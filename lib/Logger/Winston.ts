@@ -1,8 +1,9 @@
 import winston from 'winston';
 import Severity from './Severity';
+import { appOptions } from '../Config/Config';
 
 let level;
-switch (process.env.NODE_ENV) {
+switch (appOptions.env) {
   case 'debug':
     level = Severity.DEBUG;
     break;

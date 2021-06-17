@@ -9,7 +9,7 @@ services:
         volumes:
             - ./:/var/www
         environment:
-            APP_DEBUG: debug
+            APP_ENV: debug
             UDP_LOGGER_HOST: logstash
             UDP_LOGGER_PORT: 5005
             METRICS_HOST: kapacitor
