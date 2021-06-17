@@ -2,7 +2,13 @@
 
 stages:
     - test
+    - mirror
     - cleanup
+
+before_script:
+    - export REPO_ROOT=$(pwd)
+    - eval $(ssh-agent)
+    - ssh-add ~/.ssh/bob_the_builder_hanaboso
 
 test:
     stage: test
@@ -10,6 +16,12 @@ test:
         - export COMPOSE_PROJECT_NAME="${CI_PIPELINE_ID}-pipes-nodejs-sdk"
         - export COMPOSE_FILE="docker-compose.ci.yml"
         - make docker-compose.ci.yml test
+
+mirror:
+    stage: mirror
+    when: manual
+    script:
+        - "curl -X POST -F token=${MIRROR_TOKEN} -F ref=master -F variables\\[REPO\\]=hanaboso-pipes-nodejs-sdk https://gitlab.hanaboso.net/api/v4/projects/38/trigger/pipeline"
 
 cleanup:
     stage: cleanup
