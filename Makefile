@@ -34,7 +34,7 @@ lint:
 	$(DCS) yarn lint
 
 unit:
-	$(DCS) yarn test:unit
+	$(DCS) yarn test
 
 fasttest: lint unit
 
