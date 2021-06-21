@@ -15,10 +15,7 @@ abstract class CryptImplAbstract implements ICrypt {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public getType(): string {
-    return NAME;
-  }
+  public getType = (): string => NAME;
 
   public getPrefix(): string {
     return this.prefix;

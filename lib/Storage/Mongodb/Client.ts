@@ -41,6 +41,11 @@ export default class MongoDbClient {
       this.waitOnConnect();
     }
 
-    return new Repository(className, this._client, (className as unknown as IDocument).collection, this._cryptManager);
+    return new Repository(
+      className,
+      this._client,
+      (className as unknown as IDocument).getCollection(),
+      this._cryptManager,
+    );
   }
 }

@@ -107,16 +107,14 @@ export class ApplicationInstall extends DocumentAbstract {
     return this;
   }
 
-  public toArray(): {[key: string]: unknown} {
-    return {
-      id: this._id?.toHexString() ?? '',
-      user: this.user,
-      key: this.key,
-      settings: this.settings,
-      nonEncryptedSettings: this.nonEncryptedSettings,
-      created: DateTimeUtils.getFormattedDate(this.created, DATE_TIME),
-      update: DateTimeUtils.getFormattedDate(this.updated, DATE_TIME),
-      expires: this.expires ? DateTimeUtils.getFormattedDate(this.expires, DATE_TIME) : null,
-    };
-  }
+  public toArray = (): { [key: string]: unknown } => ({
+    id: this._id?.toHexString() ?? '',
+    user: this.user,
+    key: this.key,
+    settings: this.settings,
+    nonEncryptedSettings: this.nonEncryptedSettings,
+    created: DateTimeUtils.getFormattedDate(this.created, DATE_TIME),
+    update: DateTimeUtils.getFormattedDate(this.updated, DATE_TIME),
+    expires: this.expires ? DateTimeUtils.getFormattedDate(this.expires, DATE_TIME) : null,
+  });
 }

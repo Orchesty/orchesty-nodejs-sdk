@@ -3,7 +3,7 @@ import { id, objectId } from 'mongodb-typescript';
 import { ObjectId } from 'mongodb';
 
 export interface IDocument {
-  get collection(): string;
+  getCollection(): string;
   toArray(): {[key: string]: unknown};
 }
 
@@ -15,17 +15,11 @@ export default abstract class DocumentAbstract implements IDocument {
     return this._id?.toHexString() ?? '';
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public get collection(): string {
-    return DocumentAbstract.collection;
-  }
+  public getCollection = (): string => DocumentAbstract.getCollection();
 
-  public static get collection(): string {
+  public static getCollection(): string {
     return this.name;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  public toArray(): {[key: string]: unknown} {
-    return {};
-  }
+  public toArray = (): { [key: string]: unknown } => ({});
 }
