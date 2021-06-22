@@ -17,7 +17,7 @@ export class ApplicationInstall extends DocumentAbstract {
 
   private readonly created: Date;
 
-  private readonly updated: Date;
+  private updated: Date;
 
   private expires?: Date;
 
@@ -54,6 +54,11 @@ export class ApplicationInstall extends DocumentAbstract {
     return this.updated;
   }
 
+  public setUpdated(): ApplicationInstall {
+    this.updated = DateTimeUtils.utcDate;
+    return this;
+  }
+
   public getDeleted(): boolean {
     return this.deleted;
   }
@@ -70,6 +75,11 @@ export class ApplicationInstall extends DocumentAbstract {
 
   public getExpires(): Date | undefined {
     return this.expires;
+  }
+
+  public setExpires(expires: Date): ApplicationInstall {
+    this.expires = expires;
+    return this;
   }
 
   public getKey(): string {

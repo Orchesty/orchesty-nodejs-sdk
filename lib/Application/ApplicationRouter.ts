@@ -1,15 +1,9 @@
 import express from 'express';
 import CommonRouter from '../Commons/CommonRouter';
 import ApplicationManager from './Manager/ApplicationManager';
+import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
 
 export const APPLICATION_PREFIX = 'hbpf.application';
-
-// TODO: move to OAuth2 Provider
-function stateDecode(state: string): string[] {
-  const params = Buffer.from(state, 'base64url').toString().split(':');
-
-  return [params[0] ?? '', params[1] ?? ''];
-}
 
 export class ApplicationRouter extends CommonRouter {
   constructor(app: express.Application, private _manager: ApplicationManager) {
@@ -52,17 +46,17 @@ export class ApplicationRouter extends CommonRouter {
       res.json({ authorizeUrl: url });
     });
 
-    this.app.route('/applications/:name/users/:user/authorize/token').get((req, res) => {
-      const url = this._manager.saveAuthorizationToken(
+    this.app.route('/applications/:name/users/:user/authorize/token').get(async (req, res) => {
+      const url = await this._manager.saveAuthorizationToken(
         req.params.name,
         req.params.user,
-        req.query.valueOf() as string[],
+        req.query as { [key: string]: string },
       );
 
       res.json({ redirectUrl: url });
     });
 
-    this.app.route('/applications/authorize/token').get((req, res) => {
+    this.app.route('/applications/authorize/token').get(async (req, res) => {
       const { state } = req.query;
       if (!state) {
         throw Error('Missing "state" query parameter.');
@@ -70,8 +64,8 @@ export class ApplicationRouter extends CommonRouter {
 
       let user = '';
       let key = '';
-      [user, key] = stateDecode(state.toString());
-      const url = this._manager.saveAuthorizationToken(key, user, req.query.valueOf() as string[]);
+      [user, key] = OAuth2Provider.stateDecode(state.toString());
+      const url = await this._manager.saveAuthorizationToken(key, user, req.query as { [key: string]: string });
 
       res.json({ redirectUrl: url });
     });

@@ -454,6 +454,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hapi/boom@npm:9.x.x":
+  version: 9.1.2
+  resolution: "@hapi/boom@npm:9.1.2"
+  dependencies:
+    "@hapi/hoek": 9.x.x
+  checksum: abf911cc05dcef8611166803ed2d9c193e958793fe3281a5b00f3fe47eb741b0cffa17a98741773a7bf5b73e9c5c112f04a6a71bb8bf76f3382fa62261279e32
+  languageName: node
+  linkType: hard
+
+"@hapi/bourne@npm:2.x.x":
+  version: 2.0.0
+  resolution: "@hapi/bourne@npm:2.0.0"
+  checksum: 97a3e6d44c63debbb170f5966a8076022e2855f1c4fa81edc8c6fd255ba56ce047c3dcce5055858188610eafd77e6420c67ece7fd17e3192830e2fbca7766fd0
+  languageName: node
+  linkType: hard
+
+"@hapi/hoek@npm:9.x.x, @hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.0.4":
+  version: 9.2.0
+  resolution: "@hapi/hoek@npm:9.2.0"
+  checksum: c68d43f3fa7de4d53362c38ed5927e7872394bd80cd8d500a8b6c705da92ad9d37106df72d97a63417270fb186e2ad0b147bc31d61b9cdba614987bf8f1ba1ae
+  languageName: node
+  linkType: hard
+
+"@hapi/topo@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@hapi/topo@npm:5.0.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+  checksum: f92797d5ef54bb801a3591a118ea483ed5a6b41cdd1aaa6f7bf427b64b5f76056bc7063447adf43be8f94b04408228cce12963ea498b8da8f9e01d01c78710ac
+  languageName: node
+  linkType: hard
+
+"@hapi/wreck@npm:^17.0.0":
+  version: 17.1.0
+  resolution: "@hapi/wreck@npm:17.1.0"
+  dependencies:
+    "@hapi/boom": 9.x.x
+    "@hapi/bourne": 2.x.x
+    "@hapi/hoek": 9.x.x
+  checksum: ea3fd37926e16e0c2667e19b17a707eca1e2a58422af610a070d95c09c8b403e1069df4c04bf68ab44f8e1784bd3b7eb5ba5e05b4a13f4df43de3549dbcb9c82
+  languageName: node
+  linkType: hard
+
 "@istanbuljs/load-nyc-config@npm:^1.0.0":
   version: 1.1.0
   resolution: "@istanbuljs/load-nyc-config@npm:1.1.0"
@@ -722,6 +765,29 @@ __metadata:
     mkdirp: ^1.0.4
     rimraf: ^3.0.2
   checksum: d178d86a0a96e5aa12e6d70c00d50eb3bb9a58c0cf1c36e1d7f240acb4ae3f14642c6314659c438ea409a509f08c2a62e29c9346a033e554c3f6921cdb293219
+  languageName: node
+  linkType: hard
+
+"@sideway/address@npm:^4.1.0":
+  version: 4.1.2
+  resolution: "@sideway/address@npm:4.1.2"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+  checksum: e5fcccb92024859e0acbb893e84e626298656ea77e3727d80352659474968fae1b2816800145793592e340cff7f137d539490fd202073146cb43bf8370ef2062
+  languageName: node
+  linkType: hard
+
+"@sideway/formula@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@sideway/formula@npm:3.0.0"
+  checksum: b83ecd35fea33e7b826ddcdc9f0735a79bd374927efea36885203200c418ad0f9975c329eaf9e990a7c61cf96f560ed2020227a35e699324ddd3c94dd3f4045f
+  languageName: node
+  linkType: hard
+
+"@sideway/pinpoint@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@sideway/pinpoint@npm:2.0.0"
+  checksum: e5528639aef1d266c23050897a6571c1e2aeccb59b6a22006a153fbd73aee78ae995bf19c022d70de5a00589a7f51372e78ef9aacd34a3dd9b13720c866aca7e
   languageName: node
   linkType: hard
 
@@ -1063,6 +1129,13 @@ __metadata:
     "@types/mime": ^1
     "@types/node": "*"
   checksum: f261127514057b5c038d76259128d7b765dd92bfeaf769d05b8ddf5f254d066ce6142a935e2fc707bb3009d6544a979591852f0d135d0ed4d0c56db08738df6b
+  languageName: node
+  linkType: hard
+
+"@types/simple-oauth2@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "@types/simple-oauth2@npm:4.1.0"
+  checksum: de9297b41469503f5f2b797d3d57380eee88c7c87b6cb6d251b889bab933de26d39ef3235a04675d7f30d48a86f539768f9856a812003a2786d20d601f205321
   languageName: node
   linkType: hard
 
@@ -4595,6 +4668,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"joi@npm:^17.3.0":
+  version: 17.4.0
+  resolution: "joi@npm:17.4.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+    "@hapi/topo": ^5.0.0
+    "@sideway/address": ^4.1.0
+    "@sideway/formula": ^3.0.0
+    "@sideway/pinpoint": ^2.0.0
+  checksum: 2f6203d4513c063d457a935dab5e8060413479880d55af2c4fada987c7fe1bedff46d46eec36b14cf433ecc4df3b580fe1c0a0fed5b73a265b78011f97ff5c2d
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -5739,6 +5825,7 @@ __metadata:
     "@types/node-cache": ^4.2.5
     "@types/node-fetch": ^2.5.10
     "@types/php-serialize": ^3.0.0
+    "@types/simple-oauth2": ^4.1.0
     "@types/sodium-native": ^2.3.5
     "@types/supertest": ^2.0.11
     "@typescript-eslint/eslint-plugin": ^4.28.0
@@ -5759,6 +5846,7 @@ __metadata:
     nodemon: ^2.0.7
     php-serialize: ^4.0.2
     reflect-metadata: ^0.1.13
+    simple-oauth2: ^4.2.0
     sodium-native: ^3.2.1
     supertest: ^6.1.3
     ts-jest: ^27.0.3
@@ -6389,6 +6477,18 @@ __metadata:
   version: 3.0.3
   resolution: "signal-exit@npm:3.0.3"
   checksum: f8f3fec95c8d1f9ad7e3cce07e1195f84e7a85cdcb4e825e8a2b76aa5406a039083d2bc9662b3cf40e6948262f41277047d20e6fbd58c77edced0b18fab647d8
+  languageName: node
+  linkType: hard
+
+"simple-oauth2@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "simple-oauth2@npm:4.2.0"
+  dependencies:
+    "@hapi/hoek": ^9.0.4
+    "@hapi/wreck": ^17.0.0
+    debug: ^4.1.1
+    joi: ^17.3.0
+  checksum: ff7602360575eca6e47f66974cdb8c11990a61d98b05f2b473fa9e99619de9bb4269e9b7efc5230b96880e1c6143bccf3a4c383e304a17b8b85402dba9def1aa
   languageName: node
   linkType: hard
 
