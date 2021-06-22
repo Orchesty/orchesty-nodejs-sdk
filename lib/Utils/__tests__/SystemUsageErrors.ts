@@ -1,4 +1,3 @@
-// Mock Logger module
 import { getCpuTimes, getCpuUsage } from '../SystemUsage';
 
 // Mock Logger module

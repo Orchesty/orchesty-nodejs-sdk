@@ -21,7 +21,6 @@ export default class Field {
 
     private _choices: unknown[] = [];
 
-    // eslint-disable-next-line no-useless-constructor
     public constructor(
         private _type: FieldType,
         private _key: string,

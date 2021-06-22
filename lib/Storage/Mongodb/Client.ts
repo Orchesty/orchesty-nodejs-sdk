@@ -35,10 +35,10 @@ export default class MongoDbClient {
       });
   }
 
-  public getRepository(className: ClassType<IDocument>): Repository<unknown> {
+  public async getRepository(className: ClassType<IDocument>): Promise<Repository<unknown>> {
     if (!this._client.isConnected()) {
       this.reconnect();
-      this.waitOnConnect();
+      await this.waitOnConnect();
     }
 
     return new Repository(

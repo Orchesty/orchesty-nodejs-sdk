@@ -3,7 +3,7 @@ import HttpMethods from '../../HttpMethods';
 import ProcessDTO from '../../../Utils/ProcessDTO';
 
 describe('RequestDto tests', () => {
-  const url = 'http://www.google.com';
+  const url = 'https://www.google.com';
   const method = HttpMethods.POST;
   const body = JSON.stringify({ test: 'test' });
   const header = { headerParam: 'headerParam' };

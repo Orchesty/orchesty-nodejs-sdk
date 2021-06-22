@@ -1,4 +1,3 @@
-import { isPromise } from 'util/types';
 import { ITimesMetrics, sendCurlMetrics, sendProcessMetrics } from '../Metrics';
 
 // Mock Logger module
@@ -9,11 +8,6 @@ jest.mock('../../Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-jest.mock('metrics-sender/dist/lib/metrics/Metrics', () => ({
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  Metrics: jest.fn().mockImplementation(() => ({})),
-}));
-
 const mockITimesMetrics: ITimesMetrics = {
   requestDuration: BigInt(9907199254740999),
   userTime: 5,
@@ -21,19 +15,15 @@ const mockITimesMetrics: ITimesMetrics = {
 };
 
 describe('Test metrics', () => {
-  it('sendCurlMetrics', () => {
-    const curlMetrics = sendCurlMetrics(
-      mockITimesMetrics,
-    );
+  it('sendCurlMetrics', async () => {
+    const curlMetrics = await sendCurlMetrics(mockITimesMetrics);
     expect(curlMetrics).toBeDefined();
-    expect(isPromise(curlMetrics)).toBeTruthy();
+    expect(typeof curlMetrics === 'string').toBeTruthy();
   });
 
-  it('sendProcessMetrics', () => {
-    const processMetric = sendProcessMetrics(
-      mockITimesMetrics,
-    );
+  it('sendProcessMetrics', async () => {
+    const processMetric = await sendProcessMetrics(mockITimesMetrics);
     expect(processMetric).toBeDefined();
-    expect(isPromise(processMetric)).toBeTruthy();
+    expect(typeof processMetric === 'string').toBeTruthy();
   });
 });
