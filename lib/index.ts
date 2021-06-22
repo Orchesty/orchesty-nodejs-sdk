@@ -13,6 +13,7 @@ import ApplicationManager from './Application/Manager/ApplicationManager';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
 import MongoDbClient from './Storage/Mongodb/Client';
+import CurlSender from './Transport/Curl/CurlSender';
 
 export const routes: CommonRouter[] = [];
 const container = new DIContainer();
@@ -28,12 +29,14 @@ export function initiateContainer(): void {
   const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager);
   const loader = new CommonLoader(container);
   const appManager = new ApplicationManager(mongoDbClient, loader);
+  const curlSender = new CurlSender();
 
   // Add them to the DIContainer
   container.set('hbpf.core.crypt_manager', cryptManager);
   container.set('hbpf.core.mongo', mongoDbClient);
   container.set('hbpf.core.common_loader', loader);
   container.set('hbpf.core.app_manager', appManager);
+  container.set('hbpf.core.curl_sender', curlSender);
 
   // Configure routes
   routes.push(new ConnectorRouter(expressApp, loader));
@@ -42,7 +45,6 @@ export function initiateContainer(): void {
 }
 
 export function listen(): void {
-  initiateContainer();
   expressApp.disable('x-powered-by');
   expressApp.use(errorHandler);
   expressApp.listen(appOptions.port, () => {

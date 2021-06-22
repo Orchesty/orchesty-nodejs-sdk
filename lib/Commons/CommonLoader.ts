@@ -2,7 +2,6 @@ import DIContainer from '../DIContainer/Container';
 import { IName } from './IName';
 
 export default class CommonLoader {
-  // eslint-disable-next-line no-useless-constructor
   constructor(private _container: DIContainer) {
   }
 

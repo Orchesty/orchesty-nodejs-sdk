@@ -11,14 +11,9 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 
 export default class ApplicationManager {
-    private _repository: Repository<ApplicationInstall>;
+    private _repository: Repository<ApplicationInstall>|undefined;
 
-    constructor(
-        private _client: MongoDbClient,
-        private _loader: CommonLoader,
-    ) {
-      this._repository = this._client.getRepository(ApplicationInstall) as Repository<ApplicationInstall>;
-    }
+    constructor(private _client: MongoDbClient, private _loader: CommonLoader) {}
 
     public getApplications(): string[] {
       return this._loader.getList(APPLICATION_PREFIX);
@@ -90,6 +85,9 @@ export default class ApplicationManager {
     }
 
     private async _loadApplicationInstall(key: string, user: string): Promise<ApplicationInstall> {
+      if (!this._repository) {
+        this._repository = await this._client.getRepository(ApplicationInstall) as Repository<ApplicationInstall>;
+      }
       const appInstall = await this._repository.findOne({ user, key });
       if (appInstall === null) {
         throw Error(`Application [${key}] has not found.`);

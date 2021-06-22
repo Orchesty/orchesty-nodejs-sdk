@@ -5,17 +5,17 @@ import {
 } from '../Metrics/Metrics';
 import { getCorrelationId, getNodeId } from '../Utils/Headers';
 
-function afterResponse(req: Request, res: Response, next: NextFunction, startMetrics: IStartMetrics) {
+async function afterResponse(req: Request, res: Response, next: NextFunction, startMetrics: IStartMetrics) {
   res.removeListener('finish', afterResponse);
   next();
 
   const times = getTimes(startMetrics);
-  sendProcessMetrics(times, getCorrelationId(req.headers), getNodeId(req.headers), getCorrelationId(req.headers));
+  await sendProcessMetrics(times, getCorrelationId(req.headers), getNodeId(req.headers), getCorrelationId(req.headers));
   logger.debug(`Total request duration: ${Number(times.requestDuration) / 1000000}ms`);
 }
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {
   const startMetrics = getCurrentMetrics();
-  res.on('finish', () => { afterResponse(req, res, next, startMetrics); });
+  res.on('finish', async () => { await afterResponse(req, res, next, startMetrics); });
   next();
 }

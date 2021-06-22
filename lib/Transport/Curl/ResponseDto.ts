@@ -1,7 +1,6 @@
 import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto implements IResponseDto {
-  // eslint-disable-next-line no-useless-constructor
   constructor(private _body: string, private _code: number, private _reason?: string) {
   }
 
