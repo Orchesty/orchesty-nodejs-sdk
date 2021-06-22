@@ -1,6 +1,6 @@
 import TestConnector from './Connector/TestConnector';
 import {container, initiateContainer, listen} from '../lib';
-import TestOAuth2Application from "./Application/OAuth2/TestOAuth2Application";
+import TestOAuth2Application from "./Application/TestOAuth2Application";
 import {ApplicationInstall} from "../lib/Application/Database/ApplicationInstall";
 import MongoDbClient from "../lib/Storage/Mongodb/Client";
 import {CLIENT_ID, CLIENT_SECRET} from "../lib/Authorization/Type/OAuth2/IOAuth2Application";

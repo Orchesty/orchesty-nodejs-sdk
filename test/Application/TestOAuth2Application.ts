@@ -1,12 +1,12 @@
-import OAuth2ApplicationAbstract from "../../../lib/Authorization/Type/OAuth2/OAuth2ApplicationAbstract";
-import {ApplicationInstall} from "../../../lib/Application/Database/ApplicationInstall";
-import Form from "../../../lib/Application/Model/Form/Form";
-import RequestDto from "../../../lib/Transport/Curl/RequestDto";
-import Field from "../../../lib/Application/Model/Form/Field";
-import FieldType from "../../../lib/Application/Model/Form/FieldType";
-import HttpMethods from "../../../lib/Transport/HttpMethods";
-import {CLIENT_ID, CLIENT_SECRET} from "../../../lib/Authorization/Type/OAuth2/IOAuth2Application";
-import ScopeSeparatorEnum from "../../../lib/Authorization/ScopeSeparatorEnum";
+import OAuth2ApplicationAbstract from "../../lib/Authorization/Type/OAuth2/OAuth2ApplicationAbstract";
+import {ApplicationInstall} from "../../lib/Application/Database/ApplicationInstall";
+import Form from "../../lib/Application/Model/Form/Form";
+import RequestDto from "../../lib/Transport/Curl/RequestDto";
+import Field from "../../lib/Application/Model/Form/Field";
+import FieldType from "../../lib/Application/Model/Form/FieldType";
+import HttpMethods from "../../lib/Transport/HttpMethods";
+import {CLIENT_ID, CLIENT_SECRET} from "../../lib/Authorization/Type/OAuth2/IOAuth2Application";
+import ScopeSeparatorEnum from "../../lib/Authorization/ScopeSeparatorEnum";
 
 export default class TestOAuth2Application extends OAuth2ApplicationAbstract {
 

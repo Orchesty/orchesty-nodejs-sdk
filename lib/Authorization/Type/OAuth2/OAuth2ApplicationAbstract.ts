@@ -116,16 +116,16 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
     settings: IApplicationSettings,
   ): ApplicationInstall {
     super.setApplicationSettings(applicationInstall, settings);
-
     this._createAuthSettings(applicationInstall);
 
-    applicationInstall.getSettings()[FORM].forEach((key: string, value: unknown) => {
-      if (CREDENTIALS.includes(key)) {
-        const sett = applicationInstall.getSettings();
-        sett[AUTHORIZATION_SETTINGS][key] = value;
-        applicationInstall.setSettings(sett);
+    const sett = applicationInstall.getSettings();
+    Object.entries(sett[FORM]).forEach((item) => {
+      if (CREDENTIALS.includes(item[0])) {
+        // eslint-disable-next-line prefer-destructuring
+        sett[AUTHORIZATION_SETTINGS][item[0]] = item[1];
       }
     });
+    applicationInstall.setSettings(sett);
 
     return applicationInstall;
   }
