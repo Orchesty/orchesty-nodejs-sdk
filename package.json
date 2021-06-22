@@ -19,6 +19,7 @@
     "@types/mongodb": "^3.6.18",
     "@types/node-cache": "^4.2.5",
     "@types/php-serialize": "^3.0.0",
+    "@types/simple-oauth2": "^4.1.0",
     "@types/sodium-native": "^2.3.5",
     "dateformat": "^4.5.1",
     "express": "^5.0.0-alpha.8",
@@ -29,6 +30,7 @@
     "node-fetch": "^2.6.1",
     "php-serialize": "^4.0.2",
     "reflect-metadata": "^0.1.13",
+    "simple-oauth2": "^4.2.0",
     "sodium-native": "^3.2.1",
     "winston": "^3.3.3"
   },

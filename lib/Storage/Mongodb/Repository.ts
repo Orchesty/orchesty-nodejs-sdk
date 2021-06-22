@@ -66,6 +66,7 @@ export default class Repository<T> extends BaseRepo<T> {
     ) {
       const encrypted = this._crypt.encrypt((entity as unknown as ApplicationInstall).getSettings());
       ((entity as unknown as ApplicationInstall)).setEncryptedSettings(encrypted);
+      ((entity as unknown as ApplicationInstall)).setUpdated();
     }
   }
 
