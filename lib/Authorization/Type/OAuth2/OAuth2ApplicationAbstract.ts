@@ -1,0 +1,156 @@
+import {
+  CLIENT_ID, CLIENT_SECRET, FRONTEND_REDIRECT_URL, IOAuth2Application,
+} from './IOAuth2Application';
+import ApplicationAbstract, { AUTHORIZATION_SETTINGS, FORM } from '../../../Application/Base/ApplicationAbstract';
+import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
+import { ApplicationInstall, IApplicationSettings } from '../../../Application/Database/ApplicationInstall';
+import { TOKEN } from '../Basic/BasicApplicationAbstract';
+import Field, { IFieldArray } from '../../../Application/Model/Form/Field';
+import FieldType from '../../../Application/Model/Form/FieldType';
+import OAuth2Dto from '../../Provider/Dto/OAuth2Dto';
+import {
+  ACCESS_TOKEN, EXPIRES, IToken, OAuth2Provider,
+} from '../../Provider/OAuth2/OAuth2Provider';
+import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
+
+export const CREDENTIALS = [
+  CLIENT_ID,
+  CLIENT_SECRET,
+];
+
+export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstract implements IOAuth2Application {
+  constructor(private _provider: OAuth2Provider) {
+    super();
+  }
+
+  abstract getAuthUrl(): string;
+
+  abstract getTokenUrl(): string;
+
+  abstract getScopes(applicationInstall: ApplicationInstall): string[];
+
+  public getAuthorizationType = (): AuthorizationTypeEnum => AuthorizationTypeEnum.OAUTH2;
+
+  public authorize(applicationInstall: ApplicationInstall): string {
+    return this._provider.authorize(
+      this.createDto(applicationInstall),
+      this.getScopes(applicationInstall),
+      this.getScopesSeparator(),
+    );
+  }
+
+  public isAuthorized = (
+    applicationInstall: ApplicationInstall,
+  ): boolean => !!applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN]
+
+  public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
+    const formFields = super.getApplicationForm(applicationInstall);
+
+    const redirectField = new Field(
+      FieldType.TEXT,
+      FRONTEND_REDIRECT_URL,
+      'Redirect URL',
+      this._provider.getRedirectUri(),
+    ).setReadOnly(true).toArray;
+
+    formFields.push(redirectField);
+
+    return formFields;
+  }
+
+  public getFrontendRedirectUrl = (
+    applicationInstall: ApplicationInstall,
+  ): string => applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][FRONTEND_REDIRECT_URL]
+
+  public async refreshAuthorization(applicationInstall: ApplicationInstall): Promise<ApplicationInstall> {
+    const token = await this._provider.refreshAccessToken(
+      this.createDto(applicationInstall),
+      this.getTokens(applicationInstall),
+    );
+
+    applicationInstall.setExpires(token[EXPIRES] ?? undefined);
+
+    const settings = applicationInstall.getSettings();
+    settings[AUTHORIZATION_SETTINGS][TOKEN] = token;
+    applicationInstall.setSettings(settings);
+
+    return applicationInstall;
+  }
+
+  public async setAuthorizationToken(
+    applicationInstall: ApplicationInstall,
+    token: { [key: string]: string },
+  ): Promise<void> {
+    const tokenFromProvider = await this._provider.getAccessToken(this.createDto(applicationInstall), token.code);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    applicationInstall.setExpires((tokenFromProvider as any)[EXPIRES] ?? undefined);
+
+    if (Object.prototype.hasOwnProperty.call(tokenFromProvider, EXPIRES)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (tokenFromProvider as any)[EXPIRES] = (tokenFromProvider as any)[EXPIRES].toString();
+    }
+
+    const settings = applicationInstall.getSettings();
+    this._createAuthSettings(applicationInstall);
+    settings[AUTHORIZATION_SETTINGS][TOKEN] = tokenFromProvider;
+    applicationInstall.setSettings(settings);
+  }
+
+  public setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): void {
+    this._createAuthSettings(applicationInstall);
+    const settings = applicationInstall.getSettings();
+    settings[AUTHORIZATION_SETTINGS][FRONTEND_REDIRECT_URL] = redirectUrl;
+    applicationInstall.setSettings(settings);
+  }
+
+  public getAccessToken = (applicationInstall: ApplicationInstall): string => {
+    if (applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN]) {
+      return applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN];
+    }
+    throw new Error('There is no access token');
+  }
+
+  public setApplicationSettings(
+    applicationInstall: ApplicationInstall,
+    settings: IApplicationSettings,
+  ): ApplicationInstall {
+    super.setApplicationSettings(applicationInstall, settings);
+
+    this._createAuthSettings(applicationInstall);
+
+    applicationInstall.getSettings()[FORM].forEach((key: string, value: unknown) => {
+      if (CREDENTIALS.includes(key)) {
+        const sett = applicationInstall.getSettings();
+        sett[AUTHORIZATION_SETTINGS][key] = value;
+        applicationInstall.setSettings(sett);
+      }
+    });
+
+    return applicationInstall;
+  }
+
+  public createDto(applicationInstall: ApplicationInstall, redirectUrl = ''): OAuth2Dto {
+    const dto = new OAuth2Dto(applicationInstall, this.getAuthUrl(), this.getTokenUrl());
+    dto.setCustomAppDependencies(applicationInstall.getUser(), applicationInstall.getKey());
+
+    if (redirectUrl) {
+      dto.setRedirectUrl(redirectUrl);
+    }
+    return dto;
+  }
+
+  public getTokens = (
+    applicationInstall: ApplicationInstall,
+  ): IToken => applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN]
+
+  protected getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA
+
+  private _createAuthSettings = (applicationInstall: ApplicationInstall): ApplicationInstall => {
+    if (!Object.prototype.hasOwnProperty.call(applicationInstall.getSettings(), AUTHORIZATION_SETTINGS)) {
+      applicationInstall.addSettings({ [AUTHORIZATION_SETTINGS]: {} });
+      return applicationInstall;
+    }
+    return applicationInstall;
+  }
+}

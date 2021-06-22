@@ -86,7 +86,7 @@ describe('ApplicationManager tests', () => {
 
   xit('saveAuthorizationToken', async () => {
     // TODO: otestovat na OAuth2 Applikaci
-    const dbInstall = await appManager.saveAuthorizationToken('test', 'user', ['testToken']);
+    const dbInstall = await appManager.saveAuthorizationToken('test', 'user', { testToken: 'tokenTest' });
     expect(dbInstall).toEqual('url');
   });
 });

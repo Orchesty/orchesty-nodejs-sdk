@@ -5,7 +5,9 @@ import ConnectorRouter from './Connector/ConnectorRouter';
 import CommonRouter from './Commons/CommonRouter';
 import logger from './Logger/Logger';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
-import { appOptions, cryptOptions, storageOptions } from './Config/Config';
+import {
+  appOptions, cryptOptions, pipesOptions, storageOptions,
+} from './Config/Config';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
 import { ApplicationRouter } from './Application/ApplicationRouter';
@@ -13,6 +15,7 @@ import ApplicationManager from './Application/Manager/ApplicationManager';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
 import MongoDbClient from './Storage/Mongodb/Client';
+import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import CurlSender from './Transport/Curl/CurlSender';
 
 export const routes: CommonRouter[] = [];
@@ -29,6 +32,7 @@ export function initiateContainer(): void {
   const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager);
   const loader = new CommonLoader(container);
   const appManager = new ApplicationManager(mongoDbClient, loader);
+  const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
   const curlSender = new CurlSender();
 
   // Add them to the DIContainer
@@ -36,6 +40,7 @@ export function initiateContainer(): void {
   container.set('hbpf.core.mongo', mongoDbClient);
   container.set('hbpf.core.common_loader', loader);
   container.set('hbpf.core.app_manager', appManager);
+  container.set('hbpf.core.oauth2_provider', oauth2Provider);
   container.set('hbpf.core.curl_sender', curlSender);
 
   // Configure routes

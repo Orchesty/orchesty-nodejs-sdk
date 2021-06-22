@@ -6,13 +6,13 @@ export const CLIENT_SECRET = 'client_secret';
 export const FRONTEND_REDIRECT_URL = 'frontend_redirect_url';
 
 export interface IOAuth2Application extends IApplication {
-    authorize(applicationInstall: ApplicationInstall): string;
+  authorize(applicationInstall: ApplicationInstall): string;
 
-    refreshAuthorization(applicationInstall: ApplicationInstall): ApplicationInstall;
+  refreshAuthorization(applicationInstall: ApplicationInstall): Promise<ApplicationInstall>;
 
-    getFrontendRedirectUrl(applicationInstall: ApplicationInstall): string;
+  getFrontendRedirectUrl(applicationInstall: ApplicationInstall): string;
 
-    setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): IOAuth2Application;
+  setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): void;
 
-    setAuthorizationToken(applicationInstall: ApplicationInstall, token: string[]): IOAuth2Application;
+  setAuthorizationToken(applicationInstall: ApplicationInstall, token: { [key: string]: string }): Promise<void>;
 }

@@ -23,3 +23,7 @@ export const appOptions = {
 export const cryptOptions = {
   secret: process.env.CRYPT_SECRET || 'ThisIsNotSoSecret',
 };
+
+export const pipesOptions = {
+  backend: process.env.BACKEND_URL || 'http://127.0.0.40:8080',
+};
