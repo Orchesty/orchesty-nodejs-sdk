@@ -67,9 +67,8 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
       this.createDto(applicationInstall),
       this.getTokens(applicationInstall),
     );
-    if (Object.prototype.hasOwnProperty.call(token, EXPIRES) && typeof token[EXPIRES] !== 'undefined') {
-      applicationInstall.setExpires(token[EXPIRES]);
-    }
+
+    applicationInstall.setExpires(token[EXPIRES] ?? undefined);
 
     const settings = applicationInstall.getSettings();
     settings[AUTHORIZATION_SETTINGS][TOKEN] = token;
@@ -83,9 +82,11 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
     token: { [key: string]: string },
   ): Promise<void> {
     const tokenFromProvider = await this._provider.getAccessToken(this.createDto(applicationInstall), token.code);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    applicationInstall.setExpires((tokenFromProvider as any)[EXPIRES] ?? undefined);
+
     if (Object.prototype.hasOwnProperty.call(tokenFromProvider, EXPIRES)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      applicationInstall.setExpires((tokenFromProvider as any)[EXPIRES]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (tokenFromProvider as any)[EXPIRES] = (tokenFromProvider as any)[EXPIRES].toString();
     }

@@ -77,7 +77,7 @@ export class ApplicationInstall extends DocumentAbstract {
     return this.expires;
   }
 
-  public setExpires(expires: Date): ApplicationInstall {
+  public setExpires(expires?: Date): ApplicationInstall {
     this.expires = expires;
     return this;
   }
