@@ -1,9 +1,7 @@
 import { readFileSync } from 'fs';
-import * as util from 'util';
 import logger from '../Logger/Logger';
 
 const FILE_PROC_UPTIME = '/proc/uptime';
-const FILE_PROC_STAT = '/proc/%s/stat';
 const HERTZ = 100;
 
 export interface ICpuTimes {
@@ -14,7 +12,7 @@ export interface ICpuTimes {
 
 export function getCpuTimes(): ICpuTimes {
   try {
-    const stats = readFileSync(util.format(FILE_PROC_STAT, process.pid)).toString().split(' ');
+    const stats = readFileSync(`/proc/${process.pid}/stat`).toString().split(' ');
 
     return {
       cpuUserCodeTime: Number(stats[13]) + Number(stats[15]),

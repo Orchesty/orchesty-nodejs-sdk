@@ -1,13 +1,9 @@
 import { Request } from 'express';
 import ApplicationManager from '../ApplicationManager';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
-import { storageOptions } from '../../../Config/Config';
-import DIContainer from '../../../DIContainer/Container';
-import CommonLoader from '../../../Commons/CommonLoader';
 import TestBasicApplication from '../../../../test/Application/TestBasicApplication';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
-import CryptManager from '../../../Crypt/CryptManager';
-import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
+import { getTestContainer } from '../../../../test/TestAbstact';
 
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
@@ -33,23 +29,20 @@ describe('ApplicationManager tests', () => {
   }
 
   beforeEach(async () => {
-    const cryptManager = new CryptManager([new WindWalkerCrypt('123')]);
-    dbClient = new MongoDbClient(storageOptions.dsn, cryptManager);
-    const container = new DIContainer();
-    const app = new TestBasicApplication();
-    container.setApplication(app.getName(), app);
-    const loader = new CommonLoader(container);
-    appManager = new ApplicationManager(dbClient, loader);
-
+    const container = getTestContainer();
+    appManager = container.get('hbpf.core.app_manager');
+    dbClient = container.get('hbpf.core.mongo');
     appInstall = new ApplicationInstall();
     appInstall.setUser('user').setKey('test').setSettings({ key: 'value' });
 
-    await dbClient.getRepository(ApplicationInstall).insert(appInstall);
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    await repo.insert(appInstall);
   });
 
-  afterEach(() => {
-    dbClient.getRepository(ApplicationInstall).remove(appInstall);
-    dbClient.down();
+  afterEach(async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    await repo.remove(appInstall);
+    await dbClient.down();
   });
 
   it('applications', () => {
