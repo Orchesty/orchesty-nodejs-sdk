@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ignore } from 'mongodb-typescript';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 import DocumentAbstract from '../../Storage/Mongodb/DocumentAbstract';
@@ -9,6 +8,7 @@ export interface IApplicationSettings {
 }
 
 export class ApplicationInstall extends DocumentAbstract {
+  /* eslint-disable @typescript-eslint/naming-convention */
   private deleted = false;
 
   private user = '';
@@ -27,6 +27,7 @@ export class ApplicationInstall extends DocumentAbstract {
   private encryptedSettings = '';
 
   private nonEncryptedSettings: IApplicationSettings = {};
+  /* eslint-enable @typescript-eslint/naming-convention */
 
   public constructor() {
     super();
