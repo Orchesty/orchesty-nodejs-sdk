@@ -4,10 +4,18 @@ import MongoDbClient from '../../../Storage/Mongodb/Client';
 import TestBasicApplication from '../../../../test/Application/TestBasicApplication';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
 import { getTestContainer } from '../../../../test/TestAbstact';
+import CoreServices from '../../../DIContainer/CoreServices';
+import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Provider';
+import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
+import DIContainer from '../../../DIContainer/Container';
+import CommonLoader from '../../../Commons/CommonLoader';
+import { AUTHORIZATION_SETTINGS } from '../../Base/ApplicationAbstract';
+import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
 let appInstall: ApplicationInstall;
+let appInstallOAuth: ApplicationInstall;
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -16,6 +24,8 @@ jest.mock('../../../Logger/Logger', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
+
+jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
 
 describe('ApplicationManager tests', () => {
   // Mock Request/Response of Express
@@ -30,23 +40,32 @@ describe('ApplicationManager tests', () => {
 
   beforeEach(async () => {
     const container = getTestContainer();
-    appManager = container.get('hbpf.core.app_manager');
-    dbClient = container.get('hbpf.core.mongo');
+    appManager = container.get(CoreServices.APP_MANAGER);
+    dbClient = container.get(CoreServices.MONGO);
     appInstall = new ApplicationInstall();
     appInstall.setUser('user').setKey('test').setSettings({ key: 'value' });
 
     const repo = await dbClient.getRepository(ApplicationInstall);
     await repo.insert(appInstall);
+
+    appInstallOAuth = new ApplicationInstall();
+    appInstallOAuth
+      .setUser('user')
+      .setKey('oauth2application')
+      .setSettings({ key: 'value', [AUTHORIZATION_SETTINGS]: { [FRONTEND_REDIRECT_URL]: 'url' } });
+
+    await repo.insert(appInstallOAuth);
   });
 
   afterEach(async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     await repo.remove(appInstall);
+    await repo.remove(appInstallOAuth);
     await dbClient.down();
   });
 
   it('applications', () => {
-    expect(appManager.getApplications()).toEqual(['test']);
+    expect(appManager.getApplications()).toEqual(['test', 'oauth2application']);
   });
 
   it('getApplication', () => {
@@ -78,15 +97,36 @@ describe('ApplicationManager tests', () => {
     expect(dbInstall.getSettings()).toEqual({ key: 'value', authorization_settings: { password: 'passs' } });
   });
 
-  xit('authorizationApplication', async () => {
-    // TODO: otestovat na OAuth2 Applikaci
-    const dbInstall = await appManager.authorizationApplication('test', 'user', 'http://testRedirect.com');
-    expect(dbInstall).toEqual('');
+  it('authorizationApplication', async () => {
+    const oAuth2Provider = new OAuth2Provider('');
+    (oAuth2Provider.authorize as jest.MockedFunction<typeof oAuth2Provider.authorize>).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
+
+    const testApp = new TestOAuth2Application(oAuth2Provider);
+    const mockedContainer = new DIContainer();
+    mockedContainer.setApplication(testApp.getName(), testApp);
+
+    const mockedLoader = new CommonLoader(mockedContainer);
+    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
+
+    const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
+    expect(dbInstall).toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
   });
 
-  xit('saveAuthorizationToken', async () => {
-    // TODO: otestovat na OAuth2 Applikaci
-    const dbInstall = await appManager.saveAuthorizationToken('test', 'user', { testToken: 'tokenTest' });
-    expect(dbInstall).toEqual('url');
+  it('saveAuthorizationToken', async () => {
+    const oAuth2Provider = new OAuth2Provider('');
+    (oAuth2Provider.getAccessToken as jest.MockedFunction<typeof oAuth2Provider.getAccessToken>).mockResolvedValue({});
+
+    const testApp = new TestOAuth2Application(oAuth2Provider);
+    const mockedContainer = new DIContainer();
+    mockedContainer.setApplication(testApp.getName(), testApp);
+
+    const mockedLoader = new CommonLoader(mockedContainer);
+    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
+    const frontendUrl = await mockedAppManager.saveAuthorizationToken(
+      'oauth2application',
+      'user',
+      { testToken: 'tokenTest' },
+    );
+    expect(frontendUrl).toEqual('url');
   });
 });

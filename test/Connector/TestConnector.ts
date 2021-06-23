@@ -16,7 +16,7 @@ export default class TestConnector implements ICommonNode {
     dto.setJsonData({ test: 'ok', processed: Date.now().toString() });
     dto.setStopProcess(ResultCode.DO_NOT_CONTINUE);
 
-    const requestDto = new RequestDto('http://jsonplaceholder.typicode.com/users', HttpMethods.GET);
+    const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET);
     requestDto.setDebugInfo(dto);
     const responseDto = await this._sender.send(requestDto);
     if (responseDto.getResponseCode() !== 200) {

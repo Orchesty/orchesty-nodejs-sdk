@@ -1,30 +1,28 @@
 import TestConnector from './Connector/TestConnector';
-import {container, initiateContainer, listen} from '../lib';
-import TestOAuth2Application from "./Application/TestOAuth2Application";
-import {ApplicationInstall} from "../lib/Application/Database/ApplicationInstall";
-import MongoDbClient from "../lib/Storage/Mongodb/Client";
-import {CLIENT_ID, CLIENT_SECRET} from "../lib/Authorization/Type/OAuth2/IOAuth2Application";
-import logger from "../lib/Logger/Logger";
+import { container, initiateContainer, listen } from '../lib';
+import TestOAuth2Application from './Application/TestOAuth2Application';
+import { ApplicationInstall } from '../lib/Application/Database/ApplicationInstall';
+import MongoDbClient from '../lib/Storage/Mongodb/Client';
+import { CLIENT_ID, CLIENT_SECRET } from '../lib/Authorization/Type/OAuth2/IOAuth2Application';
+import logger from '../lib/Logger/Logger';
+import CoreServices from '../lib/DIContainer/CoreServices';
 
 initiateContainer();
 
-const curlSender = container.get('hbpf.core.curl_sender');
+const oauth2Provider = container.get(CoreServices.OAUTH2_PROVIDER);
+const curlSender = container.get(CoreServices.CURL);
+
 const testConnector = new TestConnector(curlSender);
 container.setConnector(testConnector.getName(), testConnector);
 
-
 const key = 'oauth2application';
 const user = 'user';
-
-const oauth2Provider = container.get('hbpf.core.oauth2_provider');
 const testApp = new TestOAuth2Application(oauth2Provider);
-
 container.setApplication(testApp.getName(), testApp);
 
-const db = container.get('hbpf.core.mongo') as MongoDbClient;
-
+const db = container.get(CoreServices.MONGO) as MongoDbClient;
 db.getRepository(ApplicationInstall).then(async (repository) => {
-  let appInstall = await repository.findOne({key: key, user: user});
+  const appInstall = await repository.findOne({ key, user });
   if (appInstall) {
     await repository.remove(appInstall);
   }

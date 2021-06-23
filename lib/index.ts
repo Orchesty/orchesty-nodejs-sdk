@@ -17,6 +17,7 @@ import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
 import MongoDbClient from './Storage/Mongodb/Client';
 import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import CurlSender from './Transport/Curl/CurlSender';
+import CoreServices from './DIContainer/CoreServices';
 
 export const routes: CommonRouter[] = [];
 const container = new DIContainer();
@@ -36,12 +37,12 @@ export function initiateContainer(): void {
   const curlSender = new CurlSender();
 
   // Add them to the DIContainer
-  container.set('hbpf.core.crypt_manager', cryptManager);
-  container.set('hbpf.core.mongo', mongoDbClient);
-  container.set('hbpf.core.common_loader', loader);
-  container.set('hbpf.core.app_manager', appManager);
-  container.set('hbpf.core.oauth2_provider', oauth2Provider);
-  container.set('hbpf.core.curl_sender', curlSender);
+  container.set(CoreServices.CRYPT_MANAGER, cryptManager);
+  container.set(CoreServices.MONGO, mongoDbClient);
+  container.set(CoreServices.LOADER, loader);
+  container.set(CoreServices.APP_MANAGER, appManager);
+  container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
+  container.set(CoreServices.CURL, curlSender);
 
   // Configure routes
   routes.push(new ConnectorRouter(expressApp, loader));

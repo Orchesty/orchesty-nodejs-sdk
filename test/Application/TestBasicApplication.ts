@@ -14,19 +14,13 @@ export default class TestBasicApplication extends BasicApplicationAbstract {
     });
   }
 
-  getDescription(): string {
-    return 'Test description';
-  }
+  public getDescription = (): string => 'Test description';
 
-  getName(): string {
-    return 'test';
-  }
+  public getName = (): string => 'test';
 
-  getPublicName(): string {
-    return 'Test application';
-  }
+  public getPublicName = (): string => 'Test application';
 
-  getSettingsForm(): Form {
+  public getSettingsForm = (): Form => {
     const label = 'testLabel';
     const fieldText = new Field(FieldType.TEXT, 'person', label);
     const field = new Field(FieldType.PASSWORD, 'testKey', label);
@@ -35,14 +29,12 @@ export default class TestBasicApplication extends BasicApplicationAbstract {
     form.addField(field);
     form.addField(fieldText);
     return form;
-  }
+  };
 
-  getRequestDto(
+  public getRequestDto = (
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
     data?: string,
-  ): RequestDto {
-    return new RequestDto(url ?? '', method, data);
-  }
+  ): RequestDto => new RequestDto(url ?? '', method, data);
 }

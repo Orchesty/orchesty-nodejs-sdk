@@ -15,14 +15,17 @@ describe('Test application', () => {
     const app = new TestBasicApplication();
     expect(app.getDescription()).toEqual('Test description');
   });
+
   it('getPublicName', () => {
     const app = new TestBasicApplication();
     expect(app.getPublicName()).toEqual('Test application');
   });
+
   it('getName', () => {
     const app = new TestBasicApplication();
     expect(app.getName()).toEqual('test');
   });
+
   it('toArray', () => {
     const app = new TestBasicApplication();
     expect(app.toArray()).toEqual({
@@ -33,6 +36,7 @@ describe('Test application', () => {
       name: 'Test application',
     });
   });
+
   it('getSettingsForm', () => {
     const app = new TestBasicApplication();
     const expected = {
@@ -63,6 +67,7 @@ describe('Test application', () => {
     };
     expect(app.getSettingsForm()).toEqual(expected);
   });
+
   it('setApplicationSettings', () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
@@ -76,6 +81,7 @@ describe('Test application', () => {
     appInstall = app.setApplicationSettings(appInstall, { form: { user, password: pass, token } });
     expect(appInstall.getSettings()).toEqual(expected);
   });
+
   it('setApplicationSettingsAddPerson', () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
@@ -87,6 +93,7 @@ describe('Test application', () => {
     appInstall = app.setApplicationSettings(appInstall, { person: 'test' });
     expect(appInstall.getSettings()).toEqual(expected);
   });
+
   it('getApplicationForm', () => {
     const app = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
@@ -94,18 +101,20 @@ describe('Test application', () => {
     const result = app.setApplicationSettings(appInstall, sett);
     expect(result).toBeInstanceOf(ApplicationInstall);
     const resultSett = result.getSettings();
-    expect(resultSett.hasOwnProperty('authorization_settings')).toBeTruthy();
+    expect(resultSett).toHaveProperty('authorization_settings');
     expect(result.getSettings().authorization_settings.user).toEqual(user);
     expect(result.getSettings().authorization_settings.password).toEqual(pass);
     expect(result.getSettings().authorization_settings.token).toEqual(token);
   });
+
   it('getUri', () => {
     const app = new TestBasicApplication();
     expect(app.getUri('https://www.google.com')).toBeInstanceOf(URL);
   });
+
   it('getRequestDto', () => {
     const app = new TestBasicApplication();
-    const urlValue = 'http://www.google.com';
+    const urlValue = 'https://www.google.com';
     const data = JSON.stringify({ test: 'testData' });
     const method = HttpMethods.POST;
     const requestDto = app.getRequestDto(new ApplicationInstall(), method, urlValue, data);
@@ -117,6 +126,7 @@ describe('Test application', () => {
     const requestDtoWithoutUrl = app.getRequestDto(new ApplicationInstall(), method);
     expect(requestDtoWithoutUrl).toHaveProperty('_url', '');
   });
+
   it('getApplicationForm', () => {
     const app = new TestBasicApplication();
     const appInstall = new ApplicationInstall();

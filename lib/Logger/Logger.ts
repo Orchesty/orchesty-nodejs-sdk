@@ -55,7 +55,7 @@ export class Logger {
       hostname: os.hostname(),
       type: process.env.PIPES_NODE_TYPE || 'pipes_node',
       severity: `${severity}`.toUpperCase(),
-      message: message.replace(/\s\s+/g, ' '),
+      message: message?.replace(/\s\s+/g, ' '),
     };
 
     if (context) {

@@ -23,11 +23,11 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
     super();
   }
 
-  abstract getAuthUrl(): string;
+  public abstract getAuthUrl(): string;
 
-  abstract getTokenUrl(): string;
+  public abstract getTokenUrl(): string;
 
-  abstract getScopes(applicationInstall: ApplicationInstall): string[];
+  public abstract getScopes(applicationInstall: ApplicationInstall): string[];
 
   public getAuthorizationType = (): AuthorizationTypeEnum => AuthorizationTypeEnum.OAUTH2;
 
