@@ -4,7 +4,6 @@ export const USER = 'user';
 export const APPLICATION = 'application';
 
 export default class Webhook extends DocumentAbstract {
-
   /* eslint-disable @typescript-eslint/naming-convention */
   private name = '';
 
