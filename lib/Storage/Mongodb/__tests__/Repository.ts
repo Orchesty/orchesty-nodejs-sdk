@@ -4,7 +4,7 @@ import { getTestContainer } from '../../../../test/TestAbstact';
 import DocumentAbstract from '../DocumentAbstract';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
-import CoreServices from "../../../DIContainer/CoreServices";
+import CoreServices from '../../../DIContainer/CoreServices';
 
 let dbClient: MongoDbClient;
 

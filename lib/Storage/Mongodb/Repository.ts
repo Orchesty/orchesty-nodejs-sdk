@@ -1,9 +1,11 @@
-import {Repository as BaseRepo} from 'mongodb-typescript';
-import {Cursor, FilterQuery, MongoClient, ObjectId, ReplaceOneOptions,} from 'mongodb';
-import {ClassType, RepositoryOptions} from 'mongodb-typescript/lib/repository';
+import { Repository as BaseRepo } from 'mongodb-typescript';
+import {
+  Cursor, FilterQuery, MongoClient, ObjectId, ReplaceOneOptions,
+} from 'mongodb';
+import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
-import {ApplicationInstall} from '../../Application/Database/ApplicationInstall';
-import {IQueryFilter} from './Filters/QueryFilterAbstract';
+import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
+import { IQueryFilter } from './Filters/QueryFilterAbstract';
 import filters from './Filters';
 
 export default class Repository<T> extends BaseRepo<T> {
@@ -64,7 +66,7 @@ export default class Repository<T> extends BaseRepo<T> {
 
   public async findById(id: ObjectId): Promise<T | null> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const query = {_id: id};
+    const query = { _id: id };
     this._decorateQuery(query);
     const entity = await super.findOne(query);
     if (entity) {
@@ -75,7 +77,7 @@ export default class Repository<T> extends BaseRepo<T> {
 
   public async findManyById(ids: ObjectId[]): Promise<T[]> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const query = {_id: {$in: ids}};
+    const query = { _id: { $in: ids } };
     this._decorateQuery(query);
     const entities = await super.find(query).toArray();
     if (entities) {
