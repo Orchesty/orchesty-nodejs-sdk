@@ -1,7 +1,7 @@
-import {ICommonNode} from "../../lib/Commons/ICommonNode";
-import ProcessDTO from "../../lib/Utils/ProcessDTO";
+import {ICommonNode} from '../../lib/Commons/ICommonNode';
+import ProcessDTO from '../../lib/Utils/ProcessDTO';
 
-export default class TestBatch implements ICommonNode{
+export default class TestBatch implements ICommonNode {
   getName(): string {
     return 'testbatch';
   }

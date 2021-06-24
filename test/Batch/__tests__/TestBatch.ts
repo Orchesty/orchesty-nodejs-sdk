@@ -1,5 +1,5 @@
-import TestBatch from "../TestBatch";
-import ProcessDTO from "../../../lib/Utils/ProcessDTO";
+import TestBatch from '../TestBatch';
+import ProcessDTO from '../../../lib/Utils/ProcessDTO';
 
 describe('Tests for TestBatch', () => {
 

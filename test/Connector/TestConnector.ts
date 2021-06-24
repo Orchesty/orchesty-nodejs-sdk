@@ -1,4 +1,4 @@
-import { ICommonNode } from '../../lib/Commons/ICommonNode';
+import {ICommonNode} from '../../lib/Commons/ICommonNode';
 import ProcessDTO from '../../lib/Utils/ProcessDTO';
 import ResultCode from '../../lib/Utils/ResultCode';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
@@ -13,7 +13,7 @@ export default class TestConnector implements ICommonNode {
   public getName = (): string => 'test';
 
   public async processAction(dto: ProcessDTO): Promise<ProcessDTO> {
-    dto.setJsonData({ test: 'ok', processed: Date.now().toString() });
+    dto.setJsonData({test: 'ok', processed: Date.now().toString()});
     dto.setStopProcess(ResultCode.DO_NOT_CONTINUE);
 
     const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET);
