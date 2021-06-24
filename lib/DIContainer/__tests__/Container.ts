@@ -51,25 +51,17 @@ describe('Test DIContainer', () => {
     }
   });
 
-  it('test set/get Connector service', () => {
-    const serviceName = 'testService4';
-    container.setConnector(serviceName, testConnector);
-
-    expect(container.get(`${CONNECTOR_PREFIX}.${serviceName}`)).toEqual(testConnector);
-  });
-
   it('test set/get CustomNode service', () => {
-    const serviceName = 'testService5';
-    container.setCustomNode(serviceName, testConnector);
+    const cont = new DIContainer();
+    cont.setCustomNode(testConnector);
 
-    expect(container.get(`${CUSTOM_NODE_PREFIX}.${serviceName}`)).toEqual(testConnector);
+    expect(cont.get(`${CUSTOM_NODE_PREFIX}.${testConnector.getName()}`)).toEqual(testConnector);
   });
 
   it('test set/getAllByPrefix services', () => {
     const container2 = new DIContainer();
-    container2.setConnector('testService6', testConnector);
-    container2.setConnector('testService7', testConnector);
+    container2.setConnector(testConnector);
 
-    expect(container2.getAllByPrefix(CUSTOM_NODE_PREFIX)).toEqual([testConnector, testConnector]);
+    expect(container2.getAllByPrefix(CUSTOM_NODE_PREFIX)).toEqual([testConnector]);
   });
 });

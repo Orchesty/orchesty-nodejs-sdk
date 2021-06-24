@@ -1,13 +1,11 @@
 import { Application } from 'express';
 import supertest from 'supertest';
 import CommonLoader from '../../Commons/CommonLoader';
-import BatchRouter from '../BatchRouter';
-import TestBatch from '../../../test/Batch/TestBatch';
-import { container, expressApp, initiateContainer } from '../../index';
+import BatchRouter, { BATCH_PREFIX } from '../BatchRouter';
+import { getTestContainer, expressApp } from '../../../test/TestAbstact';
 
-initiateContainer();
-const batch = new TestBatch();
-container.setBatch(batch.getName(), batch);
+const container = getTestContainer();
+const batch = container.get(`${BATCH_PREFIX}.testbatch`);
 
 describe('Tests for BatchRouter', () => {
   it('get /batch/:name/action', async () => {

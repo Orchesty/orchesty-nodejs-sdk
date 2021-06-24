@@ -7,21 +7,22 @@ import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
 
 interface IContainer {
+
+  has(name: string): boolean;
+
   get(name: string): any;
 
   getAllByPrefix(prefix: string): any[];
 
   set(name: string, service: any): void;
 
-  setConnector(name: string, service: any): void;
+  setConnector(service: any): void;
 
-  setCustomNode(name: string, service: any): void;
+  setCustomNode(service: any): void;
 
-  has(name: string): boolean;
+  setApplication(service: IApplication): void;
 
-  setApplication(name: string, service: IApplication): void;
-
-  setBatch(name: string, service: any): void;
+  setBatch(service: any): void;
 }
 
 export default class DIContainer implements IContainer {
@@ -63,19 +64,19 @@ export default class DIContainer implements IContainer {
     }
   }
 
-  setConnector(name: string, service: ICommonNode): void {
-    this.set(`${CONNECTOR_PREFIX}.${name}`, service);
+  setConnector(service: ICommonNode): void {
+    this.set(`${CONNECTOR_PREFIX}.${service.getName()}`, service);
   }
 
-  setCustomNode(name: string, service: ICommonNode): void {
-    this.set(`${CUSTOM_NODE_PREFIX}.${name}`, service);
+  setCustomNode(service: ICommonNode): void {
+    this.set(`${CUSTOM_NODE_PREFIX}.${service.getName()}`, service);
   }
 
-  setApplication(name: string, service: IApplication): void {
-    this.set(`${APPLICATION_PREFIX}.${name}`, service);
+  setApplication(service: IApplication): void {
+    this.set(`${APPLICATION_PREFIX}.${service.getName()}`, service);
   }
 
-  setBatch(name: string, service: ICommonNode): void {
-    this.set(`${BATCH_PREFIX}.${name}`, service);
+  setBatch(service: ICommonNode): void {
+    this.set(`${BATCH_PREFIX}.${service.getName()}`, service);
   }
 }
