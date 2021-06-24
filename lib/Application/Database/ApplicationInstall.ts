@@ -60,6 +60,11 @@ export class ApplicationInstall extends DocumentAbstract {
     return this;
   }
 
+  public setDeleted(): ApplicationInstall {
+    this.deleted = true;
+    return this;
+  }
+
   public getDeleted(): boolean {
     return this.deleted;
   }
