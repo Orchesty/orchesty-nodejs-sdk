@@ -14,6 +14,12 @@ Linux:
 		-e "s/{DEV_GID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -g); else echo '1001'; fi)/g" \
 		.env.dist > .env; \
 
+init: docker-up-force yarn-install
+
+publish:
+	npx yarn build || true
+	npx npm publish
+
 docker-compose.ci.yml:
 	# Comment out any port forwarding
 	sed -r 's/^(\s+ports:)$$/#\1/g; s/^(\s+- \$$\{DEV_IP\}.*)$$/#\1/g' docker-compose.yaml > docker-compose.ci.yml
