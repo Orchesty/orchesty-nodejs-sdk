@@ -3,22 +3,23 @@ import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import { IApplicationArray } from './ApplicationAbstract';
 import HttpMethods from '../../Transport/HttpMethods';
+import { IName } from '../../Commons/IName';
 
-export interface IApplication {
+export interface IApplication extends IName {
 
-    getRequestDto
-    (
-        applicationInstall: ApplicationInstall,
-        method: HttpMethods,
-        url?: string,
-        data?: string,
-    ): RequestDto;
+  getRequestDto
+  (
+    applicationInstall: ApplicationInstall,
+    method: HttpMethods,
+    url?: string,
+    data?: string,
+  ): RequestDto;
 
-    getAuthorizationType(): AuthorizationTypeEnum;
+  getAuthorizationType(): AuthorizationTypeEnum;
 
-    setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings): ApplicationInstall;
+  setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings): ApplicationInstall;
 
-    isAuthorized(applicationInstall: ApplicationInstall): boolean;
+  isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-    toArray(): IApplicationArray;
+  toArray(): IApplicationArray;
 }

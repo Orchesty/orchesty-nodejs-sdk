@@ -17,6 +17,7 @@ import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
 import MongoDbClient from './Storage/Mongodb/Client';
 import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import CurlSender from './Transport/Curl/CurlSender';
+import BatchRouter from './Batch/BatchRouter';
 import CoreServices from './DIContainer/CoreServices';
 
 export const routes: CommonRouter[] = [];
@@ -48,6 +49,7 @@ export function initiateContainer(): void {
   routes.push(new ConnectorRouter(expressApp, loader));
   routes.push(new CustomNodeRouter(expressApp, loader));
   routes.push(new ApplicationRouter(expressApp, appManager));
+  routes.push(new BatchRouter(expressApp, loader));
 }
 
 export function listen(): void {

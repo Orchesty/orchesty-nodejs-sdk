@@ -27,6 +27,9 @@ export const REPEAT_HOPS = 'repeat-hops';
 // Limiter headers
 export const LIMITER_KEY = 'limiter-key';
 
+// Batch headers
+export const BATCH_CURSOR = 'cursor';
+
 const WHITE_LIST = ['content-type'];
 
 export type HttpHeaders = NodeJS.Dict<string | string[]>
