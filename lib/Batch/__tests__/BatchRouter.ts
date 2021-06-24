@@ -10,16 +10,22 @@ const batch = container.get(`${BATCH_PREFIX}.testbatch`);
 describe('Tests for BatchRouter', () => {
   it('get /batch/:name/action', async () => {
     const batchUrl = `/batch/${batch.getName()}/action`;
-    await supertest(expressApp).post(batchUrl).expect(200, '{dataTest: testValue}');
+    await supertest(expressApp)
+      .post(batchUrl)
+      .expect(200, '{dataTest: testValue}');
   });
 
   it('get /batch/:name/action/test route', async () => {
     const batchUrl = `/batch/${batch.getName()}/action/test`;
-    await supertest(expressApp).get(batchUrl).expect(200, '[]');
+    await supertest(expressApp)
+      .get(batchUrl)
+      .expect(200, '[]');
   });
 
   it('get /batch/list route', async () => {
-    await supertest(expressApp).get('/batch/list').expect(200, '["testbatch"]');
+    await supertest(expressApp)
+      .get('/batch/list')
+      .expect(200, '["testbatch"]');
   });
 
   it('test configureRoutes', () => {
@@ -30,7 +36,8 @@ describe('Tests for BatchRouter', () => {
       get: getFn,
     };
 
-    const routeFn = jest.fn().mockReturnValue(routeMock);
+    const routeFn = jest.fn()
+      .mockReturnValue(routeMock);
     const expressMock = {
       route: routeFn,
       address: jest.fn(),
@@ -43,9 +50,13 @@ describe('Tests for BatchRouter', () => {
     } as never as CommonLoader;
 
     const router = new BatchRouter(expressMock, loaderMock);
-    expect(routeFn).toBeCalledTimes(3);
-    expect(getFn).toBeCalledTimes(2);
-    expect(postFn).toBeCalledTimes(1);
-    expect(router.getName()).toEqual('BatchRouter');
+    expect(routeFn)
+      .toBeCalledTimes(3);
+    expect(getFn)
+      .toBeCalledTimes(2);
+    expect(postFn)
+      .toBeCalledTimes(1);
+    expect(router.getName())
+      .toEqual('BatchRouter');
   });
 });

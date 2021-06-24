@@ -1,10 +1,10 @@
-import {ApplicationInstall} from '../lib/Application/Database/ApplicationInstall';
+import { ApplicationInstall } from '../lib/Application/Database/ApplicationInstall';
 import MongoDbClient from '../lib/Storage/Mongodb/Client';
-import {CLIENT_ID, CLIENT_SECRET} from '../lib/Authorization/Type/OAuth2/IOAuth2Application';
+import { CLIENT_ID, CLIENT_SECRET } from '../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import logger from '../lib/Logger/Logger';
 import CoreServices from '../lib/DIContainer/CoreServices';
-import {CONNECTOR_PREFIX} from "../lib/Connector/ConnectorRouter";
-import {getTestContainer, listen} from "./TestAbstact";
+import { CONNECTOR_PREFIX } from '../lib/Connector/ConnectorRouter';
+import { getTestContainer, listen } from './TestAbstact';
 
 const container = getTestContainer();
 

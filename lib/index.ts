@@ -5,9 +5,7 @@ import ConnectorRouter from './Connector/ConnectorRouter';
 import CommonRouter from './Commons/CommonRouter';
 import logger from './Logger/Logger';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
-import {
-  appOptions, cryptOptions, pipesOptions, storageOptions,
-} from './Config/Config';
+import { appOptions, cryptOptions, pipesOptions, storageOptions, } from './Config/Config';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
 import { ApplicationRouter } from './Application/ApplicationRouter';

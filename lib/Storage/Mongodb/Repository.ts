@@ -1,7 +1,5 @@
 import { Repository as BaseRepo } from 'mongodb-typescript';
-import {
-  Cursor, FilterQuery, MongoClient, ObjectId, ReplaceOneOptions,
-} from 'mongodb';
+import { Cursor, FilterQuery, MongoClient, ObjectId, ReplaceOneOptions, } from 'mongodb';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
@@ -41,7 +39,8 @@ export default class Repository<T> extends BaseRepo<T> {
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-explicit-any
   public async findMany(query?: FilterQuery<T | { _id: any; }>): Promise<T[]> {
     this._decorateQuery(query);
-    const entities = await super.find(query).toArray();
+    const entities = await super.find(query)
+      .toArray();
     entities.forEach((entity) => {
       this._decrypt(entity);
     });
@@ -79,7 +78,8 @@ export default class Repository<T> extends BaseRepo<T> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const query = { _id: { $in: ids } };
     this._decorateQuery(query);
-    const entities = await super.find(query).toArray();
+    const entities = await super.find(query)
+      .toArray();
     if (entities) {
       entities.forEach((entity) => {
         this._decrypt(entity);
@@ -134,8 +134,9 @@ export default class Repository<T> extends BaseRepo<T> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/naming-convention
   private _decorateQuery(query?: FilterQuery<T | { _id: any; }>): void {
-    Object.entries(this._filters).forEach((item) => {
-      item[1].decorate(this.Type, query);
-    });
+    Object.entries(this._filters)
+      .forEach((item) => {
+        item[1].decorate(this.Type, query);
+      });
   }
 }

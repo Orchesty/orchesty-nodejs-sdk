@@ -3,8 +3,8 @@ import TestConnector from './Connector/TestConnector';
 import TestBasicApplication from './Application/TestBasicApplication';
 import CoreServices from '../lib/DIContainer/CoreServices';
 import TestOAuth2Application from './Application/TestOAuth2Application';
-import {container as c, expressApp as e, initiateContainer, listen as l} from "../lib";
-import TestBatch from "./Batch/TestBatch";
+import { container as c, expressApp as e, initiateContainer, listen as l } from '../lib';
+import TestBatch from './Batch/TestBatch';
 
 initiateContainer();
 

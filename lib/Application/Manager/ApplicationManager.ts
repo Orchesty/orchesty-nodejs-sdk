@@ -94,7 +94,10 @@ export default class ApplicationManager {
     if (!this._repository) {
       this._repository = await this._client.getRepository(ApplicationInstall) as Repository<ApplicationInstall>;
     }
-    const appInstall = await this._repository.findOne({ user, key });
+    const appInstall = await this._repository.findOne({
+      user,
+      key
+    });
     if (appInstall === null) {
       throw Error(`Application [${key}] has not found.`);
     }
