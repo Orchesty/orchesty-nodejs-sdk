@@ -6,6 +6,7 @@ import MongoDbClient from '../lib/Storage/Mongodb/Client';
 import { CLIENT_ID, CLIENT_SECRET } from '../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import logger from '../lib/Logger/Logger';
 import CoreServices from '../lib/DIContainer/CoreServices';
+import TestBatch from "./Batch/TestBatch";
 
 initiateContainer();
 
@@ -14,6 +15,9 @@ const curlSender = container.get(CoreServices.CURL);
 
 const testConnector = new TestConnector(curlSender);
 container.setConnector(testConnector.getName(), testConnector);
+
+const batch = new TestBatch();
+container.setBatch(batch.getName(), batch);
 
 const key = 'oauth2application';
 const user = 'user';
