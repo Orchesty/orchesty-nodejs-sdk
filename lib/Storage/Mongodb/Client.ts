@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 import { ClassType } from 'mongodb-typescript';
 import logger from '../../Logger/Logger';
 import { IDocument } from './DocumentAbstract';
@@ -8,14 +8,8 @@ import CryptManager from '../../Crypt/CryptManager';
 export default class MongoDbClient {
   private readonly _client: MongoClient
 
-  private _connectionPromise?: Promise<void> = undefined;
-
   constructor(private _dsn: string, private _cryptManager: CryptManager) {
     this._client = new MongoClient(this._dsn, { useUnifiedTopology: true });
-  }
-
-  public async waitOnConnect(): Promise<void> {
-    await this._connectionPromise;
   }
 
   public async down(): Promise<void> {
@@ -26,19 +20,26 @@ export default class MongoDbClient {
     return this._client.isConnected();
   }
 
-  public reconnect(): void {
-    this._connectionPromise = this._client.connect()
-      .then(() => {
-        logger.info('⚡️[server]: MongoDB Connected.');
-      }).catch((err) => {
-        logger.error(err.message);
-      });
+  public async reconnect(): Promise<void> {
+    try {
+      await this._client.connect();
+      logger.info('⚡️[server]: MongoDB Connected.');
+    } catch (err) {
+      logger.error(err.message);
+    }
+  }
+
+  public async db(name?: string): Promise<Db> {
+    if (!this._client.isConnected()) {
+      await this.reconnect();
+    }
+
+    return this._client.db(name);
   }
 
   public async getRepository(className: ClassType<IDocument>): Promise<Repository<unknown>> {
     if (!this._client.isConnected()) {
-      this.reconnect();
-      await this.waitOnConnect();
+      await this.reconnect();
     }
 
     return new Repository(

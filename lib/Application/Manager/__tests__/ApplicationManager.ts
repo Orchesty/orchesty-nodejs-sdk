@@ -40,9 +40,14 @@ describe('ApplicationManager tests', () => {
     return mockedRequest() as unknown as Request;
   }
 
+  beforeAll(async () => {
+    dbClient = container.get(CoreServices.MONGO);
+    const db = await dbClient.db();
+    await db.dropCollection(ApplicationInstall.getCollection());
+  });
+
   beforeEach(async () => {
     appManager = container.get(CoreServices.APP_MANAGER);
-    dbClient = container.get(CoreServices.MONGO);
     appInstall = new ApplicationInstall();
     appInstall.setUser('user').setKey('test').setSettings({ key: 'value' });
 

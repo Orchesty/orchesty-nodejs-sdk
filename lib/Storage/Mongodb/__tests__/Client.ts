@@ -20,8 +20,7 @@ describe('Test MongoDb Storage', () => {
   });
 
   it('IsConnected', async () => {
-    dbClient.reconnect();
-    await dbClient.waitOnConnect();
+    await dbClient.reconnect();
     expect(dbClient.isConnected()).toBeTruthy();
-  }, 200);
+  });
 });
