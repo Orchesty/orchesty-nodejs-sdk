@@ -11,6 +11,7 @@
 
 # TODO:
 - Coverage
+- MongoDB Metrics sender
 - Manual for usage of SDK:
   - create app
   - logger

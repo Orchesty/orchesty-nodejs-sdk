@@ -37,7 +37,7 @@ yarn-update:
 	$(DCS) yarn up
 
 lint:
-	$(DCS) yarn lint
+	$(DCS) yarn lint-ci
 
 unit:
 	$(DCS) yarn test
