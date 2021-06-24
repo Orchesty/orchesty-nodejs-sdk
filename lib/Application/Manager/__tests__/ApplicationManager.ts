@@ -17,6 +17,8 @@ let dbClient: MongoDbClient;
 let appInstall: ApplicationInstall;
 let appInstallOAuth: ApplicationInstall;
 
+const container = getTestContainer();
+
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
   error: () => jest.fn(),
@@ -39,7 +41,6 @@ describe('ApplicationManager tests', () => {
   }
 
   beforeEach(async () => {
-    const container = getTestContainer();
     appManager = container.get(CoreServices.APP_MANAGER);
     dbClient = container.get(CoreServices.MONGO);
     appInstall = new ApplicationInstall();
@@ -61,6 +62,9 @@ describe('ApplicationManager tests', () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     await repo.remove(appInstall);
     await repo.remove(appInstallOAuth);
+  });
+
+  afterAll(async () => {
     await dbClient.down();
   });
 
@@ -103,7 +107,7 @@ describe('ApplicationManager tests', () => {
 
     const testApp = new TestOAuth2Application(oAuth2Provider);
     const mockedContainer = new DIContainer();
-    mockedContainer.setApplication(testApp.getName(), testApp);
+    mockedContainer.setApplication(testApp);
 
     const mockedLoader = new CommonLoader(mockedContainer);
     const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
@@ -118,7 +122,7 @@ describe('ApplicationManager tests', () => {
 
     const testApp = new TestOAuth2Application(oAuth2Provider);
     const mockedContainer = new DIContainer();
-    mockedContainer.setApplication(testApp.getName(), testApp);
+    mockedContainer.setApplication(testApp);
 
     const mockedLoader = new CommonLoader(mockedContainer);
     const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);

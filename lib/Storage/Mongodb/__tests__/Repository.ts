@@ -8,6 +8,8 @@ import CoreServices from '../../../DIContainer/CoreServices';
 
 let dbClient: MongoDbClient;
 
+const container = getTestContainer();
+
 class ClassWithoutDeleted extends DocumentAbstract {
   user = 'withoutDeleted';
 
@@ -31,11 +33,10 @@ class ClassWithDeleted extends DocumentAbstract {
 
 describe('Tests for repository', () => {
   beforeEach(() => {
-    const container = getTestContainer();
     dbClient = container.get(CoreServices.MONGO);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await dbClient.down();
   });
 
