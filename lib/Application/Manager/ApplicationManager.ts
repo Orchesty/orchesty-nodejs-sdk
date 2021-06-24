@@ -96,7 +96,7 @@ export default class ApplicationManager {
     }
     const appInstall = await this._repository.findOne({
       user,
-      key
+      key,
     });
     if (appInstall === null) {
       throw Error(`Application [${key}] has not found.`);
