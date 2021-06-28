@@ -1,3 +1,5 @@
+import { MONGO } from '../Metrics/MetricsSenderLoader';
+
 export const loggerOptions = {
   server: process.env.UDP_LOGGER_HOST || '127.0.0.40',
   port: parseInt(process.env.UDP_LOGGER_PORT || '5120', 10),
@@ -8,6 +10,7 @@ export const metricsOptions = {
   port: parseInt(process.env.METRICS_PORT || '4444', 10),
   curlMeasurement: process.env.CURL_METRICS_MEASUREMENT || 'monolith',
   processMeasurement: process.env.PROCESS_METRICS_MEASUREMENT || 'connectors',
+  metricsService: process.env.METRICS_SERVICE || MONGO,
 };
 
 export const storageOptions = {
