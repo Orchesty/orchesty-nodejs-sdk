@@ -1,8 +1,6 @@
 export interface IResponseDto {
-    getBody(): string;
-    getJsonBody(): unknown;
-    getResponseCode(): number;
-    getReason(): string|undefined;
-
-    setBody(body: string): void;
+    readonly body: string;
+    readonly jsonBody: unknown;
+    readonly responseCode: number;
+    readonly reason: string|undefined;
 }

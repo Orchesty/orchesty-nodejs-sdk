@@ -3,10 +3,10 @@ import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto implements IResponseDto {
   constructor(
-    private _body: string,
-    private _code: number,
+    private readonly _body: string,
+    private readonly _code: number,
     private readonly _headers: Headers,
-    private _reason?: string,
+    private readonly _reason?: string,
   ) {
   }
 
@@ -14,23 +14,19 @@ export default class ResponseDto implements IResponseDto {
     return this._headers;
   }
 
-  getBody(): string {
+  get body(): string {
     return this._body;
   }
 
-  getJsonBody(): unknown {
+  get jsonBody(): unknown {
     return JSON.parse(this._body);
   }
 
-  getReason(): string | undefined {
+  get reason(): string | undefined {
     return this._reason;
   }
 
-  getResponseCode(): number {
+  get responseCode(): number {
     return this._code;
-  }
-
-  setBody(body: string): void {
-    this._body = body;
   }
 }

@@ -2,7 +2,7 @@
 import * as os from 'os';
 import { Sender } from 'metrics-sender/dist/lib/udp/Sender';
 import { Request } from 'express';
-import ProcessDTO from '../Utils/ProcessDTO';
+import ProcessDto from '../Utils/ProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import * as headers from '../Utils/Headers';
 import { loggerOptions } from '../Config/Config';
@@ -142,17 +142,17 @@ export class Logger {
 
     /**
      *
-     * @param {ProcessDTO} dto
+     * @param {ProcessDto} dto
      * @param {Error} err
      * @return {ILogContext}
      */
-    public static ctxFromDto(dto: ProcessDTO, err?: Error): ILogContext {
+    public static ctxFromDto(dto: ProcessDto, err?: Error): ILogContext {
       const ctx: ILogContext = {
-        node_id: headers.getNodeId(dto.getHeaders()),
-        correlation_id: headers.getCorrelationId(dto.getHeaders()),
-        process_id: headers.getProcessId(dto.getHeaders()),
-        parent_id: headers.getParentId(dto.getHeaders()),
-        sequence_id: headers.getSequenceId(dto.getHeaders()),
+        node_id: headers.getNodeId(dto.headers),
+        correlation_id: headers.getCorrelationId(dto.headers),
+        process_id: headers.getProcessId(dto.headers),
+        parent_id: headers.getParentId(dto.headers),
+        sequence_id: headers.getSequenceId(dto.headers),
       };
 
       if (err) {

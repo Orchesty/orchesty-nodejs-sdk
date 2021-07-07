@@ -1,13 +1,13 @@
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
-import ProcessDTO from '../../lib/Utils/ProcessDTO';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBatch implements ICommonNode {
   getName(): string {
     return 'testbatch';
   }
 
-  processAction(dto: ProcessDTO): Promise<ProcessDTO> {
-    dto.setData('{dataTest: testValue}');
+  processAction(dto: ProcessDto): Promise<ProcessDto> {
+    dto.data = '{dataTest: testValue}';
     dto.setBatchCursor('testCursor');
     return Promise.resolve(dto);
   }

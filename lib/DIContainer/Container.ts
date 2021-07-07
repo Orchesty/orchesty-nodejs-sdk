@@ -6,26 +6,7 @@ import { ICommonNode } from '../Commons/ICommonNode';
 import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
 
-interface IContainer {
-
-  has(name: string): boolean;
-
-  get(name: string): any;
-
-  getAllByPrefix(prefix: string): any[];
-
-  set(name: string, service: any): void;
-
-  setConnector(service: any): void;
-
-  setCustomNode(service: any): void;
-
-  setApplication(service: IApplication): void;
-
-  setBatch(service: any): void;
-}
-
-export default class DIContainer implements IContainer {
+export default class DIContainer {
   private _services: Map<string, any>;
 
   constructor() {

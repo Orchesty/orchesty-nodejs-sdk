@@ -10,26 +10,21 @@ describe('test for ResponseDto', () => {
   });
 
   it('getBody', () => {
-    expect(responseDto.getBody()).toEqual(JSON.stringify(jsonBody));
+    expect(responseDto.body).toEqual(JSON.stringify(jsonBody));
   });
 
   it('getJsonBody', () => {
-    expect(responseDto.getJsonBody()).toEqual({
+    expect(responseDto.jsonBody).toEqual({
       param1: 1,
       param2: 2,
     });
   });
 
   it('getReason', () => {
-    expect(responseDto.getReason()).toEqual('testReason');
+    expect(responseDto.reason).toEqual('testReason');
   });
 
   it('getResponseCode', () => {
-    expect(responseDto.getResponseCode()).toEqual(999);
-  });
-
-  it('getReason', () => {
-    responseDto.setBody('');
-    expect(responseDto.getBody()).toEqual('');
+    expect(responseDto.responseCode).toEqual(999);
   });
 });

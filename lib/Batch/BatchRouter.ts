@@ -1,7 +1,7 @@
 import express from 'express';
 import CommonRouter from '../Commons/CommonRouter';
 import { ICommonNode } from '../Commons/ICommonNode';
-import { createProcessDTO, createSuccessResponse } from '../Utils/Router';
+import { createProcessDto, createSuccessResponse } from '../Utils/Router';
 import CommonLoader from '../Commons/CommonLoader';
 
 export const BATCH_PREFIX = 'hbpf.batch';
@@ -18,7 +18,7 @@ export default class BatchRouter extends CommonRouter {
     this.app.route('/batch/:name/action')
       .post(async (req, res, next) => {
         const batch = this._loader.get(BATCH_PREFIX, req.params.name) as ICommonNode;
-        const dto = await batch.processAction(createProcessDTO(req));
+        const dto = await batch.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);
         next();

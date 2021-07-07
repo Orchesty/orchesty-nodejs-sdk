@@ -1,6 +1,6 @@
 import express from 'express';
 import CommonRouter from '../Commons/CommonRouter';
-import { createProcessDTO, createSuccessResponse } from '../Utils/Router';
+import { createProcessDto, createSuccessResponse } from '../Utils/Router';
 import CommonLoader from '../Commons/CommonLoader';
 import { ICommonNode } from '../Commons/ICommonNode';
 
@@ -17,7 +17,7 @@ export default class ConnectorRouter extends CommonRouter {
     configureRoutes(): express.Application {
       this.app.route('/connector/:name/action').post(async (req, res, next) => {
         const connector = this._loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;
-        const dto = await connector.processAction(createProcessDTO(req));
+        const dto = await connector.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);
         next();
@@ -35,7 +35,7 @@ export default class ConnectorRouter extends CommonRouter {
       // TODO: Deprecated
       this.app.route('/connector/:name/webhook').post(async (req, res, next) => {
         const connector = this._loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;
-        const dto = await connector.processAction(createProcessDTO(req));
+        const dto = await connector.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);
         next();

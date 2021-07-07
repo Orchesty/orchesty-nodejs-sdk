@@ -1,66 +1,66 @@
-import { HeaderInit } from 'node-fetch';
+import { HeaderInit, Headers } from 'node-fetch';
 import { IRequestDto } from '../IRequestDto';
-import ProcessDTO from '../../Utils/ProcessDTO';
+import ProcessDto from '../../Utils/ProcessDto';
 import HttpMethods from '../HttpMethods';
 
 export default class RequestDto implements IRequestDto {
-    private _timeout: number;
+  private _timeout: number;
 
-    constructor(
-        private _url: string,
-        private _method: HttpMethods,
-        private _body?: string,
-        private _headers?: HeaderInit,
-        private _debugInfo?: ProcessDTO,
-    ) {
-      this._timeout = 10000; // 10sec as a default timeout
-    }
+  constructor(
+    private _url: string,
+    private _method: HttpMethods,
+    private _body: string = '',
+    private _headers: HeaderInit = new Headers(),
+    private _debugInfo?: ProcessDto,
+  ) {
+    this._timeout = 10000; // 10sec as a default timeout
+  }
 
-    getBody(): string | undefined {
-      return this._body;
-    }
+  get body(): string {
+    return this._body;
+  }
 
-    getHeaders(): HeaderInit | undefined {
-      return this._headers;
-    }
+  set body(body: string) {
+    this._body = body;
+  }
 
-    getMethod(): HttpMethods {
-      return this._method;
-    }
+  get headers(): HeaderInit {
+    return this._headers;
+  }
 
-    getUrl(): string {
-      return this._url;
-    }
+  set headers(headers: HeaderInit) {
+    this._headers = headers;
+  }
 
-    setBody(body: string): void {
-      this._body = body;
-    }
+  get method(): HttpMethods {
+    return this._method;
+  }
 
-    setHeaders(headers: HeaderInit): void {
-      this._headers = headers;
-    }
+  set method(method: HttpMethods) {
+    this._method = method;
+  }
 
-    setMethod(method: HttpMethods): void {
-      this._method = method;
-    }
+  get url(): string {
+    return this._url;
+  }
 
-    setUrl(url: string): void {
-      this._url = url;
-    }
+  set url(url: string) {
+    this._url = url;
+  }
 
-    setTimeout(ms: number): void {
-      this._timeout = ms;
-    }
+  set timeout(ms: number) {
+    this._timeout = ms;
+  }
 
-    getTimeout(): number {
-      return this._timeout;
-    }
+  get timeout(): number {
+    return this._timeout;
+  }
 
-    getDebugInfo(): ProcessDTO | undefined {
-      return this._debugInfo;
-    }
+  get debugInfo(): ProcessDto | undefined {
+    return this._debugInfo;
+  }
 
-    setDebugInfo(dto: ProcessDTO): void {
-      this._debugInfo = dto;
-    }
+  set debugInfo(dto: ProcessDto | undefined) {
+    this._debugInfo = dto;
+  }
 }
