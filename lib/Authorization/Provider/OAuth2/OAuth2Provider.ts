@@ -4,6 +4,7 @@ import { IOAuth2Provider } from './IOAuth2Provider';
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { IOAuth2Dto } from '../Dto/IOAuth2Dto';
 import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
+import { decode, encode } from '../../../Utils/Base64';
 
 export const REFRESH_TOKEN = 'refreshToken';
 export const ACCESS_TOKEN = 'accessToken';
@@ -60,14 +61,14 @@ export class OAuth2Provider extends OAuthProviderAbstract implements IOAuth2Prov
     const newAccessToken = await accessToken.refresh();
 
     return OAuth2Provider._convertAccessToken(newAccessToken);
-  }
+  };
 
   public static stateEncode(dto: IOAuth2Dto): string {
-    return Buffer.from(`${dto.getUser()}:${dto.getApplicationKey()}`).toString('base64url');
+    return encode(`${dto.getUser()}:${dto.getApplicationKey()}`, 'base64url');
   }
 
   public static stateDecode(state: string): string[] {
-    const params = Buffer.from(state, 'base64url').toString().split(':');
+    const params = decode(state, 'base64url').split(':');
 
     return [params[0] ?? '', params[1] ?? ''];
   }

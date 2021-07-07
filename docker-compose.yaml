@@ -8,6 +8,8 @@ services:
         working_dir: /var/www
         volumes:
             - ./:/var/www
+        ports:
+            - ${DEV_IP}:8080:8080
         environment:
             APP_ENV: debug
             UDP_LOGGER_HOST: logstash

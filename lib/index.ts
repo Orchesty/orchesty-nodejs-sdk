@@ -27,6 +27,7 @@ import Influx from './Metrics/Impl/Influx';
 export const routes: CommonRouter[] = [];
 const container = new DIContainer();
 const expressApp: express.Application = express();
+expressApp.use(express.json());
 expressApp.use(metricsHandler);
 
 export function initiateContainer(): void {

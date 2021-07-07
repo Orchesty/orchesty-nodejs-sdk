@@ -24,11 +24,11 @@ export class ApplicationRouter extends CommonRouter {
     });
 
     this.app.route('/applications/:name/sync/:method')
-      .get((req, res) => {
-        res.json(this._manager.runSynchronousAction(req.params.name, req.params.method, req));
+      .get(async (req, res) => {
+        res.json(await this._manager.runSynchronousAction(req.params.name, req.params.method, req));
       })
-      .post((req, res) => {
-        res.json(this._manager.runSynchronousAction(req.params.name, req.params.method, req));
+      .post(async (req, res) => {
+        res.json(await this._manager.runSynchronousAction(req.params.name, req.params.method, req));
       });
 
     this.app.route('/applications/:name/users/:user/authorize').get(async (req, res) => {

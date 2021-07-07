@@ -42,12 +42,13 @@ describe('ApplicationManager tests', () => {
   }
 
   beforeAll(async () => {
+    dbClient = container.get(CoreServices.MONGO);
+    const db = await dbClient.db();
     try {
-      dbClient = container.get(CoreServices.MONGO);
-      const db = await dbClient.db();
       await db.dropCollection(ApplicationInstall.getCollection());
-      // eslint-disable-next-line no-empty
-    } catch {}
+    } catch (e) {
+      // Ignore non-existent
+    }
   });
 
   beforeEach(async () => {
