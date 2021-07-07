@@ -37,7 +37,7 @@ export default class MongoDbClient {
     return this._client.db(name);
   }
 
-  public async getRepository(className: ClassType<IDocument>): Promise<Repository<unknown>> {
+  public async getRepository<T extends IDocument>(className: ClassType<T>): Promise<Repository<T>> {
     if (!this._client.isConnected()) {
       await this.reconnect();
     }
