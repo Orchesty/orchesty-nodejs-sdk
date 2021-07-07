@@ -13,7 +13,7 @@ export interface IApplication extends IName {
     method: HttpMethods,
     url?: string,
     data?: string,
-  ): RequestDto;
+  ): RequestDto | Promise<RequestDto>;
 
   getAuthorizationType(): AuthorizationTypeEnum;
 

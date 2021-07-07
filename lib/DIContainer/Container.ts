@@ -68,15 +68,31 @@ export default class DIContainer implements IContainer {
     this.set(`${CONNECTOR_PREFIX}.${service.getName()}`, service);
   }
 
+  getConnector(name: string): ICommonNode {
+    return this.get(`${CONNECTOR_PREFIX}.${name}`);
+  }
+
   setCustomNode(service: ICommonNode): void {
     this.set(`${CUSTOM_NODE_PREFIX}.${service.getName()}`, service);
+  }
+
+  getCustomNode(name: string): ICommonNode {
+    return this.get(`${CUSTOM_NODE_PREFIX}.${name}`);
   }
 
   setApplication(service: IApplication): void {
     this.set(`${APPLICATION_PREFIX}.${service.getName()}`, service);
   }
 
+  getApplication(name: string): IApplication {
+    return this.get(`${APPLICATION_PREFIX}.${name}`);
+  }
+
   setBatch(service: ICommonNode): void {
     this.set(`${BATCH_PREFIX}.${service.getName()}`, service);
+  }
+
+  getBatch(name: string): ICommonNode {
+    return this.get(`${BATCH_PREFIX}.${name}`);
   }
 }

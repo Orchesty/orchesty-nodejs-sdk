@@ -40,7 +40,7 @@ export default abstract class ApplicationAbstract implements IApplication {
         method: string,
         url?: string,
         data?: string
-    ): RequestDto;
+    ): RequestDto | Promise<RequestDto>;
 
     public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
       const settings = applicationInstall.getSettings()[FORM] ?? [];

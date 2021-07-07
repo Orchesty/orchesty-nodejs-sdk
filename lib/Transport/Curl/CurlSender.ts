@@ -24,7 +24,7 @@ export default class CurlSender {
         CurlSender._log(dto, response, Severity.DEBUG, body);
       }
 
-      return new ResponseDto(body, response.status, response.statusText);
+      return new ResponseDto(body, response.status, response.headers, response.statusText);
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       logger.error(e);

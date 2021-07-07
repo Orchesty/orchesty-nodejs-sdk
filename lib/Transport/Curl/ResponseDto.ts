@@ -1,7 +1,17 @@
+import { Headers } from 'node-fetch';
 import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto implements IResponseDto {
-  constructor(private _body: string, private _code: number, private _reason?: string) {
+  constructor(
+    private _body: string,
+    private _code: number,
+    private readonly _headers: Headers,
+    private _reason?: string,
+  ) {
+  }
+
+  get headers(): Headers {
+    return this._headers;
   }
 
   getBody(): string {
@@ -12,7 +22,7 @@ export default class ResponseDto implements IResponseDto {
     return JSON.parse(this._body);
   }
 
-  getReason(): string|undefined {
+  getReason(): string | undefined {
     return this._reason;
   }
 

@@ -2,6 +2,7 @@ import DIContainer from '../Container';
 import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import { getTestContainer } from '../../../test/TestAbstact';
+import { APPLICATION_PREFIX } from '../../Application/ApplicationRouter';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -14,6 +15,7 @@ jest.mock('../../Logger/Logger', () => ({
 
 const container = getTestContainer();
 const testConnector = container.get(`${CONNECTOR_PREFIX}.test`);
+const testApp = container.get(`${APPLICATION_PREFIX}.test`);
 
 describe('Test DIContainer', () => {
   it('test set/has service', () => {
@@ -64,6 +66,18 @@ describe('Test DIContainer', () => {
 
     expect(cont.get(`${CUSTOM_NODE_PREFIX}.${testConnector.getName()}`))
       .toEqual(testConnector);
+    expect(cont.getCustomNode(testConnector.getName()))
+      .toEqual(testConnector);
+  });
+
+  it('test set/get Application service', () => {
+    const cont = new DIContainer();
+    cont.setApplication(testApp);
+
+    expect(cont.get(`${APPLICATION_PREFIX}.${testApp.getName()}`))
+      .toEqual(testApp);
+    expect(cont.getApplication(testApp.getName()))
+      .toEqual(testApp);
   });
 
   it('test set/getAllByPrefix services', () => {
