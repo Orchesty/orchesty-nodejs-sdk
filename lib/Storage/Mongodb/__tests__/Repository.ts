@@ -124,12 +124,12 @@ describe('Tests for repository', () => {
 
     (appInstallMongo as ClassWithoutDeleted).edited = true;
 
-    await repo.upsert(appInstallMongo);
+    await repo.upsert(appInstallMongo as ClassWithoutDeleted);
     const appInstallEdited = await repo.findById(appKey);
 
     expect((appInstallEdited as ClassWithoutDeleted).edited).toBeTruthy();
     expect(appInstallEdited).toBeInstanceOf(ClassWithoutDeleted);
-    await repo.remove(appInstallEdited);
+    await repo.remove(appInstallEdited as ClassWithoutDeleted);
   });
 
   it('repository - findMany', async () => {

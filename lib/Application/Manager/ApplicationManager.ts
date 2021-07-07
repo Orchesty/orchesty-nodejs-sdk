@@ -92,7 +92,7 @@ export default class ApplicationManager {
 
   private async _loadApplicationInstall(key: string, user: string): Promise<ApplicationInstall> {
     if (!this._repository) {
-      this._repository = await this._client.getRepository(ApplicationInstall) as Repository<ApplicationInstall>;
+      this._repository = await this._client.getRepository(ApplicationInstall);
     }
     const appInstall = await this._repository.findOne({
       user,
