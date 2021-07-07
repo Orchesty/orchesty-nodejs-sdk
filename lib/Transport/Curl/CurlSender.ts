@@ -3,19 +3,20 @@ import RequestDto from './RequestDto';
 import logger, { Logger } from '../../Logger/Logger';
 import ResponseDto from './ResponseDto';
 import {
-  getCurrentMetrics, getTimes, IStartMetrics, sendCurlMetrics,
-} from '../../Metrics/Metrics';
-import {
   APPLICATION, CORRELATION_ID, NODE_ID, USER,
 } from '../../Utils/Headers';
 import Severity from '../../Logger/Severity';
+import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 
 export default class CurlSender {
+  constructor(private _metrics: Metrics) {
+  }
+
   public send = async (dto: RequestDto): Promise<ResponseDto> => {
-    const startTime = getCurrentMetrics();
+    const startTime = Metrics.getCurrentMetrics();
     try {
       const response = await fetch(dto.getUrl(), CurlSender._createInitFromDto(dto));
-      await CurlSender._sendMetrics(dto, startTime);
+      await this._sendMetrics(dto, startTime);
       const body = await response.text();
       if (!response.ok) {
         CurlSender._log(dto, response, Severity.ERROR, body);
@@ -25,7 +26,7 @@ export default class CurlSender {
 
       return new ResponseDto(body, response.status, response.statusText);
     } catch (e) {
-      await CurlSender._sendMetrics(dto, startTime);
+      await this._sendMetrics(dto, startTime);
       logger.error(e);
       return Promise.reject(e);
     }
@@ -57,12 +58,12 @@ export default class CurlSender {
     );
   }
 
-  private static async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
+  private async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
     const info = dto.getDebugInfo();
     try {
       if (info) {
-        const times = getTimes(startTimes);
-        await sendCurlMetrics(
+        const times = Metrics.getTimes(startTimes);
+        await this._metrics.sendCurlMetrics(
           times,
           info.getHeader(NODE_ID),
           info.getHeader(CORRELATION_ID),

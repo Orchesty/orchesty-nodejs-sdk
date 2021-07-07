@@ -1,101 +1,107 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ITagsMap, Metrics } from 'metrics-sender/dist/lib/metrics/Metrics';
-import { ICpuTimes, getCpuTimes, getCurrentTimestamp } from '../Utils/SystemUsage';
+import { ITagsMap } from 'metrics-sender/dist/lib/metrics/Metrics';
+import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
+import MetricsSenderLoader from './MetricsSenderLoader';
 
 export interface IStartMetrics {
-    timestamp: bigint,
-    cpu: ICpuTimes,
+  timestamp: bigint,
+  cpu: ICpuTimes,
 }
 
 export interface ITimesMetrics {
-    requestDuration: bigint,
-    userTime: number,
-    kernelTime: number,
+  requestDuration: bigint,
+  userTime: number,
+  kernelTime: number,
 }
 
-export async function sendProcessMetrics(
-  timeData: ITimesMetrics,
-  topologyId?: string,
-  nodeId?: string,
-  correlationId?: string,
-): Promise<string|void> {
-  const tags: ITagsMap = {};
-  if (topologyId) {
-    tags.topology_id = topologyId;
-  }
-  if (nodeId) {
-    tags.node_id = nodeId;
-  }
-  if (correlationId) {
-    tags.correlation_id = correlationId;
+export default class Metrics {
+  constructor(private _loader: MetricsSenderLoader) {
   }
 
-  const fields: ITagsMap = {
-    fpm_request_total_duration: String(timeData.requestDuration),
-    fpm_cpu_user_time: String(timeData.userTime),
-    fpm_cpu_kernel_time: String(timeData.kernelTime),
-  };
+  public async sendProcessMetrics(
+    timeData: ITimesMetrics,
+    topologyId?: string,
+    nodeId?: string,
+    correlationId?: string,
+  ): Promise<boolean> {
+    const tags: ITagsMap = {};
+    if (topologyId) {
+      tags.topology_id = topologyId;
+    }
+    if (nodeId) {
+      tags.node_id = nodeId;
+    }
+    if (correlationId) {
+      tags.correlation_id = correlationId;
+    }
 
-  try {
-    return await new Metrics(metricsOptions.processMeasurement, tags, metricsOptions.server, metricsOptions.port)
-      .send(fields);
-  } catch (e) {
-    logger.error(e);
-    return undefined;
-  }
-}
+    const fields: ITagsMap = {
+      fpm_request_total_duration: String(timeData.requestDuration),
+      fpm_cpu_user_time: String(timeData.userTime),
+      fpm_cpu_kernel_time: String(timeData.kernelTime),
+    };
 
-export async function sendCurlMetrics(
-  timeData: ITimesMetrics,
-  nodeId?: string,
-  correlationId?: string,
-  user?: string,
-  appKey?: string,
-): Promise<string|void> {
-  const tags: ITagsMap = {};
-  if (user) {
-    tags.user_id = user;
-  }
-  if (appKey) {
-    tags.application_id = appKey;
-  }
-  if (nodeId) {
-    tags.node_id = nodeId;
-  }
-  if (correlationId) {
-    tags.correlation_id = correlationId;
+    try {
+      return await this._loader.getSender()
+        .send(metricsOptions.processMeasurement, fields, tags);
+    } catch (e) {
+      logger.error(e);
+      return false;
+    }
   }
 
-  const fields: ITagsMap = {
-    user_id: user ?? '',
-    application_id: appKey ?? '',
-    sent_request_total_duration: String(timeData.requestDuration),
-  };
+  public async sendCurlMetrics(
+    timeData: ITimesMetrics,
+    nodeId?: string,
+    correlationId?: string,
+    user?: string,
+    appKey?: string,
+  ): Promise<boolean> {
+    const tags: ITagsMap = {};
+    if (user) {
+      tags.user_id = user;
+    }
+    if (appKey) {
+      tags.application_id = appKey;
+    }
+    if (nodeId) {
+      tags.node_id = nodeId;
+    }
+    if (correlationId) {
+      tags.correlation_id = correlationId;
+    }
 
-  try {
-    return await new Metrics(metricsOptions.curlMeasurement, tags, metricsOptions.server, metricsOptions.port)
-      .send(fields);
-  } catch (e) {
-    logger.error(e);
-    return undefined;
+    const fields: ITagsMap = {
+      user_id: user ?? '',
+      application_id: appKey ?? '',
+      sent_request_total_duration: String(timeData.requestDuration),
+    };
+
+    try {
+      return await this._loader.getSender()
+        .send(metricsOptions.processMeasurement, fields, tags);
+    } catch (e) {
+      logger.error(e);
+      return false;
+    }
   }
-}
 
-export function getCurrentMetrics(): IStartMetrics {
-  return {
-    timestamp: getCurrentTimestamp(),
-    cpu: getCpuTimes(),
-  };
-}
+  public static getCurrentMetrics(): IStartMetrics {
+    return {
+      timestamp: getCurrentTimestamp(),
+      cpu: getCpuTimes(),
+    };
+  }
 
-export function getTimes(startMetrics: IStartMetrics): ITimesMetrics {
-  const endMetrics = getCurrentMetrics();
+  public static getTimes(startMetrics: IStartMetrics): ITimesMetrics {
+    const endMetrics = this.getCurrentMetrics();
 
-  return {
-    requestDuration: endMetrics.timestamp - startMetrics.timestamp,
-    userTime: endMetrics.cpu.cpuUserCodeTime - startMetrics.cpu.cpuUserCodeTime,
-    kernelTime: endMetrics.cpu.cpuKernelCodeTime - startMetrics.cpu.cpuKernelCodeTime,
-  };
+    return {
+      requestDuration: endMetrics.timestamp - startMetrics.timestamp,
+      userTime: endMetrics.cpu.cpuUserCodeTime - startMetrics.cpu.cpuUserCodeTime,
+      kernelTime: endMetrics.cpu.cpuKernelCodeTime - startMetrics.cpu.cpuKernelCodeTime,
+    };
+  }
 }

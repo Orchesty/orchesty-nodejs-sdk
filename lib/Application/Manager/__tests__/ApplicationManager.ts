@@ -24,7 +24,8 @@ jest.mock('../../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  Logger: jest.fn().mockImplementation(() => ({})),
+  Logger: jest.fn()
+    .mockImplementation(() => ({})),
 }));
 
 jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
@@ -41,15 +42,20 @@ describe('ApplicationManager tests', () => {
   }
 
   beforeAll(async () => {
-    dbClient = container.get(CoreServices.MONGO);
-    const db = await dbClient.db();
-    await db.dropCollection(ApplicationInstall.getCollection());
+    try {
+      dbClient = container.get(CoreServices.MONGO);
+      const db = await dbClient.db();
+      await db.dropCollection(ApplicationInstall.getCollection());
+      // eslint-disable-next-line no-empty
+    } catch {}
   });
 
   beforeEach(async () => {
     appManager = container.get(CoreServices.APP_MANAGER);
     appInstall = new ApplicationInstall();
-    appInstall.setUser('user').setKey('test').setSettings({ key: 'value' });
+    appInstall.setUser('user')
+      .setKey('test')
+      .setSettings({ key: 'value' });
 
     const repo = await dbClient.getRepository(ApplicationInstall);
     await repo.insert(appInstall);
@@ -58,7 +64,10 @@ describe('ApplicationManager tests', () => {
     appInstallOAuth
       .setUser('user')
       .setKey('oauth2application')
-      .setSettings({ key: 'value', [AUTHORIZATION_SETTINGS]: { [FRONTEND_REDIRECT_URL]: 'url' } });
+      .setSettings({
+        key: 'value',
+        [AUTHORIZATION_SETTINGS]: { [FRONTEND_REDIRECT_URL]: 'url' },
+      });
 
     await repo.insert(appInstallOAuth);
   });
@@ -74,20 +83,24 @@ describe('ApplicationManager tests', () => {
   });
 
   it('applications', () => {
-    expect(appManager.getApplications()).toEqual(['test', 'oauth2application']);
+    expect(appManager.getApplications())
+      .toEqual(['test', 'oauth2application']);
   });
 
   it('getApplication', () => {
-    expect(appManager.getApplication('test')).toBeInstanceOf(TestBasicApplication);
+    expect(appManager.getApplication('test'))
+      .toBeInstanceOf(TestBasicApplication);
   });
 
   it('getSynchronousActions', () => {
-    expect(appManager.getSynchronousActions('test')).toEqual(['testSyncMethod']);
+    expect(appManager.getSynchronousActions('test'))
+      .toEqual(['testSyncMethod']);
   });
 
   it('runSynchronousAction', () => {
     expect(appManager.runSynchronousAction('test', 'testSyncMethod',
-      mockRequest())).toEqual('{"param1":"p1","param2":"p2"}');
+      mockRequest()))
+      .toEqual('{"param1":"p1","param2":"p2"}');
   });
 
   it('saveApplicationSettings', async () => {
@@ -96,14 +109,20 @@ describe('ApplicationManager tests', () => {
     };
     const dbInstall = await appManager.saveApplicationSettings('test', 'user', appSettings);
 
-    expect(dbInstall.getId() !== '').toBeTruthy();
-    expect(dbInstall.getSettings()).toEqual({ key: 'value' });
+    expect(dbInstall.getId() !== '')
+      .toBeTruthy();
+    expect(dbInstall.getSettings())
+      .toEqual({ key: 'value' });
   });
 
   it('saveApplicationPassword', async () => {
     const dbInstall = await appManager.saveApplicationPassword('test', 'user', 'passs');
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    expect(dbInstall.getSettings()).toEqual({ key: 'value', authorization_settings: { password: 'passs' } });
+    expect(dbInstall.getSettings())
+      .toEqual({
+        key: 'value',
+        [AUTHORIZATION_SETTINGS]: { password: 'passs' },
+      });
   });
 
   it('authorizationApplication', async () => {
@@ -118,7 +137,8 @@ describe('ApplicationManager tests', () => {
     const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
 
     const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
-    expect(dbInstall).toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
+    expect(dbInstall)
+      .toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
   });
 
   it('saveAuthorizationToken', async () => {
@@ -136,6 +156,7 @@ describe('ApplicationManager tests', () => {
       'user',
       { testToken: 'tokenTest' },
     );
-    expect(frontendUrl).toEqual('url');
+    expect(frontendUrl)
+      .toEqual('url');
   });
 });

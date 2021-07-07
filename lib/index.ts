@@ -6,7 +6,7 @@ import CommonRouter from './Commons/CommonRouter';
 import logger from './Logger/Logger';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import {
-  appOptions, cryptOptions, pipesOptions, storageOptions,
+  appOptions, cryptOptions, metricsOptions, pipesOptions, storageOptions,
 } from './Config/Config';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
@@ -19,6 +19,10 @@ import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import CurlSender from './Transport/Curl/CurlSender';
 import BatchRouter from './Batch/BatchRouter';
 import CoreServices from './DIContainer/CoreServices';
+import Metrics from './Metrics/Metrics';
+import MetricsSenderLoader from './Metrics/MetricsSenderLoader';
+import Mongo from './Metrics/Impl/Mongo';
+import Influx from './Metrics/Impl/Influx';
 
 export const routes: CommonRouter[] = [];
 const container = new DIContainer();
@@ -35,7 +39,9 @@ export function initiateContainer(): void {
   const loader = new CommonLoader(container);
   const appManager = new ApplicationManager(mongoDbClient, loader);
   const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
-  const curlSender = new CurlSender();
+  const metricsLoader = new MetricsSenderLoader(metricsOptions.metricsService, new Influx(), new Mongo(mongoDbClient));
+  const metrics = new Metrics(metricsLoader);
+  const curlSender = new CurlSender(metrics);
 
   // Add them to the DIContainer
   container.set(CoreServices.CRYPT_MANAGER, cryptManager);
@@ -44,6 +50,7 @@ export function initiateContainer(): void {
   container.set(CoreServices.APP_MANAGER, appManager);
   container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
   container.set(CoreServices.CURL, curlSender);
+  container.set(CoreServices.METRICS, metrics);
 
   // Configure routes
   routes.push(new ConnectorRouter(expressApp, loader));
