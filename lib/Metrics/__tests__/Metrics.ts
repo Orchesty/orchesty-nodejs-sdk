@@ -1,12 +1,7 @@
-import {
-  getCurrentMetrics,
-  getTimes,
-  IStartMetrics,
-  ITimesMetrics,
-  sendCurlMetrics,
-  sendProcessMetrics,
-} from '../Metrics';
 import { ICpuTimes } from '../../Utils/SystemUsage';
+import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
+import CoreServices from '../../DIContainer/CoreServices';
+import { getTestContainer } from '../../../test/TestAbstact';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -33,9 +28,11 @@ const mockITimesMetrics: ITimesMetrics = {
   kernelTime: 5,
 };
 
+const container = getTestContainer();
+
 describe('Test metrics', () => {
   it('getTimes', () => {
-    const times = getTimes(mockIStartMetrics);
+    const times = Metrics.getTimes(mockIStartMetrics);
     expect(times).toHaveProperty('requestDuration');
     expect(typeof times.requestDuration).toEqual('bigint');
     expect(times).toHaveProperty('userTime');
@@ -45,7 +42,7 @@ describe('Test metrics', () => {
   });
 
   it('getCurrentMetrics', () => {
-    const currentMetrics = getCurrentMetrics();
+    const currentMetrics = Metrics.getCurrentMetrics();
 
     expect(currentMetrics).toHaveProperty('timestamp');
     expect(typeof currentMetrics.timestamp).toEqual('bigint');
@@ -61,7 +58,8 @@ describe('Test metrics', () => {
   });
 
   it('sendCurlMetrics', async () => {
-    const curlMetrics = await sendCurlMetrics(
+    const metrics = container.get(CoreServices.METRICS);
+    const curlMetrics = await metrics.sendCurlMetrics(
       mockITimesMetrics,
       'randomNodeId',
       'randomCorrelationId',
@@ -69,17 +67,18 @@ describe('Test metrics', () => {
       'randomAppKey',
     );
     expect(curlMetrics).toBeDefined();
-    expect(typeof curlMetrics === 'string').toBeTruthy();
+    expect(typeof curlMetrics === 'boolean').toBeTruthy();
   });
 
   it('sendProcessMetrics', async () => {
-    const processMetric = await sendProcessMetrics(
+    const metrics = container.get(CoreServices.METRICS);
+    const processMetric = await metrics.sendProcessMetrics(
       mockITimesMetrics,
       'randomTopologyId',
       'randomNodeId',
       'randomCorrelationId',
     );
     expect(processMetric).toBeDefined();
-    expect(typeof processMetric === 'string').toBeTruthy();
+    expect(typeof processMetric === 'boolean').toBeTruthy();
   });
 });

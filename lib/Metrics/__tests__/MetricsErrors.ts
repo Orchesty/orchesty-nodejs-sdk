@@ -1,4 +1,6 @@
-import { ITimesMetrics, sendCurlMetrics, sendProcessMetrics } from '../Metrics';
+import { ITimesMetrics } from '../Metrics';
+import { getTestContainer } from '../../../test/TestAbstact';
+import CoreServices from '../../DIContainer/CoreServices';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -14,16 +16,20 @@ const mockITimesMetrics: ITimesMetrics = {
   kernelTime: 5,
 };
 
+const container = getTestContainer();
+
 describe('Test metrics', () => {
   it('sendCurlMetrics', async () => {
-    const curlMetrics = await sendCurlMetrics(mockITimesMetrics);
+    const metrics = container.get(CoreServices.METRICS);
+    const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics);
     expect(curlMetrics).toBeDefined();
-    expect(typeof curlMetrics === 'string').toBeTruthy();
+    expect(typeof curlMetrics === 'boolean').toBeTruthy();
   });
 
   it('sendProcessMetrics', async () => {
-    const processMetric = await sendProcessMetrics(mockITimesMetrics);
+    const metrics = container.get(CoreServices.METRICS);
+    const processMetric = await metrics.sendProcessMetrics(mockITimesMetrics);
     expect(processMetric).toBeDefined();
-    expect(typeof processMetric === 'string').toBeTruthy();
+    expect(typeof processMetric === 'boolean').toBeTruthy();
   });
 });

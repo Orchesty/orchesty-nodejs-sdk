@@ -6,6 +6,7 @@ enum CoreServices {
   APP_MANAGER = 'hbpf.core.app_manager',
   OAUTH2_PROVIDER = 'hbpf.core.oauth2_provider',
   CURL = 'hbpf.core.curl_sender',
+  METRICS = 'hbpf.core.metrics',
 }
 
 export default CoreServices;
