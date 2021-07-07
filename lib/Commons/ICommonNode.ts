@@ -1,6 +1,6 @@
-import ProcessDTO from '../Utils/ProcessDTO';
+import ProcessDto from '../Utils/ProcessDto';
 import { IName } from './IName';
 
 export interface ICommonNode extends IName{
-    processAction(dto: ProcessDTO): Promise<ProcessDTO>;
+    processAction(dto: ProcessDto): Promise<ProcessDto>;
 }

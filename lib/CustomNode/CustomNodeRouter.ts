@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import CommonRouter from '../Commons/CommonRouter';
 import CommonLoader from '../Commons/CommonLoader';
-import { createProcessDTO, createSuccessResponse } from '../Utils/Router';
+import { createProcessDto, createSuccessResponse } from '../Utils/Router';
 import { ICommonNode } from '../Commons/ICommonNode';
 
 export const CUSTOM_NODE_PREFIX = 'hbpf.connector';
@@ -14,7 +14,7 @@ export default class CustomNodeRouter extends CommonRouter {
   configureRoutes(): express.Application {
     this.app.route('/custom_node/:name/process').post(async (req, res, next) => {
       const customNode = this._loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
-      const dto = await customNode.processAction(createProcessDTO(req));
+      const dto = await customNode.processAction(createProcessDto(req));
 
       createSuccessResponse(res, dto);
       next();

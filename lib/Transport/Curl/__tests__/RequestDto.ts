@@ -1,6 +1,6 @@
 import RequestDto from '../RequestDto';
 import HttpMethods from '../../HttpMethods';
-import ProcessDTO from '../../../Utils/ProcessDTO';
+import ProcessDto from '../../../Utils/ProcessDto';
 
 describe('RequestDto tests', () => {
   const url = 'https://www.google.com';
@@ -10,50 +10,50 @@ describe('RequestDto tests', () => {
   const requestDto = new RequestDto(url, method, body, header);
 
   it('getBody', () => {
-    expect(requestDto.getBody()).toEqual(body);
+    expect(requestDto.body).toEqual(body);
   });
   it('getHeader', () => {
-    expect(requestDto.getHeaders()).toEqual(header);
+    expect(requestDto.headers).toEqual(header);
   });
   it('getMethod', () => {
-    expect(requestDto.getMethod()).toEqual(method);
+    expect(requestDto.method).toEqual(method);
   });
   it('getUrl', () => {
-    expect(requestDto.getUrl()).toEqual(url);
+    expect(requestDto.url).toEqual(url);
   });
   it('getMethod', () => {
-    expect(requestDto.getTimeout()).toEqual(10000);
+    expect(requestDto.timeout).toEqual(10000);
   });
   it('getUndefinedDebugInfo', () => {
-    expect(requestDto.getDebugInfo()).toEqual(undefined);
+    expect(requestDto.debugInfo).toEqual(undefined);
   });
   it('getDebugInfo', () => {
-    requestDto.setDebugInfo(new ProcessDTO());
-    expect(requestDto.getDebugInfo()).toEqual(new ProcessDTO());
+    requestDto.debugInfo = new ProcessDto();
+    expect(requestDto.debugInfo).toEqual(new ProcessDto());
   });
   it('setBody', () => {
     const newBody = JSON.stringify({ newBody: 'newBody' });
-    requestDto.setBody(newBody);
-    expect(requestDto.getBody()).toEqual(newBody);
+    requestDto.body = newBody;
+    expect(requestDto.body).toEqual(newBody);
   });
   it('setHeaders', () => {
     const newHeader = { newHeaderParam: 'newHeaderParam' };
-    requestDto.setHeaders(newHeader);
-    expect(requestDto.getHeaders()).toEqual(newHeader);
+    requestDto.headers = newHeader;
+    expect(requestDto.headers).toEqual(newHeader);
   });
   it('setMethod', () => {
     const newMethod = HttpMethods.PUT;
-    requestDto.setMethod(newMethod);
-    expect(requestDto.getMethod()).toEqual(newMethod);
+    requestDto.method = newMethod;
+    expect(requestDto.method).toEqual(newMethod);
   });
   it('setUrl', () => {
     const newUrl = 'https://test.cz';
-    requestDto.setUrl(newUrl);
-    expect(requestDto.getUrl()).toEqual(newUrl);
+    requestDto.url = newUrl;
+    expect(requestDto.url).toEqual(newUrl);
   });
   it('setTimeout', () => {
     const newTimeout = 5000;
-    requestDto.setTimeout(newTimeout);
-    expect(requestDto.getTimeout()).toEqual(newTimeout);
+    requestDto.timeout = newTimeout;
+    expect(requestDto.timeout).toEqual(newTimeout);
   });
 });

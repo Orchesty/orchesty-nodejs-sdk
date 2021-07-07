@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { mocked } from 'ts-jest/utils';
-import { createErrorResponse, createProcessDTO, createSuccessResponse } from '../Router';
+import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
 import { Logger } from '../../Logger/Logger';
-import ProcessDTO from '../ProcessDTO';
-import { createKey, NODE_ID } from '../Headers';
+import ProcessDto from '../ProcessDto';
+import { NODE_ID } from '../Headers';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -106,7 +106,7 @@ describe('tests Router Utils', () => {
   it('createSuccessResponse', () => {
     const [statusMock, hasHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(false);
     const res = mockResponse(statusMock, hasHeaderMock, setHeaderMock, jsonMock, sendMock);
-    const dto = new ProcessDTO();
+    const dto = new ProcessDto();
     dto.addHeader(NODE_ID, '123');
 
     createSuccessResponse(res, dto);
@@ -119,7 +119,7 @@ describe('tests Router Utils', () => {
   it('createSuccessResponse exist all headers', () => {
     const [statusMock, hasHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(true);
     const res = mockResponse(statusMock, hasHeaderMock, setHeaderMock, jsonMock, sendMock);
-    const dto = new ProcessDTO();
+    const dto = new ProcessDto();
     dto.addHeader(NODE_ID, '123');
 
     createSuccessResponse(res, dto);
@@ -129,10 +129,10 @@ describe('tests Router Utils', () => {
     expect(setHeaderMock).toBeCalledTimes(1);
   });
 
-  it('createProcessDTO', () => {
+  it('createProcessDto', () => {
     const req = mockRequest();
-    const dto = createProcessDTO(req);
-    expect(dto.getHeader(createKey(NODE_ID))).toEqual('123');
-    expect(dto.getJsonData()).toEqual({ body: 'aaa' });
+    const dto = createProcessDto(req);
+    expect(dto.getHeader(NODE_ID)).toEqual('123');
+    expect(dto.jsonData).toEqual({ body: 'aaa' });
   });
 });

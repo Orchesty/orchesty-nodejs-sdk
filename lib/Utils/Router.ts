@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
-import ProcessDTO from './ProcessDTO';
+import ProcessDto from './ProcessDto';
 import logger, { Logger } from '../Logger/Logger';
-import {
-  createKey, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
-} from './Headers';
+import { RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
 import ResultCode from './ResultCode';
 import { appOptions } from '../Config/Config';
 
@@ -21,8 +19,8 @@ export function createErrorResponse(req: Request, res: Response, e?: Error): voi
   let message = 'Error occurred: unknown reason';
   let responseBody = { result: 'Unknown error', message: 'Unknown error occurred.' };
 
-  if (!res.hasHeader(createKey(RESULT_CODE))) {
-    res.setHeader(createKey(RESULT_CODE), ResultCode.STOP_AND_FAILED);
+  if (!res.hasHeader(RESULT_CODE)) {
+    res.setHeader(RESULT_CODE, ResultCode.STOP_AND_FAILED);
   }
 
   if (e) {
@@ -30,46 +28,46 @@ export function createErrorResponse(req: Request, res: Response, e?: Error): voi
     message = `Error occurred: ${e.message}`;
     responseBody = formatError(e);
 
-    if (appOptions.debug && !res.hasHeader(createKey(RESULT_DETAIL))) {
+    if (appOptions.debug && !res.hasHeader(RESULT_DETAIL)) {
       res.setHeader(
-        createKey(RESULT_DETAIL),
+        RESULT_DETAIL,
         e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')),
       );
     }
   }
 
-  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-    res.setHeader(createKey(RESULT_MESSAGE), message);
+  if (!res.hasHeader(RESULT_MESSAGE)) {
+    res.setHeader(RESULT_MESSAGE, message);
   }
 
   logger.error(message, Logger.ctxFromReq(req));
   res.json(responseBody);
 }
 
-export function createSuccessResponse(res: Response, dto: ProcessDTO): void {
+export function createSuccessResponse(res: Response, dto: ProcessDto): void {
   res.status(200);
 
-  Object.entries(dto.getHeaders()).forEach(([key, value]) => {
+  Object.entries(dto.headers).forEach(([key, value]) => {
     res.setHeader(key, String(value));
   });
 
-  if (!res.hasHeader(createKey(RESULT_CODE))) {
-    res.setHeader(createKey(RESULT_CODE), ResultCode.SUCCESS);
+  if (!res.hasHeader(RESULT_CODE)) {
+    res.setHeader(RESULT_CODE, ResultCode.SUCCESS);
   }
 
-  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-    res.setHeader(createKey(RESULT_MESSAGE), 'Processed successfully.');
+  if (!res.hasHeader(RESULT_MESSAGE)) {
+    res.setHeader(RESULT_MESSAGE, 'Processed successfully.');
   }
 
   logger.debug('Request successfully processed.', Logger.ctxFromDto(dto));
-  res.send(dto.getData());
+  res.send(dto.data);
 }
 
-export function createProcessDTO(req: Request): ProcessDTO {
-  const dto = new ProcessDTO();
+export function createProcessDto(req: Request): ProcessDto {
+  const dto = new ProcessDto();
 
-  dto.setData(req.body);
-  dto.setHeaders(req.headers);
+  dto.data = req.body;
+  dto.headers = req.headers;
 
   return dto;
 }

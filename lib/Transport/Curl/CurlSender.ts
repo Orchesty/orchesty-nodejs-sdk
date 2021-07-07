@@ -15,7 +15,7 @@ export default class CurlSender {
   public send = async (dto: RequestDto): Promise<ResponseDto> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
-      const response = await fetch(dto.getUrl(), CurlSender._createInitFromDto(dto));
+      const response = await fetch(dto.url, CurlSender._createInitFromDto(dto));
       await this._sendMetrics(dto, startTime);
       const body = await response.text();
       if (!response.ok) {
@@ -34,20 +34,19 @@ export default class CurlSender {
 
   private static _createInitFromDto(dto: RequestDto): RequestInit {
     return {
-      method: dto.getMethod(),
-      headers: dto.getHeaders(),
-      body: dto.getBody(),
-      timeout: dto.getTimeout(),
+      method: dto.method,
+      headers: dto.headers,
+      body: dto.body,
+      timeout: dto.timeout,
     };
   }
 
-  private static _log(req: RequestDto, res: Response, level: string, body?: string): void {
+  private static _log({ debugInfo }: RequestDto, res: Response, level: string, body?: string): void {
     let message = 'Request success.';
     if (res.status !== 200) {
       message = 'Request failed.';
     }
 
-    const debugInfo = req.getDebugInfo();
     logger.log(
       level,
       `${message}
@@ -59,7 +58,7 @@ export default class CurlSender {
   }
 
   private async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
-    const info = dto.getDebugInfo();
+    const info = dto.debugInfo;
     try {
       if (info) {
         const times = Metrics.getTimes(startTimes);

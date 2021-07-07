@@ -9,7 +9,7 @@ import {
   REPEAT_INTERVAL,
   REPEAT_MAX_HOPS,
 } from '../Utils/Headers';
-import ProcessDTO from '../Utils/ProcessDTO';
+import ProcessDto from '../Utils/ProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import logger, { Logger } from '../Logger/Logger';
 
@@ -19,10 +19,9 @@ function hasRepeaterHeaders(headers: HttpHeaders): boolean {
       || get(REPEAT_INTERVAL, headers) !== undefined;
 }
 
-function setNextHopHeaders(dto: ProcessDTO): void {
-  const headers = dto.getHeaders();
-  const currentHop = getRepeatHops(headers);
-  const maxHop = getRepeaterMaxHops(headers);
+function setNextHopHeaders(dto: ProcessDto): void {
+  const currentHop = getRepeatHops(dto.headers);
+  const maxHop = getRepeaterMaxHops(dto.headers);
 
   if (currentHop < maxHop) {
     dto.incrementRepeaterHop();
@@ -34,7 +33,7 @@ function setNextHopHeaders(dto: ProcessDTO): void {
   logger.debug(
     `Repeater reached with settings: 
       CurrentHop: ${currentHop}, 
-      Interval: ${get(REPEAT_INTERVAL, headers)}, 
+      Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
       MaxHops: ${maxHop}`,
     Logger.ctxFromDto(dto),
   );
@@ -49,7 +48,7 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
   if (err instanceof OnRepeatException) {
     const dto = err.getDto();
 
-    if (!hasRepeaterHeaders(dto.getHeaders())) {
+    if (!hasRepeaterHeaders(dto.headers)) {
       // todo add load repeat settings from mongo
       dto.setRepeater(err.getInterval(), err.getMaxHops(), 0);
     }

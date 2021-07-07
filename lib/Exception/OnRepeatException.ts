@@ -1,22 +1,22 @@
-import ProcessDTO from '../Utils/ProcessDTO';
+import ProcessDto from '../Utils/ProcessDto';
 
 export default class OnRepeatException extends Error {
     private _interval: number;
 
     private _maxHops: number;
 
-    constructor(private _dto: ProcessDTO, message?: string) {
+    constructor(private _dto: ProcessDto, message?: string) {
       super(message);
 
       this._interval = 60000;
       this._maxHops = 10;
     }
 
-    public getDto(): ProcessDTO {
+    public getDto(): ProcessDto {
       return this._dto;
     }
 
-    public setDto(value: ProcessDTO): void {
+    public setDto(value: ProcessDto): void {
       this._dto = value;
     }
 

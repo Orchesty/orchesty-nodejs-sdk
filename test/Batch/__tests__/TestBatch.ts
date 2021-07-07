@@ -1,8 +1,7 @@
 import TestBatch from '../TestBatch';
-import ProcessDTO from '../../../lib/Utils/ProcessDTO';
+import ProcessDto from '../../../lib/Utils/ProcessDto';
 
 describe('Tests for TestBatch', () => {
-
   it('getName', function () {
     const batch = new TestBatch();
     expect(batch.getName()).toEqual('testbatch');
@@ -10,12 +9,11 @@ describe('Tests for TestBatch', () => {
 
   it('processAction', async function () {
     const batch = new TestBatch();
-    const editedDto = await batch.processAction(new ProcessDTO());
-    const headers = editedDto.getHeaders();
+    const editedDto = await batch.processAction(new ProcessDto());
+    const headers = editedDto.headers;
     expect(headers).toEqual({
       "pf-cursor": "testCursor",
       "pf-result-code": "1010"
     })
   });
-
 })
