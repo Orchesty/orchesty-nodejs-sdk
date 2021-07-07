@@ -29,7 +29,7 @@ describe('ApplicationInstall tests', () => {
   });
 
   it('get key', () => {
-    expect(appInstall.getKey()).toEqual('');
+    expect(appInstall.getName()).toEqual('');
   });
 
   it('get toArray', () => {

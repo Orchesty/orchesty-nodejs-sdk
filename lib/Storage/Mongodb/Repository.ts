@@ -5,7 +5,7 @@ import {
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
-import { IQueryFilter } from './Filters/QueryFilterAbstract';
+import { IQueryFilter } from './Filters/AQueryFilter';
 import filters from './Filters';
 
 export default class Repository<T> extends BaseRepo<T> {

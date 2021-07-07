@@ -1,4 +1,4 @@
-import OAuth2ApplicationAbstract from '../../lib/Authorization/Type/OAuth2/OAuth2ApplicationAbstract';
+import AOAuth2Application from '../../lib/Authorization/Type/OAuth2/AOAuth2Application';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Form from '../../lib/Application/Model/Form/Form';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
@@ -8,7 +8,7 @@ import HttpMethods from '../../lib/Transport/HttpMethods';
 import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
 
-export default class TestOAuth2Application extends OAuth2ApplicationAbstract {
+export default class TestOAuth2Application extends AOAuth2Application {
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
 
   public getDescription = (): string => 'Test OAuth2 application';
@@ -37,5 +37,5 @@ export default class TestOAuth2Application extends OAuth2ApplicationAbstract {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getScopes = (applicationInstall: ApplicationInstall): string[] => ['idoklad_api', 'offline_access'];
 
-  protected getScopesSeparator = (): string => ScopeSeparatorEnum.SPACE;
+  protected _getScopesSeparator = (): string => ScopeSeparatorEnum.SPACE;
 }

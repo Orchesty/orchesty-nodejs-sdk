@@ -1,12 +1,12 @@
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
-import { BasicApplicationAbstract } from '../../lib/Authorization/Type/Basic/BasicApplicationAbstract';
+import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import Form from '../../lib/Application/Model/Form/Form';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
 
-export default class TestBasicApplication extends BasicApplicationAbstract {
+export default class TestBasicApplication extends ABasicApplication {
   syncTestSyncMethod(): string {
     return JSON.stringify({
       param1: 'p1',

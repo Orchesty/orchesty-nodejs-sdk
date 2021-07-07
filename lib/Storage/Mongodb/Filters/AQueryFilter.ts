@@ -7,15 +7,14 @@ export interface IQueryFilter {
   active(activate: boolean): void;
 }
 
-export default abstract class QueryFilterAbstract implements IQueryFilter {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+export default abstract class AQueryFilter implements IQueryFilter {
   protected _active = true;
 
   public abstract decorate(type: unknown, query: unknown): void;
 
   public abstract active(activate: boolean): void;
 
-  public getName = (): string => QueryFilterAbstract.getName();
+  public getName = (): string => AQueryFilter.getName();
 
   public static getName(): string {
     return this.name;

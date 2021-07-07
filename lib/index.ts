@@ -2,7 +2,7 @@ import express from 'express';
 import DIContainer from './DIContainer/Container';
 import CommonLoader from './Commons/CommonLoader';
 import ConnectorRouter from './Connector/ConnectorRouter';
-import CommonRouter from './Commons/CommonRouter';
+import ACommonRouter from './Commons/ACommonRouter';
 import logger from './Logger/Logger';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import {
@@ -24,7 +24,7 @@ import MetricsSenderLoader from './Metrics/MetricsSenderLoader';
 import Mongo from './Metrics/Impl/Mongo';
 import Influx from './Metrics/Impl/Influx';
 
-export const routes: CommonRouter[] = [];
+export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
 const expressApp: express.Application = express();
 expressApp.use(express.json());
@@ -40,7 +40,11 @@ export function initiateContainer(): void {
   const loader = new CommonLoader(container);
   const appManager = new ApplicationManager(mongoDbClient, loader);
   const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
-  const metricsLoader = new MetricsSenderLoader(metricsOptions.metricsService, new Influx(), new Mongo(mongoDbClient));
+  const metricsLoader = new MetricsSenderLoader(
+    metricsOptions.metricsService,
+    new Influx(),
+    new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager)),
+  );
   const metrics = new Metrics(metricsLoader);
   const curlSender = new CurlSender(metrics);
 

@@ -11,12 +11,12 @@ services:
         ports:
             - ${DEV_IP}:8080:8080
         environment:
-            APP_ENV: debug
+            # Envs for tests are load from .jest/testEnvs.js
+            JEST_DOCKER: 1
             UDP_LOGGER_HOST: logstash
             UDP_LOGGER_PORT: 5005
-            METRICS_HOST: kapacitor
-            METRICS_PORT: 5005
-            MONGO_DSN: 'mongodb://mongo:27017'
+            METRICS_DSN: 'mongodb://mongo:27017/metrics'
+            MONGO_DSN: 'mongodb://mongo:27017/node-sdk'
         command: sleep infinity
 
     mongo:

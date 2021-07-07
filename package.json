@@ -1,15 +1,15 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.5",
+  "version": "1.0.9",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
-    "test": "APP_ENV=debug jest --coverage",
+    "test": "jest --coverage",
     "lint": "eslint lib/**/*.ts --fix",
     "lint-ci": "eslint lib/**/*.ts",
     "start": "nodemon test/index.ts",
-    "build": "tsc -d"
+    "build": "rm -rf dist && tsc -d"
   },
   "keywords": [],
   "author": "info@hanaboso.com",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.0.0",
+    "@types/node": "^16.0.1",
     "@types/node-fetch": "^2.5.11",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.2",

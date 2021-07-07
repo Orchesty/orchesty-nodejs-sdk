@@ -1,6 +1,6 @@
 import { IOAuth2Dto } from './IOAuth2Dto';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
-import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/ApplicationAbstract';
+import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 
 export default class OAuth2Dto implements IOAuth2Dto {

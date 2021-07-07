@@ -20,7 +20,7 @@ export interface IApplicationArray {
     description: string;
 }
 
-export default abstract class ApplicationAbstract implements IApplication {
+export default abstract class AApplication implements IApplication {
     public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
     public abstract getPublicName(): string;

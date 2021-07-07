@@ -77,6 +77,12 @@
                 "leadingUnderscore": "require"
             },
             {
+                "selector": "memberLike",
+                "modifiers": ["protected"],
+                "format": ["camelCase"],
+                "leadingUnderscore": "require"
+            },
+            {
                 "selector": "typeLike",
                 "format": ["PascalCase"]
             },
@@ -84,6 +90,12 @@
                 "selector": "interface",
                 "format": ["PascalCase"],
                 "prefix": ["I"]
+            },
+            {
+                "selector": "class",
+                "modifiers": ["abstract"],
+                "format": ["PascalCase"],
+                "prefix": ["A"]
             },
             {
                 "selector": [

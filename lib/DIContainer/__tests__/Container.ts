@@ -1,5 +1,4 @@
 import DIContainer from '../Container';
-import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import { getTestContainer } from '../../../test/TestAbstact';
 import { APPLICATION_PREFIX } from '../../Application/ApplicationRouter';
@@ -14,8 +13,8 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 const container = getTestContainer();
-const testConnector = container.get(`${CONNECTOR_PREFIX}.test`);
-const testApp = container.get(`${APPLICATION_PREFIX}.test`);
+const testConnector = container.getConnector('test');
+const testApp = container.getApplication('test');
 
 describe('Test DIContainer', () => {
   it('test set/has service', () => {

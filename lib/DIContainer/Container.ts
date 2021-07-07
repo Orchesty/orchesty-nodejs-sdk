@@ -18,7 +18,7 @@ export default class DIContainer {
       return this._services.get(name);
     }
 
-    throw new Error(`Service with name "${name}" does not exist!`);
+    throw new Error(`Service with name [${name}] does not exist!`);
   }
 
   getAllByPrefix(prefix: string): any[] {
@@ -41,7 +41,7 @@ export default class DIContainer {
     if (!this.has(name)) {
       this._services.set(name, service);
     } else {
-      throw new Error(`Service with name "${name}" already exist!`);
+      throw new Error(`Service with name [${name}] already exist!`);
     }
   }
 

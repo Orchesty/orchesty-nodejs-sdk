@@ -2,7 +2,7 @@ import { IOAuthProvider } from './IOAuthProvider';
 import logger from '../../Logger/Logger';
 import Application from '../../Utils/Application';
 
-export default abstract class OAuthProviderAbstract implements IOAuthProvider {
+export default abstract class AOAuthProvider implements IOAuthProvider {
   constructor(private _backend: string) {
   }
 
@@ -15,6 +15,6 @@ export default abstract class OAuthProviderAbstract implements IOAuthProvider {
 
   public static throwException(message: string, code: number): void {
     logger.error(message);
-    throw new Error(`Message: ${message} code: ${code}`);
+    throw new Error(`Message [${message}] code [${code}]`);
   }
 }

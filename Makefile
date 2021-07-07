@@ -34,7 +34,7 @@ yarn-install:
 	$(DCS) yarn install
 
 yarn-update:
-	$(DCS) yarn up
+	$(DCS) yarn up "**"
 
 lint:
 	$(DCS) yarn lint-ci

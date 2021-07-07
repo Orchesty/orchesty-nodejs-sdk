@@ -1,6 +1,6 @@
-import QueryFilterAbstract from '../QueryFilterAbstract';
+import AQueryFilter from '../AQueryFilter';
 
-export default class Deleted extends QueryFilterAbstract {
+export default class Deleted extends AQueryFilter {
   public active(activate: boolean): void {
     this._active = activate;
   }

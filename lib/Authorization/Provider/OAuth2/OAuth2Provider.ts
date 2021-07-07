@@ -1,5 +1,5 @@
 import { AccessToken, AuthorizationCode } from 'simple-oauth2';
-import OAuthProviderAbstract from '../OAuthProviderAbstract';
+import AOAuthProvider from '../AOAuthProvider';
 import { IOAuth2Provider } from './IOAuth2Provider';
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { IOAuth2Dto } from '../Dto/IOAuth2Dto';
@@ -17,7 +17,7 @@ export interface IToken {
   [key: string]: any;
 }
 
-export class OAuth2Provider extends OAuthProviderAbstract implements IOAuth2Provider {
+export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
   public authorize(dto: OAuth2Dto, scopes: string[], separator: string = ScopeSeparatorEnum.COMMA): string {
     let state = '';
     if (dto.isCustomApp()) {

@@ -1,12 +1,12 @@
 import express from 'express';
-import CommonRouter from '../Commons/CommonRouter';
+import ACommonRouter from '../Commons/ACommonRouter';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { createProcessDto, createSuccessResponse } from '../Utils/Router';
 import CommonLoader from '../Commons/CommonLoader';
 
 export const BATCH_PREFIX = 'hbpf.batch';
 
-export default class BatchRouter extends CommonRouter {
+export default class BatchRouter extends ACommonRouter {
   private _loader: CommonLoader;
 
   constructor(app: express.Application, loader: CommonLoader) {
@@ -15,7 +15,7 @@ export default class BatchRouter extends CommonRouter {
   }
 
   configureRoutes(): express.Application {
-    this.app.route('/batch/:name/action')
+    this._app.route('/batch/:name/action')
       .post(async (req, res, next) => {
         const batch = this._loader.get(BATCH_PREFIX, req.params.name) as ICommonNode;
         const dto = await batch.processAction(createProcessDto(req));
@@ -24,17 +24,17 @@ export default class BatchRouter extends CommonRouter {
         next();
       });
 
-    this.app.route('/batch/:name/action/test')
+    this._app.route('/batch/:name/action/test')
       .get((req, res) => {
         this._loader.get(BATCH_PREFIX, req.params.name);
         res.json([]);
       });
 
-    this.app.route('/batch/list')
+    this._app.route('/batch/list')
       .get((req, res) => {
         res.json(this._loader.getList(BATCH_PREFIX));
       });
 
-    return this.app;
+    return this._app;
   }
 }

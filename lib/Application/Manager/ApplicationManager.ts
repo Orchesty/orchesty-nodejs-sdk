@@ -1,4 +1,3 @@
-import { Repository } from 'mongodb-typescript';
 import { Request } from 'express';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import Annotation from '../../Utils/Annotation';
@@ -9,9 +8,10 @@ import HttpMethods from '../../Transport/HttpMethods';
 import { IBasicApplication } from '../../Authorization/Type/Basic/IBasicApplication';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
+import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
 
 export default class ApplicationManager {
-  private _repository: Repository<ApplicationInstall> | undefined;
+  private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
 
   constructor(private _client: MongoDbClient, private _loader: CommonLoader) {
   }
@@ -39,69 +39,65 @@ export default class ApplicationManager {
       }
       return app[syncMethod](request);
     }
-    throw new Error(`Method ${syncMethod} has not found in application ${key}.`);
+    throw new Error(`Method [${syncMethod}] has not found in application [${key}].`);
   }
 
   public async saveApplicationSettings(
-    key: string,
+    name: string,
     user: string,
     data: IApplicationSettings,
   ): Promise<ApplicationInstall> {
-    const app = this.getApplication(key);
-    const appInstall = await this._loadApplicationInstall(key, user);
+    const app = this.getApplication(name);
+    const appInstall = await this._loadApplicationInstall(name, user);
 
     return app.setApplicationSettings(appInstall as ApplicationInstall, data);
   }
 
-  public async saveApplicationPassword(key: string, user: string, password: string): Promise<ApplicationInstall> {
-    const app = this.getApplication(key) as IBasicApplication;
-    const appInstall = await this._loadApplicationInstall(key, user);
+  public async saveApplicationPassword(name: string, user: string, password: string): Promise<ApplicationInstall> {
+    const app = this.getApplication(name) as IBasicApplication;
+    const appInstall = await this._loadApplicationInstall(name, user);
 
     return app.setApplicationPassword(appInstall, password);
   }
 
-  public async authorizationApplication(key: string, user: string, redirectUrl: string): Promise<string> {
-    const app = this.getApplication(key) as IOAuth2Application;
-    const appInstall = await this._loadApplicationInstall(key, user);
+  public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {
+    const app = this.getApplication(name) as IOAuth2Application;
+    const appInstall = await this._loadApplicationInstall(name, user);
 
     app.setFrontendRedirectUrl(appInstall, redirectUrl);
-
-    if (typeof this._repository !== 'undefined') {
-      await this._repository.update(appInstall);
-    }
+    await (await this._getRepository()).update(appInstall);
 
     return app.authorize(appInstall);
   }
 
   public async saveAuthorizationToken(
-    key: string,
+    name: string,
     user: string,
     requestParams: { [key: string]: string },
   ): Promise<string> {
-    const app = this.getApplication(key) as IOAuth2Application;
-    const appInstall = await this._loadApplicationInstall(key, user);
+    const app = this.getApplication(name) as IOAuth2Application;
+    const appInstall = await this._loadApplicationInstall(name, user);
 
     await app.setAuthorizationToken(appInstall, requestParams);
-
-    if (typeof this._repository !== 'undefined') {
-      await this._repository.update(appInstall);
-    }
+    await (await this._getRepository()).update(appInstall);
 
     return app.getFrontendRedirectUrl(appInstall);
   }
 
-  private async _loadApplicationInstall(key: string, user: string): Promise<ApplicationInstall> {
-    if (!this._repository) {
-      this._repository = await this._client.getRepository(ApplicationInstall);
-    }
-    const appInstall = await this._repository.findOne({
-      user,
-      key,
-    });
+  private async _loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
+    const appInstall = await (await this._getRepository()).findByNameAndUser(name, user);
     if (appInstall === null) {
-      throw Error(`Application [${key}] has not found.`);
+      throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not found!`);
     }
 
     return appInstall;
+  }
+
+  private async _getRepository(): Promise<ApplicationInstallRepository<ApplicationInstall>> {
+    if (!this._repository) {
+      this._repository = await this._client.getApplicationRepository();
+    }
+
+    return this._repository;
   }
 }

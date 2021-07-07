@@ -1,6 +1,6 @@
 import TestBasicApplication from '../TestBasicApplication';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
-import { AUTHORIZATION_SETTINGS } from '../../../lib/Application/Base/ApplicationAbstract';
+import { AUTHORIZATION_SETTINGS } from '../../../lib/Application/Base/AApplication';
 
 describe('Application authorize tests', () => {
   it('isAuthorized', () => {

@@ -1,7 +1,7 @@
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
-import { IApplicationArray } from './ApplicationAbstract';
+import { IApplicationArray } from './AApplication';
 import HttpMethods from '../../Transport/HttpMethods';
 import { IName } from '../../Commons/IName';
 

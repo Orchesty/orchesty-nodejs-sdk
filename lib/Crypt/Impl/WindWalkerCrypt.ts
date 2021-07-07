@@ -14,7 +14,7 @@ import {
 } from 'sodium-native';
 import { Buffer } from 'buffer';
 import NodeCache from 'node-cache';
-import CryptImplAbstract from '../CryptImplAbstract';
+import ACryptImpl from '../ACryptImpl';
 
 const PBKDF2_SALT_BYTE_SIZE = 32;
 const PBKDF2_HASH_BYTE_SIZE = 32;
@@ -22,7 +22,7 @@ const PBKDF2_HASH_BYTE_SIZE = 32;
 const SHA256 = 'sha256';
 const BASE64 = 'base64';
 
-export default class WindWalkerCrypt extends CryptImplAbstract {
+export default class WindWalkerCrypt extends ACryptImpl {
   private _cache;
 
   private _secureHMACKey = ''

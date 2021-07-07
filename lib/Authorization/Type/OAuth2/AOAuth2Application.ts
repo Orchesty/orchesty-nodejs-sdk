@@ -1,10 +1,10 @@
 import {
   CLIENT_ID, CLIENT_SECRET, FRONTEND_REDIRECT_URL, IOAuth2Application,
 } from './IOAuth2Application';
-import ApplicationAbstract, { AUTHORIZATION_SETTINGS, FORM } from '../../../Application/Base/ApplicationAbstract';
+import AApplication, { AUTHORIZATION_SETTINGS, FORM } from '../../../Application/Base/AApplication';
 import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
 import { ApplicationInstall, IApplicationSettings } from '../../../Application/Database/ApplicationInstall';
-import { TOKEN } from '../Basic/BasicApplicationAbstract';
+import { TOKEN } from '../Basic/ABasicApplication';
 import Field, { IFieldArray } from '../../../Application/Model/Form/Field';
 import FieldType from '../../../Application/Model/Form/FieldType';
 import OAuth2Dto from '../../Provider/Dto/OAuth2Dto';
@@ -18,7 +18,7 @@ export const CREDENTIALS = [
   CLIENT_SECRET,
 ];
 
-export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstract implements IOAuth2Application {
+export default abstract class AOAuth2Application extends AApplication implements IOAuth2Application {
   constructor(private _provider: OAuth2Provider) {
     super();
   }
@@ -35,7 +35,7 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
     return this._provider.authorize(
       this.createDto(applicationInstall),
       this.getScopes(applicationInstall),
-      this.getScopesSeparator(),
+      this._getScopesSeparator(),
     );
   }
 
@@ -132,7 +132,7 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
 
   public createDto(applicationInstall: ApplicationInstall, redirectUrl = ''): OAuth2Dto {
     const dto = new OAuth2Dto(applicationInstall, this.getAuthUrl(), this.getTokenUrl());
-    dto.setCustomAppDependencies(applicationInstall.getUser(), applicationInstall.getKey());
+    dto.setCustomAppDependencies(applicationInstall.getUser(), applicationInstall.getName());
 
     if (redirectUrl) {
       dto.setRedirectUrl(redirectUrl);
@@ -144,7 +144,7 @@ export default abstract class OAuth2ApplicationAbstract extends ApplicationAbstr
     applicationInstall: ApplicationInstall,
   ): IToken => applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN]
 
-  protected getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA
+  protected _getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA
 
   private _createAuthSettings = (applicationInstall: ApplicationInstall): ApplicationInstall => {
     if (!Object.prototype.hasOwnProperty.call(applicationInstall.getSettings(), AUTHORIZATION_SETTINGS)) {

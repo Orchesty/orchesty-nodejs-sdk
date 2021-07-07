@@ -88,12 +88,12 @@ export class ApplicationInstall extends DocumentAbstract {
     return this;
   }
 
-  public getKey(): string {
+  public getName(): string {
     return this.key;
   }
 
-  public setKey(key: string): ApplicationInstall {
-    this.key = key;
+  public setName(name: string): ApplicationInstall {
+    this.key = name;
 
     return this;
   }

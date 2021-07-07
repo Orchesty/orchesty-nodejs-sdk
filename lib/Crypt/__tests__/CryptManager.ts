@@ -65,7 +65,7 @@ describe('CryptManager tests', () => {
       bad.decrypt('');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('Crypt prefix of class "WindWalkerCrypt" has bad length "3", allowed length is 4.');
+      expect(e.message).toEqual('Crypt prefix of class [WindWalkerCrypt] has bad length [3], allowed length is 4.');
     }
   });
 

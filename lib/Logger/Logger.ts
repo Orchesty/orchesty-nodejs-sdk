@@ -101,6 +101,7 @@ export class Logger {
     private udp: Sender;
 
     constructor() {
+      // TODO: parse from dsn
       this.udp = new Sender(loggerOptions.server, loggerOptions.port);
     }
 

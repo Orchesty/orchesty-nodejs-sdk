@@ -9,7 +9,7 @@ import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Pro
 import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
 import DIContainer from '../../../DIContainer/Container';
 import CommonLoader from '../../../Commons/CommonLoader';
-import { AUTHORIZATION_SETTINGS } from '../../Base/ApplicationAbstract';
+import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 
 let appManager: ApplicationManager;
@@ -55,7 +55,7 @@ describe('ApplicationManager tests', () => {
     appManager = container.get(CoreServices.APP_MANAGER);
     appInstall = new ApplicationInstall();
     appInstall.setUser('user')
-      .setKey('test')
+      .setName('test')
       .setSettings({ key: 'value' });
 
     const repo = await dbClient.getRepository(ApplicationInstall);
@@ -64,7 +64,7 @@ describe('ApplicationManager tests', () => {
     appInstallOAuth = new ApplicationInstall();
     appInstallOAuth
       .setUser('user')
-      .setKey('oauth2application')
+      .setName('oauth2application')
       .setSettings({
         key: 'value',
         [AUTHORIZATION_SETTINGS]: { [FRONTEND_REDIRECT_URL]: 'url' },
