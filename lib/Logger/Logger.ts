@@ -5,9 +5,10 @@ import { Request } from 'express';
 import ProcessDto from '../Utils/ProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import * as headers from '../Utils/Headers';
-import { loggerOptions } from '../Config/Config';
+import { loggerOptions, pipesOptions } from '../Config/Config';
 import winstonLogger from './Winston';
 import Severity from './Severity';
+import { parseInfluxDsn } from '../Utils/DsnParser';
 
 export interface ILogContext {
     topology_id?: string;
@@ -53,7 +54,7 @@ export class Logger {
     const line: ILoggerFormat = {
       timestamp: Date.now(),
       hostname: os.hostname(),
-      type: process.env.PIPES_NODE_TYPE || 'pipes_node',
+      type: pipesOptions.nodeType,
       severity: `${severity}`.toUpperCase(),
       message: message?.replace(/\s\s+/g, ' '),
     };
@@ -101,8 +102,8 @@ export class Logger {
     private udp: Sender;
 
     constructor() {
-      // TODO: parse from dsn
-      this.udp = new Sender(loggerOptions.server, loggerOptions.port);
+      const parsed = parseInfluxDsn(loggerOptions.dsn);
+      this.udp = new Sender(parsed.server, parsed.port);
     }
 
     /**

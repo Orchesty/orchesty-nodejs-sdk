@@ -23,12 +23,14 @@ import Metrics from './Metrics/Metrics';
 import MetricsSenderLoader from './Metrics/MetricsSenderLoader';
 import Mongo from './Metrics/Impl/Mongo';
 import Influx from './Metrics/Impl/Influx';
+import bodyParser from './Middleware/BodyParseHandler';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
 const expressApp: express.Application = express();
-expressApp.use(express.json());
+
 expressApp.use(metricsHandler);
+expressApp.use(bodyParser);
 
 export function initiateContainer(): void {
   // Instantiate core services

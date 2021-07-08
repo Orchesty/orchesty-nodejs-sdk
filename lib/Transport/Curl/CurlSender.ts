@@ -27,18 +27,23 @@ export default class CurlSender {
       return new ResponseDto(body, response.status, response.headers, response.statusText);
     } catch (e) {
       await this._sendMetrics(dto, startTime);
-      logger.error(e);
+      logger.error(e.message);
       return Promise.reject(e);
     }
   };
 
   private static _createInitFromDto(dto: RequestDto): RequestInit {
-    return {
+    const req: RequestInit = {
       method: dto.method,
       headers: dto.headers,
-      body: dto.body,
       timeout: dto.timeout,
     };
+
+    if (dto.body.length > 0) {
+      req.body = dto.body;
+    }
+
+    return req;
   }
 
   private static _log({ debugInfo }: RequestDto, res: Response, level: string, body?: string): void {

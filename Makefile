@@ -30,6 +30,9 @@ docker-up-force: .env .lo0-up
 docker-down-clean: .env .lo0-down
 	docker-compose down -v
 
+start:
+	$(DCS) yarn start
+
 yarn-install:
 	$(DCS) yarn install
 
