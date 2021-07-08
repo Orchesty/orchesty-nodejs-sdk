@@ -20,6 +20,10 @@ export default class Metrics {
   constructor(private _loader: MetricsSenderLoader) {
   }
 
+  public async close(): Promise<void> {
+    await this._loader.getSender().close();
+  }
+
   public async sendProcessMetrics(
     timeData: ITimesMetrics,
     topologyId?: string,

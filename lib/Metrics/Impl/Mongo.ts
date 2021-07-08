@@ -21,4 +21,9 @@ export default class Mongo implements IMetricsSender {
       return false;
     }
   }
+
+  async close(): Promise<boolean> {
+    await this._client.down();
+    return true;
+  }
 }

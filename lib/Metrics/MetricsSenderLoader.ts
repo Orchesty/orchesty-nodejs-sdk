@@ -1,7 +1,7 @@
 import { IMetricsSender } from './IMetricsSender';
 
 export const INFLUX = 'influx';
-export const MONGO = 'mogno';
+export const MONGO = 'mongo';
 
 export default class MetricsSenderLoader {
   constructor(

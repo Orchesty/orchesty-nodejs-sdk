@@ -1,7 +1,7 @@
 import { MONGO } from '../Metrics/MetricsSenderLoader';
 
 export const loggerOptions = {
-  dsn: process.env.UDP_LOGGER_DSN || 'localhost:80',
+  dsn: process.env.UDP_LOGGER_DSN || '',
 };
 
 export const metricsOptions = {
@@ -27,5 +27,4 @@ export const cryptOptions = {
 
 export const pipesOptions = {
   backend: process.env.BACKEND_URL || '',
-  nodeType: process.env.PIPES_NODE_TYPE || 'pipes_node',
 };

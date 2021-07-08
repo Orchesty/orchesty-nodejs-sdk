@@ -25,7 +25,8 @@ docker-compose.ci.yml:
 	sed -r 's/^(\s+ports:)$$/#\1/g; s/^(\s+- \$$\{DEV_IP\}.*)$$/#\1/g' docker-compose.yaml > docker-compose.ci.yml
 
 docker-up-force: .env .lo0-up
-	docker-compose up -d --force-recreate --remove-orphans --build
+	docker-compose pull --ignore-pull-failures
+	docker-compose up -d --force-recreate --remove-orphans
 
 docker-down-clean: .env .lo0-down
 	docker-compose down -v

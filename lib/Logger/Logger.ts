@@ -5,7 +5,7 @@ import { Request } from 'express';
 import ProcessDto from '../Utils/ProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import * as headers from '../Utils/Headers';
-import { loggerOptions, pipesOptions } from '../Config/Config';
+import { loggerOptions } from '../Config/Config';
 import winstonLogger from './Winston';
 import Severity from './Severity';
 import { parseInfluxDsn } from '../Utils/DsnParser';
@@ -54,7 +54,7 @@ export class Logger {
     const line: ILoggerFormat = {
       timestamp: Date.now(),
       hostname: os.hostname(),
-      type: pipesOptions.nodeType,
+      type: 'sdk',
       severity: `${severity}`.toUpperCase(),
       message: message?.replace(/\s\s+/g, ' '),
     };

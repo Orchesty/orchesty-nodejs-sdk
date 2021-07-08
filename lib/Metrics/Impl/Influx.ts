@@ -14,4 +14,7 @@ export default class Influx implements IMetricsSender {
       return false;
     }
   };
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  close = async (): Promise<boolean> => true;
 }
