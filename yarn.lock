@@ -1107,19 +1107,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.0.1":
-  version: 16.0.1
-  resolution: "@types/node@npm:16.0.1"
-  checksum: 0f3d559689763cef9c2cf593a9190ead7adc8b71aeaef5c446bda96a781c22e39806780ee240c7272dddf01b82008d84e49a4298fba88b6d7726af76f00fc3ad
+"@types/node@npm:^16.3.1":
+  version: 16.3.1
+  resolution: "@types/node@npm:16.3.1"
+  checksum: 2021138afd66a9235f4b64e412dd8a8d1199f3d17303c2868ab062a10214ba76b793bf4f59e14c3bf981623e099843855776390b445d840779cb171c2fcb97a9
   languageName: node
   linkType: hard
 
-"@types/php-serialize@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@types/php-serialize@npm:3.0.0"
+"@types/php-serialize@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@types/php-serialize@npm:3.0.1"
   dependencies:
     "@types/node": "*"
-  checksum: 13ae96888736851e4bf13f9e071772c85b52356170b2273c554424edef6a4d05371b704ca28040667149f5140be2db846089f181b9e0ce023355a174725ab3b2
+  checksum: 16b3b648e6873f03938ab1119bed78e7afb5b99dee9eb01f36b2d3bf7a155a4ef65ad077b78a5315ec5692d20ef77c519b30a6fcb969b3229d7d124388116435
   languageName: node
   linkType: hard
 
@@ -1631,9 +1631,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autocannon@npm:^7.3.0":
-  version: 7.3.0
-  resolution: "autocannon@npm:7.3.0"
+"autocannon@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "autocannon@npm:7.4.0"
   dependencies:
     chalk: ^4.1.0
     char-spinner: ^1.0.1
@@ -1658,7 +1658,7 @@ __metadata:
     timestring: ^6.0.0
   bin:
     autocannon: autocannon.js
-  checksum: 333972da2d4afc9d133f5d427d5fb4141a2057694d85dc003e96a82b2bd5d7fa1cd303377e5e4b35480df81458bc0dc29524492cfabd03144918fc996cbcb3fe
+  checksum: 5b4b9dc05fc1a04f354338f6990d49b8a094a7ef81b436bd409230594dbdcae8e802c3ec1582f0ac72c6d3a5b52950759900004f8f73015b54c57a08ac6617b9
   languageName: node
   linkType: hard
 
@@ -5417,9 +5417,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:^2.0.9":
-  version: 2.0.9
-  resolution: "nodemon@npm:2.0.9"
+"nodemon@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "nodemon@npm:2.0.12"
   dependencies:
     chokidar: ^3.2.2
     debug: ^3.2.6
@@ -5433,7 +5433,7 @@ __metadata:
     update-notifier: ^4.1.0
   bin:
     nodemon: bin/nodemon.js
-  checksum: bed92265bba3ed750b6d064bdf4f93d4a952948c24379e824f568bc48c336390d394c130aef32206d1cd8aa4d32395052326834a42ed11a8596b94b5a01ed1a8
+  checksum: 8a866e2a25043e88615c223ccd601092e181f9c4edbe2027f0e59fc881647ffb2be9fac280f5d2d851564242cd8aa55a288fb1ae8c6609a0013d375b5647b656
   languageName: node
   linkType: hard
 
@@ -5867,16 +5867,16 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/jest": ^26.0.24
     "@types/mongodb": ^3.6.20
-    "@types/node": ^16.0.1
+    "@types/node": ^16.3.1
     "@types/node-cache": ^4.2.5
     "@types/node-fetch": ^2.5.11
-    "@types/php-serialize": ^3.0.0
+    "@types/php-serialize": ^3.0.1
     "@types/simple-oauth2": ^4.1.1
     "@types/sodium-native": ^2.3.5
     "@types/supertest": ^2.0.11
     "@typescript-eslint/eslint-plugin": ^4.28.2
     "@typescript-eslint/parser": ^4.28.2
-    autocannon: ^7.3.0
+    autocannon: ^7.4.0
     dateformat: ^4.5.1
     eslint: ^7.30.0
     eslint-config-airbnb-base: ^14.2.1
@@ -5889,14 +5889,14 @@ __metadata:
     mongodb-typescript: ^2.2.1
     node-cache: ^5.1.2
     node-fetch: ^2.6.1
-    nodemon: ^2.0.9
+    nodemon: ^2.0.12
     php-serialize: ^4.0.2
     reflect-metadata: ^0.1.13
     simple-oauth2: ^4.2.0
     sodium-native: ^3.2.1
     supertest: ^6.1.3
     ts-jest: ^27.0.3
-    ts-node: ^10.0.0
+    ts-node: ^10.1.0
     typescript: ^4.3.5
     winston: ^3.3.3
   languageName: unknown
@@ -7150,9 +7150,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "ts-node@npm:10.0.0"
+"ts-node@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "ts-node@npm:10.1.0"
   dependencies:
     "@tsconfig/node10": ^1.0.7
     "@tsconfig/node12": ^1.0.7
@@ -7165,8 +7165,8 @@ __metadata:
     source-map-support: ^0.5.17
     yn: 3.1.1
   peerDependencies:
-    "@swc/core": ">=1.2.45"
-    "@swc/wasm": ">=1.2.45"
+    "@swc/core": ">=1.2.50"
+    "@swc/wasm": ">=1.2.50"
     "@types/node": "*"
     typescript: ">=2.7"
   peerDependenciesMeta:
@@ -7180,7 +7180,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: dc461e2b9b931b00ff065530a0247f86da1d035e72a7ef6d7ed072dd8e6b236d1879f113dcc73a354d240c81b6b845445c3d32b16eeb68022ed27ab6d130c049
+  checksum: d1b582dc3624061d86c2657507e21c3875919b7d108db16cde5507f2aa75b025be2e09b35ec607900eb525e429ebd14f0cf1c5f4b81292a191c0f8c7bfdf0720
   languageName: node
   linkType: hard
 

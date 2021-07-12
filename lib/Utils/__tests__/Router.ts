@@ -59,7 +59,7 @@ describe('tests Router Utils', () => {
     const [statusMock, hasHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(false);
     const res = mockResponse(statusMock, hasHeaderMock, setHeaderMock, jsonMock);
 
-    createErrorResponse(mockRequest(), res, new Error('err message'));
+    createErrorResponse(mockRequest(), res, new ProcessDto(), new Error('err message'));
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
@@ -72,7 +72,7 @@ describe('tests Router Utils', () => {
     const err = new Error('err message');
     err.stack = undefined;
 
-    createErrorResponse(mockRequest(), res, err);
+    createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
@@ -85,7 +85,7 @@ describe('tests Router Utils', () => {
     const err = new Error('err message');
     err.stack = undefined;
 
-    createErrorResponse(mockRequest(), res, err);
+    createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
@@ -96,7 +96,7 @@ describe('tests Router Utils', () => {
     const [statusMock, hasHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(false);
     const res = mockResponse(statusMock, hasHeaderMock, setHeaderMock, jsonMock);
 
-    createErrorResponse(mockRequest(), res);
+    createErrorResponse(mockRequest(), res, new ProcessDto());
     expect(statusMock).toBeCalledTimes(1);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(2);

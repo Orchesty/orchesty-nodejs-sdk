@@ -25,7 +25,7 @@ export default class TestConnector extends AConnector {
     requestDto.debugInfo = dto;
     const responseDto = await this._sender.send(requestDto);
     if (responseDto.responseCode !== 200) {
-      throw new OnRepeatException(dto);
+      throw new OnRepeatException();
     }
     dto.data = responseDto.body;
 

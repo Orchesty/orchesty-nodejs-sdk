@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import ProcessDto from './ProcessDto';
 import logger, { Logger } from '../Logger/Logger';
-import { RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
+import {
+  createKey, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
+} from './Headers';
 import ResultCode from './ResultCode';
 import { appOptions } from '../Config/Config';
 
@@ -14,13 +16,17 @@ export function formatError(e: Error): IErrorResponse {
   return { result: 'error', message: e.message };
 }
 
-export function createErrorResponse(req: Request, res: Response, e?: Error): void {
+export function createErrorResponse(req: Request, res: Response, dto: ProcessDto, e?: Error): void {
   res.status(500);
+  Object.entries(dto.headers).forEach(([key, value]) => {
+    res.setHeader(key, String(value));
+  });
+
   let message = 'Error occurred: unknown reason';
   let responseBody = { result: 'Unknown error', message: 'Unknown error occurred.' };
 
-  if (!res.hasHeader(RESULT_CODE)) {
-    res.setHeader(RESULT_CODE, ResultCode.STOP_AND_FAILED);
+  if (!res.hasHeader(createKey(RESULT_CODE))) {
+    res.setHeader(createKey(RESULT_CODE), ResultCode.STOP_AND_FAILED);
   }
 
   if (e) {
@@ -28,16 +34,16 @@ export function createErrorResponse(req: Request, res: Response, e?: Error): voi
     message = `Error occurred: ${e.message}`;
     responseBody = formatError(e);
 
-    if (appOptions.debug && !res.hasHeader(RESULT_DETAIL)) {
+    if (appOptions.debug && !res.hasHeader(createKey(RESULT_DETAIL))) {
       res.setHeader(
-        RESULT_DETAIL,
+        createKey(RESULT_DETAIL),
         e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')),
       );
     }
   }
 
-  if (!res.hasHeader(RESULT_MESSAGE)) {
-    res.setHeader(RESULT_MESSAGE, message);
+  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
+    res.setHeader(createKey(RESULT_MESSAGE), message);
   }
 
   logger.error(message, Logger.ctxFromReq(req));
@@ -51,12 +57,12 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
     res.setHeader(key, String(value));
   });
 
-  if (!res.hasHeader(RESULT_CODE)) {
-    res.setHeader(RESULT_CODE, ResultCode.SUCCESS);
+  if (!res.hasHeader(createKey(RESULT_CODE))) {
+    res.setHeader(createKey(RESULT_CODE), ResultCode.SUCCESS);
   }
 
-  if (!res.hasHeader(RESULT_MESSAGE)) {
-    res.setHeader(RESULT_MESSAGE, 'Processed successfully.');
+  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
+    res.setHeader(createKey(RESULT_MESSAGE), 'Processed successfully.');
   }
 
   logger.debug('Request successfully processed.', Logger.ctxFromDto(dto));

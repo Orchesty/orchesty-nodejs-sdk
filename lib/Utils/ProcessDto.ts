@@ -3,7 +3,6 @@ import {
   BATCH_CURSOR,
   clear,
   createKey,
-  getRepeatHops,
   HttpHeaders,
   LIMITER_KEY,
   REPEAT_HOPS,
@@ -79,7 +78,7 @@ export default class ProcessDto {
     this._setStatusHeader(status, message);
   }
 
-  setRepeater(interval: number, maxHops: number, repeatHops?: number, queue?: string, message?: string): void {
+  setRepeater(interval: number, maxHops: number, queue?: string, message?: string): void {
     if (interval < 1) {
       throw new Error('Value interval is obligatory and can not be lower than 0');
     }
@@ -92,18 +91,9 @@ export default class ProcessDto {
     this.addHeader(REPEAT_INTERVAL, interval.toString());
     this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
 
-    if (repeatHops) {
-      this.addHeader(REPEAT_HOPS, repeatHops.toString());
-    }
-
     if (queue) {
       this.addHeader(REPEAT_QUEUE, queue);
     }
-  }
-
-  incrementRepeaterHop(): void {
-    const hop = getRepeatHops(this._headers) + 1;
-    this.addHeader(REPEAT_HOPS, hop.toString());
   }
 
   removeRepeater(): void {

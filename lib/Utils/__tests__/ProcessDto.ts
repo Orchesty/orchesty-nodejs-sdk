@@ -93,10 +93,9 @@ describe('Tests ProcessDto utils', () => {
 
   it('setRepeater and removeRepeater', () => {
     const dto = new ProcessDto();
-    dto.setRepeater(2, 20, 10, 'rep-queue', 'rep-message');
+    dto.setRepeater(2, 20, 'rep-queue', 'rep-message');
 
     expect(dto.getHeader('repeat-interval')).toEqual('2');
-    expect(dto.getHeader('repeat-hops')).toEqual('10');
     expect(dto.getHeader('repeat-max-hops')).toEqual('20');
     expect(dto.getHeader('repeat-queue')).toEqual('rep-queue');
     expect(dto.getHeader('result-code')).toEqual('1001');
@@ -125,15 +124,6 @@ describe('Tests ProcessDto utils', () => {
     const dto = new ProcessDto();
     expect(() => dto.setRepeater(-1, 1)).toThrow(Error);
     expect(() => dto.setRepeater(1, -1)).toThrow(Error);
-  });
-
-  it('increment current repeaterHop', () => {
-    const dto = new ProcessDto();
-    dto.setRepeater(1, 2);
-    expect(dto.getHeader('repeat-hops')).toBeUndefined();
-
-    dto.incrementRepeaterHop();
-    expect(dto.getHeader('repeat-hops')).toEqual('1');
   });
 
   it('setLimiter and removeLimiter', () => {
