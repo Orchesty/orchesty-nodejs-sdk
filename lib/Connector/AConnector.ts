@@ -3,13 +3,17 @@ import { IApplication } from '../Application/Base/IApplication';
 import ProcessDto from '../Utils/ProcessDto';
 import { ApplicationInstall } from '../Application/Database/ApplicationInstall';
 import MongoDbClient from '../Storage/Mongodb/Client';
+import CurlSender from '../Transport/Curl/CurlSender';
 
 export default abstract class AConnector implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private application?: IApplication
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  private dbClient?: MongoDbClient
+  private db?: MongoDbClient
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  private sender?: CurlSender
 
   public abstract processAction(dto: ProcessDto): Promise<ProcessDto>;
 
@@ -21,8 +25,14 @@ export default abstract class AConnector implements ICommonNode {
     return this;
   }
 
-  public setDbClient(value: MongoDbClient): AConnector {
-    this.dbClient = value;
+  public setDb(db: MongoDbClient): AConnector {
+    this.db = db;
+
+    return this;
+  }
+
+  public setSender(sender: CurlSender): AConnector {
+    this.sender = sender;
 
     return this;
   }
@@ -36,11 +46,19 @@ export default abstract class AConnector implements ICommonNode {
   }
 
   protected get _dbClient(): MongoDbClient {
-    if (this.dbClient) {
-      return this.dbClient;
+    if (this.db) {
+      return this.db;
     }
 
     throw new Error('MongoDbClient has not set.');
+  }
+
+  protected get _sender(): CurlSender {
+    if (this.sender) {
+      return this.sender;
+    }
+
+    throw new Error('CurlSender has not set.');
   }
 
   protected async _getApplicationInstall(user: string): Promise<ApplicationInstall> {
