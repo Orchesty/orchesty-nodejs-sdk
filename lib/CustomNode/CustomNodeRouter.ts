@@ -12,7 +12,7 @@ export default class CustomNodeRouter extends ACommonRouter {
   }
 
   configureRoutes(): express.Application {
-    this._app.route('/custom_node/:name/process').post(async (req, res, next) => {
+    this._app.route('/custom-node/:name/process').post(async (req, res, next) => {
       const customNode = this._loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
       const dto = await customNode.processAction(createProcessDto(req));
 
@@ -20,12 +20,12 @@ export default class CustomNodeRouter extends ACommonRouter {
       next();
     });
 
-    this._app.route('/custom_node/:name/process/test').get((req, res) => {
+    this._app.route('/custom-node/:name/process/test').get((req, res) => {
       this._loader.get(CUSTOM_NODE_PREFIX, req.params.name);
       res.json([]);
     });
 
-    this._app.route('/custom_node/list').get((req: Request, res: Response) => {
+    this._app.route('/custom-node/list').get((req: Request, res: Response) => {
       res.json(this._loader.getList(CUSTOM_NODE_PREFIX));
     });
 

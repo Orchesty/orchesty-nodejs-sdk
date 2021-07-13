@@ -1,3 +1,4 @@
+import { Application } from 'express';
 import DIContainer from '../lib/DIContainer/Container';
 import TestConnector from './Connector/TestConnector';
 import TestBasicApplication from './Application/TestBasicApplication';
@@ -7,6 +8,7 @@ import {
   container as c, expressApp as e, initiateContainer, listen as l,
 } from '../lib';
 import TestBatch from './Batch/TestBatch';
+import CommonLoader from '../lib/Commons/CommonLoader';
 
 initiateContainer();
 
@@ -30,4 +32,35 @@ export function getTestContainer(): DIContainer {
   container.setBatch(batch);
 
   return container;
+}
+
+export function mockRouter(): {
+  postFn: jest.Mock,
+  getFn: jest.Mock,
+  routeFn: jest.Mock,
+  express: Application,
+  loader: CommonLoader,
+  } {
+  const postFn = jest.fn();
+  const getFn = jest.fn();
+  const route = {
+    post: postFn,
+    get: getFn,
+  };
+
+  const routeFn = jest.fn().mockReturnValue(route);
+  const express = {
+    route: routeFn,
+    address: jest.fn(),
+    listen: jest.fn(),
+  } as never as Application;
+
+  const loader = {
+    get: jest.fn(),
+    getList: jest.fn(),
+  } as never as CommonLoader;
+
+  return {
+    postFn, getFn, routeFn, express, loader,
+  };
 }

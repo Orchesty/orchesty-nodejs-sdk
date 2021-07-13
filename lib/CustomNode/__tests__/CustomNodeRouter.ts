@@ -1,6 +1,5 @@
-import { Application } from 'express';
 import CustomNodeRouter from '../CustomNodeRouter';
-import CommonLoader from '../../Commons/CommonLoader';
+import { mockRouter } from '../../../test/TestAbstact';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -12,29 +11,11 @@ jest.mock('../../Logger/Logger', () => ({
 
 describe('Test CustomNodeRouter', () => {
   it('test configureRoutes', () => {
-    const postFn = jest.fn();
-    const getFn = jest.fn();
-    const routeMock = {
-      post: postFn,
-      get: getFn,
-    };
-
-    const routeFn = jest.fn().mockReturnValue(routeMock);
-    const expressMock = {
-      route: routeFn,
-      address: jest.fn(),
-      listen: jest.fn(),
-    } as never as Application;
-
-    const loaderMock = {
-      get: jest.fn(),
-      getList: jest.fn(),
-    } as never as CommonLoader;
-
-    const router = new CustomNodeRouter(expressMock, loaderMock);
-    expect(routeFn).toBeCalledTimes(3);
-    expect(getFn).toBeCalledTimes(2);
-    expect(postFn).toBeCalledTimes(1);
+    const mock = mockRouter();
+    const router = new CustomNodeRouter(mock.express, mock.loader);
+    expect(mock.routeFn).toBeCalledTimes(3);
+    expect(mock.getFn).toBeCalledTimes(2);
+    expect(mock.postFn).toBeCalledTimes(1);
     expect(router.getName()).toEqual('CustomNodeRouter');
   });
 });

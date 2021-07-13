@@ -8,7 +8,8 @@ import AConnector from '../../lib/Connector/AConnector';
 export default class TestConnector extends AConnector {
   public getName = (): string => 'test';
 
-  public async processAction(dto: ProcessDto): Promise<ProcessDto> {
+  public async processAction(_dto: ProcessDto): Promise<ProcessDto> {
+    const dto = _dto;
     dto.jsonData = {
       test: 'ok',
       processed: Date.now()

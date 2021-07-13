@@ -5,7 +5,7 @@ import WebhookSubscription from '../Model/Webhook/WebhookSubscription';
 
 export interface IWebhookApplication extends IApplication {
 
-  getWebhookSubscriptions(): string[];
+  getWebhookSubscriptions(): WebhookSubscription[];
 
   getWebhookSubscribeRequestDto(
     applicationInstall: ApplicationInstall,

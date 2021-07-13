@@ -67,10 +67,10 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     return encode(`${dto.getUser()}:${dto.getApplicationKey()}`, 'base64url');
   }
 
-  public static stateDecode(state: string): string[] {
+  public static stateDecode(state: string): {user: string, name: string} {
     const params = decode(state, 'base64url').split(':');
 
-    return [params[0] ?? '', params[1] ?? ''];
+    return { user: params[0] ?? '', name: params[1] ?? '' };
   }
 
   private static _convertAccessToken(accessToken: AccessToken): IToken {
