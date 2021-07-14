@@ -1107,10 +1107,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.3.1":
-  version: 16.3.1
-  resolution: "@types/node@npm:16.3.1"
-  checksum: 2021138afd66a9235f4b64e412dd8a8d1199f3d17303c2868ab062a10214ba76b793bf4f59e14c3bf981623e099843855776390b445d840779cb171c2fcb97a9
+"@types/node@npm:^16.3.2":
+  version: 16.3.2
+  resolution: "@types/node@npm:16.3.2"
+  checksum: 11896edc7022a40f8938e64f57e497b3110ca732bdef785f86f0a0a819609e9b78ad0c950dcaa59177bc299f2793489b605a3e713cdf7900a39031f0018e2134
   languageName: node
   linkType: hard
 
@@ -5277,7 +5277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:^3.6.10":
+"mongodb@npm:~3.6.10":
   version: 3.6.10
   resolution: "mongodb@npm:3.6.10"
   dependencies:
@@ -5867,7 +5867,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/jest": ^26.0.24
     "@types/mongodb": ^3.6.20
-    "@types/node": ^16.3.1
+    "@types/node": ^16.3.2
     "@types/node-cache": ^4.2.5
     "@types/node-fetch": ^2.5.11
     "@types/php-serialize": ^3.0.1
@@ -5885,7 +5885,7 @@ __metadata:
     express: ^5.0.0-alpha.8
     jest: ^27.0.6
     metrics-sender: ^0.0.10
-    mongodb: ^3.6.10
+    mongodb: ~3.6.10
     mongodb-typescript: ^2.2.1
     node-cache: ^5.1.2
     node-fetch: ^2.6.1

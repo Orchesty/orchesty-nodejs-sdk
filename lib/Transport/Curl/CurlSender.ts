@@ -28,7 +28,8 @@ export default class CurlSender {
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       logger.error(e.message);
-      return Promise.reject(e);
+
+      throw Error(e.message);
     }
   };
 
