@@ -15,7 +15,7 @@ export default abstract class AConnector implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private sender?: CurlSender
 
-  public abstract processAction(dto: ProcessDto): Promise<ProcessDto>;
+  public abstract processAction(dto: ProcessDto): Promise<ProcessDto>|ProcessDto;
 
   public abstract getName(): string;
 
