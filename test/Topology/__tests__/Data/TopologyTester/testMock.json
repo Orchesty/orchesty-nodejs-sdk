@@ -1,0 +1,8 @@
+{
+    "code": 200,
+    "http": "GET https://jsonplaceholder.typicode.com/users",
+    "body": {
+        "data": {
+        }
+    }
+}

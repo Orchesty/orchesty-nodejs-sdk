@@ -132,9 +132,13 @@ export default class ProcessDto {
     this.removeHeader(LIMITER_KEY);
   }
 
-  setBatchCursor(cursor: string): void {
+  setBatchCursor(cursor: string, iterateOnly = false): void {
     this.addHeader(BATCH_CURSOR, cursor);
-    this.addHeader(RESULT_CODE, ResultCode.BATCH_ITERATE.toString());
+    if (iterateOnly) {
+      this.addHeader(RESULT_CODE, ResultCode.BATCH_CURSOR_ONLY.toString());
+    } else {
+      this.addHeader(RESULT_CODE, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString());
+    }
   }
 
   removeBatchCursor(): void {

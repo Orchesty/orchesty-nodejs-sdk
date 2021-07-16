@@ -3182,6 +3182,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-xml-parser@npm:^3.19.0":
+  version: 3.19.0
+  resolution: "fast-xml-parser@npm:3.19.0"
+  bin:
+    xml2js: cli.js
+  checksum: bac00722d00f7f8782ab507281bff3c5cff2b37e2e1e26891a11ac2ac3f0c40e91f545492923d6dc8a57bdf9cfba99518c02ddff380f4ff1e81083d25055e43e
+  languageName: node
+  linkType: hard
+
 "fastq@npm:^1.6.0":
   version: 1.11.0
   resolution: "fastq@npm:1.11.0"
@@ -5883,6 +5892,7 @@ __metadata:
     eslint-import-resolver-typescript: ^2.4.0
     eslint-plugin-import: ^2.23.4
     express: ^5.0.0-alpha.8
+    fast-xml-parser: ^3.19.0
     jest: ^27.0.6
     metrics-sender: ^0.0.10
     mongodb: ~3.6.10
