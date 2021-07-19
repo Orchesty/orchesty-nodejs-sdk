@@ -3,6 +3,7 @@ import {
   BATCH_CURSOR,
   clear,
   createKey,
+  FORCE_TARGET_QUEUE,
   HttpHeaders,
   LIMITER_KEY,
   REPEAT_HOPS,
@@ -11,6 +12,7 @@ import {
   REPEAT_QUEUE,
   RESULT_CODE,
   RESULT_MESSAGE,
+  WORKER_FOLLOWERS,
 } from './Headers';
 import ResultCode from './ResultCode';
 
@@ -147,6 +149,18 @@ export default class ProcessDto {
 
   removeBatchCursor(): void {
     this.removeHeader(BATCH_CURSOR);
+  }
+
+  setForceFollowers(...followers: string[]): void {
+    const workerFollowers: {name: string; id: string}[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
+    const filtered = workerFollowers.filter((item) => followers.includes(item.name));
+
+    this.addHeader(FORCE_TARGET_QUEUE, filtered.map((item) => item.id).join(','));
+    this._setStatusHeader(ResultCode.FORWARD_TO_TARGET_QUEUE);
+  }
+
+  removeForceFollowers(): void {
+    this.removeHeader(FORCE_TARGET_QUEUE);
   }
 
   private _setStatusHeader(value: ResultCode, message?: string) {

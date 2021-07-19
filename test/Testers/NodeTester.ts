@@ -16,58 +16,53 @@ export default class NodeTester {
 
   public async testConnector(
     nodeName: string,
-    file: string,
     prefix = '',
     exceptedError?: unknown,
   ): Promise<void> {
-    await this._testNode(nodeName, file, CONNECTOR_PREFIX, prefix, exceptedError);
+    await this._testNode(nodeName, CONNECTOR_PREFIX, prefix, exceptedError);
   }
 
   public async testBatch(
     nodeName: string,
-    file: string,
     prefix = '',
     exceptedError?: unknown,
   ): Promise<void> {
-    await this._testNode(nodeName, file, BATCH_PREFIX, prefix, exceptedError);
+    await this._testNode(nodeName, BATCH_PREFIX, prefix, exceptedError);
   }
 
   public async testCustomNode(
     nodeName: string,
-    file: string,
     prefix = '',
     exceptedError?: unknown,
   ): Promise<void> {
-    await this._testNode(nodeName, file, CUSTOM_NODE_PREFIX, prefix, exceptedError);
+    await this._testNode(nodeName, CUSTOM_NODE_PREFIX, prefix, exceptedError);
   }
 
   public async testApplication(
     nodeName: string,
-    file: string,
     prefix = '',
     exceptedError?: unknown,
   ): Promise<void> {
-    await this._testNode(nodeName, file, APPLICATION_PREFIX, prefix, exceptedError);
+    await this._testNode(nodeName, APPLICATION_PREFIX, prefix, exceptedError);
   }
 
   private async _testNode(
     nodeName: string,
-    file: string,
     nodePrefix: string,
     _prefix = '',
     expectedError?: unknown,
   ): Promise<void> {
     const prefix = _prefix !== '' ? `${_prefix}-` : '';
     const node = this._container.get(`${nodePrefix}.${nodeName}`) as AConnector;
-    const fileName = path.parse(file).name;
-    const fileDir = path.parse(file).dir;
+    const fileName = path.parse(this._file).name;
+    const fileDir = path.parse(this._file).dir;
 
-    const input = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}Input.json`)
+    const input = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}input.json`)
       .toString()) as IDtoData;
-    const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}Output.json`)
+    const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output.json`)
       .toString()) as IDtoData;
 
-    const spy = mockCurl(node, this._file, this._container.get(CoreServices.CURL), prefix);
+    const spy = mockCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix);
     const dto = new ProcessDto();
     dto.jsonData = input.data;
     dto.headers = input.headers;

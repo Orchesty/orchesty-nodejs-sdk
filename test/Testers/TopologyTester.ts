@@ -1,7 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import * as fs from 'fs';
 import { parse } from 'fast-xml-parser/src/parser';
-import path from 'path';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
@@ -18,9 +17,9 @@ export default class TopologyTester {
   constructor(private _container: DIContainer, private _file: string) {
   }
 
-  public async runTopology(topologyName: string, dto: ProcessDto): Promise<ProcessDto[]> {
+  public async runTopology(topologyPath: string, dto: ProcessDto): Promise<ProcessDto[]> {
     // Parse BPMN scheme
-    this._nodes = this._parseTopologyFile(topologyName);
+    this._nodes = this._parseTopologyFile(topologyPath);
 
     // Find first nodes
     const starts = this._nodes.filter((node) => node.previous.length <= 0);
@@ -41,11 +40,8 @@ export default class TopologyTester {
     return results;
   }
 
-  private _parseTopologyFile(topologyName: string): TestNode[] {
-    const fileName = path.parse(this._file).name;
-    const fileDir = path.parse(this._file).dir;
-
-    const buff = fs.readFileSync(`${fileDir}/Data/${fileName}/${topologyName}.tplg`);
+  private _parseTopologyFile = (path: string): TestNode[] => {
+    const buff = fs.readFileSync(path);
     const res = parse(buff.toString(), { ignoreAttributes: false, ignoreNameSpace: true });
 
     // Parse a compile TestNodes
@@ -66,7 +62,7 @@ export default class TopologyTester {
     });
 
     return nodes;
-  }
+  };
 
   private async _recursiveRunner(node: TestNode, dto: ProcessDto, _index = 0): Promise<ProcessDto[]> {
     // Get worker instance from container
