@@ -2,62 +2,17 @@
 import * as fs from 'fs';
 import { parse } from 'fast-xml-parser/src/parser';
 import path from 'path';
-import { Headers } from 'node-fetch';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
-import CoreServices from '../../lib/DIContainer/CoreServices';
-import SpyInstance = jest.SpyInstance;
-import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
-import AConnector from '../../lib/Connector/AConnector';
 import {
-  FORCE_TARGET_QUEUE, get, RESULT_CODE, WORKER_FOLLOWERS,
+  FORCE_TARGET_QUEUE, get, REPEAT_HOPS, REPEAT_MAX_HOPS, RESULT_CODE, WORKER_FOLLOWERS,
 } from '../../lib/Utils/Headers';
 import ResultCode from '../../lib/Utils/ResultCode';
-import RequestDto from '../../lib/Transport/Curl/RequestDto';
+import { mockCurl, TestNode } from './TesterHelpers';
+import CoreServices from '../../lib/DIContainer/CoreServices';
 
-interface ICurlMock {
-  body: Record<string, unknown>,
-  code: number,
-  http: string,
-  headers: { [key: string]: string },
-}
-
-export interface ILightNode {
-  name: string,
-  id: string,
-}
-
-export class TestNode implements ILightNode {
-  id: string;
-
-  name: string;
-
-  type: string;
-
-  previous: ILightNode[] = [];
-
-  followers: ILightNode[] = [];
-
-  constructor(id: string, name: string, type: string) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-  }
-
-  public toWorkerFollowerHeader(): {id: string; name: string}[] {
-    const res: {id: string; name: string}[] = [];
-    this.followers.forEach((f) => res.push({ id: f.id, name: f.name }));
-
-    return res;
-  }
-
-  public reduceFollowersByHeader(forceTargetQueue: string): ILightNode[] {
-    return this.followers.filter((f) => f.id === forceTargetQueue);
-  }
-}
-
-export class TopologyTester {
+export default class TopologyTester {
   private _nodes: TestNode[] = [];
 
   constructor(private _container: DIContainer, private _file: string) {
@@ -113,7 +68,7 @@ export class TopologyTester {
     return nodes;
   }
 
-  private async _recursiveRunner(node: TestNode, dto: ProcessDto): Promise<ProcessDto[]> {
+  private async _recursiveRunner(node: TestNode, dto: ProcessDto, _index = 0): Promise<ProcessDto[]> {
     // Get worker instance from container
     let worker: ICommonNode;
     switch (node.type) {
@@ -130,25 +85,55 @@ export class TopologyTester {
         throw new Error(`Unsupported node type [${node.type}]`);
     }
 
-    const spy = this._mockCurl(worker);
-    const out = await worker.processAction(dto);
-    if (spy) {
-      spy.mockRestore();
+    let index = _index;
+    if (index >= 255) {
+      throw new Error(`Node [${node.name}] has reached [${index}] iterations. Process has been stopped!`);
     }
+
+    const nextDto: ProcessDto[] = [];
+    let out = await this._processAction(worker, node, dto, index);
 
     let { followers } = node;
     const results: ProcessDto[] = [];
     switch (get(RESULT_CODE, out.headers)) {
-      // Success end
+      // Status has not provided => success
+      case undefined:
+        nextDto.push(out);
+        break;
+      // Success end and exit
       case ResultCode.DO_NOT_CONTINUE.toString():
+        results.push(out);
         return results;
       // Re routing
       case ResultCode.FORWARD_TO_TARGET_QUEUE.toString():
         followers = node.reduceFollowersByHeader(get(FORCE_TARGET_QUEUE, out.headers) ?? '');
+        nextDto.push(out);
         break;
-        // TODO: add statuscode for repeater
-        // TODO: add statuscode for batch cursor with followers
-        // TODO: add statuscode for batch cursor only
+      // Message want to be repeated
+      case ResultCode.REPEAT.toString():
+        index += 1;
+        dto.addHeader(REPEAT_HOPS, String(parseInt(dto.getHeader(REPEAT_HOPS, '0') as string, 10) + 1));
+        if (parseInt(get(REPEAT_HOPS, dto.headers) ?? '0', 10)
+          >= parseInt(get(REPEAT_MAX_HOPS, dto.headers) ?? '0', 10)) {
+          throw new Error('Repeater has used last try and still need to repeat.');
+        }
+        [out] = (await this._recursiveRunner(node, dto, index));
+        nextDto.push(out);
+        break;
+      // Repeat batch until cursor ends and send only one message
+      case ResultCode.BATCH_CURSOR_ONLY.toString():
+        index += 1;
+        [out] = (await this._recursiveRunner(node, dto, index));
+        nextDto.push(this._cloneProcessDto(out, {}));
+        break;
+      // Repeat batch until cursor ends and store message
+      case ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString():
+        (out.jsonData as Array<Record<string, undefined>>).forEach((item) => {
+          nextDto.push(this._cloneProcessDto(out, item));
+        });
+        index += 1;
+        [out] = (await this._recursiveRunner(node, dto, index));
+        break;
       default:
         if (get(RESULT_CODE, out.headers) !== '0') {
           throw new Error(
@@ -157,53 +142,46 @@ export class TopologyTester {
         }
     }
 
-    // Prepare out ProcessDto for followers
-    out.removeRepeater();
-    out.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
+    await Promise.all(
+      nextDto.map(async (d) => {
+        // Prepare out ProcessDto for followers
+        d.removeRepeater();
+        d.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
 
-    // Run process on followers
-    if (followers.length <= 0) {
-      results.push(out);
-    } else {
-      await Promise.all(
-        followers.map(async (follower) => {
-          const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
-          results.push(
-            ...await this._recursiveRunner(this._nodes[fIndex], out),
+        // Run process on followers
+        if (followers.length <= 0) {
+          results.push(d);
+        } else {
+          await Promise.all(
+            followers.map(async (follower) => {
+              const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
+              results.push(
+                ...await this._recursiveRunner(this._nodes[fIndex], d),
+              );
+            }),
           );
-        }),
-      );
-    }
+        }
+      }),
+    );
 
     return results;
   }
 
-  private _mockCurl(node: ICommonNode|AConnector): SpyInstance | undefined {
-    if (Reflect.has(node, 'sender')) {
-      const fileName = path.parse(this._file).name;
-      const fileDir = path.parse(this._file).dir;
-      const curlSender = this._container.get(CoreServices.CURL);
-      const curl = JSON.parse(
-        // TODO: Limitation: You can only have one node of the same name in the topology !!
-        fs.readFileSync(`${fileDir}/Data/${fileName}/${node.getName()}Mock.json`).toString(),
-      ) as ICurlMock;
-
-      return jest.spyOn(curlSender, 'send')
-        .mockImplementation(
-          (r) => {
-            const request = r as RequestDto;
-            const [method, url] = curl.http.split(' ', 2);
-            expect(request.method).toBe(method);
-            expect(request.url).toBe(url);
-
-            return new ResponseDto(
-              JSON.stringify(curl.body || {}),
-              curl.code || 200,
-              new Headers(curl.headers || new Headers()),
-            );
-          },
-        );
+  private async _processAction(worker: ICommonNode, node: TestNode, dto: ProcessDto, index = 0): Promise<ProcessDto> {
+    const spy = mockCurl(worker, this._file, this._container.get(CoreServices.CURL), node.id, index);
+    const out = await worker.processAction(dto);
+    if (spy) {
+      spy.mockRestore();
     }
-    return undefined;
+
+    return out;
   }
+
+  private _cloneProcessDto = (dto: ProcessDto, body: Record<string, undefined>): ProcessDto => {
+    const clone = new ProcessDto();
+    clone.jsonData = body;
+    clone.headers = dto.headers;
+
+    return clone;
+  };
 }

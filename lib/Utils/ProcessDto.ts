@@ -97,6 +97,7 @@ export default class ProcessDto {
   }
 
   removeRepeater(): void {
+    this.removeHeader(RESULT_CODE);
     this.removeHeader(REPEAT_INTERVAL);
     this.removeHeader(REPEAT_MAX_HOPS);
     this.removeHeader(REPEAT_HOPS);
@@ -129,20 +130,26 @@ export default class ProcessDto {
   }
 
   removeLimiter(): void {
+    this.removeHeader(RESULT_CODE);
     this.removeHeader(LIMITER_KEY);
   }
 
   setBatchCursor(cursor: string, iterateOnly = false): void {
     this.addHeader(BATCH_CURSOR, cursor);
     if (iterateOnly) {
-      this.addHeader(RESULT_CODE, ResultCode.BATCH_CURSOR_ONLY.toString());
+      this._setStatusHeader(ResultCode.BATCH_CURSOR_ONLY);
     } else {
-      this.addHeader(RESULT_CODE, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString());
+      this._setStatusHeader(ResultCode.BATCH_CURSOR_WITH_FOLLOWERS);
     }
+  }
+
+  getBatchCursor(defaultValue: string): string {
+    return this.getHeader(BATCH_CURSOR, defaultValue) as string;
   }
 
   removeBatchCursor(): void {
     this.removeHeader(BATCH_CURSOR);
+    this.removeHeader(RESULT_CODE);
   }
 
   private _setStatusHeader(value: ResultCode, message?: string) {

@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -38,13 +38,13 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.3.2",
+    "@types/node": "^16.3.3",
     "@types/node-fetch": "^2.5.11",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "autocannon": "^7.4.0",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.4",
