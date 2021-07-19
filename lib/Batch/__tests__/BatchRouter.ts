@@ -10,7 +10,7 @@ describe('Tests for BatchRouter', () => {
     const batchUrl = `/batch/${batch.getName()}/action`;
     await supertest(expressApp)
       .post(batchUrl)
-      .expect(200, '{dataTest: testValue}');
+      .expect(200, '[{"dataTest":"testValue"}]');
   });
 
   it('get /batch/:name/action/test route', async () => {

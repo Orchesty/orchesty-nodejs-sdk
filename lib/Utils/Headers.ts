@@ -12,6 +12,8 @@ export const TOPOLOGY_ID = 'topology-id';
 export const TOPOLOGY_NAME = 'topology-name';
 export const APPLICATION = 'application';
 export const USER = 'user';
+export const WORKER_FOLLOWERS = 'worker-followers';
+export const FORCE_TARGET_QUEUE = 'force-target-queue';
 
 // Result headers
 export const RESULT_CODE = 'result-code';

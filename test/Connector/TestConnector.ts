@@ -15,9 +15,8 @@ export default class TestConnector extends AConnector {
       processed: Date.now()
         .toString(),
     };
-    dto.setStopProcess(ResultCode.DO_NOT_CONTINUE);
 
-    const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.POST);
+    const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET);
     requestDto.debugInfo = dto;
     const responseDto = await this._sender.send(requestDto);
     if (responseDto.responseCode !== 200) {
