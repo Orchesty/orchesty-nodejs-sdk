@@ -90,6 +90,8 @@ export default class TopologyTester {
       throw new Error(`Node [${node.name}] has reached [${index}] iterations. Process has been stopped!`);
     }
 
+    dto.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
+
     const nextDto: ProcessDto[] = [];
     let out = await this._processAction(worker, node, dto, index);
 
@@ -98,15 +100,18 @@ export default class TopologyTester {
     switch (get(RESULT_CODE, out.headers)) {
       // Status has not provided => success
       case undefined:
+        dto.removeHeader(RESULT_CODE);
         nextDto.push(out);
         break;
       // Success end and exit
       case ResultCode.DO_NOT_CONTINUE.toString():
+        dto.removeHeader(RESULT_CODE);
         results.push(out);
         return results;
       // Re routing
       case ResultCode.FORWARD_TO_TARGET_QUEUE.toString():
         followers = node.reduceFollowersByHeader(get(FORCE_TARGET_QUEUE, out.headers) ?? '');
+        dto.removeHeader(RESULT_CODE);
         nextDto.push(out);
         break;
       // Message want to be repeated
@@ -117,12 +122,15 @@ export default class TopologyTester {
           >= parseInt(get(REPEAT_MAX_HOPS, dto.headers) ?? '0', 10)) {
           throw new Error('Repeater has used last try and still need to repeat.');
         }
+        dto.removeHeader(RESULT_CODE);
         [out] = (await this._recursiveRunner(node, dto, index));
         nextDto.push(out);
         break;
       // Repeat batch until cursor ends and send only one message
       case ResultCode.BATCH_CURSOR_ONLY.toString():
         index += 1;
+        dto.setBatchCursor(out.getBatchCursor());
+        dto.removeHeader(RESULT_CODE);
         [out] = (await this._recursiveRunner(node, dto, index));
         nextDto.push(this._cloneProcessDto(out, {}));
         break;
@@ -132,6 +140,8 @@ export default class TopologyTester {
           nextDto.push(this._cloneProcessDto(out, item));
         });
         index += 1;
+        dto.setBatchCursor(out.getBatchCursor());
+        dto.removeHeader(RESULT_CODE);
         [out] = (await this._recursiveRunner(node, dto, index));
         break;
       default:
@@ -146,7 +156,7 @@ export default class TopologyTester {
       nextDto.map(async (d) => {
         // Prepare out ProcessDto for followers
         d.removeRepeater();
-        d.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
+        d.removeHeader(RESULT_CODE);
 
         // Run process on followers
         if (followers.length <= 0) {
@@ -177,10 +187,14 @@ export default class TopologyTester {
     return out;
   }
 
-  private _cloneProcessDto = (dto: ProcessDto, body: Record<string, undefined>): ProcessDto => {
+  private _cloneProcessDto = (dto: ProcessDto, body?: Record<string, undefined>): ProcessDto => {
     const clone = new ProcessDto();
-    clone.jsonData = body;
     clone.headers = dto.headers;
+    if (body) {
+      clone.jsonData = body;
+    } else {
+      clone.data = dto.data;
+    }
 
     return clone;
   };

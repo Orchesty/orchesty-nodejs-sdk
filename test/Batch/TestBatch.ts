@@ -11,7 +11,7 @@ export default class TestBatch implements ICommonNode {
     dto.data = '{dataTest: testValue}';
     dto.jsonData = [{ dataTest: 'testValue' }];
 
-    if (dto.getBatchCursor('') === CURSOR) {
+    if (dto.getBatchCursor() === CURSOR) {
       dto.removeBatchCursor();
       return dto;
     }
