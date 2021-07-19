@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:pipes="http://www.omg.org/spec/Pipes/20100524/MODEL" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:event id="Event_0ve2715" pipes:pipesType="start" name="Start">
+      <bpmn:outgoing>Flow_10jcaku</bpmn:outgoing>
+    </bpmn:event>
+    <bpmn:task id="Activity_158l2ix" pipes:pipesType="batch" name="testbatch">
+      <bpmn:incoming>Flow_0drj5ev</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:task id="Activity_1kiutnz" pipes:pipesType="connector" name="test">
+      <bpmn:incoming>Flow_10jcaku</bpmn:incoming>
+      <bpmn:outgoing>Flow_0drj5ev</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_10jcaku" sourceRef="Event_0ve2715" targetRef="Activity_1kiutnz" />
+    <bpmn:sequenceFlow id="Flow_0drj5ev" sourceRef="Activity_1kiutnz" targetRef="Activity_158l2ix" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNEdge id="Flow_0drj5ev_di" bpmnElement="Flow_0drj5ev">
+        <di:waypoint x="480" y="270" />
+        <di:waypoint x="570" y="270" />
+        <di:waypoint x="570" y="200" />
+        <di:waypoint x="690" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10jcaku_di" bpmnElement="Flow_10jcaku">
+        <di:waypoint x="288" y="270" />
+        <di:waypoint x="380" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0ve2715_di" bpmnElement="Event_0ve2715">
+        <dc:Bounds x="252" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="258" y="291" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_158l2ix_di" bpmnElement="Activity_158l2ix">
+        <dc:Bounds x="690" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kiutnz_di" bpmnElement="Activity_1kiutnz">
+        <dc:Bounds x="380" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
