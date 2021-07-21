@@ -27,4 +27,5 @@ export const cryptOptions = {
 
 export const pipesOptions = {
   backend: process.env.BACKEND_URL || '',
+  startingPoint: process.env.STARTING_POINT_URL || '',
 };

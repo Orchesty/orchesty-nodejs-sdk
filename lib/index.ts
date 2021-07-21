@@ -24,6 +24,7 @@ import MetricsSenderLoader from './Metrics/MetricsSenderLoader';
 import Mongo from './Metrics/Impl/Mongo';
 import Influx from './Metrics/Impl/Influx';
 import bodyParser from './Middleware/BodyParseHandler';
+import TopologyRunner from './Topology/TopologyRunner';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
@@ -49,6 +50,7 @@ export function initiateContainer(): void {
   );
   const metrics = new Metrics(metricsLoader);
   const curlSender = new CurlSender(metrics);
+  const topologyRunner = new TopologyRunner(curlSender);
 
   // Add them to the DIContainer
   container.set(CoreServices.CRYPT_MANAGER, cryptManager);
@@ -58,6 +60,7 @@ export function initiateContainer(): void {
   container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
   container.set(CoreServices.CURL, curlSender);
   container.set(CoreServices.METRICS, metrics);
+  container.set(CoreServices.TOPOLOGY_RUNNER, topologyRunner);
 
   // Configure routes
   routes.push(new ConnectorRouter(expressApp, loader));

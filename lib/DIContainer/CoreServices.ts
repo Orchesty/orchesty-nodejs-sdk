@@ -7,6 +7,7 @@ enum CoreServices {
   OAUTH2_PROVIDER = 'hbpf.core.oauth2_provider',
   CURL = 'hbpf.core.curl_sender',
   METRICS = 'hbpf.core.metrics',
+  TOPOLOGY_RUNNER = 'hbpf.core.topology_runner',
 }
 
 export default CoreServices;
