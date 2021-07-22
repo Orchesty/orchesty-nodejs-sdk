@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.24",
+  "version": "1.0.26",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -51,7 +51,7 @@
     "jest": "^27.0.6",
     "nodemon": "^2.0.12",
     "supertest": "^6.1.4",
-    "ts-jest": "^27.0.3",
+    "ts-jest": "^27.0.4",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
   }

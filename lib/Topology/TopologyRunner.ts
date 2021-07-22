@@ -4,13 +4,14 @@ import logger from '../Logger/Logger';
 import { pipesOptions } from '../Config/Config';
 import RequestDto from '../Transport/Curl/RequestDto';
 import HttpMethods from '../Transport/HttpMethods';
+import OnRepeatException from '../Exception/OnRepeatException';
 
 export default class TopologyRunner {
   constructor(private _curlSender: CurlSender) {
   }
 
   public async runByName(
-    data: Record<string, undefined>,
+    data: Record<string, unknown>,
     topology: string,
     node: string,
     _user?: string,
@@ -22,7 +23,7 @@ export default class TopologyRunner {
   }
 
   public async runById(
-    data: Record<string, undefined>,
+    data: Record<string, unknown>,
     topology: string,
     node: string,
     _user?: string,
@@ -33,19 +34,26 @@ export default class TopologyRunner {
     return this._run(url, data);
   }
 
-  private async _run(url: string, data: Record<string, undefined>): Promise<ResponseDto> {
-    const errMessage = `Call of starting-point with url [${url}] has been failed.`;
+  private async _run(url: string, data: Record<string, unknown>): Promise<ResponseDto> {
+    const errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
     try {
       const requestDto = new RequestDto(url, HttpMethods.POST, JSON.stringify(data));
       const resp = await this._curlSender.send(requestDto);
       if (resp.responseCode !== 200) {
+        errMessage.replace('__reason__', 'ResponseCode is not 200');
         logger.error(errMessage);
+        throw new OnRepeatException(60, 10, errMessage);
       }
 
       return resp;
     } catch (e) {
+      if (e instanceof OnRepeatException) {
+        throw e;
+      }
+
+      errMessage.replace('__reason__', e.message || 'unknown');
       logger.error(e.message || `${errMessage}: Unknown error!`);
-      throw e;
+      throw new OnRepeatException(60, 10, errMessage);
     }
   }
 }
