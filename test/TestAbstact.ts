@@ -9,6 +9,7 @@ import {
 } from '../lib';
 import TestBatch from './Batch/TestBatch';
 import CommonLoader from '../lib/Commons/CommonLoader';
+import TestCustomNode from './CustomNode/TestCustomNode';
 
 initiateContainer();
 
@@ -24,12 +25,14 @@ export function getTestContainer(): DIContainer {
   const appBasic = new TestBasicApplication();
   const appOAuth = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
   const batch = new TestBatch();
+  const custom = new TestCustomNode();
 
   // Add them to the DIContainer
   container.setConnector(testConnector);
   container.setApplication(appBasic);
   container.setApplication(appOAuth);
   container.setBatch(batch);
+  container.setCustomNode(custom);
 
   return container;
 }

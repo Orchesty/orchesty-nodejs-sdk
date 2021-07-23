@@ -4,7 +4,7 @@ import CommonLoader from '../Commons/CommonLoader';
 import { createProcessDto, createSuccessResponse } from '../Utils/Router';
 import { ICommonNode } from '../Commons/ICommonNode';
 
-export const CUSTOM_NODE_PREFIX = 'hbpf.connector';
+export const CUSTOM_NODE_PREFIX = 'hbpf.custom-node';
 
 export default class CustomNodeRouter extends ACommonRouter {
   constructor(app: express.Application, private _loader: CommonLoader) {

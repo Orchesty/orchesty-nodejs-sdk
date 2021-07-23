@@ -2,6 +2,8 @@ import DIContainer from '../Container';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import { getTestContainer } from '../../../test/TestAbstact';
 import { APPLICATION_PREFIX } from '../../Application/ApplicationRouter';
+import { BATCH_PREFIX } from '../../Batch/BatchRouter';
+import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -14,6 +16,8 @@ jest.mock('../../Logger/Logger', () => ({
 
 const container = getTestContainer();
 const testConnector = container.getConnector('test');
+const testCustom = container.getCustomNode('testcustom');
+const testBatch = container.getBatch('testbatch');
 const testApp = container.getApplication('test');
 
 describe('Test DIContainer', () => {
@@ -60,13 +64,13 @@ describe('Test DIContainer', () => {
   });
 
   it('test set/get CustomNode service', () => {
-    const cont = new DIContainer();
-    cont.setCustomNode(testConnector);
+    expect(container.get(`${CUSTOM_NODE_PREFIX}.${testCustom.getName()}`)).toEqual(testCustom);
+    expect(container.getCustomNode(testCustom.getName())).toEqual(testCustom);
+  });
 
-    expect(cont.get(`${CUSTOM_NODE_PREFIX}.${testConnector.getName()}`))
-      .toEqual(testConnector);
-    expect(cont.getCustomNode(testConnector.getName()))
-      .toEqual(testConnector);
+  it('test set/get Batch service', () => {
+    expect(container.get(`${BATCH_PREFIX}.${testBatch.getName()}`)).toEqual(testBatch);
+    expect(container.getBatch(testBatch.getName())).toEqual(testBatch);
   });
 
   it('test set/get Application service', () => {
@@ -83,7 +87,6 @@ describe('Test DIContainer', () => {
     const container2 = new DIContainer();
     container2.setConnector(testConnector);
 
-    expect(container2.getAllByPrefix(CUSTOM_NODE_PREFIX))
-      .toEqual([testConnector]);
+    expect(container2.getAllByPrefix(CONNECTOR_PREFIX)).toEqual([testConnector]);
   });
 });
