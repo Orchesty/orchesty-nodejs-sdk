@@ -46,12 +46,23 @@ export default class TopologyTester {
 
     // Parse a compile TestNodes
     const nodes: TestNode[] = [];
-    res.definitions.process.task.forEach((task: Record<string, string>) => {
+
+    let taskList = res.definitions.process.task
+    if (!Array.isArray(taskList)) {
+      taskList = [taskList];
+    }
+
+    taskList.forEach((task: Record<string, string>) => {
       const node = new TestNode(task['@_id'], task['@_name'], task['@_pipesType']);
       nodes.push(node);
     });
 
-    res.definitions.process.sequenceFlow.forEach((line: Record<string, string>) => {
+    let sequenceFlow = res.definitions.process.sequenceFlow;
+    if (!Array.isArray(sequenceFlow)){
+      sequenceFlow = [sequenceFlow];
+    }
+
+    sequenceFlow.forEach((line: Record<string, string>) => {
       const from = nodes.findIndex((node) => node.id === line['@_sourceRef']);
       const to = nodes.findIndex((node) => node.id === line['@_targetRef']);
 

@@ -35,12 +35,12 @@ export default class TopologyRunner {
   }
 
   private async _run(url: string, data: Record<string, unknown>): Promise<ResponseDto> {
-    const errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
+    let errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
     try {
       const requestDto = new RequestDto(url, HttpMethods.POST, JSON.stringify(data));
       const resp = await this._curlSender.send(requestDto);
       if (resp.responseCode !== 200) {
-        errMessage.replace('__reason__', 'ResponseCode is not 200');
+        errMessage = errMessage.replace('__reason__', 'ResponseCode is not 200');
         logger.error(errMessage);
         throw new OnRepeatException(60, 10, errMessage);
       }
@@ -51,7 +51,7 @@ export default class TopologyRunner {
         throw e;
       }
 
-      errMessage.replace('__reason__', e.message || 'unknown');
+      errMessage = errMessage.replace('__reason__', e.message || 'unknown');
       logger.error(e.message || `${errMessage}: Unknown error!`);
       throw new OnRepeatException(60, 10, errMessage);
     }
