@@ -8,7 +8,7 @@ import {
   FORCE_TARGET_QUEUE, get, REPEAT_HOPS, REPEAT_MAX_HOPS, RESULT_CODE, WORKER_FOLLOWERS,
 } from '../../lib/Utils/Headers';
 import ResultCode from '../../lib/Utils/ResultCode';
-import { mockCurl, TestNode } from './TesterHelpers';
+import { mockNodeCurl, TestNode } from './TesterHelpers';
 import CoreServices from '../../lib/DIContainer/CoreServices';
 
 export default class TopologyTester {
@@ -47,18 +47,19 @@ export default class TopologyTester {
     // Parse a compile TestNodes
     const nodes: TestNode[] = [];
 
-    let taskList = res.definitions.process.task
+    let taskList = res.definitions.process.task;
     if (!Array.isArray(taskList)) {
       taskList = [taskList];
     }
 
     taskList.forEach((task: Record<string, string>) => {
-      const node = new TestNode(task['@_id'], task['@_name'], task['@_pipesType']);
-      nodes.push(node);
+      nodes.push(
+        new TestNode(task['@_id'], task['@_name'], task['@_pipesType']),
+      );
     });
 
-    let sequenceFlow = res.definitions.process.sequenceFlow;
-    if (!Array.isArray(sequenceFlow)){
+    let { sequenceFlow } = res.definitions.process;
+    if (!Array.isArray(sequenceFlow)) {
       sequenceFlow = [sequenceFlow];
     }
 
@@ -185,13 +186,12 @@ export default class TopologyTester {
   }
 
   private async _processAction(worker: ICommonNode, node: TestNode, dto: ProcessDto, index = 0): Promise<ProcessDto> {
-    const spy = mockCurl(worker, this._file, this._container.get(CoreServices.CURL), node.id, index);
-    const out = await worker.processAction(dto);
-    if (spy) {
-      spy.mockRestore();
+    const spy = mockNodeCurl(worker, this._file, this._container.get(CoreServices.CURL), node.id, index);
+    try {
+      return await worker.processAction(dto);
+    } finally {
+      spy?.mockRestore();
     }
-
-    return out;
   }
 
   private _cloneProcessDto = (dto: ProcessDto, body?: Record<string, undefined>): ProcessDto => {

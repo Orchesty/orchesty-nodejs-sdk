@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import DIContainer from '../../lib/DIContainer/Container';
 import ProcessDto from '../../lib/Utils/ProcessDto';
-import { IDtoData, mockCurl } from './TesterHelpers';
+import { IDtoData, mockNodeCurl } from './TesterHelpers';
 import AConnector from '../../lib/Connector/AConnector';
 import CoreServices from '../../lib/DIContainer/CoreServices';
 import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
@@ -62,7 +62,7 @@ export default class NodeTester {
     const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output.json`)
       .toString()) as IDtoData;
 
-    const spy = mockCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix);
+    const spy = mockNodeCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix);
     const dto = new ProcessDto();
     dto.jsonData = input.data;
     dto.headers = input.headers;
@@ -78,9 +78,7 @@ export default class NodeTester {
         expect(e).toBeInstanceOf(expectedError);
       }
     } finally {
-      if (spy) {
-        spy.mockRestore();
-      }
+      spy?.mockRestore();
     }
   }
 }

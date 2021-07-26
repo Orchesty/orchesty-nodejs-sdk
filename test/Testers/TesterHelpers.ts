@@ -55,6 +55,44 @@ export class TestNode implements ILightNode {
 }
 
 export function mockCurl(
+  file: string,
+  sender: CurlSender,
+  _prefix = '',
+  _index = 0,
+): SpyInstance | undefined {
+  const prefix = _prefix !== '' ? `${_prefix}-` : '';
+  const index = _index !== 0 ? `${_index}-` : '';
+  const fileName = path.parse(file).name;
+  const fileDir = path.parse(file).dir;
+  let spy = jest.spyOn(sender, 'send');
+  let mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock.json`;
+  let call = 0;
+
+  do {
+    const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
+    spy = spy.mockImplementationOnce(
+      // eslint-disable-next-line @typescript-eslint/require-await,no-loop-func
+      async (r: RequestDto): Promise<ResponseDto> => {
+        const request = r as RequestDto;
+        const [method, url] = curl.http.split(' ', 2);
+        expect(request.method).toBe(method);
+        expect(request.url).toBe(url);
+
+        return new ResponseDto(
+          JSON.stringify(curl.body || {}),
+          curl.code || 200,
+          new Headers(curl.headers || new Headers()),
+        );
+      },
+    );
+    call += 1;
+    mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock${call}.json`;
+  } while (fs.existsSync(mockFile));
+
+  return spy;
+}
+
+export function mockNodeCurl(
   node: ICommonNode|AConnector,
   file: string,
   sender: CurlSender,
@@ -62,30 +100,7 @@ export function mockCurl(
   _index = 0,
 ): SpyInstance | undefined {
   if (Reflect.has(node, 'sender') && Reflect.get(node, 'sender') !== undefined) {
-    const prefix = _prefix !== '' ? `${_prefix}-` : '';
-    const index = _index !== 0 ? `${_index}-` : '';
-    const fileName = path.parse(file).name;
-    const fileDir = path.parse(file).dir;
-    const curl = JSON.parse(
-      fs.readFileSync(`${fileDir}/Data/${fileName}/${index}${prefix}mock.json`).toString(),
-    ) as ICurlMock;
-
-    return jest.spyOn(sender, 'send')
-      .mockImplementation(
-        // eslint-disable-next-line @typescript-eslint/require-await
-        async (r: RequestDto): Promise<ResponseDto> => {
-          const request = r as RequestDto;
-          const [method, url] = curl.http.split(' ', 2);
-          expect(request.method).toBe(method);
-          expect(request.url).toBe(url);
-
-          return new ResponseDto(
-            JSON.stringify(curl.body || {}),
-            curl.code || 200,
-            new Headers(curl.headers || new Headers()),
-          );
-        },
-      );
+    return mockCurl(file, sender, _prefix, _index);
   }
   return undefined;
 }
