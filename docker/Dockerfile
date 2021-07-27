@@ -1,6 +1,6 @@
 FROM node:slim
 
-RUN apt-get update && apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade && apt-get install -y \
     yarn
 
 RUN yarn set version berry
