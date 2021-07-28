@@ -5,7 +5,12 @@ import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
 import {
-  FORCE_TARGET_QUEUE, get, REPEAT_HOPS, REPEAT_MAX_HOPS, RESULT_CODE, WORKER_FOLLOWERS,
+  FORCE_TARGET_QUEUE,
+  get,
+  REPEAT_HOPS,
+  REPEAT_MAX_HOPS,
+  RESULT_CODE,
+  WORKER_FOLLOWERS,
 } from '../../lib/Utils/Headers';
 import ResultCode from '../../lib/Utils/ResultCode';
 import { mockNodeCurl, TestNode } from './TesterHelpers';
@@ -109,7 +114,11 @@ export default class TopologyTester {
       // Status has not provided => success
       case undefined:
         dto.removeHeader(RESULT_CODE);
-        nextDto.push(out);
+        if (node.type === 'batch') {
+          this._pushMultiple(nextDto, out);
+        } else {
+          nextDto.push(out);
+        }
         break;
       // Success end and exit
       case ResultCode.DO_NOT_CONTINUE.toString():
@@ -144,9 +153,7 @@ export default class TopologyTester {
         break;
       // Repeat batch until cursor ends and store message
       case ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString():
-        (out.jsonData as Array<Record<string, undefined>>).forEach((item) => {
-          nextDto.push(this._cloneProcessDto(out, item));
-        });
+        this._pushMultiple(nextDto, out);
         index += 1;
         dto.setBatchCursor(out.getBatchCursor());
         dto.removeHeader(RESULT_CODE);
@@ -205,4 +212,10 @@ export default class TopologyTester {
 
     return clone;
   };
+
+  private _pushMultiple(nextDto: ProcessDto[], out: ProcessDto): void {
+    (out.jsonData as Array<Record<string, undefined>>).forEach((item) => {
+      nextDto.push(this._cloneProcessDto(out, item));
+    });
+  }
 }

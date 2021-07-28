@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.4.3",
+    "@types/node": "^16.4.5",
     "@types/node-fetch": "^2.5.12",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
