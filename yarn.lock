@@ -1107,10 +1107,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.4.5":
-  version: 16.4.5
-  resolution: "@types/node@npm:16.4.5"
-  checksum: 639222e5c711a1d24828c2b3b0687fb9d5c3f9cf1f67992101c3a6784430fdf1fe84ecb19e083fdebf8ce0ec165bc44954aa92ae0670f225ec52cd7fe78efd5a
+"@types/node@npm:^16.4.7":
+  version: 16.4.7
+  resolution: "@types/node@npm:16.4.7"
+  checksum: ab6fab8feedb42eeb1a1cbe2217083da4cdc3fed351bd7daf1ad44ad1e24ffa8ace944a2fc885721a2a0fa16d4ded3af282001bb55cf56930feb7abd9d15394c
   languageName: node
   linkType: hard
 
@@ -5878,7 +5878,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/jest": ^26.0.24
     "@types/mongodb": ^3.6.20
-    "@types/node": ^16.4.5
+    "@types/node": ^16.4.7
     "@types/node-cache": ^4.2.5
     "@types/node-fetch": ^2.5.12
     "@types/php-serialize": ^3.0.1

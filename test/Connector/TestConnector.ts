@@ -1,5 +1,4 @@
 import ProcessDto from '../../lib/Utils/ProcessDto';
-import ResultCode from '../../lib/Utils/ResultCode';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';

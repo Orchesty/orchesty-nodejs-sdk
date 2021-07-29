@@ -19,7 +19,7 @@ import CoreServices from '../../lib/DIContainer/CoreServices';
 export default class TopologyTester {
   private _nodes: TestNode[] = [];
 
-  constructor(private _container: DIContainer, private _file: string) {
+  constructor(private _container: DIContainer, private _file: string, private _forceMock = false) {
   }
 
   public async runTopology(topologyPath: string, dto: ProcessDto): Promise<ProcessDto[]> {
@@ -34,13 +34,15 @@ export default class TopologyTester {
 
     // Iterate over all nodes
     const results: ProcessDto[] = [];
-    await Promise.all(
-      await starts.map(async (node) => {
+    while (starts.length > 0) {
+      const startNode = starts.shift();
+      if (startNode) {
         results.push(
-          ...await this._recursiveRunner(node, dto),
+          // eslint-disable-next-line no-await-in-loop
+          ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto)),
         );
-      }),
-    );
+      }
+    }
 
     return results;
   }
@@ -193,7 +195,14 @@ export default class TopologyTester {
   }
 
   private async _processAction(worker: ICommonNode, node: TestNode, dto: ProcessDto, index = 0): Promise<ProcessDto> {
-    const spy = mockNodeCurl(worker, this._file, this._container.get(CoreServices.CURL), node.id, index);
+    const spy = mockNodeCurl(
+      worker,
+      this._file,
+      this._container.get(CoreServices.CURL),
+      node.id,
+      index,
+      this._forceMock,
+    );
     try {
       return await worker.processAction(dto);
     } finally {

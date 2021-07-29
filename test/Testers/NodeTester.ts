@@ -11,7 +11,7 @@ import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
 import { BATCH_PREFIX } from '../../lib/Batch/BatchRouter';
 
 export default class NodeTester {
-  constructor(private _container: DIContainer, private _file: string) {
+  constructor(private _container: DIContainer, private _file: string, private _forceMock = false) {
   }
 
   public async testConnector(
@@ -62,7 +62,7 @@ export default class NodeTester {
     const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output.json`)
       .toString()) as IDtoData;
 
-    const spy = mockNodeCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix);
+    const spy = mockNodeCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix, 0, this._forceMock);
     const dto = new ProcessDto();
     dto.jsonData = input.data;
     dto.headers = input.headers;
