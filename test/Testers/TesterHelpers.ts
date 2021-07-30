@@ -68,7 +68,7 @@ export function mockCurl(
   let mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock.json`;
   let call = 0;
 
-  while (fs.existsSync(mockFile)) {
+  do {
     const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
     spy = spy.mockImplementationOnce(
       // eslint-disable-next-line @typescript-eslint/require-await,no-loop-func
@@ -87,7 +87,7 @@ export function mockCurl(
     );
     call += 1;
     mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock${call}.json`;
-  }
+  } while (fs.existsSync(mockFile));
 
   return spy;
 }
@@ -99,8 +99,9 @@ export function mockNodeCurl(
   _prefix = '',
   _index = 0,
   _forceMock = false,
+  _exclude: string[] = [],
 ): SpyInstance | undefined {
-  if (_forceMock) {
+  if (_forceMock && !_exclude.includes(_prefix)) {
     return mockCurl(file, sender, _prefix, _index);
   }
 
