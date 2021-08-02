@@ -2,7 +2,7 @@ import DIContainer from '../DIContainer/Container';
 import { IName } from './IName';
 
 export default class CommonLoader {
-  constructor(private _container: DIContainer) {
+  constructor(protected _container: DIContainer) {
   }
 
   public get(prefix: string, name: string): IName {

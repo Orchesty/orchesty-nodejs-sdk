@@ -8,9 +8,9 @@ import CoreServices from '../../../DIContainer/CoreServices';
 import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Provider';
 import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
 import DIContainer from '../../../DIContainer/Container';
-import CommonLoader from '../../../Commons/CommonLoader';
 import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
+import ApplicationLoader from '../../ApplicationLoader';
 
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
@@ -85,7 +85,26 @@ describe('ApplicationManager tests', () => {
 
   it('applications', () => {
     expect(appManager.getApplications())
-      .toEqual(['test', 'oauth2application']);
+      .toEqual([
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          application_type: 'cron',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          authorization_type: 'basic',
+          description: 'Test description',
+          key: 'test',
+          name: 'Test application',
+        },
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          application_type: 'cron',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          authorization_type: 'oauth2',
+          description: 'Test OAuth2 application',
+          key: 'oauth2application',
+          name: 'Test OAuth2 Application',
+        },
+      ]);
   });
 
   it('getApplication', () => {
@@ -134,7 +153,7 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
-    const mockedLoader = new CommonLoader(mockedContainer);
+    const mockedLoader = new ApplicationLoader(mockedContainer);
     const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
 
     const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
@@ -150,7 +169,7 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
-    const mockedLoader = new CommonLoader(mockedContainer);
+    const mockedLoader = new ApplicationLoader(mockedContainer);
     const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
     const frontendUrl = await mockedAppManager.saveAuthorizationToken(
       'oauth2application',

@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import Annotation from '../../Utils/Annotation';
-import CommonLoader from '../../Commons/CommonLoader';
 import { IApplication } from '../Base/IApplication';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
 import HttpMethods from '../../Transport/HttpMethods';
@@ -9,15 +8,17 @@ import { IBasicApplication } from '../../Authorization/Type/Basic/IBasicApplicat
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
+import ApplicationLoader from '../ApplicationLoader';
+import { IApplicationArray } from '../Base/AApplication';
 
 export default class ApplicationManager {
   private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
 
-  constructor(private _client: MongoDbClient, private _loader: CommonLoader) {
+  constructor(private _client: MongoDbClient, private _loader: ApplicationLoader) {
   }
 
-  public getApplications(): string[] {
-    return this._loader.getList(APPLICATION_PREFIX);
+  public getApplications(): IApplicationArray[] {
+    return this._loader.getListApplications();
   }
 
   public getApplication(key: string): IApplication {

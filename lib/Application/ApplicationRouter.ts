@@ -12,7 +12,7 @@ export class ApplicationRouter extends ACommonRouter {
 
   configureRoutes(): express.Application {
     this._app.route('/applications').get((req, res) => {
-      res.json(this._manager.getApplications());
+      res.json({ items: this._manager.getApplications() });
     });
 
     this._app.route('/applications/:name').get((req, res) => {

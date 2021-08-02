@@ -25,6 +25,7 @@ import Mongo from './Metrics/Impl/Mongo';
 import Influx from './Metrics/Impl/Influx';
 import bodyParser from './Middleware/BodyParseHandler';
 import TopologyRunner from './Topology/TopologyRunner';
+import ApplicationLoader from './Application/ApplicationLoader';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
@@ -41,7 +42,8 @@ export function initiateContainer(): void {
   const cryptManager = new CryptManager(cryptProviders);
   const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager);
   const loader = new CommonLoader(container);
-  const appManager = new ApplicationManager(mongoDbClient, loader);
+  const appLoader = new ApplicationLoader(container);
+  const appManager = new ApplicationManager(mongoDbClient, appLoader);
   const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
   const metricsLoader = new MetricsSenderLoader(
     metricsOptions.metricsService,
@@ -56,6 +58,7 @@ export function initiateContainer(): void {
   container.set(CoreServices.CRYPT_MANAGER, cryptManager);
   container.set(CoreServices.MONGO, mongoDbClient);
   container.set(CoreServices.LOADER, loader);
+  container.set(CoreServices.APP_LOADER, appLoader);
   container.set(CoreServices.APP_MANAGER, appManager);
   container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
   container.set(CoreServices.CURL, curlSender);

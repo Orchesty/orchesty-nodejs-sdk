@@ -75,8 +75,17 @@ export function mockCurl(
       async (r: RequestDto): Promise<ResponseDto> => {
         const request = r as RequestDto;
         const [method, url] = curl.http.split(' ', 2);
-        expect(request.method).toBe(method);
-        expect(request.url).toBe(url);
+        try {
+          expect(request.method).toBe(method);
+        } catch (e) {
+          throw new Error(`HTTP Method for [${index}${_prefix}] should be [${method}], [${request.method}] received.`);
+        }
+
+        try {
+          expect(request.url).toBe(url);
+        } catch (e) {
+          throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${request.url}] received.`);
+        }
 
         return new ResponseDto(
           JSON.stringify(curl.body || {}),
