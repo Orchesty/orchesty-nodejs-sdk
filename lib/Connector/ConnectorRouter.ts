@@ -17,7 +17,6 @@ export default class ConnectorRouter extends ACommonRouter {
     configureRoutes(): express.Application {
       this._app.route('/connector/:name/action').post(async (req, res, next) => {
         const connector = this._loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;
-        console.log(connector);
         const dto = await connector.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);

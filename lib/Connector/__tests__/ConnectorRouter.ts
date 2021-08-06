@@ -37,8 +37,21 @@ describe('Test ConnectorRouter', () => {
     const connectorUrl = `/connector/${connector.getName()}/action`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .send({ name: 'john' })
       .expect(200, '{\n  "id": 11\n}');
+  });
+
+  it('post /connector/:name/webhook route', async () => {
+    const connectorUrl = `/connector/${connector.getName()}/webhook`;
+    await supertest(expressApp)
+      .post(connectorUrl)
+      .expect(200, '{\n  "id": 11\n}');
+  });
+
+  it('get /connector/:name/webhook/test route', async () => {
+    const connectorUrl = `/connector/${connector.getName()}/webhook/test`;
+    await supertest(expressApp)
+      .get(connectorUrl)
+      .expect(200, '[]');
   });
 
   it('get /connector/list route', async () => {
