@@ -21,6 +21,14 @@ describe('Test ConnectorRouter', () => {
       .expect(200, '[]');
   });
 
+  it('post /connector/:name/action route', async () => {
+    const connectorUrl = `/connector/${connector.getName()}/action`;
+    await supertest(expressApp)
+      .post(connectorUrl)
+      .send({ name: 'john' })
+      .expect(200, '[]');
+  });
+
   it('get /connector/list route', async () => {
     const connectorUrl = '/connector/list';
     await supertest(expressApp)
