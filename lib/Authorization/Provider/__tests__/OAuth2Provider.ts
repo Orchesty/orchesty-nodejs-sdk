@@ -4,6 +4,14 @@ import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 describe('OAuth2Provider tests', () => {
   it('authorize ', () => {
     const authUrl = 'https://identity.idoklad.cz/server/connect/authorize';

@@ -2,6 +2,14 @@ import { getTestContainer } from '../../TestAbstact';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import TopologyTester from '../TopologyTester';
 
+// Mock Logger module
+jest.mock('../../../lib/Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 describe('Test topologyTester', () => {
   it('', async () => {
     const dto = new ProcessDto();

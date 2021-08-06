@@ -5,7 +5,7 @@
   "main": "dist/lib/index.js",
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
-    "test": "jest --coverage",
+    "test": "jest --coverage --maxConcurrency=1 --maxWorkers=1 --detectOpenHandles --forceExit",
     "lint": "eslint lib/**/*.ts --fix",
     "lint-ci": "eslint lib/**/*.ts",
     "start": "nodemon test/index.ts",
@@ -38,11 +38,11 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.4.10",
+    "@types/node": "^16.4.13",
     "@types/node-fetch": "^2.5.12",
     "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
     "autocannon": "^7.4.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",

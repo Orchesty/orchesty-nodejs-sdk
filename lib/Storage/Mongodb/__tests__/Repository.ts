@@ -6,6 +6,14 @@ import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
 import CoreServices from '../../../DIContainer/CoreServices';
 
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 let dbClient: MongoDbClient;
 
 const container = getTestContainer();

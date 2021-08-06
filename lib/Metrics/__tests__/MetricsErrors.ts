@@ -1,4 +1,4 @@
-import { ITimesMetrics } from '../Metrics';
+import Metrics, { ITimesMetrics } from '../Metrics';
 import { getTestContainer } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
 
@@ -17,17 +17,25 @@ const mockITimesMetrics: ITimesMetrics = {
 };
 
 const container = getTestContainer();
+let metrics: Metrics;
 
 describe('Test metrics', () => {
+  beforeAll(() => {
+    metrics = container.get(CoreServices.METRICS);
+  });
+
+  afterAll(async () => {
+    await metrics.close();
+  });
+
   it('sendCurlMetrics', async () => {
-    const metrics = container.get(CoreServices.METRICS);
     const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics);
     expect(curlMetrics).toBeDefined();
     expect(typeof curlMetrics === 'boolean').toBeTruthy();
+    await metrics.close();
   });
 
   it('sendProcessMetrics', async () => {
-    const metrics = container.get(CoreServices.METRICS);
     const processMetric = await metrics.sendProcessMetrics(mockITimesMetrics);
     expect(processMetric).toBeDefined();
     expect(typeof processMetric === 'boolean').toBeTruthy();

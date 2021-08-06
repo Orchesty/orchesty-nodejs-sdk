@@ -4,6 +4,14 @@ import Mongo from '../Impl/Mongo';
 import CoreServices from '../../DIContainer/CoreServices';
 import { getTestContainer } from '../../../test/TestAbstact';
 
+// Mock Logger module
+jest.mock('../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 const container = getTestContainer();
 
 describe('tests for MetricsSenderLoader', () => {

@@ -1,6 +1,16 @@
 import Influx from '../Influx';
 import { metricsOptions } from '../../../Config/Config';
 
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
+jest.mock('metrics-sender/dist/lib/udp/Sender');
+
 describe('tests Metrics Influx Sender', () => {
   it('send', async () => {
     if (process.env.JEST_DOCKER) {

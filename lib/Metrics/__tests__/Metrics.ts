@@ -29,8 +29,17 @@ const mockITimesMetrics: ITimesMetrics = {
 };
 
 const container = getTestContainer();
+let metrics: Metrics;
 
 describe('Test metrics', () => {
+  beforeAll(() => {
+    metrics = container.get(CoreServices.METRICS);
+  });
+
+  afterAll(async () => {
+    await metrics.close();
+  });
+
   it('getTimes', () => {
     const times = Metrics.getTimes(mockIStartMetrics);
     expect(times).toHaveProperty('requestDuration');
@@ -58,7 +67,6 @@ describe('Test metrics', () => {
   });
 
   it('sendCurlMetrics', async () => {
-    const metrics = container.get(CoreServices.METRICS);
     const curlMetrics = await metrics.sendCurlMetrics(
       mockITimesMetrics,
       'randomNodeId',
@@ -71,7 +79,6 @@ describe('Test metrics', () => {
   });
 
   it('sendProcessMetrics', async () => {
-    const metrics = container.get(CoreServices.METRICS);
     const processMetric = await metrics.sendProcessMetrics(
       mockITimesMetrics,
       'randomTopologyId',

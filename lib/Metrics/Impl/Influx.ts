@@ -9,6 +9,7 @@ export default class Influx implements IMetricsSender {
       const parsed = parseInfluxDsn(metricsOptions.dsn);
       const client = new Metrics(measurement, tags, parsed.server, parsed.port);
       await client.send(fields);
+      client.close();
       return true;
     } catch {
       return false;
