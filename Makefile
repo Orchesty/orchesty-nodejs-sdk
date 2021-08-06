@@ -51,4 +51,8 @@ unit:
 
 fasttest: lint unit
 
+localtest:
+	npx yarn lint
+	npx yarn test
+
 test: docker-up-force yarn-install fasttest docker-down-clean

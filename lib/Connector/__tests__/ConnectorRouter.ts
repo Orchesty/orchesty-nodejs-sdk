@@ -1,5 +1,9 @@
+import supertest from 'supertest';
 import ConnectorRouter from '../ConnectorRouter';
-import { mockRouter } from '../../../test/TestAbstact';
+import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
+
+const container = getTestContainer();
+const connector = container.getConnector('test');
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -10,6 +14,20 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 describe('Test ConnectorRouter', () => {
+  it('get /connector/:name/action/test route', async () => {
+    const connectorUrl = `/connector/${connector.getName()}/action/test`;
+    await supertest(expressApp)
+      .get(connectorUrl)
+      .expect(200, '[]');
+  });
+
+  it('get /connector/list route', async () => {
+    const connectorUrl = '/connector/list';
+    await supertest(expressApp)
+      .get(connectorUrl)
+      .expect(200, '["test"]');
+  });
+
   it('test configureRoutes', () => {
     const mock = mockRouter();
     const router = new ConnectorRouter(mock.express, mock.loader);
