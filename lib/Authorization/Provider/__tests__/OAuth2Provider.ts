@@ -3,6 +3,7 @@ import { ApplicationInstall } from '../../../Application/Database/ApplicationIns
 import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
+import AOAuthProvider from '../AOAuthProvider';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -28,5 +29,16 @@ describe('OAuth2Provider tests', () => {
     expect(oauth2Provider.authorize(dto, scope)).toEqual(
       'https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=**469040-****-4e03-861e-e19da38*****&redirect_uri=testBackend%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%2Coffline_access&state=dXNlcjp0ZXN0QXBw&access_type=offline',
     );
+  });
+
+  it('throwException ', () => {
+    const message = 'testThrow';
+    const code = 666;
+
+    try {
+      AOAuthProvider.throwException(message, code);
+    } catch (e) {
+      expect(e.message).toEqual(`Message [${message}] code [${code}]`);
+    }
   });
 });
