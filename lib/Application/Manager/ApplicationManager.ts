@@ -64,7 +64,6 @@ export default class ApplicationManager {
   public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {
     const app = this.getApplication(name) as IOAuth2Application;
     const appInstall = await this._loadApplicationInstall(name, user);
-
     app.setFrontendRedirectUrl(appInstall, redirectUrl);
     await (await this._getRepository()).update(appInstall);
 
@@ -90,7 +89,6 @@ export default class ApplicationManager {
     if (appInstall === null) {
       throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not found!`);
     }
-
     return appInstall;
   }
 

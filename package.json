@@ -5,6 +5,7 @@
   "main": "dist/lib/index.js",
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
+    "one-test": "jest --maxConcurrency=1 --maxWorkers=1 --forceExit",
     "test": "jest --coverage --maxConcurrency=1 --maxWorkers=1 --detectOpenHandles --forceExit",
     "lint": "eslint lib/**/*.ts --fix",
     "lint-ci": "eslint lib/**/*.ts",
@@ -25,6 +26,8 @@
     "dateformat": "^4.5.1",
     "express": "~5.0.0-alpha.8",
     "fast-xml-parser": "^3.19.0",
+    "faker": "^5.5.3",
+    "http-status-codes": "^2.1.4",
     "metrics-sender": "^0.0.10",
     "mongodb": "~3.6.10",
     "mongodb-typescript": "^2.2.1",
