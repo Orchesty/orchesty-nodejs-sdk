@@ -1,3 +1,4 @@
+import faker from 'faker';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
 
@@ -15,6 +16,14 @@ describe('Tests ProcessDto utils', () => {
     dto.data = '{"some": "data"}';
 
     expect(dto.jsonData).toEqual({ some: 'data' });
+  });
+
+  it('ShouldRemoveBatchCursor',() => {
+    const dto = new ProcessDto();
+    const cursorName = faker.name.findName();
+    dto.setBatchCursor(cursorName);
+    dto.removeBatchCursor();
+    expect(dto.headers['pf-cursor']).toBeUndefined();
   });
 
   it('setJson', () => {
