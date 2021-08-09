@@ -1,10 +1,11 @@
+import faker from 'faker';
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
+import { OAuth2Provider} from '../OAuth2/OAuth2Provider';
 import { OAuth2Provider, REFRESH_TOKEN } from '../OAuth2/OAuth2Provider';
 import { TOKEN } from '../../Type/Basic/ABasicApplication';
-import * as faker from 'faker';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 import AOAuthProvider from '../AOAuthProvider';
 

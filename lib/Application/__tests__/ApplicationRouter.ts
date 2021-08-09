@@ -1,12 +1,16 @@
 import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
+import faker from 'faker';
 import { expressApp, getTestContainer } from '../../../test/TestAbstact';
-import { Logger } from '../../Logger/Logger';
+import { ApplicationInstall } from '../Database/ApplicationInstall';
+import CoreServices from '../../DIContainer/CoreServices';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+
 const container = getTestContainer();
 const application = container.getApplication('test');
 const oAuthApplication = container.getApplication('oauth2application');
+let dbClient: MongoDbClient;
 
-// Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
@@ -15,23 +19,24 @@ jest.mock('../../Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-describe('Test ConnectorRouter', () => {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  Logger.ctxFromDto = jest.fn().mockReturnValue({
-    node_id: '1',
-    correlation_id: '1',
-    process_id: '1',
-    parent_id: '1',
-    sequence_id: '1',
-  });
+describe('Test ApplicationRouter', () => {
   /* eslint-enable @typescript-eslint/naming-convention */
+  beforeAll(async () => {
+    dbClient = container.get(CoreServices.MONGO);
+    const db = await dbClient.db();
+    try {
+      await db.dropCollection(ApplicationInstall.getCollection());
+    } catch (e) {
+      // Ignore non-existent
+    }
+  });
 
   it('get /applications route', async () => {
     const connectorUrl = '/applications';
     const expectedResult = '["test","oauth2application"]';
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name route', async () => {
@@ -40,7 +45,7 @@ describe('Test ConnectorRouter', () => {
     const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description"}';
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200,expectedResult );
+      .expect(StatusCodes.OK,expectedResult );
   });
 
   it('get /applications/:name/sync/list route', async () => {
@@ -48,7 +53,7 @@ describe('Test ConnectorRouter', () => {
     const expectedResult = '["testSyncMethod"]';
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('post /applications/:name/sync/:method route', async () => {
@@ -57,7 +62,7 @@ describe('Test ConnectorRouter', () => {
     const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(200, expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name/sync/:method route', async () => {
@@ -66,11 +71,11 @@ describe('Test ConnectorRouter', () => {
     const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('throw error on get /applications/:name/users/:user/authorize route cause ', async () => {
-    //Todo : Edit the response it doesn't return 500 and edit this test because redirectUrl is missing
+    // Todo : 500 response
     const connectorUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
     await supertest(expressApp)
       .get(connectorUrl)
@@ -78,12 +83,21 @@ describe('Test ConnectorRouter', () => {
   });
 
   it('get /applications/:name/users/:user/authorize route', async () => {
-    const connectorUrl = `/applications/${oAuthApplication.getName()}/users/user/authorize`;
+    const user = 'user';
+    const name = oAuthApplication.getName();
+    const appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+    const repo = await dbClient.getRepository(ApplicationInstall);
+
+    await repo.insert(appInstall);
+
+    const connectorUrl = `/applications/${name}/users/${user}/authorize`;
     const expectedResult = '{"authorizeUrl":"https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=&redirect_uri=http%3A%2F%2F127.0.0.40%3A8080%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%20offline_access&state=dXNlcjpvYXV0aDJhcHBsaWNhdGlvbg&access_type=offline"}';
     await supertest(expressApp)
       .get(connectorUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      .query({ redirect_url: "http://uri.com" })
+      .query({ redirect_url: faker.internet.url()})
       .expect(StatusCodes.OK ,expectedResult);
   });
 });
