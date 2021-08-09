@@ -100,4 +100,43 @@ describe('Test ApplicationRouter', () => {
       .query({ redirect_url: faker.internet.url()})
       .expect(StatusCodes.OK ,expectedResult);
   });
+
+  it.skip('get /applications/authorize/token route', async () => {
+    const user = 'user';
+    const name = oAuthApplication.getName();
+    const appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+    const repo = await dbClient.getRepository(ApplicationInstall);
+
+    await repo.insert(appInstall);
+
+    const connectorUrl = `/applications/authorize/token`;
+    const expectedResult = '{"authorizeUrl":"https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=&redirect_uri=http%3A%2F%2F127.0.0.40%3A8080%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%20offline_access&state=dXNlcjpvYXV0aDJhcHBsaWNhdGlvbg&access_type=offline"}';
+
+    await supertest(expressApp)
+      .get(connectorUrl)
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      .query({ state: faker.internet.url()})
+      .expect(StatusCodes.OK ,expectedResult);
+  });
+
+  it.skip('get /applications/:name/users/:user/authorize/token route', async () => {
+    const user = 'user';
+    const name = oAuthApplication.getName();
+    const appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+    const repo = await dbClient.getRepository(ApplicationInstall);
+
+    await repo.insert(appInstall);
+    const connectorUrl = `/applications/${name}/users/${user}/authorize/token`;
+    const expectedResult = '{"authorizeUrl":"https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=&redirect_uri=http%3A%2F%2F127.0.0.40%3A8080%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%20offline_access&state=dXNlcjpvYXV0aDJhcHBsaWNhdGlvbg&access_type=offline"}';
+
+    await supertest(expressApp)
+      .get(connectorUrl)
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      .query({ redirect_url: faker.internet.url()})
+      .expect(StatusCodes.OK ,expectedResult);
+  });
 });

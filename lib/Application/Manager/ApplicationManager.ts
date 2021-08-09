@@ -78,10 +78,8 @@ export default class ApplicationManager {
   ): Promise<string> {
     const app = this.getApplication(name) as IOAuth2Application;
     const appInstall = await this._loadApplicationInstall(name, user);
-
     await app.setAuthorizationToken(appInstall, requestParams);
     await (await this._getRepository()).update(appInstall);
-
     return app.getFrontendRedirectUrl(appInstall);
   }
 
