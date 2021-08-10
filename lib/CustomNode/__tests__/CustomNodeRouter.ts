@@ -1,17 +1,29 @@
+import supertest from 'supertest';
 import CustomNodeRouter from '../CustomNodeRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
-import supertest from 'supertest';
+import { Logger } from '../../Logger/Logger';
+
 const container = getTestContainer();
 const customNode = container.getCustomNode('test');
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
+  log: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 describe('Test CustomNodeRouter', () => {
+  /* eslint-disable @typescript-eslint/naming-convention */
+  Logger.ctxFromDto = jest.fn().mockReturnValue({
+    node_id: '1',
+    correlation_id: '1',
+    process_id: '1',
+    parent_id: '1',
+    sequence_id: '1',
+  });
+
   it('test configureRoutes', () => {
     const mock = mockRouter();
     const router = new CustomNodeRouter(mock.express, mock.loader);
@@ -35,11 +47,11 @@ describe('Test CustomNodeRouter', () => {
       .expect(200, '[]');
   });
 
-  // Todo : need to be fixed
-  it.skip('post /custom-node/:name/process route', async () => {
+  it('post /custom-node/:name/process route', async () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
+    const expected = '{\n  "id": 11\n}';
     await supertest(expressApp)
       .post(customNodeUrl)
-      .expect(200, '[]');
+      .expect(200, expected);
   });
 });
