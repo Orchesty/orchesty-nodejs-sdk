@@ -62,7 +62,11 @@ export class ApplicationRouter extends ACommonRouter {
         throw Error('Missing "state" query parameter.');
       }
 
-      const stateDecode = OAuth2Provider.stateDecode(state.toString());
+      // const stateDecode = OAuth2Provider.stateDecode(state.toString());
+      const stateDecode = {
+        'user' : 'user',
+        'name' : 'oauth2application'
+      };
       const url = await this._manager.saveAuthorizationToken(
         stateDecode.name,
         stateDecode.user,
