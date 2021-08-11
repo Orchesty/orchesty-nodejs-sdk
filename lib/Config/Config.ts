@@ -12,7 +12,7 @@ export const metricsOptions = {
 };
 
 export const storageOptions = {
-  dsn: process.env.MONGO_DSN || '',
+  dsn: process.env.MONGODB_DSN || '',
 };
 
 export const appOptions = {
