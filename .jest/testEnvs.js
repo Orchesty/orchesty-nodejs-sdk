@@ -12,14 +12,14 @@ if(process.env.JEST_DOCKER){
 
   process.env.METRICS_DSN = 'mongodb://mongo:27017/metrics'
 
-  process.env.MONGO_DSN = 'mongodb://mongo:27017/node-sdk'
+  process.env.MONGODB_DSN = 'mongodb://mongo:27017/node-sdk'
 } else {
   // --- LOCALHOST ---
   process.env.UDP_LOGGER_DSN = '127.0.0.40:5005'
 
   process.env.METRICS_DSN = 'mongodb://127.0.0.40:27017/metrics'
 
-  process.env.MONGO_DSN = 'mongodb://127.0.0.40:27017/node-sdk'
+  process.env.MONGODB_DSN = 'mongodb://127.0.0.40:27017/node-sdk'
 }
 
 
