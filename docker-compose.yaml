@@ -18,7 +18,7 @@ services:
             BACKEND_URL: 'http://127.0.0.40:8080'
             UDP_LOGGER_DSN: 'logstash:5005'
             METRICS_DSN: 'mongodb://mongo:27017/metrics'
-            MONGO_DSN: 'mongodb://mongo:27017/node-sdk'
+            MONGODB_DSN: 'mongodb://mongo:27017/node-sdk'
         command: sleep infinity
 
     mongo:
