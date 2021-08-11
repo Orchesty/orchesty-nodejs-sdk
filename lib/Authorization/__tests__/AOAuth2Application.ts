@@ -8,9 +8,15 @@ import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
+import { AuthorizationCode } from 'simple-oauth2';
 
 describe('Test AOAuth2Application', () => {
   const container = getTestContainer();
+  // jest.spyOn(AuthorizationCode , 'authorizeURL').mockImplementation((params)=>{
+  //   return "asdf";
+  // });
+
+  jest.createMockFromModule("simple-oauth2");
 
   const oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
 
@@ -77,7 +83,8 @@ describe('Test AOAuth2Application', () => {
     appInstall.setSettings(settings);
 
     const data = await oAuthApplication.refreshAuthorization(appInstall);
-    console.log(data);
+    console.log("asd",data);
+    // expect(data).toEqual("asd");
   });
 
   it('should get access token', () => {
