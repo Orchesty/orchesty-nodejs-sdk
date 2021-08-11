@@ -7,8 +7,6 @@ import { AUTHORIZATION_SETTINGS } from '../../Application/Base/AApplication';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
-import TestBasicApplication from '../../../test/Application/TestBasicApplication';
-import { AuthorizationCode } from 'simple-oauth2';
 
 describe('Test AOAuth2Application', () => {
   const container = getTestContainer();
@@ -16,7 +14,7 @@ describe('Test AOAuth2Application', () => {
   //   return "asdf";
   // });
 
-  jest.createMockFromModule("simple-oauth2");
+  jest.createMockFromModule('simple-oauth2');
 
   const oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
 
@@ -69,21 +67,36 @@ describe('Test AOAuth2Application', () => {
     }
   });
 
-  it.skip('should refresh authorization token', async () => {
-    // Todo : need the mocking
+  it('should refresh authorization token', async () => {
+    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
+    Reflect.set(provider, '_createClient', () => ({
+      createToken: () => ({
+        token: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          access_token: '', token_type: '', refresh_token: '', expires_at: '',
+        },
+        refresh: () => ({
+          token: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            access_token: '', token_type: '', refresh_token: '', expires_at: '',
+          },
+        }),
+      }),
+    }));
+
     const appInstall = new ApplicationInstall()
       .setUser('user')
       .setName(oAuthApplication.getName());
     const settings = {
       [AUTHORIZATION_SETTINGS]: {
         [CLIENT_ID]: 'asd',
-        [TOKEN]: "asd"
+        [TOKEN]: 'asd',
       },
     };
     appInstall.setSettings(settings);
 
     const data = await oAuthApplication.refreshAuthorization(appInstall);
-    console.log("asd",data);
+    console.log('asd', data);
     // expect(data).toEqual("asd");
   });
 
@@ -96,7 +109,7 @@ describe('Test AOAuth2Application', () => {
       [AUTHORIZATION_SETTINGS]: {
         [TOKEN]: {
           [ACCESS_TOKEN]: accessToken,
-        }
+        },
       },
     };
     appInstall.setSettings(settings);
@@ -121,9 +134,9 @@ describe('Test AOAuth2Application', () => {
     expect(token).toEqual(tokenFromService);
   });
 
-  it('should throw error when try to get access token and access token is not found', function () {
+  it('should throw error when try to get access token and access token is not found', () => {
     const appInstall = new ApplicationInstall();
-    appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: {[TOKEN]: {}}  });
+    appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: { [TOKEN]: {} } });
     try {
       oAuthApplication.getAccessToken(appInstall);
     } catch (e) {

@@ -16,6 +16,7 @@ jest.mock('../../../Logger/Logger', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
+import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
 describe('OAuth2Provider tests', () => {
   const authUrl = 'https://identity.idoklad.cz/server/connect/authorize';

@@ -187,9 +187,8 @@ describe('ApplicationManager tests', () => {
     const applicationName = 'testNotFound';
     try {
       await appManager.saveApplicationSettings(applicationName, 'user', appSettings);
-    }catch (e) {
+    } catch (e) {
       expect(e.message).toEqual(`Service with name [hbpf.application.${applicationName}] does not exist!`);
     }
-
   });
 });

@@ -18,7 +18,7 @@ describe('Tests ProcessDto utils', () => {
     expect(dto.jsonData).toEqual({ some: 'data' });
   });
 
-  it('ShouldRemoveBatchCursor',() => {
+  it('ShouldRemoveBatchCursor', () => {
     const dto = new ProcessDto();
     const cursorName = faker.name.findName();
     dto.setBatchCursor(cursorName);

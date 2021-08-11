@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { mocked } from 'ts-jest/utils';
+import faker from 'faker';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
 import { Logger } from '../../Logger/Logger';
 import ProcessDto from '../ProcessDto';
 import { NODE_ID } from '../Headers';
-import faker from 'faker';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

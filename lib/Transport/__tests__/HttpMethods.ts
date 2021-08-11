@@ -1,4 +1,4 @@
-import { parseHttpMethod} from '../HttpMethods';
+import { parseHttpMethod } from '../HttpMethods';
 
 describe('Http Methods tests', () => {
   it('should get methods from the enum', () => {

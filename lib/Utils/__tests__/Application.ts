@@ -1,6 +1,6 @@
+import faker from 'faker';
 import Application from '../Application';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
-import faker from 'faker';
 
 describe('Application utils tests', () => {
   it('generateUrl with appInstall', () => {

@@ -31,7 +31,7 @@ describe('Test AConnector', () => {
     // Todo : need a method that I've the right application which is not protect.
   });
 
-  it('it should set sender of connector' ,() => {
+  it('it should set sender of connector', () => {
     testConnector.setSender(curlSender);
     // Todo : need a method to get the sender so I can do some assertions
   });
