@@ -5,11 +5,3 @@ coverage
 node_modules
 
 docker-compose.ci.yml
-
-.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-.pnp.*

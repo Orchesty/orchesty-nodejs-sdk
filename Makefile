@@ -26,7 +26,7 @@ docker-compose.ci.yml:
 
 docker-up-force: .env .lo0-up
 	docker-compose pull --ignore-pull-failures
-	docker-compose up -d --force-recreate --remove-orphans
+	docker-compose up -d --force-recreate --remove-orphans --build
 
 docker-down-clean: .env .lo0-down
 	docker-compose down -v
@@ -38,7 +38,10 @@ yarn-install:
 	$(DCS) yarn install
 
 yarn-update:
-	$(DCS) yarn up "**"
+	$(DCS) yarn upgrade
+
+yarn-outdated:
+	$(DCS) yarn outdated
 
 lint:
 	$(DCS) yarn lint-ci
