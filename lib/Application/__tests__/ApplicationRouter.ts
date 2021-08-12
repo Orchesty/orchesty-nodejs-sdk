@@ -12,7 +12,13 @@ import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 const container = getTestContainer();
 const application = container.getApplication('test');
 const oAuthApplication = container.getApplication('oauth2application');
+const provider = container.get(CoreServices.OAUTH2_PROVIDER);
+
 let dbClient: MongoDbClient;
+let appInstall: ApplicationInstall;
+let name: string;
+let user: string;
+let authorizationURL: string;
 
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
@@ -24,154 +30,119 @@ jest.mock('../../Logger/Logger', () => ({
 
 describe('Test ApplicationRouter', () => {
   /* eslint-enable @typescript-eslint/naming-convention */
-  beforeAll(async () => {
+  beforeEach(async () => {
     dbClient = container.get(CoreServices.MONGO);
     const db = await dbClient.db();
     try {
       await db.dropCollection(ApplicationInstall.getCollection());
+      const repo = await dbClient.getRepository(ApplicationInstall);
+      user = faker.name.firstName();
+      name = oAuthApplication.getName();
+      authorizationURL = faker.internet.url();
+
+      appInstall = new ApplicationInstall()
+        .setUser(user)
+        .setName(name);
+      appInstall.setSettings({
+        [AUTHORIZATION_SETTINGS]: {
+          [CLIENT_ID]: 'client id 1',
+        },
+      });
+
+      await repo.insert(appInstall);
+      Reflect.set(provider, '_createClient', () => ({
+        getToken: () => ({
+          token: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            access_token: '', token_type: '', refresh_token: '', expires_at: '',
+          },
+        }),
+        authorizeURL: () => authorizationURL,
+      }));
     } catch (e) {
       // Ignore non-existent
     }
   });
 
   it('get /applications route', async () => {
-    const connectorUrl = '/applications';
+    const applicationUrl = '/applications';
     const expectedResult = '["test","oauth2application"]';
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name route', async () => {
-    const connectorUrl = `/applications/${application.getName()}`;
+    const applicationUrl = `/applications/${application.getName()}`;
     // eslint-disable-next-line max-len
     const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description"}';
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name/sync/list route', async () => {
-    const connectorUrl = `/applications/${application.getName()}/sync/list`;
+    const applicationUrl = `/applications/${application.getName()}/sync/list`;
     const expectedResult = '["testSyncMethod"]';
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
   });
 
   it('post /applications/:name/sync/:method route', async () => {
     const method = 'testSyncMethod';
-    const connectorUrl = `/applications/${application.getName()}/sync/${method}`;
+    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
     const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
     await supertest(expressApp)
-      .post(connectorUrl)
+      .post(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name/sync/:method route', async () => {
     const method = 'testSyncMethod';
-    const connectorUrl = `/applications/${application.getName()}/sync/${method}`;
+    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
     const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
   });
 
   it('throw error on get /applications/:name/users/:user/authorize route cause ', async () => {
     // Todo : 500 response
-    const connectorUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
+    const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       .expect(StatusCodes.INTERNAL_SERVER_ERROR);
   });
 
   it('get /applications/:name/users/:user/authorize route', async () => {
-    const user = faker.name.firstName();
-    const name = oAuthApplication.getName();
-    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
-    const authorizationURL = faker.internet.url();
-    Reflect.set(provider, '_createClient', () => ({
-      authorizeURL: () => authorizationURL,
-    }));
-    const appInstall = new ApplicationInstall()
-      .setUser(user)
-      .setName(name);
-    const repo = await dbClient.getRepository(ApplicationInstall);
-
-    await repo.insert(appInstall);
-
-    const connectorUrl = `/applications/${name}/users/${user}/authorize`;
+    const applicationUrl = `/applications/${name}/users/${user}/authorize`;
     const expectedResult = `{"authorizeUrl":"${authorizationURL}&access_type=offline"}`;
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: faker.internet.url() })
       .expect(StatusCodes.OK,expectedResult);
   });
 
   it('get /applications/authorize/token route', async () => {
-    const user = faker.name.firstName();
-    const name = oAuthApplication.getName();
-    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
-    Reflect.set(provider, '_createClient', () => ({
-      getToken: () => ({
-        token: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          access_token: '', token_type: '', refresh_token: '', expires_at: '',
-        },
-      }),
-    }));
-    const appInstall = new ApplicationInstall()
-      .setUser(user)
-      .setName(name);
-    appInstall.setSettings({
-      [AUTHORIZATION_SETTINGS]: {
-        [CLIENT_ID]: 'client id 1',
-      },
-    });
-    const repo = await dbClient.getRepository(ApplicationInstall);
-
-    await repo.insert(appInstall);
-
-    const connectorUrl = '/applications/authorize/token';
+    const applicationUrl = '/applications/authorize/token';
     const expectedResult = '{}';
     const state = encode(`${user}:${name}`); // base64
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ state })
       .expect(StatusCodes.OK,expectedResult);
   });
 
   it('get /applications/:name/users/:user/authorize/token route', async () => {
-    const user = faker.name.firstName();
-    const name = oAuthApplication.getName();
-    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
-    Reflect.set(provider, '_createClient', () => ({
-      getToken: () => ({
-        token: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          access_token: '', token_type: '', refresh_token: '', expires_at: '',
-        },
-      }),
-    }));
-    const appInstall = new ApplicationInstall()
-      .setUser(user)
-      .setName(name);
-
-    appInstall.setSettings({
-      [AUTHORIZATION_SETTINGS]: {
-        [CLIENT_ID]: 'client id 1',
-      },
-    });
-    const repo = await dbClient.getRepository(ApplicationInstall);
     const redirectUrl = faker.internet.url();
-    await repo.insert(appInstall);
-    const connectorUrl = `/applications/${name}/users/${user}/authorize/token`;
-    const expectedResult = "{}";
+    const applicationUrl = `/applications/${name}/users/${user}/authorize/token`;
+    const expectedResult = '{}';
 
     await supertest(expressApp)
-      .get(connectorUrl)
+      .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: redirectUrl })
       .expect(StatusCodes.OK,expectedResult);
