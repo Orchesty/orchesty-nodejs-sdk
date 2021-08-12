@@ -6,7 +6,8 @@ import { ApplicationInstall } from '../Database/ApplicationInstall';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
-import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
+import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
+import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 
 const container = getTestContainer();
 const application = container.getApplication('test');
@@ -20,7 +21,6 @@ jest.mock('../../Logger/Logger', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
-jest.mock('../../Authorization/Provider/OAuth2/OAuth2Provider');
 
 describe('Test ApplicationRouter', () => {
   /* eslint-enable @typescript-eslint/naming-convention */
@@ -86,8 +86,13 @@ describe('Test ApplicationRouter', () => {
   });
 
   it('get /applications/:name/users/:user/authorize route', async () => {
-    const user = 'user';
+    const user = faker.name.firstName();
     const name = oAuthApplication.getName();
+    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
+    const authorizationURL = faker.internet.url();
+    Reflect.set(provider, '_createClient', () => ({
+      authorizeURL: () => authorizationURL,
+    }));
     const appInstall = new ApplicationInstall()
       .setUser(user)
       .setName(name);
@@ -96,57 +101,79 @@ describe('Test ApplicationRouter', () => {
     await repo.insert(appInstall);
 
     const connectorUrl = `/applications/${name}/users/${user}/authorize`;
-    const expectedResult = '{}';
+    const expectedResult = `{"authorizeUrl":"${authorizationURL}&access_type=offline"}`;
     await supertest(expressApp)
       .get(connectorUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: faker.internet.url() })
-      .expect(StatusCodes.OK, expectedResult);
+      .expect(StatusCodes.OK,expectedResult);
   });
 
-  xit('get /applications/authorize/token route', async () => {
-    const oAuth2Provider = new OAuth2Provider('');
-
-    const user = 'user';
+  it('get /applications/authorize/token route', async () => {
+    const user = faker.name.firstName();
     const name = oAuthApplication.getName();
-    // (OAuth2Provider.stateDecode as jest.MockedFunction<typeof OAuth2Provider.stateDecode>)
-    //   .mockReturnValue({ user, name });
-    (oAuth2Provider.getAccessToken as jest.MockedFunction<typeof oAuth2Provider.getAccessToken>)
-      .mockResolvedValue({});
-
+    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
+    Reflect.set(provider, '_createClient', () => ({
+      getToken: () => ({
+        token: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          access_token: '', token_type: '', refresh_token: '', expires_at: '',
+        },
+      }),
+    }));
     const appInstall = new ApplicationInstall()
       .setUser(user)
       .setName(name);
+    appInstall.setSettings({
+      [AUTHORIZATION_SETTINGS]: {
+        [CLIENT_ID]: 'client id 1',
+      },
+    });
     const repo = await dbClient.getRepository(ApplicationInstall);
 
     await repo.insert(appInstall);
 
     const connectorUrl = '/applications/authorize/token';
-    const expectedResult = '{"authorizeUrl":"https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=&redirect_uri=http%3A%2F%2F127.0.0.40%3A8080%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%20offline_access&state=dXNlcjpvYXV0aDJhcHBsaWNhdGlvbg&access_type=offline"}';
+    const expectedResult = '{}';
     const state = encode(`${user}:${name}`); // base64
     await supertest(expressApp)
       .get(connectorUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ state })
-      .expect(expectedResult);
+      .expect(StatusCodes.OK,expectedResult);
   });
 
-  // it.skip('get /applications/:name/users/:user/authorize/token route', async () => {
-  //   const user = 'user';
-  //   const name = oAuthApplication.getName();
-  //   const appInstall = new ApplicationInstall()
-  //     .setUser(user)
-  //     .setName(name);
-  //   const repo = await dbClient.getRepository(ApplicationInstall);
-  //
-  //   await repo.insert(appInstall);
-  //   const connectorUrl = `/applications/${name}/users/${user}/authorize/token`;
-  //   const expectedResult = '{"authorizeUrl":"https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=&redirect_uri=http%3A%2F%2F127.0.0.40%3A8080%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%20offline_access&state=dXNlcjpvYXV0aDJhcHBsaWNhdGlvbg&access_type=offline"}';
-  //
-  //   await supertest(expressApp)
-  //     .get(connectorUrl)
-  //     // eslint-disable-next-line @typescript-eslint/naming-convention
-  //     .query({ redirect_url: faker.internet.url()})
-  //     .expect(expectedResult);
-  // });
+  it('get /applications/:name/users/:user/authorize/token route', async () => {
+    const user = faker.name.firstName();
+    const name = oAuthApplication.getName();
+    const provider = container.get(CoreServices.OAUTH2_PROVIDER);
+    Reflect.set(provider, '_createClient', () => ({
+      getToken: () => ({
+        token: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          access_token: '', token_type: '', refresh_token: '', expires_at: '',
+        },
+      }),
+    }));
+    const appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+
+    appInstall.setSettings({
+      [AUTHORIZATION_SETTINGS]: {
+        [CLIENT_ID]: 'client id 1',
+      },
+    });
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const redirectUrl = faker.internet.url();
+    await repo.insert(appInstall);
+    const connectorUrl = `/applications/${name}/users/${user}/authorize/token`;
+    const expectedResult = "{}";
+
+    await supertest(expressApp)
+      .get(connectorUrl)
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      .query({ redirect_url: redirectUrl })
+      .expect(StatusCodes.OK,expectedResult);
+  });
 });
