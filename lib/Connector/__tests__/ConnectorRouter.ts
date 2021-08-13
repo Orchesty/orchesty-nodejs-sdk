@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 import ConnectorRouter from '../ConnectorRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
-import ConnectorRouterExpectedResults from './ConnectorRouterExpectedResults.json';
 
 const container = getTestContainer();
 const connector = container.getConnector('test');
@@ -16,6 +15,10 @@ jest.mock('../../Logger/Logger', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
+
+jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(() => ({
+  send: () => ({ responseCode: StatusCodes.OK, body: { response: 'mockedResponse' } }),
+})));
 
 describe('Test ConnectorRouter', () => {
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -39,20 +42,14 @@ describe('Test ConnectorRouter', () => {
     const connectorUrl = `/connector/${connector.getName()}/action`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect((response) => {
-        expect(JSON.parse(response.text)).toEqual(ConnectorRouterExpectedResults);
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-      });
+      .expect(StatusCodes.OK,{ response: 'mockedResponse' });
   });
 
   it('post /connector/:name/webhook route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/webhook`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect((response) => {
-        expect(JSON.parse(response.text)).toEqual(ConnectorRouterExpectedResults);
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-      });
+      .expect(StatusCodes.OK,{ response: 'mockedResponse' });
   });
 
   it('get /connector/:name/webhook/test route', async () => {
