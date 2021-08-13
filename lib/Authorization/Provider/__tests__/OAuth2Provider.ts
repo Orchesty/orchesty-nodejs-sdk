@@ -3,11 +3,8 @@ import OAuth2Dto from '../Dto/OAuth2Dto';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
-import { OAuth2Provider} from '../OAuth2/OAuth2Provider';
-import { OAuth2Provider, REFRESH_TOKEN } from '../OAuth2/OAuth2Provider';
-import { TOKEN } from '../../Type/Basic/ABasicApplication';
-import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 import AOAuthProvider from '../AOAuthProvider';
+import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -16,7 +13,6 @@ jest.mock('../../../Logger/Logger', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
-import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
 describe('OAuth2Provider tests', () => {
   const authUrl = 'https://identity.idoklad.cz/server/connect/authorize';

@@ -1,7 +1,9 @@
 import supertest from 'supertest';
+import { StatusCodes } from 'http-status-codes';
 import ConnectorRouter from '../ConnectorRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
+import ConnectorRouterExpectedResults from './ConnectorRouterExpectedResults.json';
 
 const container = getTestContainer();
 const connector = container.getConnector('test');
@@ -30,35 +32,41 @@ describe('Test ConnectorRouter', () => {
     const connectorUrl = `/connector/${connector.getName()}/action/test`;
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, '[]');
+      .expect(StatusCodes.OK, '[]');
   });
 
   it('post /connector/:name/action route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/action`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(200, '{\n  "id": 11\n}');
+      .expect((response) => {
+        expect(JSON.parse(response.text)).toEqual(ConnectorRouterExpectedResults);
+        expect(response.statusCode).toEqual(StatusCodes.OK);
+      });
   });
 
   it('post /connector/:name/webhook route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/webhook`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(200, '{\n  "id": 11\n}');
+      .expect((response) => {
+        expect(JSON.parse(response.text)).toEqual(ConnectorRouterExpectedResults);
+        expect(response.statusCode).toEqual(StatusCodes.OK);
+      });
   });
 
   it('get /connector/:name/webhook/test route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/webhook/test`;
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, '[]');
+      .expect(StatusCodes.OK);
   });
 
   it('get /connector/list route', async () => {
     const connectorUrl = '/connector/list';
     await supertest(expressApp)
       .get(connectorUrl)
-      .expect(200, '["test"]');
+      .expect(StatusCodes.OK, '["test"]');
   });
 
   it('test configureRoutes', () => {

@@ -2,6 +2,7 @@ import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
 import ApplicationManager from './Manager/ApplicationManager';
 import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
+
 export const APPLICATION_PREFIX = 'hbpf.application';
 
 export class ApplicationRouter extends ACommonRouter {

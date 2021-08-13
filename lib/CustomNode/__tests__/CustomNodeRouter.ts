@@ -2,9 +2,10 @@ import supertest from 'supertest';
 import CustomNodeRouter from '../CustomNodeRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
+import { StatusCodes } from 'http-status-codes';
 
 const container = getTestContainer();
-const customNode = container.getCustomNode('test');
+const customNode = container.getCustomNode('testcustom');
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
@@ -37,21 +38,21 @@ describe('Test CustomNodeRouter', () => {
     const customNodeUrl = '/custom-node/list';
     await supertest(expressApp)
       .get(customNodeUrl)
-      .expect(200, '["test"]');
+      .expect(StatusCodes.OK, '["testcustom"]');
   });
 
   it('get /custom-node/:name/process/test route', async () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process/test`;
     await supertest(expressApp)
       .get(customNodeUrl)
-      .expect(200, '[]');
+      .expect(StatusCodes.OK, '[]');
   });
 
   it('post /custom-node/:name/process route', async () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
-    const expected = '{\n  "id": 11\n}';
+    const expected = '{"test":"custom"}';
     await supertest(expressApp)
       .post(customNodeUrl)
-      .expect(200, expected);
+      .expect(StatusCodes.OK, expected);
   });
 });

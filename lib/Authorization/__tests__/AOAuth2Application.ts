@@ -10,9 +10,6 @@ import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
 describe('Test AOAuth2Application', () => {
   const container = getTestContainer();
-  // jest.spyOn(AuthorizationCode , 'authorizeURL').mockImplementation((params)=>{
-  //   return "asdf";
-  // });
 
   jest.createMockFromModule('simple-oauth2');
 
@@ -89,15 +86,16 @@ describe('Test AOAuth2Application', () => {
       .setName(oAuthApplication.getName());
     const settings = {
       [AUTHORIZATION_SETTINGS]: {
-        [CLIENT_ID]: 'asd',
-        [TOKEN]: 'asd',
+        [CLIENT_ID]: '12',
+        [TOKEN]: faker.internet.password(),
       },
     };
     appInstall.setSettings(settings);
 
     const data = await oAuthApplication.refreshAuthorization(appInstall);
-    console.log('asd', data);
-    // expect(data).toEqual("asd");
+    const returnedSettings =  data.getSettings();
+    expect(returnedSettings[AUTHORIZATION_SETTINGS][CLIENT_ID]).toEqual(settings[AUTHORIZATION_SETTINGS][CLIENT_ID]);
+    expect(returnedSettings[AUTHORIZATION_SETTINGS][TOKEN]).toEqual(settings[AUTHORIZATION_SETTINGS][TOKEN]);
   });
 
   it('should get access token', () => {

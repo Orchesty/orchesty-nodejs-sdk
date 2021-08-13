@@ -64,9 +64,16 @@ describe('Test ApplicationRouter', () => {
     }
   });
 
+  afterAll(() => {
+    dbClient.down();
+  });
+
+
   it('get /applications route', async () => {
     const applicationUrl = '/applications';
-    const expectedResult = '["test","oauth2application"]';
+    // eslint-disable-next-line max-len
+    const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description"},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application"}]}';
+
     await supertest(expressApp)
       .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
