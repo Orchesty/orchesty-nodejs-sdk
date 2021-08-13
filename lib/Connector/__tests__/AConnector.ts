@@ -22,17 +22,20 @@ describe('Test AConnector', () => {
 
   it('it should set database of connector', () => {
     testConnector.setDb(mongoDbClient);
-    // Todo : need a method out of the box to get the database so I can test that I've the right db
+    const testConnectorDatabaseURL = Reflect.get(testConnector,'db')._dsn;
+    expect(mongoDbClient._dsn).toEqual(testConnectorDatabaseURL);
   });
 
   it('it should set application of connector', () => {
     const application = new TestBasicApplication();
     testConnector.setApplication(application);
-    // Todo : need a method that I've the right application which is not protect.
+    const testConnectorApplicationName = Reflect.get(testConnector,'application').getName();
+    expect(application.getName()).toEqual(testConnectorApplicationName);
   });
 
   it('it should set sender of connector', () => {
     testConnector.setSender(curlSender);
-    // Todo : need a method to get the sender so I can do some assertions
+    const testConnectorCurlSender = Reflect.get(testConnector,'sender');
+    expect(testConnectorCurlSender).toEqual(curlSender);
   });
 });
