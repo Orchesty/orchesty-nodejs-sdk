@@ -48,6 +48,8 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
 
   logger.error(message, Logger.ctxFromReq(req));
   res.json(responseBody);
+  // eslint-disable-next-line
+  dto.free = true;
 }
 
 export function createSuccessResponse(res: Response, dto: ProcessDto): void {
@@ -67,10 +69,34 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
 
   logger.debug('Request successfully processed.', Logger.ctxFromDto(dto));
   res.send(dto.data);
+  // eslint-disable-next-line
+  dto.free = true;
+}
+
+const dtoPool = new Array(100).fill(0);
+for (let i = 0; i < 100; i += 1) {
+  dtoPool[i] = new ProcessDto();
+}
+
+function getFreeDto(): ProcessDto {
+  // Should CPU still be a concern, implement linked list for faster search
+  // In case of Memory concern, limit maximum pool size and await for free objects
+  for (let i = 0; i < dtoPool.length; i += 1) {
+    if (dtoPool[i].free) {
+      dtoPool[i].free = false;
+
+      return dtoPool[i];
+    }
+  }
+
+  const dto = new ProcessDto();
+  dtoPool.push(dto);
+
+  return dto;
 }
 
 export function createProcessDto(req: Request): ProcessDto {
-  const dto = new ProcessDto();
+  const dto = getFreeDto();
 
   dto.data = req.body;
   dto.headers = req.headers;

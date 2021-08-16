@@ -19,6 +19,9 @@ import ResultCode from './ResultCode';
 const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONTINUE];
 
 export default class ProcessDto {
+  // Do not dare to touch this !! This serves for simple ObjectPool implementation
+  public free: boolean;
+
   private _data: string;
 
   private _headers: HttpHeaders;
@@ -26,6 +29,7 @@ export default class ProcessDto {
   constructor() {
     this._data = '';
     this._headers = {};
+    this.free = true;
   }
 
   get data(): string {
