@@ -179,4 +179,16 @@ describe('ApplicationManager tests', () => {
     expect(frontendUrl)
       .toEqual('url');
   });
+
+  it('it should throw an exception when have application not found when save application settings', async () => {
+    const appSettings = {
+      param1: 'p1',
+    };
+    const applicationName = 'testNotFound';
+    try {
+      await appManager.saveApplicationSettings(applicationName, 'user', appSettings);
+    } catch (e) {
+      expect(e.message).toEqual(`Service with name [hbpf.application.${applicationName}] does not exist!`);
+    }
+  });
 });

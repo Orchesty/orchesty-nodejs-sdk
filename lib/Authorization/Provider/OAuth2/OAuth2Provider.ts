@@ -24,7 +24,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
       state = OAuth2Provider.stateEncode(dto);
     }
 
-    const client = OAuth2Provider._createClient(dto);
+    const client = this._createClient(dto);
     const authUrl = client.authorizeURL({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uri: dto.isRedirectUrl() ? dto.getRedirectUrl() : this.getRedirectUri(),
@@ -41,7 +41,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
       redirect_uri: dto.isRedirectUrl() ? dto.getRedirectUrl() : this.getRedirectUri(),
     };
 
-    const client = OAuth2Provider._createClient(dto);
+    const client = this._createClient(dto);
 
     const accessToken = await client.getToken(tokenParams);
     return OAuth2Provider._convertAccessToken(accessToken);
@@ -51,7 +51,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     if (Object.prototype.hasOwnProperty.call(token, REFRESH_TOKEN)) {
       OAuth2Provider.throwException('Refresh token not found! Refresh is not possible.', 205);
     }
-    const client = OAuth2Provider._createClient(dto);
+    const client = this._createClient(dto);
     const accessToken = client.createToken({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       access_token: token[ACCESS_TOKEN],
@@ -82,7 +82,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     };
   }
 
-  private static _createClient(dto: IOAuth2Dto): AuthorizationCode {
+  private _createClient = (dto: IOAuth2Dto): AuthorizationCode => {
     const tokenUrl = new URL(dto.getTokenUrl());
     const authUrl = new URL(dto.getAuthorizationUrl());
     const config = {
@@ -97,5 +97,5 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
       },
     };
     return new AuthorizationCode(config);
-  }
+  };
 }

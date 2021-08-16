@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { mocked } from 'ts-jest/utils';
+import faker from 'faker';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
 import { Logger } from '../../Logger/Logger';
 import ProcessDto from '../ProcessDto';
@@ -90,6 +91,20 @@ describe('tests Router Utils', () => {
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
     expect(setHeaderMock).toBeCalledTimes(0);
+  });
+
+  it('createErrorResponse with error & with header', () => {
+    const [statusMock, hasHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(true);
+    const res = mockResponse(statusMock, hasHeaderMock, setHeaderMock, jsonMock);
+    const err = new Error('err message');
+    const dto = new ProcessDto();
+    dto.addHeader('authorization', `bearer ${faker.internet.password()}`);
+    err.stack = undefined;
+    createErrorResponse(mockRequest(), res, dto, err);
+    expect(statusMock).toBeCalledTimes(2);
+    expect(jsonMock).toBeCalledTimes(1);
+    expect(hasHeaderMock).toBeCalledTimes(3);
+    expect(setHeaderMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse without error', () => {
