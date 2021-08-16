@@ -38,35 +38,6 @@ Fianlly you will need to set the name of the node and in the endpoints section y
 }
 ```
 
-### APIs for using the package
-
-##### Connector APIs :
-`connector/:name/action/test`
-`connector/list` "Tip : You need to try this endpoint"
-`connector/:name/webhook`
-`connector/:name/webhook/test`
-
-##### Custom Node APIs :
-
-`/custom-node/:name/process/test`
-`/custom-node/list`
-
-##### Application APIs :
-
-`/applications`
-`/applications/:name`
-`/applications/:name/sync/list`
-`/applications/:name/sync/:method`
-`/applications/:name/users/:user/authorize`
-`/applications/:name/users/:user/authorize/token`
-`/applications/authorize/token`
-
-##### Batch APIs :
-
-`/batch/:name/action`
-`/batch/:name/action/test`
-`/batch/list`
-
 ### Testing :
 
 To be added ...
