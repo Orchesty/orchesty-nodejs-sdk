@@ -1,0 +1,275 @@
+openapi: 3.0.0
+info:
+  title: Pipes PHP SDK
+  description: Pipes PHP SDK API
+  version: '1.0'
+servers:
+  - url: http://127.0.0.40
+    description: Docker Localhost
+paths:
+  /applications:
+    get:
+      tags:
+        - Applications
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+  /applications/{key}:
+    get:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+  /applications/{key}/sync/list:
+    get:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+  /applications/{key}/sync/{method}:
+    get:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/Method'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+    post:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/Method'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+  /applications/{key}/users/{user}/authorize:
+    get:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  /applications/{key}/users/{user}/authorize/token:
+    post:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/User'
+      responses:
+        '302':
+          description: ''
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  /applications/authorize/token:
+    get:
+      tags:
+        - Applications
+      parameters:
+        - $ref: '#/components/parameters/State'
+      responses:
+        '302':
+          description: ''
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  /connector/list:
+    get:
+      tags:
+        - Connectors
+      responses:
+        '200':
+          $ref: '#/components/responses/Connectors'
+        '500':
+          $ref: '#/components/responses/500'
+  /connector/{id}/action:
+    post:
+      tags:
+        - Connectors
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+  /connector/{id}/action/test:
+    get:
+      tags:
+        - Connectors
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+  /custom_node/list:
+    get:
+      tags:
+        - Custom Nodes
+      responses:
+        '200':
+          $ref: '#/components/responses/Connectors'
+        '500':
+          $ref: '#/components/responses/500'
+  /custom_node/{id}/process:
+    post:
+      tags:
+        - Custom Nodes
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+  /custom_node/{id}/process/test:
+    get:
+      tags:
+        - Custom Nodes
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+  /batch/list:
+    get:
+      tags:
+        - Batches
+      responses:
+        '200':
+          $ref: '#/components/responses/Connectors'
+        '500':
+          $ref: '#/components/responses/500'
+  /batch/{key}/action:
+    post:
+      tags:
+        - Batches
+      parameters:
+        - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+  /batch/{key}/action/test:
+    get:
+      tags:
+        - Batches
+      parameters:
+        - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          $ref: '#/components/responses/Empty'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  responses:
+    '404':
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          example:
+            type: AppStoreException
+            status: NOT_FOUND
+            message: Application with key 'Unknown' not found!
+            error_code: 404
+    '500':
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          example:
+            type: AppStoreException
+            status: INTERNAL_SERVER_ERROR
+            message: Something gone wrong
+            error_code: 500
+    Empty:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+    Connectors:
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Connectors'
+  schemas:
+    Connectors:
+      type: array
+      items:
+        type: string
+    Message:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: string
+        message:
+          type: string
+        error_code:
+          type: integer
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      example: id
+      schema:
+        type: string
+    Key:
+      name: key
+      in: path
+      required: true
+      example: id
+      schema:
+        type: string
+    User:
+      name: user
+      in: path
+      required: true
+      example: user
+      schema:
+        type: string
+    State:
+      name: state
+      in: query
+      required: true
+      example: state
+      schema:
+        type: string
+    Method:
+      name: method
+      in: path
+      required: true
+      example: method
+      schema:
+        type: string
