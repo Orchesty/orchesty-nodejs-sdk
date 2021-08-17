@@ -9,7 +9,7 @@ import { encode } from '../../Utils/Base64';
 import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import Metrics from '../../Metrics/Metrics';
-import assertions  from './assertions.json';
+import assertions from './assertions.json';
 
 const container = getTestContainer();
 const application = container.getApplication('test');
@@ -184,5 +184,42 @@ describe('Test ApplicationRouter', () => {
     await supertest(expressApp)
       .get(applicationUrl)
       .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
+
+  it('put /applications/:name/users/:user/settings route', async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const appName = 'test';
+    const userName = faker.name.firstName();
+    appInstall = new ApplicationInstall()
+      .setUser(userName)
+      .setName(appName);
+    await repo.insert(appInstall);
+    const applicationUrl = `/applications/${appName}/users/${userName}/settings`;
+    const expectedResult = assertions['put /applications/:name/users/:user/settings route'];
+
+    await supertest(expressApp)
+      .put(applicationUrl)
+      .query({ data: { key: 'name' } }).expect((response) => {
+        expect(JSON.parse(response.text)).toEqual(expectedResult);
+        expect(response.statusCode).toEqual(StatusCodes.CREATED);
+      });
+  });
+
+  it('put /applications/:name/users/:user/password route', async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const appName = 'test';
+    const userName = faker.name.firstName();
+    appInstall = new ApplicationInstall()
+      .setUser(userName)
+      .setName(appName);
+    await repo.insert(appInstall);
+    const applicationUrl = `/applications/${appName}/users/${userName}/password`;
+    const password = faker.internet.password();
+    await supertest(expressApp)
+      .put(applicationUrl)
+      .query({ password }).expect((response)=>{
+        const responsePassword = JSON.parse(response.text).settings.authorization_settings.password;
+        expect(responsePassword).toEqual(password);
+      });
   });
 });
