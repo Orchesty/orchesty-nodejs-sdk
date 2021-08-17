@@ -12,7 +12,7 @@ export abstract class ABasicApplication extends AApplication implements IBasicAp
 
     public isAuthorized = (applicationInstall: ApplicationInstall): boolean => {
       const appInstall = applicationInstall.getSettings()[AUTHORIZATION_SETTINGS];
-      return ((!!appInstall[USER] && !!appInstall[PASSWORD]) || !!appInstall[TOKEN]);
+      return ((!!appInstall?.[USER] && !!appInstall?.[PASSWORD]) || !!appInstall?.[TOKEN]);
     }
 
     public setApplicationUser(applicationInstall: ApplicationInstall, user: string): ApplicationInstall {

@@ -1,0 +1,35 @@
+{ "post /applications/:name/users/:user/install route" : {
+  "name": "Test application",
+  "authorization_type": "basic",
+  "application_type": "cron",
+  "key": "test",
+  "description": "Test description",
+  "authorized": false,
+  "applicationSettings": [
+    {
+      "type": "password",
+      "key": "testKey",
+      "value": null,
+      "label": "testLabel",
+      "description": "",
+      "required": false,
+      "readOnly": false,
+      "disabled": false,
+      "choices": [
+      ]
+    },
+    {
+      "type": "text",
+      "key": "person",
+      "value": null,
+      "label": "testLabel",
+      "description": "",
+      "required": false,
+      "readOnly": false,
+      "disabled": false,
+      "choices": [
+      ]
+    }
+  ]
+}
+}

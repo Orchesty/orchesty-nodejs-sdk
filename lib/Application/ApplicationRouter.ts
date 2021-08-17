@@ -2,6 +2,7 @@ import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
 import ApplicationManager from './Manager/ApplicationManager';
 import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
+import { StatusCodes } from 'http-status-codes';
 
 export const APPLICATION_PREFIX = 'hbpf.application';
 
@@ -69,6 +70,13 @@ export class ApplicationRouter extends ACommonRouter {
       );
 
       res.json({ redirectUrl: url });
+    });
+
+    this._app.route('/applications/:name/users/:user/install').get(async (req, res) => {
+      const { name, user } = req.params;
+      const response = await this._manager.installApplication(name, user);
+      res.status(StatusCodes.CREATED);
+      res.json(response);
     });
 
     return this._app;
