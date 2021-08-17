@@ -38,6 +38,11 @@ describe('TopologyRunner tests', () => {
     runner = container.get(CoreServices.TOPOLOGY_RUNNER);
   });
 
+  it('get webhook url', () => {
+    const whUrl = TopologyRunner.getWebhookUrl('topoName', 'nodeName', 'hash');
+    expect(whUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/token/hash/run');
+  });
+
   it('run by name', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
     const res = await runner.runByName({}, 'topoName', 'nodeName');

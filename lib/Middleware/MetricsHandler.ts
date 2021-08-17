@@ -21,7 +21,8 @@ async function afterResponse(
     getCorrelationId(req.headers),
     getNodeId(req.headers), getCorrelationId(req.headers),
   );
-  logger.debug(`Total request duration: ${Number(times.requestDuration) / 1000000}ms`);
+  // eslint-disable-next-line max-len
+  logger.debug(`Total request duration: ${Number(times.requestDuration) / 1000000}ms for endpoint ${req.method}[${req.originalUrl}]`);
 }
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {

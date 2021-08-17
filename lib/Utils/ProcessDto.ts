@@ -20,7 +20,7 @@ const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONT
 
 export default class ProcessDto {
   // Do not dare to touch this !! This serves for simple ObjectPool implementation
-  public free: boolean;
+  private _free: boolean;
 
   private _data: string;
 
@@ -29,7 +29,19 @@ export default class ProcessDto {
   constructor() {
     this._data = '';
     this._headers = {};
-    this.free = true;
+    this._free = true;
+  }
+
+  get free(): boolean {
+    return this._free;
+  }
+
+  set free(free: boolean) {
+    if (free) {
+      this._data = '';
+      this._headers = {};
+    }
+    this._free = free;
   }
 
   get data(): string {
