@@ -1,8 +1,11 @@
 import supertest from 'supertest';
+import { StatusCodes } from 'http-status-codes';
 import CustomNodeRouter from '../CustomNodeRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
-import { StatusCodes } from 'http-status-codes';
+import CoreServices from '../../DIContainer/CoreServices';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 const container = getTestContainer();
 const customNode = container.getCustomNode('testcustom');
@@ -23,6 +26,11 @@ describe('Test CustomNodeRouter', () => {
     process_id: '1',
     parent_id: '1',
     sequence_id: '1',
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
   it('test configureRoutes', () => {

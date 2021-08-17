@@ -25,8 +25,8 @@ export default class BatchRouter extends ACommonRouter {
       });
 
     this._app.route('/batch/:name/action/test')
-      .get((req, res) => {
-        this._loader.get(BATCH_PREFIX, req.params.name);
+      .get(async (req, res) => {
+        await this._loader.get(BATCH_PREFIX, req.params.name);
         res.json([]);
       });
 

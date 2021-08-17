@@ -2,6 +2,9 @@ import supertest from 'supertest';
 import BatchRouter from '../BatchRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
+import CoreServices from '../../DIContainer/CoreServices';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -15,6 +18,11 @@ const container = getTestContainer();
 const batch = container.getBatch('testbatch');
 
 describe('Tests for BatchRouter', () => {
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
+  });
+
   /* eslint-disable @typescript-eslint/naming-convention */
   Logger.ctxFromDto = jest.fn().mockReturnValue({
     node_id: '1',

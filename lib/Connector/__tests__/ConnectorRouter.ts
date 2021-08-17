@@ -3,6 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 import ConnectorRouter from '../ConnectorRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { Logger } from '../../Logger/Logger';
+import CoreServices from '../../DIContainer/CoreServices';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 const container = getTestContainer();
 const connector = container.getConnector('test');
@@ -31,6 +34,11 @@ describe('Test ConnectorRouter', () => {
   });
   /* eslint-enable @typescript-eslint/naming-convention */
 
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
+  });
+
   it('get /connector/:name/action/test route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/action/test`;
     await supertest(expressApp)
@@ -42,14 +50,14 @@ describe('Test ConnectorRouter', () => {
     const connectorUrl = `/connector/${connector.getName()}/action`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(StatusCodes.OK,{ response: 'mockedResponse' });
+      .expect(StatusCodes.OK, { response: 'mockedResponse' });
   });
 
   it('post /connector/:name/webhook route', async () => {
     const connectorUrl = `/connector/${connector.getName()}/webhook`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(StatusCodes.OK,{ response: 'mockedResponse' });
+      .expect(StatusCodes.OK, { response: 'mockedResponse' });
   });
 
   it('get /connector/:name/webhook/test route', async () => {

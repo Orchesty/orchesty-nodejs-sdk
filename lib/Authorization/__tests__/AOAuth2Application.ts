@@ -8,6 +8,15 @@ import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
+// Mock Logger module
+jest.mock('../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn()
+    .mockImplementation(() => ({})),
+}));
+
 describe('Test AOAuth2Application', () => {
   const container = getTestContainer();
 
@@ -93,7 +102,7 @@ describe('Test AOAuth2Application', () => {
     appInstall.setSettings(settings);
 
     const data = await oAuthApplication.refreshAuthorization(appInstall);
-    const returnedSettings =  data.getSettings();
+    const returnedSettings = data.getSettings();
     expect(returnedSettings[AUTHORIZATION_SETTINGS][CLIENT_ID]).toEqual(settings[AUTHORIZATION_SETTINGS][CLIENT_ID]);
     expect(returnedSettings[AUTHORIZATION_SETTINGS][TOKEN]).toEqual(settings[AUTHORIZATION_SETTINGS][TOKEN]);
   });

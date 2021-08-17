@@ -8,6 +8,7 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
 import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
+import Metrics from '../../Metrics/Metrics';
 
 const container = getTestContainer();
 const application = container.getApplication('test');
@@ -64,10 +65,10 @@ describe('Test ApplicationRouter', () => {
     }
   });
 
-  afterAll(() => {
-    dbClient.down();
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
   });
-
 
   it('get /applications route', async () => {
     const applicationUrl = '/applications';
@@ -129,7 +130,7 @@ describe('Test ApplicationRouter', () => {
       .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: faker.internet.url() })
-      .expect(StatusCodes.OK,expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/authorize/token route', async () => {
@@ -140,7 +141,7 @@ describe('Test ApplicationRouter', () => {
       .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ state })
-      .expect(StatusCodes.OK,expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 
   it('get /applications/:name/users/:user/authorize/token route', async () => {
@@ -152,6 +153,6 @@ describe('Test ApplicationRouter', () => {
       .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: redirectUrl })
-      .expect(StatusCodes.OK,expectedResult);
+      .expect(StatusCodes.OK, expectedResult);
   });
 });
