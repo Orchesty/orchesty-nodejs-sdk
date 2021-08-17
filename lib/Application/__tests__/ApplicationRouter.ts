@@ -222,4 +222,23 @@ describe('Test ApplicationRouter', () => {
         expect(responsePassword).toEqual(password);
       });
   });
+
+  it('put /applications/:name/users/:user/uninstall route', async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const appName = 'test';
+    const userName = faker.name.firstName();
+    appInstall = new ApplicationInstall()
+      .setUser(userName)
+      .setName(appName);
+    await repo.insert(appInstall);
+
+    const applicationUrl = `/applications/${appName}/users/${userName}/uninstall`;
+    await supertest(expressApp)
+      .delete(applicationUrl)
+      .expect(async (response) => {
+        // eslint-disable-next-line max-len
+        // Todo : There's a decoratetor that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
+        expect(response.statusCode).toEqual(StatusCodes.OK);
+      });
+  });
 });

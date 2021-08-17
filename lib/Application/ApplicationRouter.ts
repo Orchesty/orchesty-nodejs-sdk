@@ -83,20 +83,28 @@ export class ApplicationRouter extends ACommonRouter {
       const { name, user } = req.params;
       const { data } = req.query;
       const response = await this._manager.saveApplicationSettings(name, user,
-        { key: "name" });
+        { key: 'name' });
       res.status(StatusCodes.CREATED);
       res.json(response);
     });
 
     this._app.route('/applications/:name/users/:user/password').put(async (req, res) => {
       const { name, user } = req.params;
-      const password = req.query.password;
+      const { password } = req.query;
       if (!password) {
         throw Error('Missing "password" query parameter.');
       }
+      // @ts-ignore
       const response = await this._manager.saveApplicationPassword(name, user, password);
       res.status(StatusCodes.OK);
       res.json(response);
+    });
+
+    this._app.route('/applications/:name/users/:user/uninstall').delete(async (req, res) => {
+      const { name, user } = req.params;
+      await this._manager.uninstallApplication(name, user);
+      res.status(StatusCodes.OK);
+      res.json({});
     });
 
     return this._app;

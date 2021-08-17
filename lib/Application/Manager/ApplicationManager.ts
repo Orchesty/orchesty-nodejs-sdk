@@ -102,6 +102,17 @@ export default class ApplicationManager {
     };
   }
 
+  public async uninstallApplication(name: string, user: string) {
+    const repo = await this._getRepository();
+    const appInstall: ApplicationInstall | null = await repo.findByNameAndUser(name, user);
+    if (!appInstall) {
+      // Todo : need to be changed to custom error that doesn't return 500
+      throw Error(`ApplicationInstall with user [${user}] and name [${name}] not found !`);
+    }
+    await repo.remove(appInstall);
+    return 'application removed successfully';
+  }
+
   private async _loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
     const appInstall = await (await this._getRepository()).findByNameAndUser(name, user);
     if (appInstall === null) {
