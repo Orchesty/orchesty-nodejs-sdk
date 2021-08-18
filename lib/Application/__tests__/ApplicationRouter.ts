@@ -241,4 +241,42 @@ describe('Test ApplicationRouter', () => {
         expect(response.statusCode).toEqual(StatusCodes.OK);
       });
   });
+
+  it('get /applications/:name/users/:user route', async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const appName = 'test';
+    const userName = faker.name.firstName();
+    appInstall = new ApplicationInstall()
+      .setUser(userName)
+      .setName(appName);
+    await repo.insert(appInstall);
+    const applicationUrl = `/applications/${appName}/users/${userName}`;
+    await supertest(expressApp)
+      .get(applicationUrl)
+      .send({ name: userName, user: userName }).expect((response) => {
+        expect(response.statusCode).toEqual(StatusCodes.OK);
+        expect(response.body).toHaveProperty('name');
+        expect(response.body.key).toEqual('test');
+        expect(response.body).toHaveProperty('applicationSettings');
+        expect(response.body).toHaveProperty('webhookSettings');
+      });
+  });
+
+  it('get /applications/users/:user route', async () => {
+    const repo = await dbClient.getRepository(ApplicationInstall);
+    const appName = 'test';
+    const userName = faker.name.firstName();
+    appInstall = new ApplicationInstall()
+      .setUser(userName)
+      .setName(appName);
+    await repo.insert(appInstall);
+    const applicationUrl = `/applications/users/${userName}`;
+    await supertest(expressApp)
+      .get(applicationUrl)
+      .send({ name: userName, user: userName }).expect((response) => {
+        expect(response.statusCode).toEqual(StatusCodes.OK);
+        expect(response.body).toHaveProperty('items');
+        expect(response.body.items).toHaveLength(1);
+      });
+  });
 });

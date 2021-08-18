@@ -12,6 +12,9 @@ import ApplicationLoader from '../ApplicationLoader';
 import AApplication, { IApplicationArray } from '../Base/AApplication';
 import { IFieldArray } from '../Model/Form/Field';
 
+const AUTHORIZED = 'authorized';
+const APPLICATION_INSTALL = 'applicationSettings';
+
 export default class ApplicationManager {
   private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
 
@@ -48,13 +51,13 @@ export default class ApplicationManager {
     name: string,
     user: string,
     data: IApplicationSettings,
-  ): Promise<{[key: string]: unknown | IFieldArray[]}> {
+  ): Promise<{ [key: string]: unknown | IFieldArray[] }> {
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
     return {
       ...app.setApplicationSettings(appInstall as ApplicationInstall, data).toArray(),
-      applicationSettings: app.getApplicationForm(appInstall),
+      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
     };
   }
 
@@ -94,9 +97,9 @@ export default class ApplicationManager {
   public async installApplication(
     name: string,
     user: string,
-  ): Promise<{[key: string]: unknown | boolean | IFieldArray[]}> {
+  ): Promise<{ [key: string]: unknown | boolean | IFieldArray[] }> {
     const repo = await this._getRepository();
-    let appInstall: ApplicationInstall|null = await repo.findByNameAndUser(name, user);
+    let appInstall: ApplicationInstall | null = await repo.findByNameAndUser(name, user);
     if (appInstall) {
       // Todo : need to be changed to custom error that doesn't return 500
       throw Error(`ApplicationInstall with user [${user}] and name [${name}] already exists !`);
@@ -108,8 +111,8 @@ export default class ApplicationManager {
     const app = (this.getApplication(appInstall.getName()) as AApplication);
     return {
       ...app.toArray(),
-      authorized: app.isAuthorized(appInstall),
-      applicationSettings: app.getApplicationForm(appInstall),
+      [AUTHORIZED]: app.isAuthorized(appInstall),
+      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
     };
   }
 
@@ -117,6 +120,31 @@ export default class ApplicationManager {
     const repo = await this._getRepository();
     const appInstall = await this._loadApplicationInstall(name, user);
     await repo.remove(appInstall);
+  }
+
+  public async detailApplication(name: string, user: string): Promise<{ [key: string]: unknown }> {
+    const appInstall = await this._loadApplicationInstall(name, user);
+    const app = (this.getApplication(appInstall.getName()) as AApplication);
+    return {
+      ...app.toArray(),
+      [AUTHORIZED]: app.isAuthorized(appInstall),
+      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
+      webhookSettings: [], // TODO add this later
+    };
+  }
+
+  public async userApplications(user: string): Promise<{ [key: string]: unknown }> {
+    const repo = await this._getRepository();
+    const appInstalls = await repo.findMany({ user });
+    return {
+      items: appInstalls.map((appInstall) => {
+        const app = (this.getApplication(appInstall.getName()) as AApplication);
+        return {
+          ...appInstall.toArray(),
+          [AUTHORIZED]: app.isAuthorized(appInstall),
+        };
+      }),
+    };
   }
 
   private async _loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {

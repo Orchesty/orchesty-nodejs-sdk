@@ -104,6 +104,20 @@ export class ApplicationRouter extends ACommonRouter {
       res.json({});
     });
 
+    this._app.route('/applications/:name/users/:user').get(async (req, res) => {
+      const { name, user } = req.params;
+      const response = await this._manager.detailApplication(name, user);
+      res.status(StatusCodes.OK);
+      res.json(response);
+    });
+
+    this._app.route('/applications/users/:user').get(async (req, res) => {
+      const { user } = req.params;
+      const response = await this._manager.userApplications(user);
+      res.status(StatusCodes.OK);
+      res.json(response);
+    });
+
     return this._app;
   }
 }
