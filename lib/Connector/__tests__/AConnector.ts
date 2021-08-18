@@ -22,20 +22,20 @@ describe('Test AConnector', () => {
 
   it('it should set database of connector', () => {
     testConnector.setDb(mongoDbClient);
-    const testConnectorDatabaseURL = Reflect.get(testConnector,'db')._dsn;
+    const testConnectorDatabaseURL = Reflect.get(testConnector, 'db')._dsn;
     expect(mongoDbClient._dsn).toEqual(testConnectorDatabaseURL);
   });
 
   it('it should set application of connector', () => {
     const application = new TestBasicApplication();
     testConnector.setApplication(application);
-    const testConnectorApplicationName = Reflect.get(testConnector,'application').getName();
+    const testConnectorApplicationName = Reflect.get(testConnector, 'application').getName();
     expect(application.getName()).toEqual(testConnectorApplicationName);
   });
 
   it('it should set sender of connector', () => {
     testConnector.setSender(curlSender);
-    const testConnectorCurlSender = Reflect.get(testConnector,'sender');
+    const testConnectorCurlSender = Reflect.get(testConnector, 'sender');
     expect(testConnectorCurlSender).toEqual(curlSender);
   });
 });

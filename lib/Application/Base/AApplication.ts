@@ -46,9 +46,11 @@ export default abstract class AApplication implements IApplication {
       const settings = applicationInstall.getSettings()[FORM] ?? [];
       const form = this.getSettingsForm();
       form.fields.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(settings, field.type)) {
+        if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
           if (field.type === FieldType.PASSWORD) {
             field.setValue(true);
+          } else {
+            field.setValue(settings[field.key]);
           }
         }
       });

@@ -75,7 +75,6 @@ describe('Test metrics', () => {
       'randomAppKey',
     );
     expect(curlMetrics).toBeDefined();
-    expect(typeof curlMetrics === 'boolean').toBeTruthy();
   });
 
   it('sendProcessMetrics', async () => {
@@ -86,6 +85,5 @@ describe('Test metrics', () => {
       'randomCorrelationId',
     );
     expect(processMetric).toBeDefined();
-    expect(typeof processMetric === 'boolean').toBeTruthy();
   });
 });

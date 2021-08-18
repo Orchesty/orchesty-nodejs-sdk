@@ -53,7 +53,7 @@ export default class ProcessDto {
   }
 
   get jsonData(): unknown {
-    return JSON.parse(this._data);
+    return JSON.parse(this._data || '{}');
   }
 
   set jsonData(body: unknown) {

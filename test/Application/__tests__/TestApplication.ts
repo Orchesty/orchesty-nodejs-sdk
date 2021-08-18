@@ -130,8 +130,34 @@ describe('Test application', () => {
   it('getApplicationForm', () => {
     const app = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
-    const sett = { form: { user, password: pass, token } };
+    const sett = { form: { person: user, testKey: pass } };
     appInstall.addSettings(sett);
-    app.getApplicationForm(appInstall);
+    const res = app.getApplicationForm(appInstall);
+    expect(res).toEqual(
+      [
+        {
+          "choices": [],
+          "description": "",
+          "disabled": false,
+          "key": "testKey",
+          "label": "testLabel",
+          "readOnly": false,
+          "required": false,
+          "type": "password",
+          "value": true
+        },
+        {
+          "choices": [],
+          "description": "",
+          "disabled": false,
+          "key": "person",
+          "label": "testLabel",
+          "readOnly": false,
+          "required": false,
+          "type": "text",
+          "value": "Jakub"
+        }
+      ]
+    );
   });
 });

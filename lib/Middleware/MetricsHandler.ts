@@ -5,7 +5,7 @@ import Metrics, { IStartMetrics } from '../Metrics/Metrics';
 import { container } from '../index';
 import CoreServices from '../DIContainer/CoreServices';
 
-async function afterResponse(
+function afterResponse(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -16,11 +16,11 @@ async function afterResponse(
   next();
 
   const times = Metrics.getTimes(startMetrics);
-  await sender.sendProcessMetrics(
+  sender.sendProcessMetrics(
     times,
     getCorrelationId(req.headers),
     getNodeId(req.headers), getCorrelationId(req.headers),
-  );
+  ).catch((e) => (logger.error(e?.message ?? e)));
   // eslint-disable-next-line max-len
   logger.debug(`Total request duration: ${Number(times.requestDuration) / 1000000}ms for endpoint ${req.method}[${req.originalUrl}]`);
 }
@@ -28,8 +28,8 @@ async function afterResponse(
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {
   const startMetrics = Metrics.getCurrentMetrics();
   const sender = container.get(CoreServices.METRICS);
-  res.on('finish', async () => {
-    await afterResponse(req, res, next, startMetrics, sender);
+  res.on('finish', () => {
+    afterResponse(req, res, next, startMetrics, sender);
   });
   next();
 }

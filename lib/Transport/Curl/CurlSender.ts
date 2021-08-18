@@ -16,7 +16,7 @@ export default class CurlSender {
     const startTime = Metrics.getCurrentMetrics();
     try {
       const response = await fetch(dto.url, CurlSender._createInitFromDto(dto));
-      await this._sendMetrics(dto, startTime);
+      this._sendMetrics(dto, startTime);
       const body = await response.text();
       if (!response.ok) {
         CurlSender._log(dto, response, Severity.ERROR, body);
@@ -26,7 +26,7 @@ export default class CurlSender {
 
       return new ResponseDto(body, response.status, response.headers, response.statusText);
     } catch (e) {
-      await this._sendMetrics(dto, startTime);
+      this._sendMetrics(dto, startTime);
       logger.error(e.message);
 
       throw Error(e.message);
@@ -63,18 +63,18 @@ export default class CurlSender {
     );
   }
 
-  private async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
+  private _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): void {
     const info = dto.debugInfo;
     try {
       if (info) {
         const times = Metrics.getTimes(startTimes);
-        await this._metrics.sendCurlMetrics(
+        this._metrics.sendCurlMetrics(
           times,
           info.getHeader(NODE_ID),
           info.getHeader(CORRELATION_ID),
           info.getHeader(USER),
           info.getHeader(APPLICATION),
-        );
+        ).catch((e) => (logger.error(e?.message ?? e)));
       }
     } catch (e) {
       logger.error(e, info ? Logger.ctxFromDto(info) : undefined);

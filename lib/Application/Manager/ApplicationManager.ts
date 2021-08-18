@@ -13,7 +13,7 @@ import AApplication, { IApplicationArray } from '../Base/AApplication';
 import { IFieldArray } from '../Model/Form/Field';
 
 const AUTHORIZED = 'authorized';
-const APPLICATION_INSTALL = 'applicationSettings';
+const APPLICATION_SETTINGS = 'applicationSettings';
 
 export default class ApplicationManager {
   private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
@@ -55,9 +55,12 @@ export default class ApplicationManager {
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
+    const res = app.setApplicationSettings(appInstall as ApplicationInstall, data).toArray();
+    await (await this._getRepository()).update(appInstall);
+
     return {
-      ...app.setApplicationSettings(appInstall as ApplicationInstall, data).toArray(),
-      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
+      ...res,
+      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
     };
   }
 
@@ -69,7 +72,10 @@ export default class ApplicationManager {
     const app = this.getApplication(name) as IBasicApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    return app.setApplicationPassword(appInstall, password).toArray();
+    const res = app.setApplicationPassword(appInstall, password).toArray();
+    await (await this._getRepository()).update(appInstall);
+
+    return res;
   }
 
   public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {
@@ -112,7 +118,7 @@ export default class ApplicationManager {
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
-      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
     };
   }
 
@@ -128,7 +134,7 @@ export default class ApplicationManager {
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
-      [APPLICATION_INSTALL]: app.getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
       webhookSettings: [], // TODO add this later
     };
   }

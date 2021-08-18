@@ -235,7 +235,7 @@ describe('Test ApplicationRouter', () => {
     const applicationUrl = `/applications/${appName}/users/${userName}/uninstall`;
     await supertest(expressApp)
       .delete(applicationUrl)
-      .expect(async (response) => {
+      .expect((response) => {
         // eslint-disable-next-line max-len
         // Todo : There's a decorator that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
         expect(response.statusCode).toEqual(StatusCodes.OK);

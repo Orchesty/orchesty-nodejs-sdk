@@ -140,6 +140,7 @@ describe('ApplicationManager tests', () => {
     expect(dbInstall.key).toEqual('test');
     expect(dbInstall.user).toEqual('user');
     expect(dbInstall.settings).toHaveProperty('authorization_settings');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((dbInstall.settings as any).authorization_settings.password).toEqual('passs');
   });
 
