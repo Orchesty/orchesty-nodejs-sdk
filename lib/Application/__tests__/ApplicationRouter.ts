@@ -131,7 +131,7 @@ describe('Test ApplicationRouter', () => {
       .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
       .query({ redirect_url: faker.internet.url() })
-      .expect(StatusCodes.OK, expectedResult);
+      .expect(expectedResult);
   });
 
   it('get /applications/authorize/token route', async () => {
@@ -164,7 +164,7 @@ describe('Test ApplicationRouter', () => {
     const expectedResult = assertions['post /applications/:name/users/:user/install route'];
 
     await supertest(expressApp)
-      .get(applicationUrl)
+      .post(applicationUrl)
       .expect((response) => {
         expect(JSON.parse(response.text)).toEqual(expectedResult);
         expect(response.statusCode).toEqual(StatusCodes.CREATED);
@@ -182,7 +182,7 @@ describe('Test ApplicationRouter', () => {
     await repo.insert(appInstall);
     const applicationUrl = `/applications/${appName}/users/${userName}/install`;
     await supertest(expressApp)
-      .get(applicationUrl)
+      .post(applicationUrl)
       .expect(StatusCodes.INTERNAL_SERVER_ERROR);
   });
 
@@ -195,13 +195,13 @@ describe('Test ApplicationRouter', () => {
       .setName(appName);
     await repo.insert(appInstall);
     const applicationUrl = `/applications/${appName}/users/${userName}/settings`;
-    const expectedResult = assertions['put /applications/:name/users/:user/settings route'];
 
     await supertest(expressApp)
       .put(applicationUrl)
-      .query({ data: { key: 'name' } }).expect((response) => {
-        expect(JSON.parse(response.text)).toEqual(expectedResult);
-        expect(response.statusCode).toEqual(StatusCodes.CREATED);
+      .send({ data: { key: 'name' } })
+      .expect((response) => {
+        expect(JSON.parse(response.text).user).toEqual(userName);
+        expect(response.statusCode).toEqual(StatusCodes.OK);
       });
   });
 
@@ -217,7 +217,7 @@ describe('Test ApplicationRouter', () => {
     const password = faker.internet.password();
     await supertest(expressApp)
       .put(applicationUrl)
-      .query({ password }).expect((response)=>{
+      .send({ password }).expect((response) => {
         const responsePassword = JSON.parse(response.text).settings.authorization_settings.password;
         expect(responsePassword).toEqual(password);
       });
@@ -237,7 +237,7 @@ describe('Test ApplicationRouter', () => {
       .delete(applicationUrl)
       .expect(async (response) => {
         // eslint-disable-next-line max-len
-        // Todo : There's a decoratetor that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
+        // Todo : There's a decorator that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
         expect(response.statusCode).toEqual(StatusCodes.OK);
       });
   });

@@ -72,7 +72,7 @@ export class ApplicationRouter extends ACommonRouter {
       res.json({ redirectUrl: url });
     });
 
-    this._app.route('/applications/:name/users/:user/install').get(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/install').post(async (req, res) => {
       const { name, user } = req.params;
       const response = await this._manager.installApplication(name, user);
       res.status(StatusCodes.CREATED);
@@ -81,20 +81,17 @@ export class ApplicationRouter extends ACommonRouter {
 
     this._app.route('/applications/:name/users/:user/settings').put(async (req, res) => {
       const { name, user } = req.params;
-      const { data } = req.query;
-      const response = await this._manager.saveApplicationSettings(name, user,
-        { key: 'name' });
-      res.status(StatusCodes.CREATED);
+      const response = await this._manager.saveApplicationSettings(name, user, JSON.parse(req.body));
+      res.status(StatusCodes.OK);
       res.json(response);
     });
 
     this._app.route('/applications/:name/users/:user/password').put(async (req, res) => {
       const { name, user } = req.params;
-      const { password } = req.query;
+      const { password } = JSON.parse(req.body);
       if (!password) {
         throw Error('Missing "password" query parameter.');
       }
-      // @ts-ignore
       const response = await this._manager.saveApplicationPassword(name, user, password);
       res.status(StatusCodes.OK);
       res.json(response);

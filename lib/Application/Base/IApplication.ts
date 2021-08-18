@@ -21,7 +21,5 @@ export interface IApplication extends IName {
 
   isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-
-
   toArray(): IApplicationArray;
 }
