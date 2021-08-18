@@ -9,7 +9,8 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
 import ApplicationLoader from '../ApplicationLoader';
-import { IApplicationArray } from '../Base/AApplication';
+import AApplication, { IApplicationArray } from '../Base/AApplication';
+import { IFieldArray } from '../Model/Form/Field';
 
 export default class ApplicationManager {
   private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
@@ -47,18 +48,25 @@ export default class ApplicationManager {
     name: string,
     user: string,
     data: IApplicationSettings,
-  ): Promise<ApplicationInstall> {
-    const app = this.getApplication(name);
+  ): Promise<{[key: string]: unknown | IFieldArray[]}> {
+    const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    return app.setApplicationSettings(appInstall as ApplicationInstall, data);
+    return {
+      ...app.setApplicationSettings(appInstall as ApplicationInstall, data).toArray(),
+      applicationSettings: app.getApplicationForm(appInstall),
+    };
   }
 
-  public async saveApplicationPassword(name: string, user: string, password: string): Promise<ApplicationInstall> {
+  public async saveApplicationPassword(
+    name: string,
+    user: string,
+    password: string,
+  ): Promise<{ [key: string]: unknown }> {
     const app = this.getApplication(name) as IBasicApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    return app.setApplicationPassword(appInstall, password);
+    return app.setApplicationPassword(appInstall, password).toArray();
   }
 
   public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {
@@ -81,6 +89,34 @@ export default class ApplicationManager {
     await app.setAuthorizationToken(appInstall, requestParams);
     await (await this._getRepository()).update(appInstall);
     return app.getFrontendRedirectUrl(appInstall);
+  }
+
+  public async installApplication(
+    name: string,
+    user: string,
+  ): Promise<{[key: string]: unknown | boolean | IFieldArray[]}> {
+    const repo = await this._getRepository();
+    let appInstall: ApplicationInstall|null = await repo.findByNameAndUser(name, user);
+    if (appInstall) {
+      // Todo : need to be changed to custom error that doesn't return 500
+      throw Error(`ApplicationInstall with user [${user}] and name [${name}] already exists !`);
+    }
+    appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+    await repo.insert(appInstall);
+    const app = (this.getApplication(appInstall.getName()) as AApplication);
+    return {
+      ...app.toArray(),
+      authorized: app.isAuthorized(appInstall),
+      applicationSettings: app.getApplicationForm(appInstall),
+    };
+  }
+
+  public async uninstallApplication(name: string, user: string): Promise<void> {
+    const repo = await this._getRepository();
+    const appInstall = await this._loadApplicationInstall(name, user);
+    await repo.remove(appInstall);
   }
 
   private async _loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
