@@ -7,14 +7,13 @@ export default class Mongo implements IMetricsSender {
   constructor(private _client: MongoDbClient) {
   }
 
-  async send(measurement: string, fields: ITagsMap, tags: ITagsMap): Promise<boolean> {
+  async send(measurement: string, _fields: ITagsMap, tags: ITagsMap): Promise<boolean> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const fields: any = _fields;
+      fields.created = parseInt(fields.created, 10);
       const db = await this._client.db();
-      await db.collection(measurement)
-        .insertOne({
-          fields,
-          tags,
-        });
+      await db.collection(measurement).insertOne({ fields, tags });
       return true;
     } catch (e) {
       logger.error(e.message);

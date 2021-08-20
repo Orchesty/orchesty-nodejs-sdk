@@ -43,6 +43,6 @@ export function getCpuUsage(): number {
   }
 }
 
-export function getCurrentTimestamp(): bigint {
-  return process.hrtime.bigint();
+export function getCurrentTimestamp(): number {
+  return new Date().getTime();
 }

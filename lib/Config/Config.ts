@@ -6,8 +6,8 @@ export const loggerOptions = {
 
 export const metricsOptions = {
   dsn: process.env.METRICS_DSN || '',
-  curlMeasurement: process.env.CURL_METRICS_MEASUREMENT || 'monolith',
-  processMeasurement: process.env.PROCESS_METRICS_MEASUREMENT || 'connectors',
+  curlMeasurement: process.env.CURL_METRICS_MEASUREMENT || 'connectors',
+  processMeasurement: process.env.PROCESS_METRICS_MEASUREMENT || 'monolith',
   metricsService: process.env.METRICS_SERVICE || MONGO,
 };
 

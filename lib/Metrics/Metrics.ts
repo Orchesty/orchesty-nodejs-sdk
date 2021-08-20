@@ -4,14 +4,15 @@ import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsag
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import MetricsSenderLoader from './MetricsSenderLoader';
+import DateTimeUtils from '../Utils/DateTimeUtils';
 
 export interface IStartMetrics {
-  timestamp: bigint,
+  timestamp: number,
   cpu: ICpuTimes,
 }
 
 export interface ITimesMetrics {
-  requestDuration: bigint,
+  requestDuration: number,
   userTime: number,
   kernelTime: number,
 }
@@ -42,6 +43,7 @@ export default class Metrics {
     }
 
     const fields: ITagsMap = {
+      created: DateTimeUtils.getTimestamp(new Date()).toString(),
       fpm_request_total_duration: String(timeData.requestDuration),
       fpm_cpu_user_time: String(timeData.userTime),
       fpm_cpu_kernel_time: String(timeData.kernelTime),
@@ -78,6 +80,7 @@ export default class Metrics {
     }
 
     const fields: ITagsMap = {
+      created: DateTimeUtils.getTimestamp(new Date()).toString(),
       user_id: user ?? '',
       application_id: appKey ?? '',
       sent_request_total_duration: String(timeData.requestDuration),
@@ -85,7 +88,7 @@ export default class Metrics {
 
     try {
       return await this._loader.getSender()
-        .send(metricsOptions.processMeasurement, fields, tags);
+        .send(metricsOptions.curlMeasurement, fields, tags);
     } catch (e) {
       logger.error(e);
       return false;

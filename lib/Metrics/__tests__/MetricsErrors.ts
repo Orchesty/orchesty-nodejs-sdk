@@ -11,7 +11,7 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 const mockITimesMetrics: ITimesMetrics = {
-  requestDuration: BigInt(9907199254740999),
+  requestDuration: Number(9907199254740999),
   userTime: 5,
   kernelTime: 5,
 };

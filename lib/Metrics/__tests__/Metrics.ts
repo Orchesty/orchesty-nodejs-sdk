@@ -18,12 +18,12 @@ const mockCpuTimes: ICpuTimes = {
 };
 
 const mockIStartMetrics: IStartMetrics = {
-  timestamp: BigInt(9007199254740991),
+  timestamp: Number(9007199254740991),
   cpu: mockCpuTimes,
 };
 
 const mockITimesMetrics: ITimesMetrics = {
-  requestDuration: BigInt(9907199254740999),
+  requestDuration: Number(9907199254740999),
   userTime: 5,
   kernelTime: 5,
 };
@@ -43,7 +43,7 @@ describe('Test metrics', () => {
   it('getTimes', () => {
     const times = Metrics.getTimes(mockIStartMetrics);
     expect(times).toHaveProperty('requestDuration');
-    expect(typeof times.requestDuration).toEqual('bigint');
+    expect(typeof times.requestDuration).toEqual('number');
     expect(times).toHaveProperty('userTime');
     expect(typeof times.userTime).toEqual('number');
     expect(times).toHaveProperty('kernelTime');
@@ -54,7 +54,7 @@ describe('Test metrics', () => {
     const currentMetrics = Metrics.getCurrentMetrics();
 
     expect(currentMetrics).toHaveProperty('timestamp');
-    expect(typeof currentMetrics.timestamp).toEqual('bigint');
+    expect(typeof currentMetrics.timestamp).toEqual('number');
     expect(currentMetrics).toHaveProperty('cpu');
 
     const { cpu } = currentMetrics;

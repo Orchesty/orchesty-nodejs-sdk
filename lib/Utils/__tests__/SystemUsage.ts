@@ -25,6 +25,6 @@ describe('Test system usages', () => {
   });
 
   it('getCurrentTimestamp ', () => {
-    expect(typeof getCurrentTimestamp()).toEqual('bigint');
+    expect(typeof getCurrentTimestamp()).toEqual('number');
   });
 });

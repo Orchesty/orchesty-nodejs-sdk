@@ -25,9 +25,8 @@ export default class CustomNodeRouter extends ACommonRouter {
       res.json([]);
     });
 
-    this._app.route('/custom-node/list').get(async (req, res, next) => {
-      res.json(this._loader.getList(CUSTOM_NODE_PREFIX));
-      await next();
+    this._app.route('/custom-node/list').get(async (req, res) => {
+      res.json(await this._loader.getList(CUSTOM_NODE_PREFIX));
     });
 
     return this._app;
