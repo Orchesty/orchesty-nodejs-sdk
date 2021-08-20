@@ -26,7 +26,7 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
   if (err instanceof OnRepeatException) {
     if (!hasRepeaterHeaders(dto.headers)) {
       // todo add load repeat settings from mongo
-      dto.setRepeater(err.getInterval(), err.getMaxHops());
+      dto.setRepeater(err.getInterval(), err.getMaxHops(), err.message);
     }
 
     logger.debug(
