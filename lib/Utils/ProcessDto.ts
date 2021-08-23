@@ -104,7 +104,7 @@ export default class ProcessDto {
       throw new Error('Value maxHops is obligatory and can not be lower than 0');
     }
 
-    this._setStatusHeader(ResultCode.REPEAT, message ?? 'Repeater applied.');
+    this._setStatusHeader(ResultCode.REPEAT, (message ?? 'Repeater applied.').replace(/\n/g, ''));
 
     this.addHeader(REPEAT_INTERVAL, interval.toString());
     this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
