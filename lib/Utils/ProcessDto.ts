@@ -96,7 +96,7 @@ export default class ProcessDto {
     this._setStatusHeader(status, message);
   }
 
-  setRepeater(interval: number, maxHops: number, queue?: string, message?: string): void {
+  setRepeater(interval: number, maxHops: number, message?: string): void {
     if (interval < 1) {
       throw new Error('Value interval is obligatory and can not be lower than 0');
     }
@@ -108,10 +108,6 @@ export default class ProcessDto {
 
     this.addHeader(REPEAT_INTERVAL, interval.toString());
     this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
-
-    if (queue) {
-      this.addHeader(REPEAT_QUEUE, queue);
-    }
   }
 
   removeRepeater(): void {

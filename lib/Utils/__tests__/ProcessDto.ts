@@ -102,11 +102,10 @@ describe('Tests ProcessDto utils', () => {
 
   it('setRepeater and removeRepeater', () => {
     const dto = new ProcessDto();
-    dto.setRepeater(2, 20, 'rep-queue', 'rep-message');
+    dto.setRepeater(2, 20, 'rep-message');
 
     expect(dto.getHeader('repeat-interval')).toEqual('2');
     expect(dto.getHeader('repeat-max-hops')).toEqual('20');
-    expect(dto.getHeader('repeat-queue')).toEqual('rep-queue');
     expect(dto.getHeader('result-code')).toEqual('1001');
     expect(dto.getHeader('result-message')).toEqual('rep-message');
 
@@ -114,7 +113,6 @@ describe('Tests ProcessDto utils', () => {
     expect(dto.getHeader('repeat-interval')).toBeUndefined();
     expect(dto.getHeader('repeat-hops')).toBeUndefined();
     expect(dto.getHeader('repeat-max-hops')).toBeUndefined();
-    expect(dto.getHeader('repeat-queue')).toBeUndefined();
   });
 
   it('setRepeater without optional attributes', () => {
@@ -125,7 +123,6 @@ describe('Tests ProcessDto utils', () => {
     expect(dto.getHeader('repeat-interval')).toEqual('3');
     expect(dto.getHeader('repeat-max-hops')).toEqual('30');
     expect(dto.getHeader('repeat-hops')).toBeUndefined();
-    expect(dto.getHeader('repeat-queue')).toBeUndefined();
     expect(dto.getHeader('result-message')).toEqual('Repeater applied.');
   });
 
