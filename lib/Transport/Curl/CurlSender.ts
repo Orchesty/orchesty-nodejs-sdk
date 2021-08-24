@@ -49,7 +49,7 @@ export default class CurlSender {
 
   private static _log({ debugInfo }: RequestDto, res: Response, level: string, body?: string): void {
     let message = 'Request success.';
-    if (res.status !== 200) {
+    if (res.status > 300) {
       message = 'Request failed.';
     }
 
