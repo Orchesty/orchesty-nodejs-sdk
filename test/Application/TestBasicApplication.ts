@@ -8,7 +8,7 @@ import Field from '../../lib/Application/Model/Form/Field';
 
 export default class TestBasicApplication extends ABasicApplication {
   // eslint-disable-next-line class-methods-use-this
-  syncTestSyncMethod(): string {
+  public syncTestSyncMethod(): string {
     return JSON.stringify({
       param1: 'p1',
       param2: 'p2',

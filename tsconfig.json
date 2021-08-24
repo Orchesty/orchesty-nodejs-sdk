@@ -19,12 +19,10 @@
         "skipLibCheck": true
     },
     "include": [
-        "lib/**/*.ts",
-        "test/**/*.ts",
+        "lib",
+        "test",
     ],
     "exclude": [
         "node_modules",
-        "src/**/__tests__",
-        "test/**/__tests__"
     ]
 }

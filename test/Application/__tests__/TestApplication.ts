@@ -136,28 +136,28 @@ describe('Test application', () => {
     expect(res).toEqual(
       [
         {
-          "choices": [],
-          "description": "",
-          "disabled": false,
-          "key": "testKey",
-          "label": "testLabel",
-          "readOnly": false,
-          "required": false,
-          "type": "password",
-          "value": true
+          choices: [],
+          description: '',
+          disabled: false,
+          key: 'testKey',
+          label: 'testLabel',
+          readOnly: false,
+          required: false,
+          type: 'password',
+          value: true,
         },
         {
-          "choices": [],
-          "description": "",
-          "disabled": false,
-          "key": "person",
-          "label": "testLabel",
-          "readOnly": false,
-          "required": false,
-          "type": "text",
-          "value": "Jakub"
-        }
-      ]
+          choices: [],
+          description: '',
+          disabled: false,
+          key: 'person',
+          label: 'testLabel',
+          readOnly: false,
+          required: false,
+          type: 'text',
+          value: 'Jakub',
+        },
+      ],
     );
   });
 });
