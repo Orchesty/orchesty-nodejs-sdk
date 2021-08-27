@@ -4,17 +4,9 @@ import OnRepeatException from '../Exception/OnRepeatException';
 import {
   get,
   getRepeatHops,
-  HttpHeaders,
   REPEAT_INTERVAL,
-  REPEAT_MAX_HOPS,
 } from '../Utils/Headers';
 import logger, { Logger } from '../Logger/Logger';
-
-function hasRepeaterHeaders(headers: HttpHeaders): boolean {
-  return getRepeatHops(headers) > 0
-    || get(REPEAT_MAX_HOPS, headers) !== undefined
-    || get(REPEAT_INTERVAL, headers) !== undefined;
-}
 
 export default function errorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (res.headersSent) {
@@ -24,10 +16,8 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
   const dto = createProcessDto(req);
 
   if (err instanceof OnRepeatException) {
-    if (!hasRepeaterHeaders(dto.headers)) {
-      // todo add load repeat settings from mongo
-      dto.setRepeater(err.getInterval(), err.getMaxHops(), err.message);
-    }
+    // todo add load repeat settings from mongo
+    dto.setRepeater(err.getInterval(), err.getMaxHops(), err.message);
 
     logger.debug(
       `Repeater reached with settings: 
