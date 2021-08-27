@@ -37,7 +37,7 @@ describe('CryptManager tests', () => {
       empty.encrypt('text');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('Unknown crypt service prefix.');
+      if (e instanceof Error) expect(e.message).toEqual('Unknown crypt service prefix.');
     }
   });
 
@@ -46,7 +46,7 @@ describe('CryptManager tests', () => {
       man.decrypt('00_');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('The prefix was removed for license reasons.');
+      if (e instanceof Error) expect(e.message).toEqual('The prefix was removed for license reasons.');
     }
   });
 
@@ -55,7 +55,7 @@ describe('CryptManager tests', () => {
       man.decrypt('unknown_');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('Unknown crypt service prefix.');
+      if (e instanceof Error) expect(e.message).toEqual('Unknown crypt service prefix.');
     }
   });
 
@@ -65,7 +65,10 @@ describe('CryptManager tests', () => {
       bad.decrypt('');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('Crypt prefix of class [WindWalkerCrypt] has bad length [3], allowed length is 4.');
+      if (e instanceof Error) {
+        expect(e.message)
+          .toEqual('Crypt prefix of class [WindWalkerCrypt] has bad length [3], allowed length is 4.');
+      }
     }
   });
 

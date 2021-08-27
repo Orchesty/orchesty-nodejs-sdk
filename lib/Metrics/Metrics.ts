@@ -50,10 +50,9 @@ export default class Metrics {
     };
 
     try {
-      return await this._loader.getSender()
-        .send(metricsOptions.processMeasurement, fields, tags);
+      return await this._loader.getSender().send(metricsOptions.processMeasurement, fields, tags);
     } catch (e) {
-      logger.error(e);
+      if (typeof e === 'string') logger.error(e);
       return false;
     }
   }
@@ -87,10 +86,9 @@ export default class Metrics {
     };
 
     try {
-      return await this._loader.getSender()
-        .send(metricsOptions.curlMeasurement, fields, tags);
+      return await this._loader.getSender().send(metricsOptions.curlMeasurement, fields, tags);
     } catch (e) {
-      logger.error(e);
+      if (typeof e === 'string') logger.error(e);
       return false;
     }
   }

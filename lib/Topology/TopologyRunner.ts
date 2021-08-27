@@ -54,9 +54,11 @@ export default class TopologyRunner {
       if (e instanceof OnRepeatException) {
         throw e;
       }
+      if (e instanceof Error) {
+        errMessage = errMessage.replace('__reason__', e.message || 'unknown');
+        logger.error(e.message || `${errMessage}: Unknown error!`);
+      }
 
-      errMessage = errMessage.replace('__reason__', e.message || 'unknown');
-      logger.error(e.message || `${errMessage}: Unknown error!`);
       throw new OnRepeatException(60, 10, errMessage);
     }
   }

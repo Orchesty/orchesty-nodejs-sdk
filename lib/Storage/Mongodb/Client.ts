@@ -29,7 +29,7 @@ export default class MongoDbClient {
       await this._client.connect();
       logger.info('⚡️[server]: MongoDB Connected.');
     } catch (err) {
-      logger.error(err.message);
+      if (err instanceof Error) logger.error(err.message);
     }
   }
 

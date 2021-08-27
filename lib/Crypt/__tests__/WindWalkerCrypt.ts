@@ -23,7 +23,7 @@ describe('Crypt tests', () => {
       crypt.decrypt('_unknown');
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('Unknown prefix in hash.');
+      if (e instanceof Error) expect(e.message).toEqual('Unknown prefix in hash.');
     }
   });
 
@@ -35,7 +35,7 @@ describe('Crypt tests', () => {
       crypt.decrypt(`${crypt.getPrefix()}${encrypted}`);
       expect(false).toBeTruthy();
     } catch (e) {
-      expect(e.message).toEqual('HMAC Error: Invalid HMAC.');
+      if (e instanceof Error) expect(e.message).toEqual('HMAC Error: Invalid HMAC.');
     }
   });
 

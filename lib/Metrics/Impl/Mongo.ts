@@ -16,7 +16,7 @@ export default class Mongo implements IMetricsSender {
       await db.collection(measurement).insertOne({ fields, tags });
       return true;
     } catch (e) {
-      logger.error(e.message);
+      if (e instanceof Error) logger.error(e.message);
       return false;
     }
   }

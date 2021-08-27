@@ -147,7 +147,7 @@ describe('Test AOAuth2Application', () => {
     try {
       oAuthApplication.getAccessToken(appInstall);
     } catch (e) {
-      expect(e.message).toEqual('There is no access token');
+      if (e instanceof Error) expect(e.message).toEqual('There is no access token');
     }
   });
 });

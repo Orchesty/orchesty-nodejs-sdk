@@ -27,9 +27,11 @@ export default class CurlSender {
       return new ResponseDto(body, response.status, response.headers, response.statusText);
     } catch (e) {
       this._sendMetrics(dto, startTime);
-      logger.error(e.message);
-
-      throw Error(e.message);
+      if (e instanceof Error) {
+        logger.error(e.message);
+        throw Error(e.message);
+      }
+      throw e;
     }
   };
 
@@ -77,7 +79,7 @@ export default class CurlSender {
         ).catch((e) => (logger.error(e?.message ?? e)));
       }
     } catch (e) {
-      logger.error(e, info ? Logger.ctxFromDto(info) : undefined);
+      if (typeof e === 'string') logger.error(e, info ? Logger.ctxFromDto(info) : undefined);
     }
   }
 }

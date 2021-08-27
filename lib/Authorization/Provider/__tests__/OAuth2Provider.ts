@@ -48,7 +48,7 @@ describe('OAuth2Provider tests', () => {
     try {
       AOAuthProvider.throwException(message, code);
     } catch (e) {
-      expect(e.message).toEqual(`Message [${message}] code [${code}]`);
+      if (e instanceof Error) expect(e.message).toEqual(`Message [${message}] code [${code}]`);
     }
   });
 });

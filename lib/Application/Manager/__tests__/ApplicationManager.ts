@@ -187,7 +187,10 @@ describe('ApplicationManager tests', () => {
     try {
       await appManager.saveApplicationSettings(applicationName, 'user', appSettings);
     } catch (e) {
-      expect(e.message).toEqual(`Service with name [hbpf.application.${applicationName}] does not exist!`);
+      if (e instanceof Error) {
+        expect(e.message)
+          .toEqual(`Service with name [hbpf.application.${applicationName}] does not exist!`);
+      }
     }
   });
 });
