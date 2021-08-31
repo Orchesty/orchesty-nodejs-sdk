@@ -20,7 +20,6 @@ export default class Webhook extends DocumentAbstract {
   private webhookId = '';
 
   private unsubscribeFailed = false;
-
   /* eslint-enable @typescript-eslint/naming-convention */
 
   public constructor() {

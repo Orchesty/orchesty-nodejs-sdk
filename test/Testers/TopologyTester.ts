@@ -15,6 +15,7 @@ import {
 import ResultCode from '../../lib/Utils/ResultCode';
 import { mockNodeCurl, TestNode } from './TesterHelpers';
 import CoreServices from '../../lib/DIContainer/CoreServices';
+import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export default class TopologyTester {
   private _nodes: TestNode[] = [];
@@ -113,7 +114,18 @@ export default class TopologyTester {
     dto.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
 
     const nextDto: ProcessDto[] = [];
-    let out = await this._processAction(worker, node, this._cloneProcessDto(dto), index);
+    let out: ProcessDto;
+    try {
+      out = await this._processAction(worker, node, this._cloneProcessDto(dto), index);
+    } catch (e) {
+      if (e instanceof OnRepeatException) {
+        out = this._cloneProcessDto(dto);
+        out.addHeader(RESULT_CODE, ResultCode.REPEAT.toString());
+        out.addHeader(REPEAT_MAX_HOPS, e.getMaxHops().toString());
+      } else {
+        throw e;
+      }
+    }
 
     let { followers } = node;
     const results: ProcessDto[] = [];
@@ -138,9 +150,9 @@ export default class TopologyTester {
       // Message want to be repeated
       case ResultCode.REPEAT.toString():
         index += 1;
-        dto.addHeader(REPEAT_HOPS, String(parseInt(dto.getHeader(REPEAT_HOPS, '0') as string, 10) + 1));
-        if (parseInt(get(REPEAT_HOPS, dto.headers) ?? '0', 10)
-          >= parseInt(get(REPEAT_MAX_HOPS, dto.headers) ?? '0', 10)) {
+        dto.addHeader(REPEAT_HOPS, String(parseInt(out.getHeader(REPEAT_HOPS, '0') as string, 10) + 1));
+        if (parseInt(get(REPEAT_HOPS, out.headers) ?? '0', 10)
+          >= parseInt(get(REPEAT_MAX_HOPS, out.headers) ?? '0', 10)) {
           throw new Error('Repeater has used last try and still need to repeat.');
         }
         dto.removeHeader(RESULT_CODE);

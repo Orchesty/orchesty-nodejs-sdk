@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { ApplicationInstall } from '../ApplicationInstall';
 import DateTimeUtils, { DATE_TIME } from '../../../Utils/DateTimeUtils';
 
@@ -34,13 +35,13 @@ describe('ApplicationInstall tests', () => {
 
   it('get toArray', () => {
     const expected = {
-      created: DateTimeUtils.getFormattedDate(appInstall.getCreated(), DATE_TIME),
+      created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(appInstall.getCreated()), DATE_TIME),
       expires: null,
       id: '',
       key: '',
       nonEncryptedSettings: {},
       settings: {},
-      update: DateTimeUtils.getFormattedDate(appInstall.getUpdated(), DATE_TIME),
+      update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(appInstall.getUpdated()), DATE_TIME),
       user: '',
     };
     expect(appInstall.toArray()).toEqual(expected);

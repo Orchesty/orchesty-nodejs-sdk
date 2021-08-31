@@ -13,6 +13,11 @@ export interface ICurlMock {
   code: number,
   http: string,
   headers: { [key: string]: string },
+  httpReplacement?:
+    {
+      query?: Record<string, string>
+      path?: Record<string, string>
+    },
 }
 
 export interface IDtoData {
@@ -82,7 +87,15 @@ export function mockCurl(
         }
 
         try {
-          expect(request.url).toBe(url);
+          let expectedUrl = request.url;
+          if (curl.httpReplacement?.query) {
+            const replacedUrl = new URL(expectedUrl);
+            Object.keys(curl.httpReplacement?.query).forEach((key) => {
+              replacedUrl.searchParams.set(key, curl.httpReplacement?.query ? [key].toString() : '');
+            });
+            expectedUrl = replacedUrl.toString();
+          }
+          expect(expectedUrl).toBe(url);
         } catch (e) {
           throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${request.url}] received.`);
         }

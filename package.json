@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.69",
+  "version": "1.0.75",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -16,17 +16,17 @@
   "author": "info@hanaboso.com",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@types/dateformat": "^3.0.1",
     "@types/express": "^4.17.13",
+    "@types/luxon": "^2.0.2",
     "@types/mongodb": "~3.6.20",
     "@types/node-fetch": "^2.5.12",
     "@types/php-serialize": "^3.0.1",
     "@types/simple-oauth2": "^4.1.1",
     "@types/sodium-native": "^2.3.5",
-    "dateformat": "^4.5.1",
     "express": "~5.0.0-alpha.8",
     "fast-xml-parser": "^3.19.0",
     "http-status-codes": "^2.1.4",
+    "luxon": "^2.0.2",
     "metrics-sender": "^0.0.10",
     "mongodb": "~3.6.10",
     "mongodb-typescript": "^2.2.1",

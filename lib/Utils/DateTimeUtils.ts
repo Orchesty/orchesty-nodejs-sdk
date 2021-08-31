@@ -1,17 +1,30 @@
-import dateFormat from 'dateformat';
+import { DateTime } from 'luxon';
 
-export const DATE_TIME = 'yyyy-mm-dd hh:MM:ss';
+export const DATE_TIME = 'yyyy-LL-dd hh:mm:ss';
+export const ISO_8601 = "yyyy-LL-dd'T'HH:mm:ssZZZ";
 
 export default class DateTimeUtils {
+  /**
+   *
+   */
   public static get utcDate(): Date {
     return new Date(new Date().toUTCString());
   }
 
-  public static getFormattedDate(date: Date, format: string): string {
-    return dateFormat(date, format);
+  /**
+   * https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+   * @param date
+   * @param format
+   */
+  public static getFormattedDate(date: DateTime, format: string): string {
+    return date.toFormat(format);
   }
 
+  /**
+   *
+   * @param date
+   */
   public static getTimestamp(date: Date): number {
-    return Math.floor(date.getTime() / 1000);
+    return DateTime.fromJSDate(date).toMillis();
   }
 }

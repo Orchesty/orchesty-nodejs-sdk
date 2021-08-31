@@ -1,4 +1,5 @@
-import { ignore } from 'mongodb-typescript';
+import { ignore, index } from 'mongodb-typescript';
+import { DateTime } from 'luxon';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 import DocumentAbstract from '../../Storage/Mongodb/DocumentAbstract';
 
@@ -11,14 +12,17 @@ export class ApplicationInstall extends DocumentAbstract {
   /* eslint-disable @typescript-eslint/naming-convention */
   private deleted = false;
 
+  @index()
   private user = '';
 
+  @index()
   private key = '';
 
   private readonly created: Date;
 
   private updated: Date;
 
+  @index()
   private expires?: Date;
 
   @ignore
@@ -129,8 +133,8 @@ export class ApplicationInstall extends DocumentAbstract {
     key: this.key,
     settings: this.settings,
     nonEncryptedSettings: this.nonEncryptedSettings,
-    created: DateTimeUtils.getFormattedDate(this.created, DATE_TIME),
-    update: DateTimeUtils.getFormattedDate(this.updated, DATE_TIME),
-    expires: this.expires ? DateTimeUtils.getFormattedDate(this.expires, DATE_TIME) : null,
+    created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
+    update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),
+    expires: this.expires ? DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.expires), DATE_TIME) : null,
   });
 }

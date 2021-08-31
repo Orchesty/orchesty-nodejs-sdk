@@ -15,7 +15,15 @@ export default class CurlSender {
   public send = async (dto: RequestDto): Promise<ResponseDto> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
-      const response = await fetch(dto.url, CurlSender._createInitFromDto(dto));
+      const req = CurlSender._createInitFromDto(dto);
+      logger.log(
+        Severity.DEBUG,
+        `Request send.
+       Body: ${req.body},
+       Headers: ${JSON.stringify(req.headers)}`,
+        dto.debugInfo,
+      );
+      const response = await fetch(dto.url, req);
       this._sendMetrics(dto, startTime);
       const body = await response.text();
       if (!response.ok) {

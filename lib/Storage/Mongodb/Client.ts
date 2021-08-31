@@ -46,12 +46,15 @@ export default class MongoDbClient {
       await this.reconnect();
     }
 
-    return new Repository(
+    const repo = new Repository(
       className,
       this._client,
       (className as unknown as IDocument).getCollection(),
       this._cryptManager,
     );
+    await repo.createIndexes(true);
+
+    return repo;
   }
 
   public async getApplicationRepository(): Promise<ApplicationInstallRepository<ApplicationInstall>> {
@@ -59,11 +62,14 @@ export default class MongoDbClient {
       await this.reconnect();
     }
 
-    return new ApplicationInstallRepository(
+    const repo = new ApplicationInstallRepository(
       ApplicationInstall,
       this._client,
       ApplicationInstall.getCollection(),
       this._cryptManager,
     );
+    await repo.createIndexes(true);
+
+    return repo;
   }
 }
