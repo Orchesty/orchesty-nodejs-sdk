@@ -1,6 +1,7 @@
 {
     "post /applications/:name/users/:user/install route": {
         "name": "Test application",
+        "logo": null,
         "authorization_type": "basic",
         "application_type": "cron",
         "key": "test",
@@ -58,6 +59,7 @@
                 "value": null
             }
         ],
+        "logo": null,
         "created": "2021-08-18 11:01:13",
         "expires": null,
         "id": "611ccc59b0037d1f607a9b32",

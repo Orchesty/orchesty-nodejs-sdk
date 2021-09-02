@@ -94,6 +94,7 @@ describe('ApplicationManager tests', () => {
           description: 'Test description',
           key: 'test',
           name: 'Test application',
+          logo: null,
         },
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -103,6 +104,7 @@ describe('ApplicationManager tests', () => {
           description: 'Test OAuth2 application',
           key: 'oauth2application',
           name: 'Test OAuth2 Application',
+          logo: null,
         },
       ]);
   });

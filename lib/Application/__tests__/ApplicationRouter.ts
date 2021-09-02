@@ -74,7 +74,7 @@ describe('Test ApplicationRouter', () => {
   it('get /applications route', async () => {
     const applicationUrl = '/applications';
     // eslint-disable-next-line max-len
-    const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description"},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application"}]}';
+    const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","logo":null}]}';
 
     await supertest(expressApp)
       .get(applicationUrl)
@@ -84,7 +84,7 @@ describe('Test ApplicationRouter', () => {
   it('get /applications/:name route', async () => {
     const applicationUrl = `/applications/${application.getName()}`;
     // eslint-disable-next-line max-len
-    const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description"}';
+    const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null}';
     await supertest(expressApp)
       .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
