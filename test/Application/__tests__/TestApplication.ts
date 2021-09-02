@@ -26,6 +26,12 @@ describe('Test application', () => {
     expect(app.getName()).toEqual('test');
   });
 
+  it('getLogo', () => {
+    const app = new TestBasicApplication();
+    app.logoFilename = 'test/Application/test.png';
+    expect(app.getLogo() != null).toBeTruthy();
+  });
+
   it('toArray', () => {
     const app = new TestBasicApplication();
     expect(app.toArray()).toEqual({
@@ -34,6 +40,7 @@ describe('Test application', () => {
       description: 'Test description',
       key: 'test',
       name: 'Test application',
+      logo: null,
     });
   });
 

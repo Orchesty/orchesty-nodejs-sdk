@@ -6,12 +6,14 @@ import ApplicationTypeEnum from './ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import { IFieldArray } from '../Model/Form/Field';
+import * as fs from 'fs';
 
 export const FORM = 'form';
 export const AUTHORIZATION_SETTINGS = 'authorization_settings';
 
 export interface IApplicationArray {
     name: string;
+    logo: string|null;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     authorization_type: AuthorizationTypeEnum;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -21,6 +23,8 @@ export interface IApplicationArray {
 }
 
 export default abstract class AApplication implements IApplication {
+    logoFilename = '';
+
     public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
     public abstract getPublicName(): string;
@@ -41,6 +45,19 @@ export default abstract class AApplication implements IApplication {
         url?: string,
         data?: string
     ): RequestDto | Promise<RequestDto>;
+
+  public getLogo(): string | null {
+    if (this.logoFilename) {
+      try {
+        const bitmap = fs.readFileSync(this.logoFilename);
+
+        return Buffer.from(bitmap).toString('base64');
+      } catch (e) {
+      }
+    }
+
+    return null;
+  }
 
     public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
       const settings = applicationInstall.getSettings()[FORM] ?? [];
@@ -85,6 +102,7 @@ export default abstract class AApplication implements IApplication {
         application_type: this.getApplicationType(),
         key: this.getName(),
         description: this.getDescription(),
+        logo: this.getLogo(),
       };
     }
 }
