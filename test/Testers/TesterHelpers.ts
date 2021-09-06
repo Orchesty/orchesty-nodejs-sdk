@@ -23,6 +23,9 @@ export interface ICurlMock {
 export interface IDtoData {
   headers: { [key: string]: string },
   data: Record<string, unknown>,
+  replacement?: {
+    data?: Record<string, string>
+  }
 }
 
 export interface ILightNode {
@@ -59,6 +62,22 @@ export class TestNode implements ILightNode {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+export function walkRecursive(body: any, keys: string[], value: string): any {
+  const first = keys.shift();
+  if (first && body[first]) {
+    // eslint-disable-next-line no-param-reassign
+    body[first] = walkRecursive(body[first], keys, value);
+  } else if (first && !body[first]) {
+    // Ignore key if don't exist in output data
+    return body;
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    body = value;
+  }
+  return body;
+}
+
 export function mockCurl(
   file: string,
   sender: CurlSender,
@@ -86,18 +105,21 @@ export function mockCurl(
           throw new Error(`HTTP Method for [${index}${_prefix}] should be [${method}], [${request.method}] received.`);
         }
 
+        let expectedUrl = request.url;
         try {
-          let expectedUrl = request.url;
           if (curl.httpReplacement?.query) {
             const replacedUrl = new URL(expectedUrl);
             Object.keys(curl.httpReplacement?.query).forEach((key) => {
-              replacedUrl.searchParams.set(key, curl.httpReplacement?.query ? [key].toString() : '');
+              replacedUrl.searchParams.set(
+                key,
+                curl.httpReplacement?.query ? curl.httpReplacement.query[key].toString() : '',
+              );
             });
-            expectedUrl = replacedUrl.toString();
+            expectedUrl = unescape(replacedUrl.toString());
           }
           expect(expectedUrl).toBe(url);
         } catch (e) {
-          throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${request.url}] received.`);
+          throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${expectedUrl}] received.`);
         }
 
         return new ResponseDto(

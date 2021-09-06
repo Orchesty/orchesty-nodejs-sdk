@@ -1,0 +1,15 @@
+{
+    "code": 200,
+    "http": "GET https://api.com/api/products/changes?from=2021-07-31T13%3A37%3A00%2B0200&itemsPerPage=100&page=1",
+    "httpReplacement": {
+        "query": {
+            "from": "2021-07-31T13%3A37%3A00%2B0200"
+        }
+    },
+    "body": {
+        "product": {
+            "one": 1,
+            "date": "some date"
+        }
+    }
+}

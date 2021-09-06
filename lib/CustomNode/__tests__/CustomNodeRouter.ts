@@ -56,11 +56,14 @@ describe('Test CustomNodeRouter', () => {
       .expect(StatusCodes.OK, '[]');
   });
 
-  it('post /custom-node/:name/process route', async () => {
+  it('post /custom-node/:name/process route', () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
-    const expected = '{"test":"custom"}';
-    await supertest(expressApp)
+    supertest(expressApp)
       .post(customNodeUrl)
-      .expect(StatusCodes.OK, expected);
+      .expect(StatusCodes.OK, (err: any, res) => {
+        expect(err === null).toBeTruthy();
+        const jsonData = JSON.parse(res.text);
+        expect(jsonData).toEqual({ test: 'custom', inner: { one: 2, date: jsonData.inner?.date } });
+      });
   });
 });

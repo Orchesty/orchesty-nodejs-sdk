@@ -6,7 +6,7 @@ export default class TestCustomNode extends ACommonNode {
 
   public processAction = (_dto: ProcessDto): ProcessDto => {
     const dto = _dto;
-    dto.jsonData = { test: 'custom' };
+    dto.jsonData = { test: 'custom', inner: { date: Date.now().toString(), one: 2 } };
 
     return dto;
   };

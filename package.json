@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.75",
+  "version": "1.0.86",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "author": "info@hanaboso.com",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@types/bson": "^4.2.0",
     "@types/express": "^4.17.13",
     "@types/luxon": "^2.0.2",
     "@types/mongodb": "~3.6.20",

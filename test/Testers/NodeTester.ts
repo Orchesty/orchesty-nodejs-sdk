@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import DIContainer from '../../lib/DIContainer/Container';
 import ProcessDto from '../../lib/Utils/ProcessDto';
-import { IDtoData, mockNodeCurl } from './TesterHelpers';
+import { IDtoData, mockNodeCurl, walkRecursive } from './TesterHelpers';
 import AConnector from '../../lib/Connector/AConnector';
 import CoreServices from '../../lib/DIContainer/CoreServices';
 import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
@@ -69,8 +69,16 @@ export default class NodeTester {
 
     try {
       const res = await node.processAction(dto);
+      let resData = dto.jsonData;
+      if (output.replacement?.data) {
+        Object.keys(output.replacement?.data).forEach((_key) => {
+          const keys = _key.split('.');
+          resData = walkRecursive(resData, keys, output.replacement?.data ? output.replacement?.data[_key] : '');
+        });
+      }
+
       expect(res.headers).toEqual(output.headers);
-      expect(res.jsonData).toEqual(output.data);
+      expect(resData).toEqual(output.data);
     } catch (e) {
       if (!expectedError) {
         throw e;

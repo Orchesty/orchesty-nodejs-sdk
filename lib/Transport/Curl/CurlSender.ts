@@ -19,12 +19,14 @@ export default class CurlSender {
       logger.log(
         Severity.DEBUG,
         `Request send.
-       Body: ${req.body},
-       Headers: ${JSON.stringify(req.headers)}`,
+       Method: ${dto.method},
+       Url: ${dto.url},
+       Headers: ${JSON.stringify(dto.headers)},
+       Body: ${dto.body}`,
         dto.debugInfo,
       );
       const response = await fetch(dto.url, req);
-      this._sendMetrics(dto, startTime);
+      await this._sendMetrics(dto, startTime);
       const body = await response.text();
       if (!response.ok) {
         CurlSender._log(dto, response, Severity.ERROR, body);
@@ -34,7 +36,7 @@ export default class CurlSender {
 
       return new ResponseDto(body, response.status, response.headers, response.statusText);
     } catch (e) {
-      this._sendMetrics(dto, startTime);
+      await this._sendMetrics(dto, startTime);
       if (e instanceof Error) {
         logger.error(e.message);
         throw Error(e.message);
@@ -73,12 +75,12 @@ export default class CurlSender {
     );
   }
 
-  private _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): void {
+  private async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
     const info = dto.debugInfo;
     try {
       if (info) {
         const times = Metrics.getTimes(startTimes);
-        this._metrics.sendCurlMetrics(
+        await this._metrics.sendCurlMetrics(
           times,
           info.getHeader(NODE_ID),
           info.getHeader(CORRELATION_ID),

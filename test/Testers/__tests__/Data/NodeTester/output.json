@@ -1,0 +1,17 @@
+{
+    "replacement": {
+        "data": {
+            "inner.date": "replaced",
+            "inner.nonExist": "exist"
+        }
+    },
+    "headers": {
+    },
+    "data": {
+        "test": "custom",
+        "inner": {
+            "date": "replaced",
+            "one": 2
+        }
+    }
+}

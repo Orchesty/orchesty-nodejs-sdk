@@ -18,8 +18,13 @@ export function formatError(e: Error): IErrorResponse {
 
 export function createErrorResponse(req: Request, res: Response, dto: ProcessDto, e?: Error): void {
   res.status(500);
+
   Object.entries(dto.headers).forEach(([key, value]) => {
-    res.setHeader(key, String(value));
+    try {
+      res.setHeader(key, String(value));
+    } catch (ex) {
+      logger.error(`Can't set header [${key}:${value}]`);
+    }
   });
 
   let message = 'Error occurred: unknown reason';
@@ -35,15 +40,26 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     responseBody = formatError(e);
 
     if (appOptions.debug && !res.hasHeader(createKey(RESULT_DETAIL))) {
-      res.setHeader(
-        createKey(RESULT_DETAIL),
-        e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')),
-      );
+      try {
+        res.setHeader(
+          createKey(RESULT_DETAIL),
+          e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')),
+        );
+      } catch (ex) {
+        logger.error(
+          // eslint-disable-next-line max-len
+          `Can't set header [${createKey(RESULT_DETAIL)}:${JSON.stringify(e.stack === undefined ? '' : e.stack.replace(/\r?\n|\r/g, ''))}]`,
+        );
+      }
     }
   }
 
   if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-    res.setHeader(createKey(RESULT_MESSAGE), message);
+    try {
+      res.setHeader(createKey(RESULT_MESSAGE), message);
+    } catch (ex) {
+      logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`);
+    }
   }
 
   logger.error(message, Logger.ctxFromReq(req));

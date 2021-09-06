@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { IApplication } from './IApplication';
 import Form from '../Model/Form/Form';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
@@ -6,7 +7,6 @@ import ApplicationTypeEnum from './ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import { IFieldArray } from '../Model/Form/Field';
-import * as fs from 'fs';
 
 export const FORM = 'form';
 export const AUTHORIZATION_SETTINGS = 'authorization_settings';
@@ -46,18 +46,19 @@ export default abstract class AApplication implements IApplication {
         data?: string
     ): RequestDto | Promise<RequestDto>;
 
-  public getLogo(): string | null {
-    if (this.logoFilename) {
-      try {
-        const bitmap = fs.readFileSync(this.logoFilename);
+    public getLogo(): string | null {
+      if (this.logoFilename) {
+        try {
+          const bitmap = fs.readFileSync(this.logoFilename);
 
-        return Buffer.from(bitmap).toString('base64');
-      } catch (e) {
+          return Buffer.from(bitmap).toString('base64');
+          // eslint-disable-next-line no-empty
+        } catch (e) {
+        }
       }
-    }
 
-    return null;
-  }
+      return null;
+    }
 
     public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
       const settings = applicationInstall.getSettings()[FORM] ?? [];

@@ -28,7 +28,7 @@ export default class TopologyTester {
   ) {
   }
 
-  public async runTopology(topologyPath: string, dto: ProcessDto): Promise<ProcessDto[]> {
+  public async runTopology(topologyPath: string, dto: ProcessDto, _prefix = ''): Promise<ProcessDto[]> {
     // Parse BPMN scheme
     this._nodes = this._parseTopologyFile(topologyPath);
 
@@ -45,7 +45,7 @@ export default class TopologyTester {
       if (startNode) {
         results.push(
           // eslint-disable-next-line no-await-in-loop
-          ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto)),
+          ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto), _prefix),
         );
       }
     }
@@ -89,7 +89,7 @@ export default class TopologyTester {
     return nodes;
   };
 
-  private async _recursiveRunner(node: TestNode, dto: ProcessDto, _index = 0): Promise<ProcessDto[]> {
+  private async _recursiveRunner(node: TestNode, dto: ProcessDto, prefix: string, _index = 0): Promise<ProcessDto[]> {
     // Get worker instance from container
     let worker: ICommonNode;
     switch (node.type) {
@@ -116,7 +116,7 @@ export default class TopologyTester {
     const nextDto: ProcessDto[] = [];
     let out: ProcessDto;
     try {
-      out = await this._processAction(worker, node, this._cloneProcessDto(dto), index);
+      out = await this._processAction(worker, node, this._cloneProcessDto(dto), prefix, index);
     } catch (e) {
       if (e instanceof OnRepeatException) {
         out = this._cloneProcessDto(dto);
@@ -156,7 +156,7 @@ export default class TopologyTester {
           throw new Error('Repeater has used last try and still need to repeat.');
         }
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), index));
+        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
         nextDto.push(out);
         break;
       // Repeat batch until cursor ends and send only one message
@@ -164,7 +164,7 @@ export default class TopologyTester {
         index += 1;
         dto.setBatchCursor(out.getBatchCursor());
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), index));
+        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
         nextDto.push(this._cloneProcessDto(out, {}));
         break;
       // Repeat batch until cursor ends and store message
@@ -173,7 +173,7 @@ export default class TopologyTester {
         index += 1;
         dto.setBatchCursor(out.getBatchCursor());
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), index));
+        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
         break;
       default:
         if (get(RESULT_CODE, out.headers) !== '0') {
@@ -197,7 +197,7 @@ export default class TopologyTester {
             followers.map(async (follower) => {
               const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
               results.push(
-                ...await this._recursiveRunner(this._nodes[fIndex], this._cloneProcessDto(d)),
+                ...await this._recursiveRunner(this._nodes[fIndex], this._cloneProcessDto(d), prefix),
               );
             }),
           );
@@ -208,12 +208,18 @@ export default class TopologyTester {
     return results;
   }
 
-  private async _processAction(worker: ICommonNode, node: TestNode, dto: ProcessDto, index = 0): Promise<ProcessDto> {
+  private async _processAction(
+    worker: ICommonNode,
+    node: TestNode,
+    dto: ProcessDto,
+    prefix: string,
+    index = 0,
+  ): Promise<ProcessDto> {
     const spy = mockNodeCurl(
       worker,
       this._file,
       this._container.get(CoreServices.CURL),
-      node.id,
+      `${prefix}${node.id}`,
       index,
       this._forceMock,
       this._excludeList,
