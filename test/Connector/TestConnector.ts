@@ -17,7 +17,7 @@ export default class TestConnector extends AConnector {
 
     await Promise.all(
       [1, 2, 3].map(async () => {
-        const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET);
+        const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET, '', { custom: 'header' });
         requestDto.debugInfo = dto;
         const responseDto = await this._sender.send(requestDto);
         if (responseDto.responseCode !== 200 && responseDto.responseCode !== 201) {

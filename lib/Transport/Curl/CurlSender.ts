@@ -7,12 +7,19 @@ import {
 } from '../../Utils/Headers';
 import Severity from '../../Logger/Severity';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
+import OnRepeatException from '../../Exception/OnRepeatException';
 
 export default class CurlSender {
   constructor(private _metrics: Metrics) {
   }
 
-  public send = async (dto: RequestDto): Promise<ResponseDto> => {
+  public send = async (
+    dto: RequestDto,
+    allowedCodes?: number[],
+    sec?: number,
+    hops?: number,
+    mess = async (res: Response) => res.text(),
+  ): Promise<ResponseDto> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
       const req = CurlSender._createInitFromDto(dto);
@@ -32,6 +39,10 @@ export default class CurlSender {
         CurlSender._log(dto, response, Severity.ERROR, body);
       } else {
         CurlSender._log(dto, response, Severity.DEBUG, body);
+      }
+
+      if (allowedCodes && !allowedCodes.includes(response.status)) {
+        throw new OnRepeatException(sec, hops, await mess(response));
       }
 
       return new ResponseDto(body, response.status, response.headers, response.statusText);
