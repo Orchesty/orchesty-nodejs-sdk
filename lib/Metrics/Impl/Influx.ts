@@ -2,9 +2,10 @@ import { ITagsMap, Metrics } from 'metrics-sender/dist/lib/metrics/Metrics';
 import { IMetricsSender } from '../IMetricsSender';
 import { metricsOptions } from '../../Config/Config';
 import { parseInfluxDsn } from '../../Utils/DsnParser';
+import { IMetricsFields } from '../Metrics';
 
 export default class Influx implements IMetricsSender {
-  send = async (measurement: string, fields: ITagsMap, tags: ITagsMap): Promise<boolean> => {
+  send = async (measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> => {
     try {
       const parsed = parseInfluxDsn(metricsOptions.dsn);
       const client = new Metrics(measurement, tags, parsed.server, parsed.port);

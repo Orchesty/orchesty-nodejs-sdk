@@ -4,7 +4,6 @@ import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsag
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import MetricsSenderLoader from './MetricsSenderLoader';
-import DateTimeUtils from '../Utils/DateTimeUtils';
 
 export interface IStartMetrics {
   timestamp: number,
@@ -15,6 +14,10 @@ export interface ITimesMetrics {
   requestDuration: number,
   userTime: number,
   kernelTime: number,
+}
+
+export interface IMetricsFields {
+  [key: string]: any;
 }
 
 export default class Metrics {
@@ -42,11 +45,11 @@ export default class Metrics {
       tags.correlation_id = correlationId;
     }
 
-    const fields: ITagsMap = {
-      created: DateTimeUtils.getTimestamp(new Date()).toString(),
-      fpm_request_total_duration: String(timeData.requestDuration),
-      fpm_cpu_user_time: String(timeData.userTime),
-      fpm_cpu_kernel_time: String(timeData.kernelTime),
+    const fields: IMetricsFields = {
+      created: new Date(),
+      fpm_request_total_duration: timeData.requestDuration,
+      fpm_cpu_user_time: timeData.userTime,
+      fpm_cpu_kernel_time: timeData.kernelTime,
     };
 
     try {
@@ -78,11 +81,11 @@ export default class Metrics {
       tags.correlation_id = correlationId;
     }
 
-    const fields: ITagsMap = {
-      created: DateTimeUtils.getTimestamp(new Date()).toString(),
+    const fields: IMetricsFields = {
+      created: new Date(),
       user_id: user ?? '',
       application_id: appKey ?? '',
-      sent_request_total_duration: String(timeData.requestDuration),
+      sent_request_total_duration: timeData.requestDuration,
     };
 
     try {
