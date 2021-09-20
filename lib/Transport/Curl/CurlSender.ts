@@ -16,9 +16,10 @@ export default class CurlSender {
   public send = async (
     dto: RequestDto,
     allowedCodes?: number[],
-    sec?: number,
-    hops?: number,
-    mess = async (res: Response) => res.text(),
+    sec = 60,
+    hops = 10,
+    // eslint-disable-next-line @typescript-eslint/require-await
+    logMessageCallback = async (res: Response, body: string) => body,
   ): Promise<ResponseDto> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
@@ -42,7 +43,7 @@ export default class CurlSender {
       }
 
       if (allowedCodes && !allowedCodes.includes(response.status)) {
-        throw new OnRepeatException(sec, hops, await mess(response));
+        throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
       }
 
       return new ResponseDto(body, response.status, response.headers, response.statusText);

@@ -53,20 +53,6 @@ describe('Test ConnectorRouter', () => {
       .expect(StatusCodes.OK, { response: 'mockedResponse' });
   });
 
-  it('post /connector/:name/webhook route', async () => {
-    const connectorUrl = `/connector/${connector.getName()}/webhook`;
-    await supertest(expressApp)
-      .post(connectorUrl)
-      .expect(StatusCodes.OK, { response: 'mockedResponse' });
-  });
-
-  it('get /connector/:name/webhook/test route', async () => {
-    const connectorUrl = `/connector/${connector.getName()}/webhook/test`;
-    await supertest(expressApp)
-      .get(connectorUrl)
-      .expect(StatusCodes.OK);
-  });
-
   it('get /connector/list route', async () => {
     const connectorUrl = '/connector/list';
     await supertest(expressApp)
@@ -77,9 +63,9 @@ describe('Test ConnectorRouter', () => {
   it('test configureRoutes', () => {
     const mock = mockRouter();
     const router = new ConnectorRouter(mock.express, mock.loader);
-    expect(mock.routeFn).toBeCalledTimes(5);
-    expect(mock.getFn).toBeCalledTimes(3);
-    expect(mock.postFn).toBeCalledTimes(2);
+    expect(mock.routeFn).toBeCalledTimes(3);
+    expect(mock.getFn).toBeCalledTimes(2);
+    expect(mock.postFn).toBeCalledTimes(1);
     expect(router.getName()).toEqual('ConnectorRouter');
   });
 });

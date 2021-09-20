@@ -1,12 +1,13 @@
 import path from 'path';
 import fs from 'fs';
-import { Headers } from 'node-fetch';
+import { Headers, Response } from 'node-fetch';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
 import AConnector from '../../lib/Connector/AConnector';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
 import SpyInstance = jest.SpyInstance;
 import CurlSender from '../../lib/Transport/Curl/CurlSender';
+import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export interface ICurlMock {
   body: Record<string, unknown>,
@@ -95,8 +96,8 @@ export function mockCurl(
   do {
     const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
     spy = spy.mockImplementationOnce(
-      // eslint-disable-next-line @typescript-eslint/require-await,no-loop-func
-      async (r: RequestDto): Promise<ResponseDto> => {
+      // eslint-disable-next-line @typescript-eslint/require-await,no-loop-func,@typescript-eslint/no-explicit-any
+      async (r: RequestDto, aC?: number[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
         const request = r as RequestDto;
         const [method, url] = curl.http.split(' ', 2);
         try {
@@ -120,6 +121,16 @@ export function mockCurl(
           expect(expectedUrl).toBe(url);
         } catch (e) {
           throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${expectedUrl}] received.`);
+        }
+
+        if (aC && !aC.includes(curl.code || 200)) {
+          if (!mC) {
+            // eslint-disable-next-line no-param-reassign
+            mC = (res: Response, body: string) => body;
+          }
+
+          const newBody = JSON.stringify(curl.body || {});
+          throw new OnRepeatException(s ?? 60, h ?? 10, mC(new Response(newBody), newBody));
         }
 
         return new ResponseDto(

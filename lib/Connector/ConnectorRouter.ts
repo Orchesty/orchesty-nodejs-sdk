@@ -32,21 +32,6 @@ export default class ConnectorRouter extends ACommonRouter {
         res.json(this._loader.getList(CONNECTOR_PREFIX));
       });
 
-      // TODO: Deprecated
-      this._app.route('/connector/:name/webhook').post(async (req, res, next) => {
-        const connector = this._loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;
-        const dto = await connector.processAction(createProcessDto(req));
-
-        createSuccessResponse(res, dto);
-        next();
-      });
-
-      // TODO: Deprecated
-      this._app.route('/connector/:name/webhook/test').get((req, res) => {
-        this._loader.get(CONNECTOR_PREFIX, req.params.name);
-        res.json([]);
-      });
-
       return this._app;
     }
 }
