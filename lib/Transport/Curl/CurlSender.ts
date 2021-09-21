@@ -1,6 +1,6 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import RequestDto from './RequestDto';
-import logger, { Logger } from '../../Logger/Logger';
+import logger from '../../Logger/Logger';
 import ResponseDto from './ResponseDto';
 import {
   APPLICATION, CORRELATION_ID, NODE_ID, USER,
@@ -83,7 +83,7 @@ export default class CurlSender {
        Code: ${res.status},
        Message: ${body ?? 'Empty response'},
        Reason: ${res.statusText}`,
-      debugInfo ? Logger.ctxFromDto(debugInfo) : undefined,
+      debugInfo ? logger.ctxFromDto(debugInfo) : undefined,
     );
   }
 
@@ -101,7 +101,7 @@ export default class CurlSender {
         ).catch((e) => (logger.error(e?.message ?? e)));
       }
     } catch (e) {
-      if (typeof e === 'string') logger.error(e, info ? Logger.ctxFromDto(info) : undefined);
+      if (typeof e === 'string') logger.error(e, info ? logger.ctxFromDto(info) : undefined);
     }
   }
 }

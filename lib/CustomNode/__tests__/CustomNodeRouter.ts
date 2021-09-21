@@ -2,7 +2,6 @@ import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
 import CustomNodeRouter from '../CustomNodeRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
-import { Logger } from '../../Logger/Logger';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
@@ -14,20 +13,13 @@ jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
   log: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
+  ctxFromReq: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 describe('Test CustomNodeRouter', () => {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  Logger.ctxFromDto = jest.fn().mockReturnValue({
-    node_id: '1',
-    correlation_id: '1',
-    process_id: '1',
-    parent_id: '1',
-    sequence_id: '1',
-  });
-
   afterAll(async () => {
     await (container.get(CoreServices.MONGO) as MongoDbClient).down();
     await (container.get(CoreServices.METRICS) as Metrics).close();

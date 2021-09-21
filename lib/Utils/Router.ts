@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ProcessDto from './ProcessDto';
-import logger, { Logger } from '../Logger/Logger';
+import logger from '../Logger/Logger';
 import {
   createKey, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
 } from './Headers';
@@ -62,7 +62,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     }
   }
 
-  logger.error(message, Logger.ctxFromReq(req));
+  logger.error(message, logger.ctxFromReq(req));
   res.json(responseBody);
   // eslint-disable-next-line
   dto.free = true;
@@ -83,7 +83,7 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
     res.setHeader(createKey(RESULT_MESSAGE), 'Processed successfully.');
   }
 
-  logger.debug('Request successfully processed.', Logger.ctxFromDto(dto));
+  logger.debug('Request successfully processed.', logger.ctxFromDto(dto));
   res.send(dto.data);
   // eslint-disable-next-line
   dto.free = true;

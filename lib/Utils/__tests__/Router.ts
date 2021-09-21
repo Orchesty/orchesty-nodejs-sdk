@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { mocked } from 'ts-jest/utils';
 import faker from 'faker';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
-import { Logger } from '../../Logger/Logger';
 import ProcessDto from '../ProcessDto';
 import { NODE_ID } from '../Headers';
 
@@ -10,14 +8,11 @@ import { NODE_ID } from '../Headers';
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
+  ctxFromReq: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
-
-// Mock Logger.ctxFromReq static method
-const mockedLogger = mocked(Logger, true);
-mockedLogger.ctxFromReq = jest.fn();
-mockedLogger.ctxFromDto = jest.fn();
 
 // Mock Request/Response of Express
 const mockedRequest = () => ({

@@ -6,7 +6,7 @@ import {
   getRepeatHops,
   REPEAT_INTERVAL,
 } from '../Utils/Headers';
-import logger, { Logger } from '../Logger/Logger';
+import logger from '../Logger/Logger';
 
 export default function errorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   if (res.headersSent) {
@@ -24,7 +24,7 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
       CurrentHop: ${getRepeatHops(dto.headers)}, 
       Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
       MaxHops: ${err.getMaxHops()}`,
-      Logger.ctxFromDto(dto),
+      logger.ctxFromDto(dto),
     );
 
     createSuccessResponse(res, dto);

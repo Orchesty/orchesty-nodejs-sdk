@@ -43,62 +43,6 @@ interface ILoggerFormat {
 }
 
 export class Logger {
-  /**
-     *
-     * @param {string} severity
-     * @param {string} message
-     * @param {ILogContext} context
-     * @return {string}
-     */
-  private static format(severity: string, message: string, context?: ILogContext): ILoggerFormat {
-    const line: ILoggerFormat = {
-      timestamp: Date.now(),
-      hostname: os.hostname(),
-      type: 'sdk',
-      severity: `${severity}`.toUpperCase(),
-      message: message?.replace(/\s\s+/g, ' '),
-    };
-
-    if (context) {
-      if (context.node_id) {
-        line.node_id = context.node_id;
-      }
-
-      if (context.correlation_id) {
-        line.correlation_id = context.correlation_id;
-      }
-
-      if (context.node_id) {
-        line.node_id = context.node_id;
-      }
-
-      if (context.node_name) {
-        line.node_name = context.node_name;
-      }
-
-      if (context.result_code && context.result_code >= 0) {
-        line.result_code = context.result_code;
-      }
-
-      if (context.result_message) {
-        line.result_message = context.result_message;
-      }
-
-      if (context.error) {
-        line.stacktrace = {
-          message: context.error.message.replace(/\s\s+/g, ' '),
-          trace: context.error.stack,
-        };
-      }
-
-      if (context.data) {
-        line.data = context.data;
-      }
-    }
-
-    return line;
-  }
-
     private udp: Sender;
 
     constructor() {
@@ -148,7 +92,7 @@ export class Logger {
      * @param {Error} err
      * @return {ILogContext}
      */
-    public static ctxFromDto(dto: ProcessDto, err?: Error): ILogContext {
+    public ctxFromDto = (dto: ProcessDto, err?: Error): ILogContext => {
       const ctx: ILogContext = {
         node_id: headers.getNodeId(dto.headers),
         correlation_id: headers.getCorrelationId(dto.headers),
@@ -164,7 +108,12 @@ export class Logger {
       return ctx;
     }
 
-    public static ctxFromReq(req: Request, err?: Error): ILogContext {
+    /**
+    *
+    * @param req
+    * @param err
+    */
+    public ctxFromReq = (req: Request, err?: Error): ILogContext => {
       const ctx: ILogContext = {
         node_id: headers.getNodeId(req.headers),
         correlation_id: headers.getCorrelationId(req.headers),
@@ -187,7 +136,7 @@ export class Logger {
      * @param {ILogContext} context
      */
     public log(severity: string, message: string, context?: ILogContext): void {
-      const data = Logger.format(severity, message, context);
+      const data = this.format(severity, message, context);
 
       winstonLogger.log(severity, '', data);
       this.udp.send(JSON.stringify(data))
@@ -195,6 +144,62 @@ export class Logger {
           // unhandled promise rejection caught
         });
     }
+
+  /**
+   *
+   * @param {string} severity
+   * @param {string} message
+   * @param {ILogContext} context
+   * @return {string}
+   */
+  private format = (severity: string, message: string, context?: ILogContext): ILoggerFormat => {
+    const line: ILoggerFormat = {
+      timestamp: Date.now(),
+      hostname: os.hostname(),
+      type: 'sdk',
+      severity: `${severity}`.toUpperCase(),
+      message: message?.replace(/\s\s+/g, ' '),
+    };
+
+    if (context) {
+      if (context.node_id) {
+        line.node_id = context.node_id;
+      }
+
+      if (context.correlation_id) {
+        line.correlation_id = context.correlation_id;
+      }
+
+      if (context.node_id) {
+        line.node_id = context.node_id;
+      }
+
+      if (context.node_name) {
+        line.node_name = context.node_name;
+      }
+
+      if (context.result_code && context.result_code >= 0) {
+        line.result_code = context.result_code;
+      }
+
+      if (context.result_message) {
+        line.result_message = context.result_message;
+      }
+
+      if (context.error) {
+        line.stacktrace = {
+          message: context.error.message.replace(/\s\s+/g, ' '),
+          trace: context.error.stack,
+        };
+      }
+
+      if (context.data) {
+        line.data = context.data;
+      }
+    }
+
+    return line;
+  }
 }
 
 const logger = new Logger();

@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import BatchRouter from '../BatchRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
-import { Logger } from '../../Logger/Logger';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
@@ -10,6 +9,8 @@ import Metrics from '../../Metrics/Metrics';
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
+  ctxFromReq: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
@@ -22,16 +23,6 @@ describe('Tests for BatchRouter', () => {
     await (container.get(CoreServices.MONGO) as MongoDbClient).down();
     await (container.get(CoreServices.METRICS) as Metrics).close();
   });
-
-  /* eslint-disable @typescript-eslint/naming-convention */
-  Logger.ctxFromDto = jest.fn().mockReturnValue({
-    node_id: '1',
-    correlation_id: '1',
-    process_id: '1',
-    parent_id: '1',
-    sequence_id: '1',
-  });
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   it('get /batch/:name/action', async () => {
     const batchUrl = `/batch/${batch.getName()}/action`;
