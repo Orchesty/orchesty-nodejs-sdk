@@ -43,7 +43,7 @@ export default abstract class ACommonNode implements ICommonNode {
     throw new Error('MongoDbClient has not set.');
   }
 
-  protected async _getApplicationInstall(user: string): Promise<ApplicationInstall> {
+  protected async _getApplicationInstall(user?: string): Promise<ApplicationInstall> {
     const repo = await this._dbClient.getApplicationRepository();
     const appInstall = await repo.findByNameAndUser(this._application.getName(), user);
 
