@@ -45,7 +45,12 @@ export default abstract class ACommonNode implements ICommonNode {
 
   protected async _getApplicationInstall(user?: string): Promise<ApplicationInstall> {
     const repo = await this._dbClient.getApplicationRepository();
-    const appInstall = await repo.findByNameAndUser(this._application.getName(), user);
+    let appInstall: ApplicationInstall | null;
+    if (user) {
+      appInstall = await repo.findByNameAndUser(this._application.getName(), user);
+    } else {
+      appInstall = await repo.findOneByName(this._application.getName());
+    }
 
     if (!appInstall) {
       throw new Error(

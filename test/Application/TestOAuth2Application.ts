@@ -7,6 +7,7 @@ import FieldType from '../../lib/Application/Model/Form/FieldType';
 import HttpMethods from '../../lib/Transport/HttpMethods';
 import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestOAuth2Application extends AOAuth2Application {
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
@@ -17,9 +18,13 @@ export default class TestOAuth2Application extends AOAuth2Application {
 
   public getPublicName = (): string => 'Test OAuth2 Application';
 
-  public getRequestDto =
-    // eslint-disable-next-line max-len
-    (applicationInstall: ApplicationInstall, method: HttpMethods, url?: string, data?: string): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data);
+  public getRequestDto = (
+    dto: ProcessDto,
+    applicationInstall: ApplicationInstall,
+    method: HttpMethods,
+    url?: string,
+    data?: string,
+  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data);
 
   public getSettingsForm = (): Form => {
     const label = 'testLabel';

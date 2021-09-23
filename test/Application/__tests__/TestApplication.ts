@@ -5,6 +5,7 @@ import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import ProcessDto from '../../../lib/Utils/ProcessDto';
 
 describe('Test application', () => {
   const user = 'Jakub';
@@ -124,13 +125,13 @@ describe('Test application', () => {
     const urlValue = 'https://www.google.com';
     const data = JSON.stringify({ test: 'testData' });
     const method = HttpMethods.POST;
-    const requestDto = app.getRequestDto(new ApplicationInstall(), method, urlValue, data);
+    const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
     expect(requestDto).toBeInstanceOf(RequestDto);
     expect(requestDto).toHaveProperty('_url', urlValue);
     expect(requestDto).toHaveProperty('_method', method);
     expect(requestDto).toHaveProperty('_body', data);
 
-    const requestDtoWithoutUrl = app.getRequestDto(new ApplicationInstall(), method);
+    const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
     expect(requestDtoWithoutUrl).toHaveProperty('_url', '');
   });
 

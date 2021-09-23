@@ -5,9 +5,9 @@ import Form from '../../lib/Application/Model/Form/Form';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBasicApplication extends ABasicApplication {
-
   // eslint-disable-next-line class-methods-use-this
   public syncTestSyncMethod(): string {
     return JSON.stringify({
@@ -34,6 +34,7 @@ export default class TestBasicApplication extends ABasicApplication {
   };
 
   public getRequestDto = (
+    dto: ProcessDto,
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
