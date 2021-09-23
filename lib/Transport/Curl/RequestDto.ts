@@ -13,7 +13,7 @@ export default class RequestDto implements IRequestDto {
     private _headers: HeaderInit = new Headers(),
     private _debugInfo?: ProcessDto,
   ) {
-    this._timeout = 10000; // 10sec as a default timeout
+    this._timeout = 30000; // 30sec as a default timeout
   }
 
   get body(): string {
