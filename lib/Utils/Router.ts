@@ -56,7 +56,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
 
   if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
     try {
-      res.setHeader(createKey(RESULT_MESSAGE), message);
+      res.setHeader(createKey(RESULT_MESSAGE), message.replace(/\r?\n|\r/g, ''));
     } catch (ex) {
       logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`);
     }

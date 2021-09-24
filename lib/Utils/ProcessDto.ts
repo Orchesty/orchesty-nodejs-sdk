@@ -177,7 +177,7 @@ export default class ProcessDto {
 
   private _setStatusHeader(value: ResultCode, message?: string) {
     if (message) {
-      this.addHeader(RESULT_MESSAGE, message);
+      this.addHeader(RESULT_MESSAGE, message.replace(/\r?\n|\r/g, ''));
     }
     this.addHeader(RESULT_CODE, value.toString());
   }
