@@ -20,6 +20,9 @@ export default class ConnectorRouter extends ACommonRouter {
         const dto = await connector.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);
+        res.on('finish', () => {
+          dto.free = true;
+        });
         next();
       });
 

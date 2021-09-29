@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.0.100",
+  "version": "1.0.101",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
