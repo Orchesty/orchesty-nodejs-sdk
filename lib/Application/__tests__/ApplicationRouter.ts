@@ -10,12 +10,11 @@ import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import Metrics from '../../Metrics/Metrics';
 import assertions from './assertions.json';
+import DIContainer from '../../DIContainer/Container';
+import { IApplication } from '../Base/IApplication';
+import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
 
-const container = getTestContainer();
-const application = container.getApplication('test');
-const oAuthApplication = container.getApplication('oauth2application');
-const provider = container.get(CoreServices.OAUTH2_PROVIDER);
-
+let container: DIContainer;
 let dbClient: MongoDbClient;
 let appInstall: ApplicationInstall;
 let name: string;
@@ -33,6 +32,17 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 describe('Test ApplicationRouter', () => {
+  let application: IApplication;
+  let oAuthApplication: IApplication;
+  let provider: OAuth2Provider;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    application = container.getApplication('test');
+    oAuthApplication = container.getApplication('oauth2application');
+    provider = container.get(CoreServices.OAUTH2_PROVIDER);
+  });
+
   /* eslint-enable @typescript-eslint/naming-convention */
   beforeEach(async () => {
     dbClient = container.get(CoreServices.MONGO);

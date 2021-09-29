@@ -7,6 +7,9 @@ import ResponseDto from '../../Transport/Curl/ResponseDto';
 import HttpMethods from '../../Transport/HttpMethods';
 import SpyInstance = jest.SpyInstance;
 import TopologyRunner from '../TopologyRunner';
+import { initiateContainer } from '../../index';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -33,9 +36,18 @@ describe('TopologyRunner tests', () => {
   let curl: CurlSender;
   let runner: TopologyRunner;
 
+  beforeAll(async () => {
+    await initiateContainer();
+  });
+
   beforeEach(() => {
     curl = container.get(CoreServices.CURL);
     runner = container.get(CoreServices.TOPOLOGY_RUNNER);
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
   it('get webhook url', () => {

@@ -1,7 +1,6 @@
 import { Repository as BaseRepo } from 'mongodb-typescript';
-import {
-  Cursor, FilterQuery, MongoClient, ObjectId, ReplaceOneOptions,
-} from 'mongodb';
+import { Cursor, FilterQuery, MongoClient, ReplaceOneOptions } from 'mongodb';
+import { ObjectId } from 'bson';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
@@ -21,6 +20,10 @@ export default class Repository<T> extends BaseRepo<T> {
   ) {
     super(Type, mongo, collection, options);
     this._filters = filters;
+  }
+
+  get name(): string {
+    return this.Type.name;
   }
 
   public async insert(entity: T): Promise<void> {

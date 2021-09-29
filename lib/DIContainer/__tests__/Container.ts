@@ -4,6 +4,11 @@ import { getTestContainer } from '../../../test/TestAbstact';
 import { APPLICATION_PREFIX } from '../../Application/ApplicationRouter';
 import { BATCH_PREFIX } from '../../Batch/BatchRouter';
 import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
+import { ICommonNode } from '../../Commons/ICommonNode';
+import { IApplication } from '../../Application/Base/IApplication';
+import CoreServices from '../CoreServices';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -14,13 +19,26 @@ jest.mock('../../Logger/Logger', () => ({
     .mockImplementation(() => ({})),
 }));
 
-const container = getTestContainer();
-const testConnector = container.getConnector('test');
-const testCustom = container.getCustomNode('testcustom');
-const testBatch = container.getBatch('testbatch');
-const testApp = container.getApplication('test');
-
 describe('Test DIContainer', () => {
+  let container: DIContainer;
+  let testConnector: ICommonNode;
+  let testCustom: ICommonNode;
+  let testBatch: ICommonNode;
+  let testApp: IApplication;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    testConnector = container.getConnector('test');
+    testCustom = container.getCustomNode('testcustom');
+    testBatch = container.getBatch('testbatch');
+    testApp = container.getApplication('test');
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
+  });
+
   it('test set/has service', () => {
     const serviceName = 'testService';
     container.set(serviceName, 'fake-service');
@@ -89,4 +107,5 @@ describe('Test DIContainer', () => {
 
     expect(container2.getAllByPrefix(CONNECTOR_PREFIX)).toEqual([testConnector]);
   });
+
 });

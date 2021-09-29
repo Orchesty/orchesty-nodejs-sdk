@@ -11,8 +11,6 @@ import TestBatch from './Batch/TestBatch';
 import CommonLoader from '../lib/Commons/CommonLoader';
 import TestCustomNode from './CustomNode/TestCustomNode';
 
-initiateContainer();
-
 export const expressApp = e;
 export const container = c;
 
@@ -20,7 +18,8 @@ export function listen(): void {
   l();
 }
 
-export function getTestContainer(): DIContainer {
+export async function getTestContainer(): Promise<DIContainer> {
+  await initiateContainer();
   const testConnector = (new TestConnector()).setSender(container.get(CoreServices.CURL));
   const appBasic = new TestBasicApplication();
   const appOAuth = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));

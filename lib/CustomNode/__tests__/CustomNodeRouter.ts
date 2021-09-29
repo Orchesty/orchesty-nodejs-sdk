@@ -5,9 +5,9 @@ import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbst
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
+import DIContainer from '../../DIContainer/Container';
+import { ICommonNode } from '../../Commons/ICommonNode';
 
-const container = getTestContainer();
-const customNode = container.getCustomNode('testcustom');
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
@@ -20,6 +20,14 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 describe('Test CustomNodeRouter', () => {
+  let container: DIContainer;
+  let customNode: ICommonNode;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    customNode = container.getCustomNode('testcustom');
+  });
+
   afterAll(async () => {
     await (container.get(CoreServices.MONGO) as MongoDbClient).down();
     await (container.get(CoreServices.METRICS) as Metrics).close();

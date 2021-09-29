@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ClassType } from 'mongodb-typescript/lib/repository';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
 import { IApplication } from '../Application/Base/IApplication';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
+import Repository from '../Storage/Mongodb/Repository';
+
+const REPOSITORY = 'repository';
 
 export default class DIContainer {
   private _services: Map<string, any>;
@@ -75,5 +79,13 @@ export default class DIContainer {
 
   getBatch(name: string): ICommonNode {
     return this.get(`${BATCH_PREFIX}.${name}`);
+  }
+
+  setRepository<T>(repository: Repository<T>): void {
+    this.set(`${REPOSITORY}.${repository.name}`, repository);
+  }
+
+  getRepository<T>(type: ClassType<T>): Repository<T> {
+    return this.get(`${REPOSITORY}.${type.name}`);
   }
 }
