@@ -64,8 +64,6 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
 
   logger.error(message, logger.ctxFromReq(req));
   res.json(responseBody);
-  // eslint-disable-next-line
-  dto.free = true;
 }
 
 export function createSuccessResponse(res: Response, dto: ProcessDto): void {
@@ -85,8 +83,6 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
 
   logger.debug('Request successfully processed.', logger.ctxFromDto(dto));
   res.send(dto.data);
-  // eslint-disable-next-line
-  dto.free = true;
 }
 
 const dtoPool = new Array(100).fill(0);

@@ -21,6 +21,9 @@ export default class BatchRouter extends ACommonRouter {
         const dto = await batch.processAction(createProcessDto(req));
 
         createSuccessResponse(res, dto);
+        res.on('finish', () => {
+          dto.free = true;
+        });
         next();
       });
 

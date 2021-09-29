@@ -28,10 +28,16 @@ export default function errorHandler(err: Error, req: Request, res: Response, ne
     );
 
     createSuccessResponse(res, dto);
+    res.on('finish', () => {
+      dto.free = true;
+    });
     next();
     return;
   }
 
   createErrorResponse(req, res, dto, err);
+  res.on('finish', () => {
+    dto.free = true;
+  });
   next();
 }
