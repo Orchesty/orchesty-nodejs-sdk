@@ -6,7 +6,7 @@
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
     "one-test": "jest --maxConcurrency=1 --maxWorkers=1 --forceExit --testNamePattern",
-    "test": "jest --no-cache --coverage --maxConcurrency=1 --maxWorkers=1 --detectOpenHandles --forceExit",
+    "test": "jest --coverage --maxConcurrency=1 --maxWorkers=1 --detectOpenHandles --forceExit",
     "lint": "eslint lib/**/*.ts --fix",
     "lint-ci": "eslint lib/**/*.ts",
     "start": "nodemon test/index.ts",

@@ -72,18 +72,6 @@ export default class MongoDbClient {
   }
 
   public async getApplicationRepository(): Promise<ApplicationInstallRepository<ApplicationInstall>> {
-    if (!this._client.isConnected()) {
-      await this.reconnect();
-    }
-
-    const repo = new ApplicationInstallRepository(
-      ApplicationInstall,
-      this._client,
-      ApplicationInstall.getCollection(),
-      this._cryptManager,
-    );
-    await repo.createIndexes(true);
-
-    return repo;
+    return await this.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
   }
 }

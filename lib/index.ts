@@ -74,6 +74,7 @@ export async function initiateContainer(): Promise<void> {
     ApplicationInstall.getCollection(),
     cryptManager,
   );
+  await applicationInstallRepo.createIndexes(true);
   container.setRepository(applicationInstallRepo);
 
   // Configure routes
