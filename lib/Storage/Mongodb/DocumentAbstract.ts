@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { id, objectId } from 'mongodb-typescript';
 import { ObjectId } from 'mongodb';
 

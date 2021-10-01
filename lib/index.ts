@@ -26,6 +26,8 @@ import Influx from './Metrics/Impl/Influx';
 import bodyParser from './Middleware/BodyParseHandler';
 import TopologyRunner from './Topology/TopologyRunner';
 import ApplicationLoader from './Application/ApplicationLoader';
+import ApplicationInstallRepository from './Application/Database/ApplicationInstallRepository';
+import { ApplicationInstall } from './Application/Database/ApplicationInstall';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
@@ -34,13 +36,13 @@ const expressApp: express.Application = express();
 expressApp.use(metricsHandler);
 expressApp.use(bodyParser);
 
-export function initiateContainer(): void {
+export async function initiateContainer(): Promise<void> {
   // Instantiate core services
   const cryptProviders = [
     new WindWalkerCrypt(cryptOptions.secret),
   ];
   const cryptManager = new CryptManager(cryptProviders);
-  const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager);
+  const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager, container);
   const loader = new CommonLoader(container);
   const appLoader = new ApplicationLoader(container);
   const appManager = new ApplicationManager(mongoDbClient, appLoader);
@@ -48,7 +50,7 @@ export function initiateContainer(): void {
   const metricsLoader = new MetricsSenderLoader(
     metricsOptions.metricsService,
     new Influx(),
-    new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager)),
+    new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager, container)),
   );
   const metrics = new Metrics(metricsLoader);
   const curlSender = new CurlSender(metrics);
@@ -64,6 +66,15 @@ export function initiateContainer(): void {
   container.set(CoreServices.CURL, curlSender);
   container.set(CoreServices.METRICS, metrics);
   container.set(CoreServices.TOPOLOGY_RUNNER, topologyRunner);
+
+  await mongoDbClient.reconnect();
+  const applicationInstallRepo = new ApplicationInstallRepository(
+    ApplicationInstall,
+    mongoDbClient.client,
+    ApplicationInstall.getCollection(),
+    cryptManager,
+  );
+  container.setRepository(applicationInstallRepo);
 
   // Configure routes
   routes.push(new ConnectorRouter(expressApp, loader));

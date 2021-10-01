@@ -1,5 +1,9 @@
 import { getTestContainer } from '../../TestAbstact';
 import NodeTester from '../NodeTester';
+import DIContainer from '../../../lib/DIContainer/Container';
+import CoreServices from '../../../lib/DIContainer/CoreServices';
+import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
+import Metrics from '../../../lib/Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({
@@ -9,8 +13,17 @@ jest.mock('../../../lib/Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-const container = getTestContainer();
 describe('Test NodeTester', () => {
+  let container: DIContainer;
+  beforeAll(async () => {
+    container = await getTestContainer();
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
+  });
+
   it('output - replacement', async () => {
     const tester = new NodeTester(container, __filename);
     await tester.testCustomNode('testcustom');

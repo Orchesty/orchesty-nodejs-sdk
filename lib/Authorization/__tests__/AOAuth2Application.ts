@@ -7,6 +7,9 @@ import { AUTHORIZATION_SETTINGS } from '../../Application/Base/AApplication';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
+import DIContainer from '../../DIContainer/Container';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics from '../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -18,11 +21,18 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 describe('Test AOAuth2Application', () => {
-  const container = getTestContainer();
-
   jest.createMockFromModule('simple-oauth2');
+  let container: DIContainer;
+  let oAuthApplication: TestOAuth2Application;
 
-  const oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
+  beforeAll(async () => {
+    container = await getTestContainer();
+    oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+  });
 
   it('should get authorizationType', () => {
     const type = 'oauth2';
@@ -46,7 +56,7 @@ describe('Test AOAuth2Application', () => {
     expect(isAuthorized).toBeTruthy();
   });
 
-  it("should check if application is not authorized and doesn't has access token", () => {
+  it('should check if application is not authorized and doesn\'t has access token', () => {
     const appInstall = new ApplicationInstall()
       .setUser('user')
       .setName(oAuthApplication.getName());

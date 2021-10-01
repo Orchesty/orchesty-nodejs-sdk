@@ -5,9 +5,8 @@ import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbst
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
-
-const container = getTestContainer();
-const connector = container.getConnector('test');
+import DIContainer from '../../DIContainer/Container';
+import { ICommonNode } from '../../Commons/ICommonNode';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -25,6 +24,14 @@ jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(
 })));
 
 describe('Test ConnectorRouter', () => {
+  let container: DIContainer;
+  let connector: ICommonNode;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    connector = container.getConnector('test');
+  });
+
   afterAll(async () => {
     await (container.get(CoreServices.MONGO) as MongoDbClient).down();
     await (container.get(CoreServices.METRICS) as Metrics).close();

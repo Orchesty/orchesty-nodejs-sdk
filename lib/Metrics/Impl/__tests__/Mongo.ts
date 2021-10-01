@@ -2,6 +2,8 @@ import { getTestContainer } from '../../../../test/TestAbstact';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Mongo from '../Mongo';
 import { metricsOptions } from '../../../Config/Config';
+import DIContainer from '../../../DIContainer/Container';
+import MongoDbClient from '../../../Storage/Mongodb/Client';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -11,11 +13,17 @@ jest.mock('../../../Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-const container = getTestContainer();
-const mongoDBClient = container.get(CoreServices.MONGO);
-const mongo = new Mongo(mongoDBClient);
-
 describe('tests Metrics Mongodb Sender', () => {
+  let container: DIContainer;
+  let mongoDBClient: MongoDbClient;
+  let mongo: Mongo;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    mongoDBClient = container.get(CoreServices.MONGO);
+    mongo = new Mongo(mongoDBClient);
+  });
+
   afterAll(async () => {
     await mongo.close();
   });
