@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import ProcessDto from './ProcessDto';
 import logger from '../Logger/Logger';
 import {
@@ -67,7 +68,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
 }
 
 export function createSuccessResponse(res: Response, dto: ProcessDto): void {
-  res.status(200);
+  res.status(StatusCodes.OK);
 
   Object.entries(dto.headers).forEach(([key, value]) => {
     res.setHeader(key, String(value));

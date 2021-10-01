@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import { contentType } from 'mime-types';
+import path from 'node:path';
 import { IApplication } from './IApplication';
 import Form from '../Model/Form/Form';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
@@ -24,7 +26,7 @@ export interface IApplicationArray {
 }
 
 export default abstract class AApplication implements IApplication {
-    logoFilename = '';
+    protected _logoFilename = 'logo.svg';
 
     public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
@@ -49,16 +51,15 @@ export default abstract class AApplication implements IApplication {
     ): RequestDto | Promise<RequestDto>;
 
     public getLogo(): string | null {
-      if (this.logoFilename) {
-        try {
-          const bitmap = fs.readFileSync(this.logoFilename);
+      try {
+        if (fs.existsSync(this._logoFilename)) {
+          const bitmap = fs.readFileSync(this._logoFilename);
+          const mimeType = contentType(path.extname(this._logoFilename));
 
-          return Buffer.from(bitmap).toString('base64');
-          // eslint-disable-next-line no-empty
-        } catch (e) {
+          return `data:${mimeType};base64, ${Buffer.from(bitmap).toString('base64')}`;
         }
-      }
-
+        // eslint-disable-next-line no-empty
+      } catch {}
       return null;
     }
 

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import CurlSender from '../Transport/Curl/CurlSender';
 import ResponseDto from '../Transport/Curl/ResponseDto';
 import logger from '../Logger/Logger';
@@ -43,7 +44,7 @@ export default class TopologyRunner {
     try {
       const requestDto = new RequestDto(url, HttpMethods.POST, JSON.stringify(data));
       const resp = await this._curlSender.send(requestDto);
-      if (resp.responseCode !== 200) {
+      if (resp.responseCode !== StatusCodes.OK) {
         errMessage = errMessage.replace('__reason__', 'ResponseCode is not 200');
         logger.error(errMessage);
         throw new OnRepeatException(60, 10, errMessage);

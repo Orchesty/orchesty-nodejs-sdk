@@ -6,7 +6,7 @@ export interface IDocument {
   toArray(): {[key: string]: unknown};
 }
 
-export default abstract class DocumentAbstract implements IDocument {
+export default abstract class ADocument implements IDocument {
   @id @objectId
   protected _id?: ObjectId;
 
@@ -14,7 +14,7 @@ export default abstract class DocumentAbstract implements IDocument {
     return this._id?.toHexString() ?? '';
   }
 
-  public getCollection = (): string => DocumentAbstract.getCollection();
+  public getCollection = (): string => ADocument.getCollection();
 
   public static getCollection(): string {
     return this.name;

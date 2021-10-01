@@ -1,14 +1,14 @@
 import { ignore, index } from 'mongodb-typescript';
 import { DateTime } from 'luxon';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
-import DocumentAbstract from '../../Storage/Mongodb/DocumentAbstract';
+import ADocument from '../../Storage/Mongodb/ADocument';
 
 export interface IApplicationSettings {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
 
-export class ApplicationInstall extends DocumentAbstract {
+export class ApplicationInstall extends ADocument {
   /* eslint-disable @typescript-eslint/naming-convention */
   private deleted = false;
 

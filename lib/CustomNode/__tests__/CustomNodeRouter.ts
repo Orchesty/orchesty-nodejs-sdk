@@ -60,7 +60,7 @@ describe('Test CustomNodeRouter', () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
     supertest(expressApp)
       .post(customNodeUrl)
-      .expect(StatusCodes.OK, (err: any, res) => {
+      .expect(StatusCodes.OK, (err, res) => {
         expect(err === null).toBeTruthy();
         const jsonData = JSON.parse(res.text);
         expect(jsonData).toEqual({ test: 'custom', inner: { one: 2, date: jsonData.inner?.date } });

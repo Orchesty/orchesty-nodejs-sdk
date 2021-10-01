@@ -43,5 +43,4 @@ describe('Test MongoDb Storage', () => {
     const appInstallRepo = await dbClient.getRepository(ApplicationInstall);
     expect(appInstallRepo).toBeInstanceOf(Repository);
   });
-
 });

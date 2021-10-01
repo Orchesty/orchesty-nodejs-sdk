@@ -9,7 +9,6 @@ import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 import DIContainer from '../../DIContainer/Container';
 import MongoDbClient from '../../Storage/Mongodb/Client';
-import Metrics from '../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

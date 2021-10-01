@@ -107,5 +107,4 @@ describe('Test DIContainer', () => {
 
     expect(container2.getAllByPrefix(CONNECTOR_PREFIX)).toEqual([testConnector]);
   });
-
 });

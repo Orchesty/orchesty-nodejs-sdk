@@ -1,5 +1,7 @@
 import { Repository as BaseRepo } from 'mongodb-typescript';
-import { Cursor, FilterQuery, MongoClient, ReplaceOneOptions, ObjectId } from 'mongodb';
+import {
+  Cursor, FilterQuery, MongoClient, ReplaceOneOptions, ObjectId,
+} from 'mongodb';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';

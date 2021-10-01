@@ -1,4 +1,5 @@
 import supertest from 'supertest';
+import { StatusCodes } from 'http-status-codes';
 import BatchRouter from '../BatchRouter';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -35,20 +36,20 @@ describe('Tests for BatchRouter', () => {
     const batchUrl = `/batch/${batch.getName()}/action`;
     await supertest(expressApp)
       .post(batchUrl)
-      .expect(200, '[{"dataTest":"testValue"}]');
+      .expect(StatusCodes.OK, '[{"dataTest":"testValue"}]');
   });
 
   it('get /batch/:name/action/test route', async () => {
     const batchUrl = `/batch/${batch.getName()}/action/test`;
     await supertest(expressApp)
       .get(batchUrl)
-      .expect(200, '[]');
+      .expect(StatusCodes.OK, '[]');
   });
 
   it('get /batch/list route', async () => {
     await supertest(expressApp)
       .get('/batch/list')
-      .expect(200, '["testbatch"]');
+      .expect(StatusCodes.OK, '["testbatch"]');
   });
 
   it('test configureRoutes', () => {

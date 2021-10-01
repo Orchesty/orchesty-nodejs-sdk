@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { ObjectId } from 'mongodb';
 import { getTestContainer } from '../../../../test/TestAbstact';
-import DocumentAbstract from '../DocumentAbstract';
+import ADocument from '../ADocument';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
 import CoreServices from '../../../DIContainer/CoreServices';
@@ -18,13 +18,13 @@ jest.mock('../../../Logger/Logger', () => ({
 
 let dbClient: MongoDbClient;
 
-class ClassWithoutDeleted extends DocumentAbstract {
+class ClassWithoutDeleted extends ADocument {
   user = 'withoutDeleted';
 
   edited = false;
 }
 
-class ClassWithDeleted extends DocumentAbstract {
+class ClassWithDeleted extends ADocument {
   user = 'withDeleted';
 
   deleted = false;
@@ -46,7 +46,7 @@ describe('Tests for repository', () => {
     container = await getTestContainer();
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     dbClient = container.get(CoreServices.MONGO);
   });
 

@@ -1,7 +1,7 @@
 import { Db, MongoClient } from 'mongodb';
 import { ClassType } from 'mongodb-typescript';
 import logger from '../../Logger/Logger';
-import { IDocument } from './DocumentAbstract';
+import { IDocument } from './ADocument';
 import Repository from './Repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
@@ -11,13 +11,13 @@ import DIContainer from '../../DIContainer/Container';
 export default class MongoDbClient {
   private readonly _client: MongoClient
 
-  constructor(private _dsn: string, private _cryptManager: CryptManager, private container: DIContainer) {
+  constructor(private _dsn: string, private _cryptManager: CryptManager, private _container: DIContainer) {
     this._client = new MongoClient(this._dsn, {
       useUnifiedTopology: true, useNewUrlParser: true, connectTimeoutMS: 10000, keepAlive: true,
     });
   }
 
-  get client() {
+  get client(): MongoClient {
     return this._client;
   }
 
@@ -52,7 +52,7 @@ export default class MongoDbClient {
     }
 
     try {
-      const repo = this.container.getRepository(className);
+      const repo = this._container.getRepository(className);
       await repo.createIndexes(true);
 
       return repo;

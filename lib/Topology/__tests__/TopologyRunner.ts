@@ -1,4 +1,5 @@
 import { Headers } from 'node-fetch';
+import { StatusCodes } from 'http-status-codes';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import { container } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -27,7 +28,7 @@ function mockCurl(curl: CurlSender, url: string): SpyInstance {
       expect(request.method).toBe(HttpMethods.POST);
       expect(request.url).toBe(url);
 
-      return new ResponseDto('{}', 200, new Headers(new Headers()));
+      return new ResponseDto('{}', StatusCodes.OK, new Headers(new Headers()));
     },
   );
 }
@@ -59,7 +60,7 @@ describe('TopologyRunner tests', () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
     const res = await runner.runByName({}, 'topoName', 'nodeName');
 
-    expect(res.responseCode).toEqual(200);
+    expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
   });
 
@@ -67,7 +68,7 @@ describe('TopologyRunner tests', () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run-by-name');
     const res = await runner.runByName({}, 'topoName', 'nodeName', 'user');
 
-    expect(res.responseCode).toEqual(200);
+    expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
   });
 
@@ -75,7 +76,7 @@ describe('TopologyRunner tests', () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/run');
     const res = await runner.runById({}, 'topoId', 'nodeId');
 
-    expect(res.responseCode).toEqual(200);
+    expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
   });
 
@@ -83,7 +84,7 @@ describe('TopologyRunner tests', () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/user/user/run');
     const res = await runner.runById({}, 'topoId', 'nodeId', 'user');
 
-    expect(res.responseCode).toEqual(200);
+    expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
   });
 });

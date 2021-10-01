@@ -29,4 +29,4 @@ async function prepare() {
   });
 }
 
-prepare().then(listen)
+prepare().then(listen);

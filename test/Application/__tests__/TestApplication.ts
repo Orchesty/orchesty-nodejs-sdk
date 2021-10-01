@@ -29,8 +29,7 @@ describe('Test application', () => {
 
   it('getLogo', () => {
     const app = new TestBasicApplication();
-    app.logoFilename = 'test/Application/test.png';
-    expect(app.getLogo() != null).toBeTruthy();
+    expect(app.getLogo() === null).toBeTruthy();
   });
 
   it('toArray', () => {

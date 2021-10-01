@@ -22,7 +22,6 @@ let metrics: Metrics;
 let container: DIContainer;
 
 describe('Test metrics', () => {
-
   beforeAll(async () => {
     container = await getTestContainer();
     metrics = container.get(CoreServices.METRICS);
