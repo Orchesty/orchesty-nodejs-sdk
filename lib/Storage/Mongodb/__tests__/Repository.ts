@@ -5,6 +5,8 @@ import DocumentAbstract from '../DocumentAbstract';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
 import CoreServices from '../../../DIContainer/CoreServices';
+import DIContainer from '../../../DIContainer/Container';
+import Metrics from '../../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -15,8 +17,6 @@ jest.mock('../../../Logger/Logger', () => ({
 }));
 
 let dbClient: MongoDbClient;
-
-const container = getTestContainer();
 
 class ClassWithoutDeleted extends DocumentAbstract {
   user = 'withoutDeleted';
@@ -40,12 +40,19 @@ class ClassWithDeleted extends DocumentAbstract {
 }
 
 describe('Tests for repository', () => {
-  beforeEach(() => {
+  let container: DIContainer;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+  });
+
+  beforeEach(async () => {
     dbClient = container.get(CoreServices.MONGO);
   });
 
   afterAll(async () => {
     await dbClient.down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
   it('ClassWithDeleted', async () => {

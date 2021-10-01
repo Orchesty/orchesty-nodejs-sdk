@@ -6,14 +6,19 @@ import Repository from './Repository';
 import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
+import DIContainer from '../../DIContainer/Container';
 
 export default class MongoDbClient {
   private readonly _client: MongoClient
 
-  constructor(private _dsn: string, private _cryptManager: CryptManager) {
+  constructor(private _dsn: string, private _cryptManager: CryptManager, private container: DIContainer) {
     this._client = new MongoClient(this._dsn, {
       useUnifiedTopology: true, useNewUrlParser: true, connectTimeoutMS: 10000, keepAlive: true,
     });
+  }
+
+  get client() {
+    return this._client;
   }
 
   public async down(): Promise<void> {
@@ -46,6 +51,15 @@ export default class MongoDbClient {
       await this.reconnect();
     }
 
+    try {
+      const repo = this.container.getRepository(className);
+      await repo.createIndexes(true);
+
+      return repo;
+    } catch (e) {
+      // Ignore and create new repo
+    }
+
     const repo = new Repository(
       className,
       this._client,
@@ -58,18 +72,6 @@ export default class MongoDbClient {
   }
 
   public async getApplicationRepository(): Promise<ApplicationInstallRepository<ApplicationInstall>> {
-    if (!this._client.isConnected()) {
-      await this.reconnect();
-    }
-
-    const repo = new ApplicationInstallRepository(
-      ApplicationInstall,
-      this._client,
-      ApplicationInstall.getCollection(),
-      this._cryptManager,
-    );
-    await repo.createIndexes(true);
-
-    return repo;
+    return await this.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
   }
 }

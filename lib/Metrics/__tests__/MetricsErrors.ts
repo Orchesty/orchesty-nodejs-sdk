@@ -1,6 +1,8 @@
 import Metrics, { ITimesMetrics } from '../Metrics';
 import { getTestContainer } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
+import DIContainer from '../../DIContainer/Container';
+import MongoDbClient from '../../Storage/Mongodb/Client';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -16,16 +18,19 @@ const mockITimesMetrics: ITimesMetrics = {
   kernelTime: 5,
 };
 
-const container = getTestContainer();
 let metrics: Metrics;
+let container: DIContainer;
 
 describe('Test metrics', () => {
-  beforeAll(() => {
+
+  beforeAll(async () => {
+    container = await getTestContainer();
     metrics = container.get(CoreServices.METRICS);
   });
 
   afterAll(async () => {
     await metrics.close();
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
   });
 
   it('sendCurlMetrics', async () => {

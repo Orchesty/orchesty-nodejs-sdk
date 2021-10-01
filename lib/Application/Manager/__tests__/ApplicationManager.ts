@@ -12,12 +12,11 @@ import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationLoader from '../../ApplicationLoader';
 
+let container: DIContainer;
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
 let appInstall: ApplicationInstall;
 let appInstallOAuth: ApplicationInstall;
-
-const container = getTestContainer();
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -42,6 +41,7 @@ describe('ApplicationManager tests', () => {
   }
 
   beforeAll(async () => {
+    container = await getTestContainer();
     dbClient = container.get(CoreServices.MONGO);
     const db = await dbClient.db();
     try {

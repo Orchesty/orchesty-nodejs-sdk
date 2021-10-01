@@ -4,6 +4,9 @@ import CoreServices from '../../../lib/DIContainer/CoreServices';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../../lib/Transport/HttpMethods';
+import { initiateContainer } from '../../../lib';
+import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
+import Metrics from '../../../lib/Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({
@@ -13,8 +16,19 @@ jest.mock('../../../lib/Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-const sender = container.get(CoreServices.CURL) as CurlSender;
 describe('Test topologyHelper', () => {
+  let sender: CurlSender;
+
+  beforeAll(async () => {
+    await initiateContainer();
+    sender = container.get(CoreServices.CURL);
+  });
+
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
+    await (container.get(CoreServices.METRICS) as Metrics).close();
+  });
+
   it('mockCurl - replacements', async () => {
     const spy = mockCurl(__filename, sender);
 

@@ -4,6 +4,8 @@ import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbst
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
+import DIContainer from '../../DIContainer/Container';
+import { ICommonNode } from '../../Commons/ICommonNode';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -15,10 +17,15 @@ jest.mock('../../Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-const container = getTestContainer();
-const batch = container.getBatch('testbatch');
-
 describe('Tests for BatchRouter', () => {
+  let container: DIContainer;
+  let batch: ICommonNode;
+
+  beforeAll(async () => {
+    container = await getTestContainer();
+    batch = container.getBatch('testbatch');
+  });
+
   afterAll(async () => {
     await (container.get(CoreServices.MONGO) as MongoDbClient).down();
     await (container.get(CoreServices.METRICS) as Metrics).close();
