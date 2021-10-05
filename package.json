@@ -25,6 +25,7 @@
     "@types/php-serialize": "^3.0.1",
     "@types/simple-oauth2": "^4.1.1",
     "@types/sodium-native": "^2.3.5",
+    "@deepkit/orm": "^1.0.1-alpha.58",
     "express": "~5.0.0-alpha.8",
     "fast-xml-parser": "^3.20.0",
     "http-status-codes": "^2.1.4",

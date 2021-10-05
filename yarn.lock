@@ -335,6 +335,19 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@deepkit/orm@^1.0.1-alpha.58":
+  version "1.0.1-alpha.58"
+  resolved "https://registry.yarnpkg.com/@deepkit/orm/-/orm-1.0.1-alpha.58.tgz#efb5a14b122ed1c15f306554f798d127d17a5080"
+  integrity sha512-LpT5R7QNy7nO2hGTx0BD+iNzt18cmO/7YzSBO2LcLmhc8aKx79HLaYgqgDDBANWiMxfN4NukCHxT3Ig7pgRFQA==
+  dependencies:
+    "@deepkit/topsort" "^1.0.1-alpha.35"
+    sift "^7.0.1"
+
+"@deepkit/topsort@^1.0.1-alpha.35":
+  version "1.0.1-alpha.35"
+  resolved "https://registry.yarnpkg.com/@deepkit/topsort/-/topsort-1.0.1-alpha.35.tgz#586c93476cb06ef6ca3e301a331c2d8016053413"
+  integrity sha512-Cv5d4n0L8W0yp8+1/dRQGgpE+VwhbpC5mfz3/rKjH9uxdTPN/YFZyazOwn5SKEiYqPafJlATakCOf6HCyHNYPA==
+
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
@@ -4592,6 +4605,11 @@ side-channel@^1.0.4:
     call-bind "^1.0.0"
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
+
+sift@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/sift/-/sift-7.0.1.tgz#47d62c50b159d316f1372f8b53f9c10cd21a4b08"
+  integrity sha512-oqD7PMJ+uO6jV9EQCl0LrRw1OwsiPsiFQR5AR30heR+4Dl7jBBbDLnNvWiak20tzZlSE1H7RB30SX/1j/YYT7g==
 
 signal-exit@^3.0.2, signal-exit@^3.0.3:
   version "3.0.5"
