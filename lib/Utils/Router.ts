@@ -92,10 +92,9 @@ for (let i = 0; i < 100; i += 1) {
 }
 
 function getFreeDto(): ProcessDto {
-  return new ProcessDto();
   // Should CPU still be a concern, implement linked list for faster search
   // In case of Memory concern, limit maximum pool size and await for free objects
-  /* TODO for (let i = 0; i < dtoPool.length; i += 1) {
+  for (let i = 0; i < dtoPool.length; i += 1) {
     if (dtoPool[i].free) {
       dtoPool[i].free = false;
 
@@ -104,9 +103,10 @@ function getFreeDto(): ProcessDto {
   }
 
   const dto = new ProcessDto();
+  dto.free = false;
   dtoPool.push(dto);
 
-  return dto;*/
+  return dto;
 }
 
 export function createProcessDto(req: Request): ProcessDto {
