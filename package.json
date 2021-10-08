@@ -5,8 +5,8 @@
   "main": "dist/lib/index.js",
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
-    "one-test": "jest --maxConcurrency=1 --maxWorkers=1 --forceExit --testNamePattern",
-    "test": "jest --coverage --maxConcurrency=1 --maxWorkers=1 --detectOpenHandles --forceExit",
+    "one-test": "jest --forceExit --testNamePattern",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
     "lint": "eslint lib/**/*.ts --fix",
     "lint-ci": "eslint lib/**/*.ts",
     "start": "nodemon test/index.ts",
