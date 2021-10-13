@@ -43,107 +43,107 @@ interface ILoggerFormat {
 }
 
 export class Logger {
-    private udp: Sender;
+  private udp: Sender;
 
-    constructor() {
-      const parsed = parseInfluxDsn(loggerOptions.dsn);
-      this.udp = new Sender(parsed.server, parsed.port);
-    }
+  constructor() {
+    const parsed = parseInfluxDsn(loggerOptions.dsn);
+    this.udp = new Sender(parsed.server, parsed.port);
+  }
 
-    /**
+  /**
      *
      * @param {string} message
      * @param {ILogContext} context
      */
-    public debug(message: string, context?: ILogContext): void {
-      this.log(Severity.DEBUG, message, context || {});
-    }
+  public debug(message: string, context?: ILogContext): void {
+    this.log(Severity.DEBUG, message, context || {});
+  }
 
-    /**
+  /**
      *
      * @param {string} message
      * @param {ILogContext} context
      */
-    public info(message: string, context?: ILogContext): void {
-      this.log(Severity.INFO, message, context || {});
-    }
+  public info(message: string, context?: ILogContext): void {
+    this.log(Severity.INFO, message, context || {});
+  }
 
-    /**
+  /**
      *
      * @param {string} message
      * @param {ILogContext} context
      */
-    public warn(message: string, context?: ILogContext): void {
-      this.log(Severity.WARNING, message, context || {});
-    }
+  public warn(message: string, context?: ILogContext): void {
+    this.log(Severity.WARNING, message, context || {});
+  }
 
-    /**
+  /**
      *
      * @param {string} message
      * @param {ILogContext} context
      */
-    public error(message: string, context?: ILogContext): void {
-      this.log(Severity.ERROR, message, context || {});
-    }
+  public error(message: string, context?: ILogContext): void {
+    this.log(Severity.ERROR, message, context || {});
+  }
 
-    /**
+  /**
      *
      * @param {ProcessDto} dto
      * @param {Error} err
      * @return {ILogContext}
      */
-    public ctxFromDto = (dto: ProcessDto, err?: Error): ILogContext => {
-      const ctx: ILogContext = {
-        node_id: headers.getNodeId(dto.headers),
-        correlation_id: headers.getCorrelationId(dto.headers),
-        process_id: headers.getProcessId(dto.headers),
-        parent_id: headers.getParentId(dto.headers),
-        sequence_id: headers.getSequenceId(dto.headers),
-      };
+  public ctxFromDto = (dto: ProcessDto, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(dto.headers),
+      correlation_id: headers.getCorrelationId(dto.headers),
+      process_id: headers.getProcessId(dto.headers),
+      parent_id: headers.getParentId(dto.headers),
+      sequence_id: headers.getSequenceId(dto.headers),
+    };
 
-      if (err) {
-        ctx.error = err;
-      }
-
-      return ctx;
+    if (err) {
+      ctx.error = err;
     }
 
-    /**
+    return ctx;
+  };
+
+  /**
     *
     * @param req
     * @param err
     */
-    public ctxFromReq = (req: Request, err?: Error): ILogContext => {
-      const ctx: ILogContext = {
-        node_id: headers.getNodeId(req.headers),
-        correlation_id: headers.getCorrelationId(req.headers),
-        process_id: headers.getProcessId(req.headers),
-        parent_id: headers.getParentId(req.headers),
-        sequence_id: headers.getSequenceId(req.headers),
-      };
+  public ctxFromReq = (req: Request, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(req.headers),
+      correlation_id: headers.getCorrelationId(req.headers),
+      process_id: headers.getProcessId(req.headers),
+      parent_id: headers.getParentId(req.headers),
+      sequence_id: headers.getSequenceId(req.headers),
+    };
 
-      if (err) {
-        ctx.error = err;
-      }
-
-      return ctx;
+    if (err) {
+      ctx.error = err;
     }
 
-    /**
+    return ctx;
+  };
+
+  /**
      *
      * @param {string} severity
      * @param {string} message
      * @param {ILogContext} context
      */
-    public log(severity: string, message: string, context?: ILogContext): void {
-      const data = this.format(severity, message, context);
+  public log(severity: string, message: string, context?: ILogContext): void {
+    const data = this.format(severity, message, context);
 
-      winstonLogger.log(severity, '', data);
-      this.udp.send(JSON.stringify(data))
-        .catch(() => {
-          // unhandled promise rejection caught
-        });
-    }
+    winstonLogger.log(severity, '', data);
+    this.udp.send(JSON.stringify(data))
+      .catch(() => {
+        // unhandled promise rejection caught
+      });
+  }
 
   /**
    *
@@ -199,7 +199,7 @@ export class Logger {
     }
 
     return line;
-  }
+  };
 }
 
 const logger = new Logger();
