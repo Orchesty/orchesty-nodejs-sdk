@@ -3,9 +3,14 @@ import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import AConnector from '../../lib/Connector/AConnector';
+import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 
 export default class TestConnector extends AConnector {
   public getName = (): string => 'test';
+
+  public async getApplicationInstallFromHeaders(dto: ProcessDto): Promise<ApplicationInstall> {
+    return this._getApplicationInstallFromHeaders(dto);
+  }
 
   public async processAction(_dto: ProcessDto): Promise<ProcessDto> {
     const dto = _dto;
