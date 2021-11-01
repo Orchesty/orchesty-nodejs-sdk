@@ -2,6 +2,7 @@ import { IApplication } from './IApplication';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 import WebhookSubscription from '../Model/Webhook/WebhookSubscription';
+import ResponseDto from '../../Transport/Curl/ResponseDto';
 
 export interface IWebhookApplication extends IApplication {
 
@@ -15,8 +16,8 @@ export interface IWebhookApplication extends IApplication {
 
   getWebhookUnsubscribeRequestDto(applicationInstall: ApplicationInstall, id: string): RequestDto;
 
-  processWebhookSubscribeResponse(dto: RequestDto, applicationInstall: ApplicationInstall): string;
+  processWebhookSubscribeResponse(dto: ResponseDto, applicationInstall: ApplicationInstall): string;
 
-  processWebhookUnsubscribeResponse(dto: RequestDto): boolean;
+  processWebhookUnsubscribeResponse(dto: ResponseDto): boolean;
 
 }
