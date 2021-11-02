@@ -13,6 +13,13 @@ export default abstract class ADocument implements IDocument {
   public getId(): string {
     return this._id?.toHexString() ?? '';
   }
+  
+  public getObjectId(): ObjectId {
+    if (!this._id) {
+      throw Error('_id is not set.');
+    }
+    return this._id;
+  }
 
   public getCollection = (): string => ADocument.getCollection();
 
