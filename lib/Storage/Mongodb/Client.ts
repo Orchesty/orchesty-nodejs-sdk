@@ -9,7 +9,7 @@ import ApplicationInstallRepository from '../../Application/Database/Application
 import DIContainer from '../../DIContainer/Container';
 
 export default class MongoDbClient {
-  private readonly _client: MongoClient
+  private readonly _client: MongoClient;
 
   constructor(private _dsn: string, private _cryptManager: CryptManager, private _container: DIContainer) {
     this._client = new MongoClient(this._dsn, {

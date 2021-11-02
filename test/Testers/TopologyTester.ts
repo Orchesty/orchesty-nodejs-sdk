@@ -28,7 +28,12 @@ export default class TopologyTester {
   ) {
   }
 
-  public async runTopology(topologyPath: string, dto: ProcessDto, _prefix = ''): Promise<ProcessDto[]> {
+  public async runTopology(
+    topologyPath: string,
+    dto: ProcessDto,
+    _prefix = '',
+    _startingPoint?: string,
+  ): Promise<ProcessDto[]> {
     // Parse BPMN scheme
     this._nodes = this._parseTopologyFile(topologyPath);
 
@@ -43,10 +48,19 @@ export default class TopologyTester {
     while (starts.length > 0) {
       const startNode = starts.shift();
       if (startNode) {
-        results.push(
-          // eslint-disable-next-line no-await-in-loop
-          ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto), _prefix),
-        );
+        if (_startingPoint) {
+          if (_startingPoint === startNode.name) {
+            results.push(
+              // eslint-disable-next-line no-await-in-loop
+              ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto), _prefix),
+            );
+          }
+        } else {
+          results.push(
+            // eslint-disable-next-line no-await-in-loop
+            ...await this._recursiveRunner(startNode, this._cloneProcessDto(dto), _prefix),
+          );
+        }
       }
     }
 
@@ -60,16 +74,8 @@ export default class TopologyTester {
     // Parse a compile TestNodes
     const nodes: TestNode[] = [];
 
-    let taskList = res.definitions.process.task;
-    if (!Array.isArray(taskList)) {
-      taskList = [taskList];
-    }
-
-    taskList.forEach((task: Record<string, string>) => {
-      nodes.push(
-        new TestNode(task['@_id'], task['@_name'], task['@_pipesType']),
-      );
-    });
+    this._pushNodes(res.definitions.process.task, nodes);
+    this._pushNodes(res.definitions.process.event, nodes);
 
     let { sequenceFlow } = res.definitions.process;
     if (!Array.isArray(sequenceFlow)) {
@@ -89,9 +95,22 @@ export default class TopologyTester {
     return nodes;
   };
 
+  private _pushNodes(_srcList: Record<string, string>[], dstList: TestNode[]) {
+    let list = _srcList;
+    if (!Array.isArray(list)) {
+      list = [list];
+    }
+
+    list.forEach((event: Record<string, string>) => {
+      dstList.push(
+        new TestNode(event['@_id'], event['@_name'], event['@_pipesType']),
+      );
+    });
+  }
+
   private async _recursiveRunner(node: TestNode, dto: ProcessDto, prefix: string, _index = 0): Promise<ProcessDto[]> {
     // Get worker instance from container
-    let worker: ICommonNode;
+    let worker: ICommonNode | null;
     switch (node.type) {
       case 'connector':
         worker = this._container.getConnector(node.name);
@@ -101,6 +120,11 @@ export default class TopologyTester {
         break;
       case 'custom':
         worker = this._container.getCustomNode(node.name);
+        break;
+      case 'start':
+      case 'cron':
+      case 'webhook':
+        worker = null;
         break;
       default:
         throw new Error(`Unsupported node type [${node.type}]`);
@@ -116,7 +140,11 @@ export default class TopologyTester {
     const nextDto: ProcessDto[] = [];
     let out: ProcessDto;
     try {
-      out = await this._processAction(worker, node, this._cloneProcessDto(dto), prefix, index);
+      if (worker) {
+        out = await this._processAction(worker, node, this._cloneProcessDto(dto), prefix, index);
+      } else {
+        out = this._cloneProcessDto(dto);
+      }
     } catch (e) {
       if (e instanceof OnRepeatException) {
         out = this._cloneProcessDto(dto);
@@ -183,27 +211,26 @@ export default class TopologyTester {
         }
     }
 
-    await Promise.all(
-      nextDto.map(async (d) => {
-        // Prepare out ProcessDto for followers
-        d.removeRepeater();
-        d.removeHeader(RESULT_CODE);
+    for (let i = 0; i < nextDto.length; i += 1) {
+      const d = nextDto[i];
+      // Prepare out ProcessDto for followers
+      d.removeRepeater();
+      d.removeHeader(RESULT_CODE);
 
-        // Run process on followers
-        if (followers.length <= 0) {
-          results.push(d);
-        } else {
-          await Promise.all(
-            followers.map(async (follower) => {
-              const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
-              results.push(
-                ...await this._recursiveRunner(this._nodes[fIndex], this._cloneProcessDto(d), prefix),
-              );
-            }),
+      // Run process on followers
+      if (followers.length <= 0) {
+        results.push(d);
+      } else {
+        for (let j = 0; j < followers.length; j += 1) {
+          const follower = followers[j];
+          const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
+          results.push(
+            // eslint-disable-next-line no-await-in-loop
+            ...await this._recursiveRunner(this._nodes[fIndex], this._cloneProcessDto(d), prefix),
           );
         }
-      }),
-    );
+      }
+    }
 
     return results;
   }

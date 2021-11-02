@@ -25,11 +25,11 @@ const BASE64 = 'base64';
 export default class WindWalkerCrypt extends ACryptImpl {
   private _cache;
 
-  private _secureHMACKey = ''
+  private _secureHMACKey = '';
 
-  private _pbkdf2Salt?: Buffer
+  private _pbkdf2Salt?: Buffer;
 
-  private _iv?: Buffer
+  private _iv?: Buffer;
 
   constructor(private _secretKey: string, prefix = '002_') {
     super(prefix);

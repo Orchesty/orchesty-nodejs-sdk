@@ -26,10 +26,18 @@ describe('Test topologyTester', () => {
     await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
-  it('', async () => {
+  it('Run without specific StartingPoint', async () => {
     const dto = new ProcessDto();
     const tester = new TopologyTester(container, __filename);
     const res = await tester.runTopology(`${__dirname}/Data/TopologyTester/test.tplg`, dto);
+    expect(res.length).toEqual(1);
+    expect(res[0].jsonData).toEqual({ dataTest: 'testValue' });
+  });
+
+  it('Run with specific StartingPoint', async () => {
+    const dto = new ProcessDto();
+    const tester = new TopologyTester(container, __filename);
+    const res = await tester.runTopology(`${__dirname}/Data/TopologyTester/test.tplg`, dto, '', 'Start');
     expect(res.length).toEqual(1);
     expect(res[0].jsonData).toEqual({ dataTest: 'testValue' });
   });

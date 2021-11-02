@@ -20,7 +20,7 @@ describe('ApplicationInstall tests', () => {
   it('get object id', () => {
     try {
       appInstall.getObjectId();
-    }catch (e) {
+    } catch (e) {
       expect(e).toEqual(Error('_id is not set.'));
     }
   });

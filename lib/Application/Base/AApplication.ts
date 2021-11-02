@@ -26,87 +26,87 @@ export interface IApplicationArray {
 }
 
 export default abstract class AApplication implements IApplication {
-    protected _logoFilename = 'logo.svg';
+  protected _logoFilename = 'logo.svg';
 
-    public abstract getAuthorizationType(): AuthorizationTypeEnum;
+  public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
-    public abstract getPublicName(): string;
+  public abstract getPublicName(): string;
 
-    public abstract getName(): string;
+  public abstract getName(): string;
 
-    public abstract getDescription(): string;
+  public abstract getDescription(): string;
 
-    public abstract getSettingsForm(): Form;
+  public abstract getSettingsForm(): Form;
 
-    public getApplicationType = (): ApplicationTypeEnum => ApplicationTypeEnum.CRON
+  public getApplicationType = (): ApplicationTypeEnum => ApplicationTypeEnum.CRON;
 
-    public abstract isAuthorized(applicationInstall: ApplicationInstall): boolean;
+  public abstract isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-    public abstract getRequestDto(
-      dto: ProcessDto,
-        applicationInstall: ApplicationInstall,
-        method: string,
-        url?: string,
-        data?: string
-    ): RequestDto | Promise<RequestDto>;
+  public abstract getRequestDto(
+    dto: ProcessDto,
+      applicationInstall: ApplicationInstall,
+      method: string,
+      url?: string,
+      data?: string
+  ): RequestDto | Promise<RequestDto>;
 
-    public getLogo(): string | null {
-      try {
-        if (fs.existsSync(this._logoFilename)) {
-          const bitmap = fs.readFileSync(this._logoFilename);
-          const mimeType = contentType(path.extname(this._logoFilename));
+  public getLogo(): string | null {
+    try {
+      if (fs.existsSync(this._logoFilename)) {
+        const bitmap = fs.readFileSync(this._logoFilename);
+        const mimeType = contentType(path.extname(this._logoFilename));
 
-          return `data:${mimeType};base64, ${Buffer.from(bitmap).toString('base64')}`;
-        }
-        // eslint-disable-next-line no-empty
-      } catch {}
-      return null;
-    }
-
-    public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
-      const settings = applicationInstall.getSettings()[FORM] ?? [];
-      const form = this.getSettingsForm();
-      form.fields.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
-          if (field.type === FieldType.PASSWORD) {
-            field.setValue(true);
-          } else {
-            field.setValue(settings[field.key]);
-          }
-        }
-      });
-
-      return form.toArray();
-    }
-
-    public setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
-        ApplicationInstall {
-      const preparedSettings: IApplicationSettings = {};
-
-      this.getSettingsForm().fields.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
-          preparedSettings[field.key] = settings[field.key];
-        }
-      });
-      if (Object.keys(preparedSettings).length > 0) {
-        applicationInstall.addSettings({ [FORM]: preparedSettings });
+        return `data:${mimeType};base64, ${Buffer.from(bitmap).toString('base64')}`;
       }
+      // eslint-disable-next-line no-empty
+    } catch {}
+    return null;
+  }
 
-      return applicationInstall;
+  public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
+    const settings = applicationInstall.getSettings()[FORM] ?? [];
+    const form = this.getSettingsForm();
+    form.fields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
+        if (field.type === FieldType.PASSWORD) {
+          field.setValue(true);
+        } else {
+          field.setValue(settings[field.key]);
+        }
+      }
+    });
+
+    return form.toArray();
+  }
+
+  public setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
+      ApplicationInstall {
+    const preparedSettings: IApplicationSettings = {};
+
+    this.getSettingsForm().fields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
+        preparedSettings[field.key] = settings[field.key];
+      }
+    });
+    if (Object.keys(preparedSettings).length > 0) {
+      applicationInstall.addSettings({ [FORM]: preparedSettings });
     }
 
-    public getUri = (url?: string): URL => new URL(url ?? '')
+    return applicationInstall;
+  }
 
-    public toArray(): IApplicationArray {
-      return {
-        name: this.getPublicName(),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        authorization_type: this.getAuthorizationType(),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        application_type: this.getApplicationType(),
-        key: this.getName(),
-        description: this.getDescription(),
-        logo: this.getLogo(),
-      };
-    }
+  public getUri = (url?: string): URL => new URL(url ?? '');
+
+  public toArray(): IApplicationArray {
+    return {
+      name: this.getPublicName(),
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      authorization_type: this.getAuthorizationType(),
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      application_type: this.getApplicationType(),
+      key: this.getName(),
+      description: this.getDescription(),
+      logo: this.getLogo(),
+    };
+  }
 }

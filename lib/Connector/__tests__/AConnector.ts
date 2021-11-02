@@ -1,3 +1,4 @@
+import { Headers } from 'node-fetch';
 import { getTestContainer } from '../../../test/TestAbstact';
 import TestConnector from '../../../test/Connector/TestConnector';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -9,7 +10,6 @@ import Metrics from '../../Metrics/Metrics';
 import ProcessDto from '../../Utils/ProcessDto';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import ResponseDto from '../../Transport/Curl/ResponseDto';
-import { Headers } from 'node-fetch';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -68,7 +68,7 @@ describe('Test AConnector', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 205, new Headers({}));
     testConnector.evaluateStatusCode(response, dto);
-    expect(dto.headers).toEqual({ "pf-result-code": "1006" });
+    expect(dto.headers).toEqual({ 'pf-result-code': '1006' });
   });
 
   it('it should return applicationInstall', async () => {
@@ -76,14 +76,14 @@ describe('Test AConnector', () => {
     const app = new ApplicationInstall();
     const user = 'testUser';
     app.setUser(user)
-    .setName('test')
+      .setName('test');
     await repo.insert(app);
     const application = new TestBasicApplication();
     testConnector.setDb(mongoDbClient);
-    testConnector.setApplication(application)
+    testConnector.setApplication(application);
     const dto = new ProcessDto();
     dto.headers = { 'pf-user': user };
-    const res = await testConnector.getApplicationInstallFromHeaders(dto)
+    const res = await testConnector.getApplicationInstallFromHeaders(dto);
     expect(res.getUser()).toEqual(user);
   });
 
@@ -92,17 +92,17 @@ describe('Test AConnector', () => {
     const app = new ApplicationInstall();
     const user = 'testUser';
     app.setUser(user)
-    .setName('test')
+      .setName('test');
     await repo.insert(app);
     const application = new TestBasicApplication();
     testConnector.setDb(mongoDbClient);
-    testConnector.setApplication(application)
+    testConnector.setApplication(application);
     const dto = new ProcessDto();
     dto.headers = {};
     try {
       await testConnector.getApplicationInstallFromHeaders(dto);
-    }catch (e) {
-     expect(e).toEqual(Error('User not defined'));
+    } catch (e) {
+      expect(e).toEqual(Error('User not defined'));
     }
   });
 });
