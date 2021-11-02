@@ -17,6 +17,14 @@ describe('ApplicationInstall tests', () => {
     expect(appInstall.getId()).toEqual('');
   });
 
+  it('get object id', () => {
+    try {
+      appInstall.getObjectId();
+    }catch (e) {
+      expect(e).toEqual(Error('_id is not set.'));
+    }
+  });
+
   it('get deleted', () => {
     expect(appInstall.getDeleted()).toEqual(false);
   });
