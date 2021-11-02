@@ -8,6 +8,8 @@ import CurlSender from '../../Transport/Curl/CurlSender';
 import Metrics from '../../Metrics/Metrics';
 import ProcessDto from '../../Utils/ProcessDto';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
+import ResponseDto from '../../Transport/Curl/ResponseDto';
+import { Headers } from 'node-fetch';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -53,6 +55,20 @@ describe('Test AConnector', () => {
     testConnector.setSender(curlSender);
     const testConnectorCurlSender = Reflect.get(testConnector, 'sender');
     expect(testConnectorCurlSender).toEqual(curlSender);
+  });
+
+  it('it shouldnt set dto stop process on dto', () => {
+    const dto = new ProcessDto();
+    const response = new ResponseDto('body', 200, new Headers({}));
+    testConnector.evaluateStatusCode(response, dto);
+    expect(dto.headers).toEqual({});
+  });
+
+  it('it should set dto stop process on dto', () => {
+    const dto = new ProcessDto();
+    const response = new ResponseDto('body', 205, new Headers({}));
+    testConnector.evaluateStatusCode(response, dto);
+    expect(dto.headers).toEqual({ "pf-result-code": "1006" });
   });
 
   it('it should return applicationInstall', async () => {
