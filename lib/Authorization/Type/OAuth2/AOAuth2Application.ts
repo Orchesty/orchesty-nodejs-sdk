@@ -111,11 +111,11 @@ export default abstract class AOAuth2Application extends AApplication implements
     throw new Error('There is no access token');
   };
 
-  public setApplicationSettings(
+  public async setApplicationSettings(
     applicationInstall: ApplicationInstall,
     settings: IApplicationSettings,
-  ): ApplicationInstall {
-    super.setApplicationSettings(applicationInstall, settings);
+  ): Promise<ApplicationInstall> {
+    await super.setApplicationSettings(applicationInstall, settings);
     this._createAuthSettings(applicationInstall);
 
     const sett = applicationInstall.getSettings();

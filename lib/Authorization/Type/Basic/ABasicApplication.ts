@@ -36,9 +36,9 @@ export abstract class ABasicApplication extends AApplication implements IBasicAp
     return applicationInstall.addSettings(settings);
   }
 
-  public setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
-        ApplicationInstall {
-    const appInstall = super.setApplicationSettings(applicationInstall, settings);
+  public async setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
+    Promise<ApplicationInstall> {
+    const appInstall = await super.setApplicationSettings(applicationInstall, settings);
 
     if (Object.prototype.hasOwnProperty.call(settings, FORM)) {
       const sett = settings[FORM];

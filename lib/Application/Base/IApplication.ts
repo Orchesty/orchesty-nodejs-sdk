@@ -19,7 +19,10 @@ export interface IApplication extends IName {
 
   getAuthorizationType(): AuthorizationTypeEnum;
 
-  setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings): ApplicationInstall;
+  setApplicationSettings(
+    applicationInstall: ApplicationInstall,
+    settings: IApplicationSettings
+  ): Promise<ApplicationInstall> | ApplicationInstall;
 
   isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
