@@ -75,7 +75,7 @@ describe('Test application', () => {
     expect(app.getSettingsForm()).toEqual(expected);
   });
 
-  it('setApplicationSettings', () => {
+  it('setApplicationSettings', async () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
     const expected = {
@@ -85,11 +85,11 @@ describe('Test application', () => {
         user,
       },
     };
-    appInstall = app.setApplicationSettings(appInstall, { form: { user, password: pass, token } });
+    appInstall = await app.setApplicationSettings(appInstall, { form: { user, password: pass, token } });
     expect(appInstall.getSettings()).toEqual(expected);
   });
 
-  it('setApplicationSettingsAddPerson', () => {
+  it('setApplicationSettingsAddPerson',async () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
     const expected = {
@@ -97,15 +97,15 @@ describe('Test application', () => {
         person: 'test',
       },
     };
-    appInstall = app.setApplicationSettings(appInstall, { person: 'test' });
+    appInstall = await app.setApplicationSettings(appInstall, { person: 'test' });
     expect(appInstall.getSettings()).toEqual(expected);
   });
 
-  it('getApplicationForm', () => {
+  it('getApplicationForm', async () => {
     const app = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
     const sett = { form: { user, password: pass, token } };
-    const result = app.setApplicationSettings(appInstall, sett);
+    const result = await app.setApplicationSettings(appInstall, sett);
     expect(result).toBeInstanceOf(ApplicationInstall);
     const resultSett = result.getSettings();
     expect(resultSett).toHaveProperty('authorization_settings');
