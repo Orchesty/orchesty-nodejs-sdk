@@ -133,12 +133,12 @@ describe('Test AOAuth2Application', () => {
     expect(accessToken).toEqual(accessTokenFromService);
   });
 
-  it('should set application settings', () => {
+  it('should set application settings', async () => {
     const appInstall = new ApplicationInstall();
     appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: [] });
     appInstall.addSettings({ form: [] });
     const sett = { user: 'Jakub', password: 'pass', token: 'token' };
-    expect(oAuthApplication.setApplicationSettings(appInstall, sett)).toBeInstanceOf(ApplicationInstall);
+    expect((await oAuthApplication.setApplicationSettings(appInstall, sett))).toBeInstanceOf(ApplicationInstall);
   });
 
   it('should get token', () => {

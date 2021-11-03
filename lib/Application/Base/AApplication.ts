@@ -79,8 +79,9 @@ export default abstract class AApplication implements IApplication {
     return form.toArray();
   }
 
-  public setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
-      ApplicationInstall {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
+     Promise<ApplicationInstall> {
     const preparedSettings: IApplicationSettings = {};
 
     this.getSettingsForm().fields.forEach((field) => {

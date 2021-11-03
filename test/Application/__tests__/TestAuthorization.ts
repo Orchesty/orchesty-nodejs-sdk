@@ -26,12 +26,12 @@ describe('Application authorize tests', () => {
     expect(basicApp.setApplicationToken(appInstall, 'token')).toBeInstanceOf(ApplicationInstall);
   });
 
-  it('setApplicationSettings', () => {
+  it('setApplicationSettings', async () => {
     const basicApp = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
     appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: [] });
     appInstall.addSettings({ form: [] });
     const sett = { user: 'Jakub', password: 'pass', token: 'token' };
-    expect(basicApp.setApplicationSettings(appInstall, sett)).toBeInstanceOf(ApplicationInstall);
+    expect((await basicApp.setApplicationSettings(appInstall, sett))).toBeInstanceOf(ApplicationInstall);
   });
 });
