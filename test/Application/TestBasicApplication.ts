@@ -1,3 +1,4 @@
+import { BodyInit } from 'node-fetch';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
 import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
@@ -38,6 +39,6 @@ export default class TestBasicApplication extends ABasicApplication {
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
-    data?: string,
+    data?: BodyInit,
   ): RequestDto => new RequestDto(url ?? '', method, data);
 }

@@ -64,7 +64,7 @@ export default class CurlSender {
       timeout: dto.timeout,
     };
 
-    if (dto.body.length > 0) {
+    if (dto.body !== undefined) {
       req.body = dto.body;
     }
 

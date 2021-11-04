@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { contentType } from 'mime-types';
 import path from 'node:path';
+import { BodyInit } from 'node-fetch';
 import { IApplication } from './IApplication';
 import Form from '../Model/Form/Form';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
@@ -47,7 +48,7 @@ export default abstract class AApplication implements IApplication {
       applicationInstall: ApplicationInstall,
       method: string,
       url?: string,
-      data?: string
+      data?: BodyInit
   ): RequestDto | Promise<RequestDto>;
 
   public getLogo(): string | null {

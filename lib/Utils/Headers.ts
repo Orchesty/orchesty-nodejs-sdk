@@ -36,6 +36,14 @@ const WHITE_LIST = ['content-type'];
 
 export type HttpHeaders = NodeJS.Dict<string | string[]>
 
+export enum CommonHeaders {
+  CONTENT_TYPE = 'Content-Type',
+  ACCEPT = 'Accept',
+  AUTHORIZATION = 'Authorization',
+}
+
+export const JSON_TYPE = 'application/json';
+
 function existPrefix(key: string): boolean {
   return key.startsWith(PREFIX);
 }

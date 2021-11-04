@@ -1,3 +1,4 @@
+import { BodyInit } from 'node-fetch';
 import AOAuth2Application from '../../lib/Authorization/Type/OAuth2/AOAuth2Application';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Form from '../../lib/Application/Model/Form/Form';
@@ -23,7 +24,7 @@ export default class TestOAuth2Application extends AOAuth2Application {
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
-    data?: string,
+    data?: BodyInit,
   ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data);
 
   public getSettingsForm = (): Form => {

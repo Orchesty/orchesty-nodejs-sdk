@@ -1,3 +1,4 @@
+import { BodyInit } from 'node-fetch';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
@@ -14,7 +15,7 @@ export interface IApplication extends IName {
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
-    data?: string,
+    data?: BodyInit,
   ): RequestDto | Promise<RequestDto>;
 
   getAuthorizationType(): AuthorizationTypeEnum;
