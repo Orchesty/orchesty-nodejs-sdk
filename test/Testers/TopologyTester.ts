@@ -95,7 +95,7 @@ export default class TopologyTester {
     return nodes;
   };
 
-  private _pushNodes(_srcList: Record<string, string>[], dstList: TestNode[]) {
+  private _pushNodes = (_srcList: Record<string, string>[], dstList: TestNode[]) => {
     let list = _srcList;
     if (!Array.isArray(list)) {
       list = [list];
@@ -106,7 +106,7 @@ export default class TopologyTester {
         new TestNode(event['@_id'], event['@_name'], event['@_pipesType']),
       );
     });
-  }
+  };
 
   private async _recursiveRunner(node: TestNode, dto: ProcessDto, prefix: string, _index = 0): Promise<ProcessDto[]> {
     // Get worker instance from container

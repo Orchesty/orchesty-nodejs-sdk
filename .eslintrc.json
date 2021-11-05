@@ -25,7 +25,7 @@
             "ignoreUrls": true,
             "ignoreComments": false
         }],
-        "class-methods-use-this": "off",
+        "class-methods-use-this": ["error", { "enforceForClassFields": false }],
         "lines-between-class-members": "off",
         "no-useless-constructor": "off",
         "@typescript-eslint/lines-between-class-members": ["error", "always"],
