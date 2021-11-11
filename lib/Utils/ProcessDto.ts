@@ -86,17 +86,17 @@ export default class ProcessDto {
     return value ? String(value) : defaultValue;
   }
 
-  setSuccessProcess(message?: string): void {
+  setSuccessProcess(message = 'Message has been processed successfully.'): void {
     this._setStatusHeader(ResultCode.SUCCESS, message);
   }
 
-  setStopProcess(status: ResultCode, message?: string): void {
+  setStopProcess(status: ResultCode, reason: string): void {
     ProcessDto._validateStatus(status);
 
-    this._setStatusHeader(status, message);
+    this._setStatusHeader(status, reason);
   }
 
-  setRepeater(interval: number, maxHops: number, message?: string): void {
+  setRepeater(interval: number, maxHops: number, reason: string): void {
     if (interval < 1) {
       throw new Error('Value interval is obligatory and can not be lower than 0');
     }
@@ -104,7 +104,7 @@ export default class ProcessDto {
       throw new Error('Value maxHops is obligatory and can not be lower than 0');
     }
 
-    this._setStatusHeader(ResultCode.REPEAT, (message ?? 'Repeater applied.').replace(/\n/g, ''));
+    this._setStatusHeader(ResultCode.REPEAT, reason);
 
     this.addHeader(REPEAT_INTERVAL, interval.toString());
     this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
@@ -149,9 +149,15 @@ export default class ProcessDto {
   setBatchCursor(cursor: string, iterateOnly = false): void {
     this.addHeader(BATCH_CURSOR, cursor);
     if (iterateOnly) {
-      this._setStatusHeader(ResultCode.BATCH_CURSOR_ONLY);
+      this._setStatusHeader(
+        ResultCode.BATCH_CURSOR_ONLY,
+        `Message will be used as a iterator with cursor [${cursor}]. No follower will be called.`,
+      );
     } else {
-      this._setStatusHeader(ResultCode.BATCH_CURSOR_WITH_FOLLOWERS);
+      this._setStatusHeader(
+        ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
+        `Message will be used as a iterator with cursor [${cursor}]. Data will be send to follower(s).`,
+      );
     }
   }
 
@@ -166,9 +172,13 @@ export default class ProcessDto {
   setForceFollowers(...followers: string[]): void {
     const workerFollowers: {name: string; id: string}[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
     const filtered = workerFollowers.filter((item) => followers.includes(item.name));
+    const targetQueues = filtered.map((item) => item.id).join(',');
 
-    this.addHeader(FORCE_TARGET_QUEUE, filtered.map((item) => item.id).join(','));
-    this._setStatusHeader(ResultCode.FORWARD_TO_TARGET_QUEUE);
+    this.addHeader(FORCE_TARGET_QUEUE, targetQueues);
+    this._setStatusHeader(
+      ResultCode.FORWARD_TO_TARGET_QUEUE,
+      `Message will be force re-routed to [${targetQueues}] follower(s).`,
+    );
   }
 
   removeForceFollowers(): void {

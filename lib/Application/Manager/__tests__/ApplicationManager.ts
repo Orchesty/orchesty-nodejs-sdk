@@ -120,8 +120,11 @@ describe('ApplicationManager tests', () => {
   });
 
   it('runSynchronousAction', () => {
-    expect(appManager.runSynchronousAction('test', 'testSyncMethod',
-      mockRequest()))
+    expect(appManager.runSynchronousAction(
+      'test',
+      'testSyncMethod',
+      mockRequest(),
+    ))
       .toEqual('{"param1":"p1","param2":"p2"}');
   });
 

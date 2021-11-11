@@ -60,15 +60,15 @@ describe('Test AConnector', () => {
   it('it shouldnt set dto stop process on dto', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 200, new Headers({}));
-    testConnector.evaluateStatusCode(response, dto);
+    testConnector.evaluateStatusCode(response, dto, 'error');
     expect(dto.headers).toEqual({});
   });
 
   it('it should set dto stop process on dto', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 205, new Headers({}));
-    testConnector.evaluateStatusCode(response, dto);
-    expect(dto.headers).toEqual({ 'pf-result-code': '1006' });
+    testConnector.evaluateStatusCode(response, dto, 'error');
+    expect(dto.headers).toEqual({ 'pf-result-code': '1006', 'pf-result-message': 'error' });
   });
 
   it('it should return applicationInstall', async () => {

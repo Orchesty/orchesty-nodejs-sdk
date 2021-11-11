@@ -1,7 +1,6 @@
 // Always sync this enum with following page:
 // https://hanaboso.atlassian.net/wiki/spaces/PIP/pages/105119850/Bridge-Worker+komunikace
 
-// eslint-disable-next-line no-shadow
 enum ResultCode {
   // OK
   SUCCESS = 0,
@@ -22,6 +21,17 @@ enum ResultCode {
   INVALID_HEADERS = 2002,
   INVALID_CONTENT = 2003,
 
+}
+
+export function isSuccessResultCode(code: number): boolean {
+  return [
+    ResultCode.SUCCESS,
+    ResultCode.REPEAT,
+    ResultCode.FORWARD_TO_TARGET_QUEUE,
+    ResultCode.DO_NOT_CONTINUE,
+    ResultCode.BATCH_CURSOR_ONLY,
+    ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
+  ].includes(code);
 }
 
 export default ResultCode;

@@ -5,7 +5,7 @@ import logger from '../Logger/Logger';
 import {
   createKey, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
 } from './Headers';
-import ResultCode from './ResultCode';
+import ResultCode, { isSuccessResultCode } from './ResultCode';
 import { appOptions } from '../Config/Config';
 
 interface IErrorResponse {
@@ -15,6 +15,20 @@ interface IErrorResponse {
 
 export function formatError(e: Error): IErrorResponse {
   return { result: 'error', message: e.message };
+}
+
+function logResponseProcess(res: Response, dto: ProcessDto) {
+  if (isSuccessResultCode(res.getHeader(createKey(RESULT_CODE)) as number ?? 0)) {
+    logger.info(
+      `Request successfully processed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
+      logger.ctxFromDto(dto),
+    );
+  } else {
+    logger.error(
+      `Request process failed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
+      logger.ctxFromDto(dto),
+    );
+  }
 }
 
 export function createErrorResponse(req: Request, res: Response, dto: ProcessDto, e?: Error): void {
@@ -63,7 +77,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     }
   }
 
-  logger.error(message, logger.ctxFromReq(req));
+  logResponseProcess(res, dto);
   res.json(responseBody);
 }
 
@@ -82,7 +96,7 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
     res.setHeader(createKey(RESULT_MESSAGE), 'Processed successfully.');
   }
 
-  logger.debug('Request successfully processed.', logger.ctxFromDto(dto));
+  logResponseProcess(res, dto);
   res.send(dto.data);
 }
 

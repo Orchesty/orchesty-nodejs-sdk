@@ -89,7 +89,7 @@ describe('Test application', () => {
     expect(appInstall.getSettings()).toEqual(expected);
   });
 
-  it('setApplicationSettingsAddPerson',async () => {
+  it('setApplicationSettingsAddPerson', async () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
     const expected = {

@@ -12,6 +12,7 @@ import { ICommonNode } from '../../Commons/ICommonNode';
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
+  info: () => jest.fn(),
   log: () => jest.fn(),
   ctxFromDto: () => jest.fn(),
   ctxFromReq: () => jest.fn(),

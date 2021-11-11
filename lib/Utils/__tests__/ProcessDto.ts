@@ -84,7 +84,7 @@ describe('Tests ProcessDto utils', () => {
     dto.setSuccessProcess();
 
     expect(dto.getHeader('result-code')).toEqual('0');
-    expect(dto.getHeader('result-message')).toBeUndefined();
+    expect(dto.getHeader('result-message')).toEqual('Message has been processed successfully.');
   });
 
   it('setStopProcess', () => {
@@ -117,19 +117,19 @@ describe('Tests ProcessDto utils', () => {
 
   it('setRepeater without optional attributes', () => {
     const dto = new ProcessDto();
-    dto.setRepeater(3, 30);
+    dto.setRepeater(3, 30, 'reason');
 
     expect(dto.getHeader('result-code')).toEqual('1001');
     expect(dto.getHeader('repeat-interval')).toEqual('3');
     expect(dto.getHeader('repeat-max-hops')).toEqual('30');
     expect(dto.getHeader('repeat-hops')).toBeUndefined();
-    expect(dto.getHeader('result-message')).toEqual('Repeater applied.');
+    expect(dto.getHeader('result-message')).toEqual('reason');
   });
 
   it('setRepeater with unsupported parameters', () => {
     const dto = new ProcessDto();
-    expect(() => dto.setRepeater(-1, 1)).toThrow(Error);
-    expect(() => dto.setRepeater(1, -1)).toThrow(Error);
+    expect(() => dto.setRepeater(-1, 1, 'reason')).toThrow(Error);
+    expect(() => dto.setRepeater(1, -1, 'reason')).toThrow(Error);
   });
 
   it('setLimiter and removeLimiter', () => {
