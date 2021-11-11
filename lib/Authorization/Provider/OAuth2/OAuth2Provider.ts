@@ -18,13 +18,18 @@ export interface IToken {
 }
 
 export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
-  public authorize(dto: OAuth2Dto, scopes: string[], separator: string = ScopeSeparatorEnum.COMMA): string {
+  public authorize(
+    dto: OAuth2Dto,
+    scopes: string[],
+    separator: string = ScopeSeparatorEnum.COMMA,
+    customConfig = {},
+  ): string {
     let state = '';
     if (dto.isCustomApp()) {
       state = OAuth2Provider.stateEncode(dto);
     }
 
-    const client = this._createClient(dto);
+    const client = this._createClient(dto, customConfig);
     const authUrl = client.authorizeURL({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uri: dto.isRedirectUrl() ? dto.getRedirectUrl() : this.getRedirectUri(),
@@ -34,24 +39,24 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     return `${authUrl}&access_type=offline`;
   }
 
-  public async getAccessToken(dto: IOAuth2Dto, code: string): Promise<IToken> {
+  public async getAccessToken(dto: IOAuth2Dto, code: string, customConfig = {}): Promise<IToken> {
     const tokenParams = {
       code,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uri: dto.isRedirectUrl() ? dto.getRedirectUrl() : this.getRedirectUri(),
     };
 
-    const client = this._createClient(dto);
+    const client = this._createClient(dto, customConfig);
 
     const accessToken = await client.getToken(tokenParams);
     return OAuth2Provider._convertAccessToken(accessToken);
   }
 
-  public refreshAccessToken = async (dto: OAuth2Dto, token: IToken): Promise<IToken> => {
+  public refreshAccessToken = async (dto: OAuth2Dto, token: IToken, customConfig = {}): Promise<IToken> => {
     if (Object.prototype.hasOwnProperty.call(token, REFRESH_TOKEN)) {
       OAuth2Provider.throwException('Refresh token not found! Refresh is not possible.', 205);
     }
-    const client = this._createClient(dto);
+    const client = this._createClient(dto, customConfig);
     const accessToken = client.createToken({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       access_token: token[ACCESS_TOKEN],
@@ -82,7 +87,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     };
   }
 
-  private _createClient = (dto: IOAuth2Dto): AuthorizationCode => {
+  private _createClient = (dto: IOAuth2Dto, customConfig = {}): AuthorizationCode => {
     const tokenUrl = new URL(dto.getTokenUrl());
     const authUrl = new URL(dto.getAuthorizationUrl());
     const config = {
@@ -96,6 +101,6 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
         authorizePath: authUrl.pathname,
       },
     };
-    return new AuthorizationCode(config);
+    return new AuthorizationCode({ ...config, ...customConfig });
   };
 }

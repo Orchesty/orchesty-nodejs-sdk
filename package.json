@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -51,7 +51,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "autocannon": "^7.4.0",
     "eslint": "^8.0.0",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.2",
     "faker": "^5.5.3",

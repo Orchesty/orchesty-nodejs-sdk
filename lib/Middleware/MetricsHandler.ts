@@ -19,7 +19,8 @@ function afterResponse(
   sender.sendProcessMetrics(
     times,
     getCorrelationId(req.headers),
-    getNodeId(req.headers), getCorrelationId(req.headers),
+    getNodeId(req.headers),
+    getCorrelationId(req.headers),
   ).catch((e) => (logger.error(e?.message ?? e)));
 
   // eslint-disable-next-line max-len
