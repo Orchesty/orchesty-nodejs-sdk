@@ -41,7 +41,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public isAuthorized = (
     applicationInstall: ApplicationInstall,
-  ): boolean => !!applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN];
+  ): boolean => !!applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[TOKEN]?.[ACCESS_TOKEN];
 
   public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
     const formFields = super.getApplicationForm(applicationInstall);
@@ -60,7 +60,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public getFrontendRedirectUrl = (
     applicationInstall: ApplicationInstall,
-  ): string => applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][FRONTEND_REDIRECT_URL];
+  ): string => applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[FRONTEND_REDIRECT_URL];
 
   public async refreshAuthorization(applicationInstall: ApplicationInstall): Promise<ApplicationInstall> {
     const token = await this._provider.refreshAccessToken(
@@ -142,7 +142,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public getTokens = (
     applicationInstall: ApplicationInstall,
-  ): IToken => applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN];
+  ): IToken => applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[TOKEN];
 
   protected _getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA;
 
