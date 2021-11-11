@@ -15,8 +15,8 @@ export default class OAuth2Dto implements IOAuth2Dto {
   private _applicationName = '';
 
   constructor(authorization: ApplicationInstall, private _authorizeUrl: string, private _tokenUrl: string) {
-    this._clientId = authorization.getSettings()[AUTHORIZATION_SETTINGS][CLIENT_ID] ?? '';
-    this._clientSecret = authorization.getSettings()[AUTHORIZATION_SETTINGS][CLIENT_SECRET] ?? '';
+    this._clientId = authorization.getSettings()?.[AUTHORIZATION_SETTINGS]?.[CLIENT_ID] ?? '';
+    this._clientSecret = authorization.getSettings()?.[AUTHORIZATION_SETTINGS]?.[CLIENT_SECRET] ?? '';
   }
 
   public getApplicationKey(): string {
