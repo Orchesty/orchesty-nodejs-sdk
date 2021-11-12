@@ -19,7 +19,7 @@ export const CREDENTIALS = [
 ];
 
 export default abstract class AOAuth2Application extends AApplication implements IOAuth2Application {
-  constructor(private _provider: OAuth2Provider) {
+  constructor(protected _provider: OAuth2Provider) {
     super();
   }
 
@@ -146,7 +146,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   protected _getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA;
 
-  private _createAuthSettings = (applicationInstall: ApplicationInstall): ApplicationInstall => {
+  protected _createAuthSettings = (applicationInstall: ApplicationInstall): ApplicationInstall => {
     if (!Object.prototype.hasOwnProperty.call(applicationInstall.getSettings(), AUTHORIZATION_SETTINGS)) {
       applicationInstall.addSettings({ [AUTHORIZATION_SETTINGS]: {} });
       return applicationInstall;
