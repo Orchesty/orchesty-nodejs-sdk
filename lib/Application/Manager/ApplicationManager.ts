@@ -37,7 +37,7 @@ export default class ApplicationManager {
   public runSynchronousAction(key: string, method: string, request: Request): unknown {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const app = this.getApplication(key) as any;
-    const syncMethod = `sync${method[0].toUpperCase()}${method.substr(1)}`;
+    const syncMethod = `sync${method[0].toUpperCase()}${method.substring(1)}`;
     if (typeof app[syncMethod] === 'function') {
       if (request.method === HttpMethods.GET) {
         return app[syncMethod]();

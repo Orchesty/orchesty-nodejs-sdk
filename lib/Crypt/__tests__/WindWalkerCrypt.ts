@@ -30,7 +30,7 @@ describe('Crypt tests', () => {
   it('Invalid HMAC', () => {
     try {
       let encrypted = crypt.encrypt(expected);
-      encrypted = encrypted.substr(crypt.getPrefixLength() + 2);
+      encrypted = encrypted.substring(crypt.getPrefixLength() + 2);
 
       crypt.decrypt(`${crypt.getPrefix()}${encrypted}`);
       expect(false).toBeTruthy();

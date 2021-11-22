@@ -29,7 +29,7 @@ export default class Annotation {
     const formattedInput: string[] = [];
     input.forEach((method) => {
       if (method.length > 4) {
-        formattedInput.push(method.substr(4).charAt(0).toLowerCase() + method.slice(5));
+        formattedInput.push(method.substring(4).charAt(0).toLowerCase() + method.slice(5));
       }
     });
     return formattedInput;

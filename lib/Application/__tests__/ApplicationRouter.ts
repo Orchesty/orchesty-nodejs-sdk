@@ -68,7 +68,7 @@ describe('Test ApplicationRouter', () => {
         getToken: () => ({
           token: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            access_token: '', token_type: '', refresh_token: '', expires_at: '',
+            ok: true, access_token: '', token_type: '', refresh_token: '', expires_at: '',
           },
         }),
         authorizeURL: () => authorizationURL,

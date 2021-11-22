@@ -21,7 +21,7 @@ export default class CryptManager {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public decrypt(data: string): any {
-    const prefix = data.substr(0, PREFIX_LENGTH);
+    const prefix = data.substring(0, PREFIX_LENGTH);
 
     return this._getImplementation(prefix).decrypt(data);
   }

@@ -72,7 +72,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
     let ivFromData;
     let encrypted;
 
-    const rawData = data.substr(this.getPrefix().length);
+    const rawData = data.substring(this.getPrefix().length);
     [hmac, pbkdf2Salt, ivFromData, encrypted] = rawData.split(':');
 
     hmac = Buffer.from(hmac, BASE64);
@@ -138,7 +138,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
 
   private static _repeatToLength(key: string, length: number) {
     let newKey = key.repeat(Math.ceil(length / key.length));
-    newKey = newKey.substr(0, length);
+    newKey = newKey.substring(0, length);
 
     return newKey;
   }

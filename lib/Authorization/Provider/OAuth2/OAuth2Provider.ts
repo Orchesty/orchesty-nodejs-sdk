@@ -79,6 +79,10 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
   }
 
   private static _convertAccessToken(accessToken: AccessToken): IToken {
+    if (!accessToken?.token?.ok) {
+      throw new Error(`Token is not received or is not valid. Reason: [${accessToken?.token?.error}]`);
+    }
+
     return {
       [ACCESS_TOKEN]: accessToken.token.access_token ?? '',
       tokenType: accessToken.token.token_type ?? '',
@@ -98,6 +102,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
       auth: {
         tokenHost: tokenUrl.origin,
         tokenPath: tokenUrl.pathname,
+        authorizeHost: authUrl.origin,
         authorizePath: authUrl.pathname,
       },
     };
