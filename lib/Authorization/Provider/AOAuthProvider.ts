@@ -7,8 +7,8 @@ export default abstract class AOAuthProvider implements IOAuthProvider {
   }
 
   public getRedirectUri(): string {
-    const backendUrl = this._backend.replace(RegExp('/+$', 'g'), '');
-    const generatedUrl = Application.generateUrl().replace(RegExp('^/+', 'g'), '');
+    const backendUrl = this._backend.replace(/\/+$/g, '');
+    const generatedUrl = Application.generateUrl().replace(/^\/+/g, '');
 
     return `${backendUrl}/${generatedUrl}`;
   }
