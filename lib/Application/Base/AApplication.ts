@@ -29,26 +29,26 @@ export interface IApplicationArray {
 export default abstract class AApplication implements IApplication {
   protected _logoFilename = 'logo.svg';
 
-  public abstract getAuthorizationType(): AuthorizationTypeEnum;
+  public abstract getAuthorizationType (): AuthorizationTypeEnum;
 
-  public abstract getPublicName(): string;
+  public abstract getPublicName (): string;
 
-  public abstract getName(): string;
+  public abstract getName (): string;
 
-  public abstract getDescription(): string;
+  public abstract getDescription (): string;
 
-  public abstract getSettingsForm(): Form;
+  public abstract getSettingsForm (): Form;
 
   public getApplicationType = (): ApplicationTypeEnum => ApplicationTypeEnum.CRON;
 
   public abstract isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-  public abstract getRequestDto(
+  public abstract getRequestDto (
     dto: ProcessDto,
-      applicationInstall: ApplicationInstall,
-      method: string,
-      url?: string,
-      data?: BodyInit
+    applicationInstall: ApplicationInstall,
+    method: string,
+    url?: string,
+    data?: BodyInit
   ): RequestDto | Promise<RequestDto>;
 
   public getLogo(): string | null {
@@ -76,6 +76,8 @@ export default abstract class AApplication implements IApplication {
         }
       }
     });
+
+    this._customFormReplace(form, applicationInstall);
 
     return form.toArray();
   }
@@ -110,5 +112,9 @@ export default abstract class AApplication implements IApplication {
       description: this.getDescription(),
       logo: this.getLogo(),
     };
+  }
+
+  // eslint-disable-next-line
+  protected _customFormReplace(form: Form, applicationInstall: ApplicationInstall): void {
   }
 }

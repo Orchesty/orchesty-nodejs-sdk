@@ -1,14 +1,14 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.1.19",
+  "version": "1.1.20",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
     "bench": "autocannon -c 200 -d 20 -m POST localhost:8080/connector/test/action",
     "one-test": "jest --forceExit --testNamePattern",
     "test": "jest --coverage --detectOpenHandles --forceExit",
-    "lint": "eslint lib/**/*.ts --fix && eslint test/**/*.ts --fix",
-    "lint-ci": "eslint lib/**/*.ts && eslint test/**/*.ts",
+    "lint": "eslint lib test --ext .ts --fix",
+    "lint-ci": "eslint lib test --ext .ts",
     "start": "nodemon test/index.ts",
     "build": "rm -rf dist && tsc -d -p tsconfig.prod.json"
   },
