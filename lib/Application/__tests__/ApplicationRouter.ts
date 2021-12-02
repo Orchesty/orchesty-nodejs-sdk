@@ -14,13 +14,6 @@ import DIContainer from '../../DIContainer/Container';
 import { IApplication } from '../Base/IApplication';
 import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
 
-let container: DIContainer;
-let dbClient: MongoDbClient;
-let appInstall: ApplicationInstall;
-let name: string;
-let user: string;
-let authorizationURL: string;
-
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
@@ -35,6 +28,12 @@ describe('Test ApplicationRouter', () => {
   let application: IApplication;
   let oAuthApplication: IApplication;
   let provider: OAuth2Provider;
+  let container: DIContainer;
+  let dbClient: MongoDbClient;
+  let appInstall: ApplicationInstall;
+  let name: string;
+  let user: string;
+  let authorizationURL: string;
 
   beforeAll(async () => {
     container = await getTestContainer();
