@@ -79,7 +79,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
   }
 
   private static _convertAccessToken(accessToken: AccessToken): IToken {
-    if (!accessToken?.token?.ok) {
+    if (!accessToken?.token?.access_token) {
       throw new Error(`Token is not received or is not valid. Reason: [${accessToken?.token?.error}]`);
     }
 
