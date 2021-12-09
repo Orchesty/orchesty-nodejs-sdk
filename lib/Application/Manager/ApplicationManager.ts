@@ -11,6 +11,8 @@ import ApplicationInstallRepository from '../Database/ApplicationInstallReposito
 import ApplicationLoader from '../ApplicationLoader';
 import AApplication, { IApplicationArray } from '../Base/AApplication';
 import { IFieldArray } from '../Model/Form/Field';
+import { isWebhook } from '../Base/ApplicationTypeEnum';
+import WebhookManager from './WebhookManager';
 
 const AUTHORIZED = 'authorized';
 const APPLICATION_SETTINGS = 'applicationSettings';
@@ -18,7 +20,11 @@ const APPLICATION_SETTINGS = 'applicationSettings';
 export default class ApplicationManager {
   private _repository: ApplicationInstallRepository<ApplicationInstall> | undefined;
 
-  constructor(private _client: MongoDbClient, private _loader: ApplicationLoader) {
+  constructor(
+    private _client: MongoDbClient,
+    private _loader: ApplicationLoader,
+    private _webhookManager: WebhookManager,
+  ) {
   }
 
   public getApplications(): IApplicationArray[] {
@@ -135,7 +141,9 @@ export default class ApplicationManager {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
       [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
-      webhookSettings: [], // TODO add this later
+      webhookSettings: isWebhook(app.getApplicationType())
+        ? await this._webhookManager.getWebhooks(app, user)
+        : [],
     };
   }
 

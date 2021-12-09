@@ -11,10 +11,13 @@ import DIContainer from '../../../DIContainer/Container';
 import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationLoader from '../../ApplicationLoader';
+import WebhookManager from '../WebhookManager';
+import CurlSender from '../../../Transport/Curl/CurlSender';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
+let curl: CurlSender;
 let appInstall: ApplicationInstall;
 let appInstallOAuth: ApplicationInstall;
 
@@ -43,6 +46,7 @@ describe('ApplicationManager tests', () => {
   beforeAll(async () => {
     container = await getTestContainer();
     dbClient = container.get(CoreServices.MONGO);
+    curl = container.get(CoreServices.CURL);
     const db = await dbClient.db();
     try {
       await db.dropCollection(ApplicationInstall.getCollection());
@@ -158,7 +162,8 @@ describe('ApplicationManager tests', () => {
     mockedContainer.setApplication(testApp);
 
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
+    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
+    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
 
     const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
     expect(dbInstall)
@@ -174,7 +179,8 @@ describe('ApplicationManager tests', () => {
     mockedContainer.setApplication(testApp);
 
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader);
+    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
+    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
     const frontendUrl = await mockedAppManager.saveAuthorizationToken(
       'oauth2application',
       'user',

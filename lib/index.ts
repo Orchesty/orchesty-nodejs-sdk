@@ -28,6 +28,8 @@ import TopologyRunner from './Topology/TopologyRunner';
 import ApplicationLoader from './Application/ApplicationLoader';
 import ApplicationInstallRepository from './Application/Database/ApplicationInstallRepository';
 import { ApplicationInstall } from './Application/Database/ApplicationInstall';
+import { WebhookRouter } from './Application/WebhookRouter';
+import WebhookManager from './Application/Manager/WebhookManager';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
@@ -45,7 +47,6 @@ export async function initiateContainer(): Promise<void> {
   const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager, container);
   const loader = new CommonLoader(container);
   const appLoader = new ApplicationLoader(container);
-  const appManager = new ApplicationManager(mongoDbClient, appLoader);
   const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
   const metricsLoader = new MetricsSenderLoader(
     metricsOptions.metricsService,
@@ -56,12 +57,16 @@ export async function initiateContainer(): Promise<void> {
   const curlSender = new CurlSender(metrics);
   const topologyRunner = new TopologyRunner(curlSender);
 
+  const webhookManager = new WebhookManager(appLoader, curlSender, mongoDbClient);
+  const appManager = new ApplicationManager(mongoDbClient, appLoader, webhookManager);
+
   // Add them to the DIContainer
   container.set(CoreServices.CRYPT_MANAGER, cryptManager);
   container.set(CoreServices.MONGO, mongoDbClient);
   container.set(CoreServices.LOADER, loader);
   container.set(CoreServices.APP_LOADER, appLoader);
   container.set(CoreServices.APP_MANAGER, appManager);
+  container.set(CoreServices.WEBHOOK_MANAGER, webhookManager);
   container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
   container.set(CoreServices.CURL, curlSender);
   container.set(CoreServices.METRICS, metrics);
@@ -77,10 +82,11 @@ export async function initiateContainer(): Promise<void> {
   container.setRepository(applicationInstallRepo);
 
   // Configure routes
-  routes.push(new ConnectorRouter(expressApp, loader));
-  routes.push(new CustomNodeRouter(expressApp, loader));
   routes.push(new ApplicationRouter(expressApp, appManager));
   routes.push(new BatchRouter(expressApp, loader));
+  routes.push(new ConnectorRouter(expressApp, loader));
+  routes.push(new CustomNodeRouter(expressApp, loader));
+  routes.push(new WebhookRouter(expressApp, webhookManager));
 }
 
 export function listen(): void {

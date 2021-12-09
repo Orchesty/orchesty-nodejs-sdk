@@ -6,6 +6,7 @@ import { IApplicationArray } from './AApplication';
 import HttpMethods from '../../Transport/HttpMethods';
 import { IName } from '../../Commons/IName';
 import ProcessDto from '../../Utils/ProcessDto';
+import ApplicationTypeEnum from './ApplicationTypeEnum';
 
 export interface IApplication extends IName {
 
@@ -19,6 +20,8 @@ export interface IApplication extends IName {
   ): RequestDto | Promise<RequestDto>;
 
   getAuthorizationType(): AuthorizationTypeEnum;
+
+  getApplicationType(): ApplicationTypeEnum;
 
   setApplicationSettings(
     applicationInstall: ApplicationInstall,
