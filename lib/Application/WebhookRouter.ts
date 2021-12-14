@@ -9,13 +9,13 @@ export class WebhookRouter extends ACommonRouter {
   }
 
   configureRoutes(): express.Application {
-    this._app.route('/webhook/applications/:name/users/:user/subscribe').get(async (req, res) => {
+    this._app.route('/webhook/applications/:name/users/:user/subscribe').post(async (req, res) => {
       await this._manager.subscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
 
       res.json([]);
     });
 
-    this._app.route('/webhook/applications/:name/users/:user/unsubscribe').get(async (req, res) => {
+    this._app.route('/webhook/applications/:name/users/:user/unsubscribe').post(async (req, res) => {
       await this._manager.unsubscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
 
       res.json([]);

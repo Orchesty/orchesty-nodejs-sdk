@@ -55,6 +55,8 @@
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
     "faker": "^5.5.3",
+    "fetch-mock": "^9.11.0",
+    "fetch-mock-jest": "^1.5.1",
     "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "supertest": "^6.1.6",
