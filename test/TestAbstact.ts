@@ -1,4 +1,7 @@
 import { Application } from 'express';
+import { FetchMockStatic } from 'fetch-mock';
+import fetchMock from 'fetch-mock-jest';
+import mf from 'node-fetch';
 import DIContainer from '../lib/DIContainer/Container';
 import TestConnector from './Connector/TestConnector';
 import TestBasicApplication from './Application/TestBasicApplication';
@@ -10,6 +13,9 @@ import {
 import TestBatch from './Batch/TestBatch';
 import CommonLoader from '../lib/Commons/CommonLoader';
 import TestCustomNode from './CustomNode/TestCustomNode';
+import TestWebhookApplication from './Application/TestWebhookApplication';
+
+jest.mock('node-fetch', () => fetchMock.sandbox());
 
 export const expressApp = e;
 export const container = c;
@@ -23,6 +29,7 @@ export async function getTestContainer(): Promise<DIContainer> {
   const testConnector = (new TestConnector()).setSender(container.get(CoreServices.CURL));
   const appBasic = new TestBasicApplication();
   const appOAuth = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
+  const appWebhook = new TestWebhookApplication();
   const batch = new TestBatch();
   const custom = new TestCustomNode();
 
@@ -30,6 +37,7 @@ export async function getTestContainer(): Promise<DIContainer> {
   container.setConnector(testConnector);
   container.setApplication(appBasic);
   container.setApplication(appOAuth);
+  container.setApplication(appWebhook);
   container.setBatch(batch);
   container.setCustomNode(custom);
 
@@ -66,3 +74,5 @@ export function mockRouter(): {
     postFn, getFn, routeFn, express, loader,
   };
 }
+
+export const mockedFetch: FetchMockStatic = mf as unknown as FetchMockStatic;

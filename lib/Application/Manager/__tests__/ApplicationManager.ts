@@ -110,6 +110,16 @@ describe('ApplicationManager tests', () => {
           name: 'Test OAuth2 Application',
           logo: null,
         },
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          application_type: 'webhook',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          authorization_type: 'basic',
+          description: 'Test webhook description',
+          key: 'webhookName',
+          name: 'Test webhook application',
+          logo: null,
+        },
       ]);
   });
 
