@@ -16,6 +16,17 @@ let webhookManager: WebhookManager;
 let appInstall: ApplicationInstall;
 let dbClient: MongoDbClient;
 
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  log: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
+  ctxFromReq: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 describe('Tests for webhookManager', () => {
   beforeAll(async () => {
     container = await getTestContainer();

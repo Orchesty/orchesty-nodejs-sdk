@@ -20,6 +20,17 @@ let db: Db;
 let name: string;
 let user: string;
 
+// Mock Logger module
+jest.mock('../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  log: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
+  ctxFromReq: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 describe('tests for WebhookRouter', () => {
   beforeAll(async () => {
     container = await getTestContainer();

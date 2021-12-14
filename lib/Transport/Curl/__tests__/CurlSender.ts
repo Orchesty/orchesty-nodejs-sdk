@@ -10,6 +10,15 @@ import MongoDbClient from '../../../Storage/Mongodb/Client';
 let container: DIContainer;
 let curlSender: CurlSender;
 
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  log: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 describe('tests for curlSender', () => {
   beforeAll(async () => {
     container = await getTestContainer();
