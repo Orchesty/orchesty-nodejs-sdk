@@ -14,6 +14,7 @@ import TestBatch from './Batch/TestBatch';
 import CommonLoader from '../lib/Commons/CommonLoader';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestWebhookApplication from './Application/TestWebhookApplication';
+import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
 
 jest.mock('node-fetch', () => fetchMock.sandbox());
 
@@ -32,6 +33,7 @@ export async function getTestContainer(): Promise<DIContainer> {
   const appWebhook = new TestWebhookApplication();
   const batch = new TestBatch();
   const custom = new TestCustomNode();
+  const onRepeatExceptionCustom = new TestOnRepeatExceptionNode();
 
   // Add them to the DIContainer
   container.setConnector(testConnector);
@@ -40,6 +42,7 @@ export async function getTestContainer(): Promise<DIContainer> {
   container.setApplication(appWebhook);
   container.setBatch(batch);
   container.setCustomNode(custom);
+  container.setCustomNode(onRepeatExceptionCustom);
 
   return container;
 }
