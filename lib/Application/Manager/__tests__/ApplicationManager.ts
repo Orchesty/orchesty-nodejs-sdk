@@ -13,6 +13,9 @@ import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth
 import ApplicationLoader from '../../ApplicationLoader';
 import WebhookManager from '../WebhookManager';
 import CurlSender from '../../../Transport/Curl/CurlSender';
+import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
+import Webhook from '../../Database/Webhook';
+import WebhookRepository from '../../Database/WebhookRepository';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
@@ -171,9 +174,12 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
+    const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
+    const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
+
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
+    const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
+    const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
 
     const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
     expect(dbInstall)
@@ -188,9 +194,12 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
+    const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
+    const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
+
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
+    const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
+    const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
     const frontendUrl = await mockedAppManager.saveAuthorizationToken(
       'oauth2application',
       'user',

@@ -10,12 +10,13 @@ export default class ApplicationLoader extends CommonLoader {
   };
 
   public getListApplications(): IApplicationArray[] {
-    const list: IApplicationArray[] = [];
+    let list: IApplicationArray[] = [];
     this._container.getAllByPrefix(APPLICATION_PREFIX)
       .forEach((obj: IApplication) => {
         list.push(obj.toArray());
       });
 
+    list = list.sort();
     return list;
   }
 }

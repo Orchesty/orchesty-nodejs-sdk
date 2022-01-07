@@ -30,6 +30,10 @@ import ApplicationInstallRepository from './Application/Database/ApplicationInst
 import { ApplicationInstall } from './Application/Database/ApplicationInstall';
 import { WebhookRouter } from './Application/WebhookRouter';
 import WebhookManager from './Application/Manager/WebhookManager';
+import WebhookRepository from './Application/Database/WebhookRepository';
+import Webhook from './Application/Database/Webhook';
+import NodeRepository from './Storage/Mongodb/Document/NodeRepository';
+import Node from './Storage/Mongodb/Document/Node';
 
 export const routes: ACommonRouter[] = [];
 const container = new DIContainer();
@@ -57,8 +61,19 @@ export async function initiateContainer(): Promise<void> {
   const curlSender = new CurlSender(metrics);
   const topologyRunner = new TopologyRunner(curlSender);
 
-  const webhookManager = new WebhookManager(appLoader, curlSender, mongoDbClient);
-  const appManager = new ApplicationManager(mongoDbClient, appLoader, webhookManager);
+  await mongoDbClient.reconnect();
+  const applicationInstallRepo = new ApplicationInstallRepository(
+    ApplicationInstall,
+    mongoDbClient.client,
+    ApplicationInstall.getCollection(),
+    cryptManager,
+  );
+
+  const webhookRepository = new WebhookRepository(Webhook, mongoDbClient.client, Webhook.getCollection(), cryptManager);
+  const nodeRepository = new NodeRepository(Node, mongoDbClient.client, Node.getCollection(), cryptManager);
+
+  const webhookManager = new WebhookManager(appLoader, curlSender, webhookRepository, applicationInstallRepo);
+  const appManager = new ApplicationManager(applicationInstallRepo, appLoader, webhookManager);
 
   // Add them to the DIContainer
   container.set(CoreServices.CRYPT_MANAGER, cryptManager);
@@ -72,14 +87,9 @@ export async function initiateContainer(): Promise<void> {
   container.set(CoreServices.METRICS, metrics);
   container.set(CoreServices.TOPOLOGY_RUNNER, topologyRunner);
 
-  await mongoDbClient.reconnect();
-  const applicationInstallRepo = new ApplicationInstallRepository(
-    ApplicationInstall,
-    mongoDbClient.client,
-    ApplicationInstall.getCollection(),
-    cryptManager,
-  );
   container.setRepository(applicationInstallRepo);
+  container.setRepository(webhookRepository);
+  container.setRepository(nodeRepository);
 
   // Configure routes
   routes.push(new ApplicationRouter(expressApp, appManager));
@@ -91,7 +101,7 @@ export async function initiateContainer(): Promise<void> {
 
 export function listen(): void {
   expressApp.disable('x-powered-by');
-  expressApp.use(errorHandler);
+  expressApp.use(errorHandler(container.getRepository(Node)));
   expressApp.listen(appOptions.port, () => {
     logger.info(`⚡️[server]: Server is running at http://localhost:${appOptions.port}`);
     routes.forEach((router) => {

@@ -5,7 +5,6 @@ import { pipesOptions } from '../../Config/Config';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import Webhook from '../Database/Webhook';
 import WebhookRepository from '../Database/WebhookRepository';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
@@ -27,11 +26,12 @@ interface IWebhookForm {
 const LENGTH = 25;
 
 export default class WebhookManager {
-  private _webhookRepository: WebhookRepository<Webhook> | undefined;
-
-  private _appRepository: ApplicationInstallRepository<ApplicationInstall> | undefined;
-
-  constructor(private _loader: ApplicationLoader, private _curl: CurlSender, private _client: MongoDbClient) {
+  constructor(
+      private _loader: ApplicationLoader,
+      private _curl: CurlSender,
+      private _webhookRepository: WebhookRepository<Webhook>,
+      private _appRepository: ApplicationInstallRepository<ApplicationInstall>,
+  ) {
   }
 
   public async getWebhooks(app: AApplication, user: string): Promise<IWebhookForm[]> {
@@ -100,7 +100,7 @@ export default class WebhookManager {
             .setWebhookId(webhookId)
             .setToken(token);
 
-          await (await this._getWebhookRepository()).upsert(webhook);
+          await this._webhookRepository.upsert(webhook);
         }),
     );
   }
@@ -124,19 +124,18 @@ export default class WebhookManager {
 
         const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook.getWebhookId());
         const resp = app.processWebhookUnsubscribeResponse(await this._curl.send(request));
-        const repo = await this._getWebhookRepository();
         if (resp) {
-          await repo.remove(webhook);
+          await this._webhookRepository.remove(webhook);
         } else {
           webhook.setUnsubscribeFailed(true);
-          await repo.update(webhook);
+          await this._webhookRepository.update(webhook);
         }
       }),
     );
   }
 
   private async _getAllWebhooks(application: string, user: string): Promise<Webhook[]> {
-    return (await this._getWebhookRepository()).findMany({ application, user });
+    return this._webhookRepository.findMany({ application, user });
   }
 
   private _getApplication(key: string): IWebhookApplication {
@@ -144,28 +143,12 @@ export default class WebhookManager {
   }
 
   private async _loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-    const appInstall = await (await this._getAppRepository()).findByNameAndUser(name, user);
+    const appInstall = await this._appRepository.findByNameAndUser(name, user);
     if (appInstall === null) {
       throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not found!`);
     }
 
     return appInstall;
-  }
-
-  private async _getWebhookRepository(): Promise<WebhookRepository<Webhook>> {
-    if (!this._webhookRepository) {
-      this._webhookRepository = await this._client.getRepository(Webhook);
-    }
-
-    return this._webhookRepository;
-  }
-
-  private async _getAppRepository(): Promise<ApplicationInstallRepository<ApplicationInstall>> {
-    if (!this._appRepository) {
-      this._appRepository = await this._client.getApplicationRepository();
-    }
-
-    return this._appRepository;
   }
 
   private _validateBody = (data: IWebhookBody): void => {

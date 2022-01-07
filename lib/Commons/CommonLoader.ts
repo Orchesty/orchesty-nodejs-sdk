@@ -10,11 +10,12 @@ export default class CommonLoader {
   }
 
   public getList(prefix: string): string[] {
-    const list: string[] = [];
+    let list: string[] = [];
     this._container.getAllByPrefix(prefix).forEach((obj: IName) => {
       list.push(obj.getName());
     });
 
+    list = list.sort();
     return list;
   }
 }
