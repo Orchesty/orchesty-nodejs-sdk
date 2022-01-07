@@ -15,8 +15,17 @@ export default class ApplicationLoader extends CommonLoader {
       .forEach((obj: IApplication) => {
         list.push(obj.toArray());
       });
-
-    list = list.sort();
+    list = list.sort(this._compare);
     return list;
   }
+
+  private _compare = (a: IApplicationArray, b: IApplicationArray): number => {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  };
 }
