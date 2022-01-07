@@ -13,6 +13,9 @@ import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth
 import ApplicationLoader from '../../ApplicationLoader';
 import WebhookManager from '../WebhookManager';
 import CurlSender from '../../../Transport/Curl/CurlSender';
+import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
+import Webhook from '../../Database/Webhook';
+import WebhookRepository from '../../Database/WebhookRepository';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
@@ -94,21 +97,21 @@ describe('ApplicationManager tests', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           application_type: 'cron',
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          authorization_type: 'basic',
-          description: 'Test description',
-          key: 'test',
-          name: 'Test application',
+          authorization_type: 'oauth2',
+          description: 'Test OAuth2 application',
+          key: 'oauth2application',
           logo: null,
+          name: 'Test OAuth2 Application',
         },
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           application_type: 'cron',
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          authorization_type: 'oauth2',
-          description: 'Test OAuth2 application',
-          key: 'oauth2application',
-          name: 'Test OAuth2 Application',
+          authorization_type: 'basic',
+          description: 'Test description',
+          key: 'test',
           logo: null,
+          name: 'Test application',
         },
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -117,8 +120,8 @@ describe('ApplicationManager tests', () => {
           authorization_type: 'basic',
           description: 'Test webhook description',
           key: 'webhookName',
-          name: 'Test webhook application',
           logo: null,
+          name: 'Test webhook application',
         },
       ]);
   });
@@ -171,9 +174,12 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
+    const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
+    const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
+
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
+    const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
+    const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
 
     const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
     expect(dbInstall)
@@ -188,9 +194,12 @@ describe('ApplicationManager tests', () => {
     const mockedContainer = new DIContainer();
     mockedContainer.setApplication(testApp);
 
+    const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
+    const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
+
     const mockedLoader = new ApplicationLoader(mockedContainer);
-    const webhookManager = new WebhookManager(mockedLoader, curl, dbClient);
-    const mockedAppManager = new ApplicationManager(dbClient, mockedLoader, webhookManager);
+    const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
+    const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
     const frontendUrl = await mockedAppManager.saveAuthorizationToken(
       'oauth2application',
       'user',
