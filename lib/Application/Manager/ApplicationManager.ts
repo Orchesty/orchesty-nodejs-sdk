@@ -8,10 +8,11 @@ import { IBasicApplication } from '../../Authorization/Type/Basic/IBasicApplicat
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
 import ApplicationLoader from '../ApplicationLoader';
-import AApplication, { IApplicationArray } from '../Base/AApplication';
+import AApplication, { FORM, IApplicationArray } from '../Base/AApplication';
 import { IFieldArray } from '../Model/Form/Field';
 import { isWebhook } from '../Base/ApplicationTypeEnum';
 import WebhookManager from './WebhookManager';
+import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
 
 const AUTHORIZED = 'authorized';
 const APPLICATION_SETTINGS = 'applicationSettings';
@@ -75,10 +76,23 @@ export default class ApplicationManager {
     const app = this.getApplication(name) as IBasicApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
+    let settings = appInstall.getSettings();
+    if (settings[FORM] && settings[FORM][PASSWORD]) {
+      settings[FORM][PASSWORD] = password;
+    } else if (settings[FORM]) {
+      settings[FORM] = { ...settings[FORM], [PASSWORD]: password };
+    } else {
+      settings = { ...settings, [FORM]: { [PASSWORD]: password } };
+    }
+
+    appInstall.addSettings(settings);
     const res = app.setApplicationPassword(appInstall, password).toArray();
     await this._repository.update(appInstall);
 
-    return res;
+    return {
+      ...res,
+      [APPLICATION_SETTINGS]: (app as unknown as AApplication).getApplicationForm(appInstall),
+    };
   }
 
   public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {

@@ -157,13 +157,11 @@ describe('ApplicationManager tests', () => {
   });
 
   it('saveApplicationPassword', async () => {
-    const dbInstall = await appManager.saveApplicationPassword('test', 'user', 'passs');
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dbInstall = await appManager.saveApplicationPassword('test', 'user', 'passs') as any;
     expect(dbInstall.key).toEqual('test');
     expect(dbInstall.user).toEqual('user');
-    expect(dbInstall.settings).toHaveProperty('authorization_settings');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((dbInstall.settings as any).authorization_settings.password).toEqual('passs');
+    expect(dbInstall.applicationSettings[0].value).toBeTruthy();
   });
 
   it('authorizationApplication', async () => {

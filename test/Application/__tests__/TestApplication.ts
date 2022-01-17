@@ -6,6 +6,7 @@ import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEn
 import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
+import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
 
 describe('Test application', () => {
   const user = 'Jakub';
@@ -51,7 +52,7 @@ describe('Test application', () => {
         {
           _choices: [],
           _description: '',
-          _key: 'testKey',
+          _key: PASSWORD,
           _label: 'testLabel',
           _type: 'password',
           _value: null,
@@ -137,7 +138,7 @@ describe('Test application', () => {
   it('getApplicationForm', () => {
     const app = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
-    const sett = { form: { person: user, testKey: pass } };
+    const sett = { form: { person: user, [PASSWORD]: pass } };
     appInstall.addSettings(sett);
     const res = app.getApplicationForm(appInstall);
     expect(res).toEqual(
@@ -146,7 +147,7 @@ describe('Test application', () => {
           choices: [],
           description: '',
           disabled: false,
-          key: 'testKey',
+          key: PASSWORD,
           label: 'testLabel',
           readOnly: false,
           required: false,

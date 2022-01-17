@@ -10,7 +10,7 @@
         "applicationSettings": [
             {
                 "type": "password",
-                "key": "testKey",
+                "key": "password",
                 "value": null,
                 "label": "testLabel",
                 "description": "",

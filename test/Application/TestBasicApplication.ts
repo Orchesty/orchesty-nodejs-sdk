@@ -1,7 +1,7 @@
 import { BodyInit } from 'node-fetch';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
-import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
+import { ABasicApplication, PASSWORD } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import Form from '../../lib/Application/Model/Form/Form';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
@@ -26,7 +26,7 @@ export default class TestBasicApplication extends ABasicApplication {
   public getSettingsForm = (): Form => {
     const label = 'testLabel';
     const fieldText = new Field(FieldType.TEXT, 'person', label);
-    const field = new Field(FieldType.PASSWORD, 'testKey', label);
+    const field = new Field(FieldType.PASSWORD, PASSWORD, label);
 
     const form = new Form();
     form.addField(field);

@@ -228,9 +228,10 @@ describe('Test ApplicationRouter', () => {
     const password = faker.internet.password();
     await supertest(expressApp)
       .put(applicationUrl)
-      .send({ password }).expect((response) => {
-        const responsePassword = JSON.parse(response.text).settings.authorization_settings.password;
-        expect(responsePassword).toEqual(password);
+      .send({ password })
+      .expect((response) => {
+        const responsePassword = JSON.parse(response.text).applicationSettings[0].value;
+        expect(responsePassword).toBeTruthy();
       });
   });
 
