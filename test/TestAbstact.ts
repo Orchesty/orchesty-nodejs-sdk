@@ -15,6 +15,8 @@ import CommonLoader from '../lib/Commons/CommonLoader';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestWebhookApplication from './Application/TestWebhookApplication';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
+import Redis from '../lib/Storage/Redis/Redis';
+import { redis } from '../lib/Config/Config';
 
 jest.mock('node-fetch', () => fetchMock.sandbox());
 
@@ -43,6 +45,8 @@ export async function getTestContainer(): Promise<DIContainer> {
   container.setBatch(batch);
   container.setCustomNode(custom);
   container.setCustomNode(onRepeatExceptionCustom);
+
+  container.set(CoreServices.REDIS, new Redis(redis.dsn));
 
   return container;
 }

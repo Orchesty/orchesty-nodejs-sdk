@@ -29,3 +29,7 @@ export const pipesOptions = {
   backend: process.env.BACKEND_URL || '',
   startingPoint: process.env.STARTING_POINT_DSN || '',
 };
+
+export const redis = {
+  dsn: process.env.REDIS_DSN || 'redis',
+};
