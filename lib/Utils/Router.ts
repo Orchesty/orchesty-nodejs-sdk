@@ -69,12 +69,17 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     }
   }
 
-  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-    try {
+  try {
+    if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
       res.setHeader(createKey(RESULT_MESSAGE), message.replace(/\r?\n|\r/g, ''));
-    } catch (ex) {
-      logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`);
+    } else {
+      res.setHeader(
+        createKey(RESULT_MESSAGE),
+        `Error: ${message.replace(/\r?\n|\r/g, '')}, Original result: ${res.getHeader(RESULT_MESSAGE)}`,
+      );
     }
+  } catch (ex) {
+    logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`);
   }
 
   logResponseProcess(res, dto);
