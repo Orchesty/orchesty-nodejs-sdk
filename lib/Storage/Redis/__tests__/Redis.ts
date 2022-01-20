@@ -1,6 +1,13 @@
 import Redis from '../Redis';
-import { getTestContainer } from '../../../../test/TestAbstact';
-import CoreServices from '../../../DIContainer/CoreServices';
+
+// Mock Logger module
+jest.mock('../../../Logger/Logger', () => ({
+  error: () => jest.fn(),
+  debug: () => jest.fn(),
+  log: () => jest.fn(),
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  Logger: jest.fn().mockImplementation(() => ({})),
+}));
 
 const TESTKEY = 'testKey';
 const TESTKEY1 = 'testKey1';
@@ -10,9 +17,8 @@ const TESTKEYVALUE1 = 'testKeyValue1';
 let redis: Redis;
 
 describe('Tests for redis', () => {
-  beforeAll(async () => {
-    const container = await getTestContainer();
-    redis = container.get(CoreServices.REDIS);
+  beforeAll(() => {
+    redis = new Redis(process.env.REDIS_DSN || '');
   });
 
   afterAll(async () => {
