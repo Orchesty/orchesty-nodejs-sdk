@@ -99,8 +99,8 @@ describe('tests Router Utils', () => {
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(0);
+    expect(getHeaderMock).toBeCalledTimes(3);
+    expect(setHeaderMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse with error & with header', () => {
@@ -114,8 +114,8 @@ describe('tests Router Utils', () => {
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
     expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(1);
+    expect(getHeaderMock).toBeCalledTimes(3);
+    expect(setHeaderMock).toBeCalledTimes(2);
   });
 
   it('createErrorResponse without error', () => {
