@@ -75,7 +75,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     } else {
       res.setHeader(
         createKey(RESULT_MESSAGE),
-        `Dto message: ${res.getHeader(RESULT_MESSAGE)}, Error: ${message.replace(/\r?\n|\r/g, '')}`,
+        `Error: ${message.replace(/\r?\n|\r/g, '')}, Original result: ${res.getHeader(RESULT_MESSAGE)}`,
       );
     }
   } catch (ex) {
