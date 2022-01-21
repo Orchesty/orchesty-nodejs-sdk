@@ -10,6 +10,7 @@ enum CoreServices {
   CURL = 'hbpf.core.curl_sender',
   METRICS = 'hbpf.core.metrics',
   TOPOLOGY_RUNNER = 'hbpf.core.topology_runner',
+  REDIS = 'hbpf.core.redis',
 }
 
 export default CoreServices;
