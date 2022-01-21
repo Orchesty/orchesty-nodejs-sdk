@@ -28,6 +28,11 @@ services:
         volumes:
             - mongo:/data/db
 
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - ${DEV_IP}:6379:6379
+
     logstash:
         image: mendhak/udp-listener
         ports:
