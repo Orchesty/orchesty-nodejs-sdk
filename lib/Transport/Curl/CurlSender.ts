@@ -19,7 +19,7 @@ export default class CurlSender {
     sec = 60,
     hops = 10,
     // eslint-disable-next-line @typescript-eslint/require-await
-    logMessageCallback = async (res: Response, body: string) => body,
+    logMessageCallback = async (res: Response, body: string) => `status: ${res.status}, body: ${body}`,
   ): Promise<ResponseDto> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
