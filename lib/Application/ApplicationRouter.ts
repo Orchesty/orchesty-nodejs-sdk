@@ -25,14 +25,16 @@ export class ApplicationRouter extends ACommonRouter {
     });
 
     this._app.route('/applications/:name/sync/:method')
-      .get(async (req, res) => {
+      .get(async (req, res, next) => {
         res.json(await this._manager.runSynchronousAction(req.params.name, req.params.method, req));
+        next();
       })
-      .post(async (req, res) => {
+      .post(async (req, res, next) => {
         res.json(await this._manager.runSynchronousAction(req.params.name, req.params.method, req));
+        next();
       });
 
-    this._app.route('/applications/:name/users/:user/authorize').get(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/authorize').get(async (req, res, next) => {
       const redirectUrl = req.query.redirect_url;
       if (!redirectUrl) {
         throw Error('Missing "redirect_url" query parameter.');
@@ -45,9 +47,10 @@ export class ApplicationRouter extends ACommonRouter {
       );
 
       res.json({ authorizeUrl: url });
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user/authorize/token').get(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/authorize/token').get(async (req, res, next) => {
       const url = await this._manager.saveAuthorizationToken(
         req.params.name,
         req.params.user,
@@ -55,9 +58,10 @@ export class ApplicationRouter extends ACommonRouter {
       );
 
       res.json({ redirectUrl: url });
+      next();
     });
 
-    this._app.route('/applications/authorize/token').get(async (req, res) => {
+    this._app.route('/applications/authorize/token').get(async (req, res, next) => {
       const { state } = req.query;
       if (!state) {
         throw Error('Missing "state" query parameter.');
@@ -70,23 +74,26 @@ export class ApplicationRouter extends ACommonRouter {
       );
 
       res.json({ redirectUrl: url });
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user/install').post(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/install').post(async (req, res, next) => {
       const { name, user } = req.params;
       const response = await this._manager.installApplication(name, user);
       res.status(StatusCodes.CREATED);
       res.json(response);
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user/settings').put(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/settings').put(async (req, res, next) => {
       const { name, user } = req.params;
       const response = await this._manager.saveApplicationSettings(name, user, JSON.parse(req.body));
       res.status(StatusCodes.OK);
       res.json(response);
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user/password').put(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/password').put(async (req, res, next) => {
       const { name, user } = req.params;
       const { password } = JSON.parse(req.body);
       if (!password) {
@@ -95,27 +102,31 @@ export class ApplicationRouter extends ACommonRouter {
       const response = await this._manager.saveApplicationPassword(name, user, password);
       res.status(StatusCodes.OK);
       res.json(response);
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user/uninstall').delete(async (req, res) => {
+    this._app.route('/applications/:name/users/:user/uninstall').delete(async (req, res, next) => {
       const { name, user } = req.params;
       await this._manager.uninstallApplication(name, user);
       res.status(StatusCodes.OK);
       res.json({});
+      next();
     });
 
-    this._app.route('/applications/:name/users/:user').get(async (req, res) => {
+    this._app.route('/applications/:name/users/:user').get(async (req, res, next) => {
       const { name, user } = req.params;
       const response = await this._manager.detailApplication(name, user);
       res.status(StatusCodes.OK);
       res.json(response);
+      next();
     });
 
-    this._app.route('/applications/users/:user').get(async (req, res) => {
+    this._app.route('/applications/users/:user').get(async (req, res, next) => {
       const { user } = req.params;
       const response = await this._manager.userApplications(user);
       res.status(StatusCodes.OK);
       res.json(response);
+      next();
     });
 
     return this._app;

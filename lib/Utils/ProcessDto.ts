@@ -96,6 +96,10 @@ export default class ProcessDto {
     this._setStatusHeader(status, reason);
   }
 
+  setLimitExceeded(reason: string) {
+    this._setStatusHeader(ResultCode.LIMIT_EXCEEDED, reason);
+  }
+
   setRepeater(interval: number, maxHops: number, reason: string): void {
     if (interval < 1) {
       throw new Error('Value interval is obligatory and can not be lower than 0');
