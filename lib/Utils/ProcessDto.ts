@@ -178,6 +178,12 @@ export default class ProcessDto {
     const filtered = workerFollowers.filter((item) => followers.includes(item.name));
     const targetQueues = filtered.map((item) => item.id).join(',');
 
+    if (!targetQueues) {
+      const workerFollowerNames = workerFollowers.map((follower) => follower.name).join(',');
+      // eslint-disable-next-line max-len
+      throw new Error(`Inserted follower(s) [${followers.join(',')}] can't be reached. Available follower(s) [${workerFollowerNames}]`);
+    }
+
     this.addHeader(FORCE_TARGET_QUEUE, targetQueues);
     this._setStatusHeader(
       ResultCode.FORWARD_TO_TARGET_QUEUE,
