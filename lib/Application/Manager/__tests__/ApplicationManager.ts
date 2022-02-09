@@ -133,16 +133,25 @@ describe('ApplicationManager tests', () => {
 
   it('getSynchronousActions', () => {
     expect(appManager.getSynchronousActions('test'))
-      .toEqual(['testSyncMethod']);
+      .toEqual(['testSyncMethod', 'testSyncMethodVoid']);
   });
 
-  it('runSynchronousAction', () => {
-    expect(appManager.runSynchronousAction(
+  it('runSynchronousAction', async () => {
+    expect(await appManager.runSynchronousAction(
       'test',
       'testSyncMethod',
       mockRequest(),
     ))
       .toEqual('{"param1":"p1","param2":"p2"}');
+  });
+
+  it('runSynchronousAction with void', async () => {
+    expect(await appManager.runSynchronousAction(
+      'test',
+      'testSyncMethodVoid',
+      mockRequest(),
+    ))
+      .toEqual({ status: 'ok' });
   });
 
   it('saveApplicationSettings', async () => {

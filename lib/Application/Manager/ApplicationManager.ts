@@ -38,15 +38,19 @@ export default class ApplicationManager {
     return Annotation.getAllMethods(instanceOfClass);
   }
 
-  public runSynchronousAction(key: string, method: string, request: Request): unknown {
+  public async runSynchronousAction(key: string, method: string, request: Request): Promise<unknown> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const app = this.getApplication(key) as any;
     const syncMethod = `sync${method[0].toUpperCase()}${method.substring(1)}`;
     if (typeof app[syncMethod] === 'function') {
+      let resp;
       if (request.method === HttpMethods.GET) {
-        return app[syncMethod]();
+        resp = await app[syncMethod]();
+      } else {
+        resp = await app[syncMethod](request);
       }
-      return app[syncMethod](request);
+
+      return resp ?? { status: 'ok' };
     }
     throw new Error(`Method [${syncMethod}] has not found in application [${key}].`);
   }

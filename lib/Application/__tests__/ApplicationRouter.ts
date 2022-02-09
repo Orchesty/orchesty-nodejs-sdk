@@ -103,7 +103,7 @@ describe('Test ApplicationRouter', () => {
 
   it('get /applications/:name/sync/list route', async () => {
     const applicationUrl = `/applications/${application.getName()}/sync/list`;
-    const expectedResult = '["testSyncMethod"]';
+    const expectedResult = '["testSyncMethod","testSyncMethodVoid"]';
     await supertest(expressApp)
       .get(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);
@@ -113,6 +113,15 @@ describe('Test ApplicationRouter', () => {
     const method = 'testSyncMethod';
     const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
     const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
+    await supertest(expressApp)
+      .post(applicationUrl)
+      .expect(StatusCodes.OK, expectedResult);
+  });
+
+  it('post /applications/:name/sync/:method route with void', async () => {
+    const method = 'testSyncMethodVoid';
+    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
+    const expectedResult = '{"status":"ok"}';
     await supertest(expressApp)
       .post(applicationUrl)
       .expect(StatusCodes.OK, expectedResult);

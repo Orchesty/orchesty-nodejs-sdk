@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import * as fs from 'fs';
-import { parse } from 'fast-xml-parser/src/parser';
+import { XMLParser } from 'fast-xml-parser';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
@@ -69,7 +69,7 @@ export default class TopologyTester {
 
   private _parseTopologyFile = (path: string): TestNode[] => {
     const buff = fs.readFileSync(path);
-    const res = parse(buff.toString(), { ignoreAttributes: false, ignoreNameSpace: true });
+    const res = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true }).parse(buff.toString());
 
     // Parse a compile TestNodes
     const nodes: TestNode[] = [];

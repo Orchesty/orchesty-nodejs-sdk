@@ -17,6 +17,9 @@ export default class TestBasicApplication extends ABasicApplication {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  public async syncTestSyncMethodVoid(): Promise<void> {}
+
   public getDescription = (): string => 'Test description';
 
   public getName = (): string => 'test';
