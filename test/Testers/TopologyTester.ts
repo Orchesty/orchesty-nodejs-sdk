@@ -172,7 +172,7 @@ export default class TopologyTester {
         return results;
       // Re routing
       case ResultCode.FORWARD_TO_TARGET_QUEUE.toString():
-        followers = node.reduceFollowersByHeader(get(FORCE_TARGET_QUEUE, out.headers) ?? '');
+        followers = node.reduceFollowersByHeader(...(get(FORCE_TARGET_QUEUE, out.headers) ?? '').split(','));
         nextDto.push(out);
         break;
       // Message want to be repeated
