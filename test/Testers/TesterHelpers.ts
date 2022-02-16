@@ -59,8 +59,8 @@ export class TestNode implements ILightNode {
     return res;
   }
 
-  public reduceFollowersByHeader(forceTargetQueue: string): ILightNode[] {
-    return this.followers.filter((f) => f.id === forceTargetQueue);
+  public reduceFollowersByHeader(...forceTargetQueues: string[]): ILightNode[] {
+    return this.followers.filter((f) => forceTargetQueues.includes(f.id));
   }
 }
 
