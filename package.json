@@ -23,7 +23,7 @@
     "@types/mongodb": "~3.6.20",
     "@types/node-fetch": "^2.5.12",
     "@types/php-serialize": "^3.0.1",
-    "@types/redis": "^2.8.31",
+    "@types/redis": "^4.0.11",
     "@types/simple-oauth2": "^4.1.1",
     "@types/sodium-native": "^2.3.5",
     "express": "~5.0.0-alpha.8",
