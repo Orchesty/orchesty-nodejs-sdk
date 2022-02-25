@@ -76,6 +76,10 @@ export function getCorrelationId(headers: HttpHeaders): string | undefined {
   return get(CORRELATION_ID, headers);
 }
 
+export function getTopologyId(headers: HttpHeaders): string | undefined {
+  return get(TOPOLOGY_ID, headers);
+}
+
 export function getNodeId(headers: HttpHeaders): string | undefined {
   return get(NODE_ID, headers);
 }

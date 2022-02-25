@@ -12,6 +12,7 @@ import { parseInfluxDsn } from '../Utils/DsnParser';
 
 export interface ILogContext {
     topology_id?: string;
+    topology_name?: string;
     node_id?: string;
     node_name?: string;
     correlation_id?: string;
@@ -32,6 +33,8 @@ interface ILoggerFormat {
     message: string;
     node_id?: string;
     node_name?: string;
+    topology_id?: string;
+    topology_name?: string;
     correlation_id?: string;
     result_code?: ResultCode;
     result_message?: string;
@@ -96,6 +99,7 @@ export class Logger {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(dto.headers),
       correlation_id: headers.getCorrelationId(dto.headers),
+      topology_id: headers.getTopologyId(dto.headers),
       process_id: headers.getProcessId(dto.headers),
       parent_id: headers.getParentId(dto.headers),
       sequence_id: headers.getSequenceId(dto.headers),
@@ -117,6 +121,7 @@ export class Logger {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(req.headers),
       correlation_id: headers.getCorrelationId(req.headers),
+      topology_id: headers.getTopologyId(req.headers),
       process_id: headers.getProcessId(req.headers),
       parent_id: headers.getParentId(req.headers),
       sequence_id: headers.getSequenceId(req.headers),
@@ -162,8 +167,12 @@ export class Logger {
     };
 
     if (context) {
-      if (context.node_id) {
-        line.node_id = context.node_id;
+      if (context.topology_id) {
+        line.topology_id = context.topology_id;
+      }
+
+      if (context.topology_name) {
+        line.topology_name = context.topology_name;
       }
 
       if (context.correlation_id) {
