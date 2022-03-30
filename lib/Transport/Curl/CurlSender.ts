@@ -50,8 +50,7 @@ export default class CurlSender {
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       if (e instanceof Error) {
-        logger.error(e.message);
-        throw Error(e.message);
+        logger.error(e.message, dto.debugInfo ? logger.ctxFromDto(dto.debugInfo) : undefined);
       }
       throw e;
     }
