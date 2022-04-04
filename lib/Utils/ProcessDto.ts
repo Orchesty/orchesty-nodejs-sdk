@@ -119,6 +119,7 @@ export default class ProcessDto {
     this.removeHeader(REPEAT_MAX_HOPS);
     this.removeHeader(REPEAT_HOPS);
     this.removeHeader(REPEAT_QUEUE);
+    this._removeRelatedHeaders([ResultCode.REPEAT]);
   }
 
   setLimiter(key: string, time: number, amount: number): void {
@@ -171,6 +172,7 @@ export default class ProcessDto {
 
   removeBatchCursor(): void {
     this.removeHeader(BATCH_CURSOR);
+    this._removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
   }
 
   setForceFollowers(...followers: string[]): void {
@@ -193,6 +195,7 @@ export default class ProcessDto {
 
   removeForceFollowers(): void {
     this.removeHeader(FORCE_TARGET_QUEUE);
+    this._removeRelatedHeaders([ResultCode.FORWARD_TO_TARGET_QUEUE]);
   }
 
   private _setStatusHeader(value: ResultCode, message?: string) {
@@ -200,6 +203,13 @@ export default class ProcessDto {
       this.addHeader(RESULT_MESSAGE, message.replace(/\r?\n|\r/g, ''));
     }
     this.addHeader(RESULT_CODE, value.toString());
+  }
+
+  private _removeRelatedHeaders(headerCodes: number[]): void {
+    if (headerCodes.includes(Number(this.getHeader(RESULT_CODE, '0')) ?? 0)) {
+      this.removeHeader(RESULT_MESSAGE);
+      this.removeHeader(RESULT_CODE);
+    }
   }
 
   private static _decorateLimitKey(key: string): string {

@@ -20,10 +20,10 @@ export default class ApplicationLoader extends CommonLoader {
   }
 
   private _compare = (a: IApplicationArray, b: IApplicationArray): number => {
-    if (a.name < b.name) {
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1;
     }
-    if (a.name > b.name) {
+    if (a.name.toLowerCase() > b.name.toLowerCase()) {
       return 1;
     }
     return 0;

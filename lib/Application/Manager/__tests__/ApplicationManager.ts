@@ -97,21 +97,21 @@ describe('ApplicationManager tests', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           application_type: 'cron',
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          authorization_type: 'oauth2',
-          description: 'Test OAuth2 application',
-          key: 'oauth2application',
-          logo: null,
-          name: 'Test OAuth2 Application',
-        },
-        {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          application_type: 'cron',
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           authorization_type: 'basic',
           description: 'Test description',
           key: 'test',
           logo: null,
           name: 'Test application',
+        },
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          application_type: 'cron',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          authorization_type: 'oauth2',
+          description: 'Test OAuth2 application',
+          key: 'oauth2application',
+          logo: null,
+          name: 'Test OAuth2 Application',
         },
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
