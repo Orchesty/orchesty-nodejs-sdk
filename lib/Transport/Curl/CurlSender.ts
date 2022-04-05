@@ -1,4 +1,4 @@
-import fetch, { RequestInit, Response } from 'node-fetch';
+import fetch, { FetchError, RequestInit, Response } from 'node-fetch';
 import RequestDto from './RequestDto';
 import logger from '../../Logger/Logger';
 import ResponseDto from './ResponseDto';
@@ -52,6 +52,13 @@ export default class CurlSender {
       if (e instanceof Error) {
         logger.error(e.message, dto.debugInfo ? logger.ctxFromDto(dto.debugInfo) : undefined);
       }
+
+      if (e instanceof FetchError) {
+        if (e.message.includes('network timeout')) {
+          throw new OnRepeatException(sec, hops, e.message);
+        }
+      }
+
       throw e;
     }
   };
