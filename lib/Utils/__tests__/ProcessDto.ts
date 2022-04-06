@@ -1,6 +1,7 @@
 import faker from 'faker';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
+import { WORKER_FOLLOWERS } from '../Headers';
 
 describe('Tests ProcessDto utils', () => {
   it('GetData', () => {
@@ -147,5 +148,42 @@ describe('Tests ProcessDto utils', () => {
     dto.setLimiterWithGroup('limit-key2', 30, 5000, 'group1', 200, 4444);
 
     expect(dto.getHeader('limiter-key')).toEqual('limit-key2|;30;5000;group1|;200;4444');
+  });
+
+  it('removeForceFollowers removes headers correctly', () => {
+    const dto = new ProcessDto();
+    dto.addHeader(WORKER_FOLLOWERS, '[{"name":"abc", "id": "123"}]');
+    dto.setForceFollowers('abc');
+
+    dto.removeForceFollowers();
+
+    expect(dto.headers).toEqual({ 'pf-worker-followers': '[{"name":"abc", "id": "123"}]' });
+  });
+
+  it('removeBatchCursor removes iterate-only cursor correctly', () => {
+    const dto = new ProcessDto();
+    dto.setBatchCursor('0', true);
+
+    dto.removeBatchCursor();
+
+    expect(dto.headers).toEqual({});
+  });
+
+  it('removeBatchCursor removes batch-with-cursor cursor correctly', () => {
+    const dto = new ProcessDto();
+    dto.setBatchCursor('0');
+
+    dto.removeBatchCursor();
+
+    expect(dto.headers).toEqual({});
+  });
+
+  it('removeRepeater removes headers correctly', () => {
+    const dto = new ProcessDto();
+    dto.setRepeater(1, 10, 'reason');
+
+    dto.removeRepeater();
+
+    expect(dto.headers).toEqual({});
   });
 });

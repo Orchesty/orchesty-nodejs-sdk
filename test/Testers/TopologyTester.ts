@@ -10,6 +10,7 @@ import {
   REPEAT_HOPS,
   REPEAT_MAX_HOPS,
   RESULT_CODE,
+  RESULT_MESSAGE,
   WORKER_FOLLOWERS,
 } from '../../lib/Utils/Headers';
 import ResultCode from '../../lib/Utils/ResultCode';
@@ -136,6 +137,7 @@ export default class TopologyTester {
     }
 
     dto.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
+    dto.removeHeader(RESULT_MESSAGE);
 
     const nextDto: ProcessDto[] = [];
     let out: ProcessDto;
@@ -273,5 +275,9 @@ export default class TopologyTester {
     (out.jsonData as Array<Record<string, undefined>>).forEach((item) => {
       nextDto.push(this._cloneProcessDto(out, item));
     });
+
+    if ((out.jsonData as unknown[])?.length <= 0) {
+      nextDto.push(out);
+    }
   }
 }
