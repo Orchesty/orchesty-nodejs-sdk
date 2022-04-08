@@ -16,7 +16,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
       next(err);
       return;
     }
-    const dto = createProcessDto(req);
+    const dto = await createProcessDto(req);
 
     if (err instanceof OnRepeatException) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
