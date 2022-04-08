@@ -1,3 +1,4 @@
+import { Mutex } from 'async-mutex';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import ProcessDto from './ProcessDto';
@@ -105,31 +106,34 @@ export function createSuccessResponse(res: Response, dto: ProcessDto): void {
   res.send(dto.data);
 }
 
+const mutex = new Mutex();
 const dtoPool = new Array(100).fill(0);
 for (let i = 0; i < 100; i += 1) {
   dtoPool[i] = new ProcessDto();
 }
 
-function getFreeDto(): ProcessDto {
+async function getFreeDto(): Promise<ProcessDto> {
   // Should CPU still be a concern, implement linked list for faster search
   // In case of Memory concern, limit maximum pool size and await for free objects
-  for (let i = 0; i < dtoPool.length; i += 1) {
-    if (dtoPool[i].free) {
-      dtoPool[i].free = false;
+  return mutex.runExclusive(() => {
+    for (let i = 0; i < dtoPool.length; i += 1) {
+      if (dtoPool[i].free) {
+        dtoPool[i].free = false;
 
-      return dtoPool[i];
+        return dtoPool[i];
+      }
     }
-  }
 
-  const dto = new ProcessDto();
-  dto.free = false;
-  dtoPool.push(dto);
+    const dto = new ProcessDto();
+    dto.free = false;
+    dtoPool.push(dto);
 
-  return dto;
+    return dto;
+  });
 }
 
-export function createProcessDto(req: Request): ProcessDto {
-  const dto = getFreeDto();
+export async function createProcessDto(req: Request): Promise<ProcessDto> {
+  const dto = await getFreeDto();
 
   dto.data = req.body;
   dto.headers = req.headers;
