@@ -158,9 +158,9 @@ describe('tests Router Utils', () => {
     expect(setHeaderMock).toBeCalledTimes(1);
   });
 
-  it('createProcessDto', () => {
+  it('createProcessDto', async () => {
     const req = mockRequest();
-    const dto = createProcessDto(req);
+    const dto = await createProcessDto(req);
     expect(dto.getHeader(NODE_ID)).toEqual('123');
     expect(dto.jsonData).toEqual({ body: 'aaa' });
   });
