@@ -14,7 +14,10 @@ export interface IWebhookApplication extends IApplication {
     url: string,
   ): RequestDto;
 
-  getWebhookUnsubscribeRequestDto(applicationInstall: ApplicationInstall, id: string): RequestDto;
+  getWebhookUnsubscribeRequestDto(
+    applicationInstall: ApplicationInstall,
+    id: string
+  ): RequestDto;
 
   processWebhookSubscribeResponse(dto: ResponseDto, applicationInstall: ApplicationInstall): string;
 

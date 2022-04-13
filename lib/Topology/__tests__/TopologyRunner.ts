@@ -11,6 +11,7 @@ import TopologyRunner from '../TopologyRunner';
 import { initiateContainer } from '../../index';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
+import ProcessDto from '../../Utils/ProcessDto';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -58,7 +59,7 @@ describe('TopologyRunner tests', () => {
 
   it('run by name', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
-    const res = await runner.runByName({}, 'topoName', 'nodeName');
+    const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto());
 
     expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
@@ -66,7 +67,7 @@ describe('TopologyRunner tests', () => {
 
   it('run by name with user', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run-by-name');
-    const res = await runner.runByName({}, 'topoName', 'nodeName', 'user');
+    const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto(), 'user');
 
     expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
@@ -74,7 +75,7 @@ describe('TopologyRunner tests', () => {
 
   it('run by id', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/run');
-    const res = await runner.runById({}, 'topoId', 'nodeId');
+    const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto());
 
     expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
@@ -82,7 +83,7 @@ describe('TopologyRunner tests', () => {
 
   it('run by id with user', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/user/user/run');
-    const res = await runner.runById({}, 'topoId', 'nodeId', 'user');
+    const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto(), 'user');
 
     expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();

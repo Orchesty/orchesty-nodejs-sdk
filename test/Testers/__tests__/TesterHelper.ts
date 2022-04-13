@@ -7,6 +7,7 @@ import HttpMethods from '../../../lib/Transport/HttpMethods';
 import { initiateContainer } from '../../../lib';
 import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import Metrics from '../../../lib/Metrics/Metrics';
+import ProcessDto from '../../../lib/Utils/ProcessDto';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({
@@ -35,6 +36,7 @@ describe('Test topologyHelper', () => {
     const reqDto = new RequestDto(
       'https://api.com/api/products/changes?from=2021-07-31T13%3A37%3A00%2B0200&itemsPerPage=100&page=1',
       HttpMethods.GET,
+      new ProcessDto(),
       '',
     );
     const res = await sender.send(reqDto);

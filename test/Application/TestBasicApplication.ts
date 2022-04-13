@@ -43,5 +43,5 @@ export default class TestBasicApplication extends ABasicApplication {
     method: HttpMethods,
     url?: string,
     data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', method, data);
+  ): RequestDto => new RequestDto(url ?? '', method, dto, data);
 }

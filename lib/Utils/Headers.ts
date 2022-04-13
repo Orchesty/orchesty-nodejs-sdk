@@ -2,10 +2,12 @@
 const PREFIX = 'pf-';
 
 // Framework headers
+export const PREV_CORRELATION_ID = 'previous-correlation-id';
 export const CORRELATION_ID = 'correlation-id';
 export const PROCESS_ID = 'process-id';
 export const PARENT_ID = 'parent-id';
 export const SEQUENCE_ID = 'sequence-id';
+export const PREV_NODE_ID = 'previous-node-id';
 export const NODE_ID = 'node-id';
 export const NODE_NAME = 'node-name';
 export const TOPOLOGY_ID = 'topology-id';

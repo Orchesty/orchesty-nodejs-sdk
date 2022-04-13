@@ -25,7 +25,7 @@ export default class TestOAuth2Application extends AOAuth2Application {
     method: HttpMethods,
     url?: string,
     data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, data);
+  ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, dto, data);
 
   public getSettingsForm = (): Form => {
     const label = 'testLabel';

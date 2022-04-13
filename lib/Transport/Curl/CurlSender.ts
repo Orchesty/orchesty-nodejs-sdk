@@ -31,7 +31,7 @@ export default class CurlSender {
        Url: ${dto.url},
        Headers: ${JSON.stringify(dto.headers)},
        Body: ${dto.body}`,
-        dto.debugInfo,
+        logger.ctxFromDto(dto.debugInfo),
       );
       const response = await fetch(dto.url, req);
       await this._sendMetrics(dto, startTime);
@@ -50,7 +50,7 @@ export default class CurlSender {
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       if (e instanceof Error) {
-        logger.error(e.message, dto.debugInfo ? logger.ctxFromDto(dto.debugInfo) : undefined);
+        logger.error(e.message, logger.ctxFromDto(dto.debugInfo));
       }
 
       if (e instanceof FetchError) {
@@ -89,25 +89,23 @@ export default class CurlSender {
        Code: ${res.status},
        Message: ${body ?? 'Empty response'},
        Reason: ${res.statusText}`,
-      debugInfo ? logger.ctxFromDto(debugInfo) : undefined,
+      logger.ctxFromDto(debugInfo),
     );
   }
 
   private async _sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
     const info = dto.debugInfo;
     try {
-      if (info) {
-        const times = Metrics.getTimes(startTimes);
-        await this._metrics.sendCurlMetrics(
-          times,
-          info.getHeader(NODE_ID),
-          info.getHeader(CORRELATION_ID),
-          info.getHeader(USER),
-          info.getHeader(APPLICATION),
-        ).catch((e) => (logger.error(e?.message ?? e)));
-      }
+      const times = Metrics.getTimes(startTimes);
+      await this._metrics.sendCurlMetrics(
+        times,
+        info.getHeader(NODE_ID),
+        info.getHeader(CORRELATION_ID),
+        info.getHeader(USER),
+        info.getHeader(APPLICATION),
+      ).catch((e) => (logger.error(e?.message ?? e)));
     } catch (e) {
-      if (typeof e === 'string') logger.error(e, info ? logger.ctxFromDto(info) : undefined);
+      if (typeof e === 'string') logger.error(e, logger.ctxFromDto(info));
     }
   }
 }

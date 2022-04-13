@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import faker from 'faker';
 import { expressApp, getTestContainer } from '../../../test/TestAbstact';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -49,9 +48,9 @@ describe('Test ApplicationRouter', () => {
     try {
       await db.dropCollection(ApplicationInstall.getCollection());
       const repo = await dbClient.getRepository(ApplicationInstall);
-      user = faker.name.firstName();
+      user = 'user';
       name = oAuthApplication.getName();
-      authorizationURL = faker.internet.url();
+      authorizationURL = 'example.com';
 
       appInstall = new ApplicationInstall()
         .setUser(user)
@@ -150,7 +149,7 @@ describe('Test ApplicationRouter', () => {
     await supertest(expressApp)
       .get(applicationUrl)
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      .query({ redirect_url: faker.internet.url() })
+      .query({ redirect_url: 'example.com' })
       .expect(expectedResult);
   });
 
@@ -166,7 +165,7 @@ describe('Test ApplicationRouter', () => {
   });
 
   it('get /applications/:name/users/:user/authorize/token route', async () => {
-    const redirectUrl = faker.internet.url();
+    const redirectUrl = 'example.com';
     const applicationUrl = `/applications/${name}/users/${user}/authorize/token`;
     const expectedResult = '{}';
 
@@ -178,7 +177,7 @@ describe('Test ApplicationRouter', () => {
   });
 
   it('post /applications/:name/users/:user/install route', async () => {
-    const newUser = faker.name.firstName();
+    const newUser = 'user';
     const appName = 'test';
     const applicationUrl = `/applications/${appName}/users/${newUser}/install`;
     const expectedResult = assertions['post /applications/:name/users/:user/install route'];
@@ -194,7 +193,7 @@ describe('Test ApplicationRouter', () => {
   it('should not allow store /applications/:name/users/:user/install if application already exists', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'user';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);
@@ -209,7 +208,7 @@ describe('Test ApplicationRouter', () => {
   it('put /applications/:name/users/:user/settings route', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'user';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);
@@ -228,13 +227,13 @@ describe('Test ApplicationRouter', () => {
   it('put /applications/:name/users/:user/password route', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'user';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);
     await repo.insert(appInstall);
     const applicationUrl = `/applications/${appName}/users/${userName}/password`;
-    const password = faker.internet.password();
+    const password = 'pass';
     await supertest(expressApp)
       .put(applicationUrl)
       .send({ password })
@@ -247,7 +246,7 @@ describe('Test ApplicationRouter', () => {
   it('put /applications/:name/users/:user/uninstall route', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'user';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);
@@ -266,7 +265,7 @@ describe('Test ApplicationRouter', () => {
   it('get /applications/:name/users/:user route', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'user';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);
@@ -286,7 +285,7 @@ describe('Test ApplicationRouter', () => {
   it('get /applications/users/:user route', async () => {
     const repo = await dbClient.getRepository(ApplicationInstall);
     const appName = 'test';
-    const userName = faker.name.firstName();
+    const userName = 'abcUsername';
     appInstall = new ApplicationInstall()
       .setUser(userName)
       .setName(appName);

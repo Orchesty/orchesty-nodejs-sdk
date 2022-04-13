@@ -1,4 +1,3 @@
-import faker from 'faker';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
 import { WORKER_FOLLOWERS } from '../Headers';
@@ -21,7 +20,7 @@ describe('Tests ProcessDto utils', () => {
 
   it('ShouldRemoveBatchCursor', () => {
     const dto = new ProcessDto();
-    const cursorName = faker.name.findName();
+    const cursorName = 'name';
     dto.setBatchCursor(cursorName);
     dto.removeBatchCursor();
     expect(dto.headers['pf-cursor']).toBeUndefined();

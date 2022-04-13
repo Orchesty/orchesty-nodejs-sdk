@@ -1,4 +1,3 @@
-import faker from 'faker';
 import TestOAuth2Application from '../../../test/Application/TestOAuth2Application';
 import { getTestContainer } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -46,7 +45,7 @@ describe('Test AOAuth2Application', () => {
     const settings = {
       [AUTHORIZATION_SETTINGS]: {
         [TOKEN]: {
-          [ACCESS_TOKEN]: faker.internet.password(),
+          [ACCESS_TOKEN]: 'token',
         },
       },
     };
@@ -105,7 +104,7 @@ describe('Test AOAuth2Application', () => {
     const settings = {
       [AUTHORIZATION_SETTINGS]: {
         [CLIENT_ID]: '12',
-        [TOKEN]: faker.internet.password(),
+        [TOKEN]: 'token',
       },
     };
     appInstall.setSettings(settings);
@@ -120,7 +119,7 @@ describe('Test AOAuth2Application', () => {
     const appInstall = new ApplicationInstall()
       .setUser('user')
       .setName(oAuthApplication.getName());
-    const accessToken = faker.internet.password();
+    const accessToken = 'token';
     const settings = {
       [AUTHORIZATION_SETTINGS]: {
         [TOKEN]: {
@@ -143,7 +142,7 @@ describe('Test AOAuth2Application', () => {
 
   it('should get token', () => {
     const appInstall = new ApplicationInstall();
-    const token = faker.internet.password();
+    const token = 'token';
     appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: { [TOKEN]: token } });
     appInstall.addSettings({ form: [] });
     const tokenFromService = oAuthApplication.getTokens(appInstall);

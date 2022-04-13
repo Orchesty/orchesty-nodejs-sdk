@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import faker from 'faker';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
 import ProcessDto from '../ProcessDto';
 import { NODE_ID } from '../Headers';
@@ -108,7 +107,7 @@ describe('tests Router Utils', () => {
     const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
     const err = new Error('err message');
     const dto = new ProcessDto();
-    dto.addHeader('authorization', `bearer ${faker.internet.password()}`);
+    dto.addHeader('authorization', 'bearer token');
     err.stack = undefined;
     createErrorResponse(mockRequest(), res, dto, err);
     expect(statusMock).toBeCalledTimes(2);

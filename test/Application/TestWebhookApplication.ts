@@ -27,7 +27,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
     method: HttpMethods,
     url?: string,
     data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', method, data);
+  ): RequestDto => new RequestDto(url ?? '', method, dto, data);
 
   public getSettingsForm = (): Form => {
     const label = 'testLabel';
@@ -44,7 +44,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
     applicationInstall: ApplicationInstall,
     subscription: WebhookSubscription,
     url: string,
-  ): RequestDto => new RequestDto(url, HttpMethods.GET);
+  ): RequestDto => new RequestDto(url, HttpMethods.GET, new ProcessDto());
 
   public getWebhookSubscriptions = (): WebhookSubscription[] => [
     new WebhookSubscription('testWebhook', 'testNode', 'testWebhook'),
@@ -55,7 +55,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
     applicationInstall: ApplicationInstall,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id: string,
-  ): RequestDto => new RequestDto('unknown/url', HttpMethods.DELETE);
+  ): RequestDto => new RequestDto('unknown/url', HttpMethods.DELETE, new ProcessDto());
 
   public processWebhookSubscribeResponse = (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

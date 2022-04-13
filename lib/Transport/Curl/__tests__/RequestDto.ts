@@ -7,7 +7,7 @@ describe('RequestDto tests', () => {
   const method = HttpMethods.POST;
   const body = JSON.stringify({ test: 'test' });
   const header = { headerParam: 'headerParam' };
-  const requestDto = new RequestDto(url, method, body, header);
+  const requestDto = new RequestDto(url, method, new ProcessDto(), body, header);
 
   it('getBody', () => {
     expect(requestDto.body).toEqual(body);
@@ -23,9 +23,6 @@ describe('RequestDto tests', () => {
   });
   it('getMethod', () => {
     expect(requestDto.timeout).toEqual(30000);
-  });
-  it('getUndefinedDebugInfo', () => {
-    expect(requestDto.debugInfo).toEqual(undefined);
   });
   it('getDebugInfo', () => {
     requestDto.debugInfo = new ProcessDto();

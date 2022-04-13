@@ -6,6 +6,7 @@ import RequestDto from '../RequestDto';
 import HttpMethods from '../../HttpMethods';
 import DIContainer from '../../../DIContainer/Container';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
+import ProcessDto from '../../../Utils/ProcessDto';
 
 let container: DIContainer;
 let curlSender: CurlSender;
@@ -15,6 +16,7 @@ jest.mock('../../../Logger/Logger', () => ({
   error: () => jest.fn(),
   debug: () => jest.fn(),
   log: () => jest.fn(),
+  ctxFromDto: () => jest.fn(),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
@@ -41,14 +43,14 @@ describe('tests for curlSender', () => {
       url,
       JSON.stringify({ id: '1' }),
     );
-    const response = await curlSender.send(new RequestDto(url, HttpMethods.GET));
+    const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
     expect((response.jsonBody as { id: string }).id).toBe('1');
   });
 
   it('should test send - 400', async () => {
     const url = 'http://testUrl.com/status';
     mockedFetch.get(url, 400);
-    const response = await curlSender.send(new RequestDto(url, HttpMethods.GET));
+    const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
     expect(response.responseCode).toBe(400);
   });
 
@@ -56,7 +58,7 @@ describe('tests for curlSender', () => {
     const url = 'http://testUrl.com/status';
     mockedFetch.get(url, 400);
     try {
-      await curlSender.send(new RequestDto(url, HttpMethods.GET), [200]);
+      await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), [200]);
     } catch (e) {
       expect(e).toBeDefined();
     }
@@ -66,7 +68,7 @@ describe('tests for curlSender', () => {
     const url = 'http://testUrl.com/status';
     mockedFetch.post(url, 200);
     try {
-      await curlSender.send(new RequestDto(url, HttpMethods.POST, JSON.stringify({ message: 'ok' })));
+      await curlSender.send(new RequestDto(url, HttpMethods.POST, new ProcessDto(), JSON.stringify({ message: 'ok' })));
     } catch (e) {
       expect(e).toBeDefined();
     }

@@ -1,4 +1,3 @@
-import faker from 'faker';
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
@@ -37,7 +36,7 @@ describe('OAuth2Provider tests', () => {
     const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
     const errorMsg = 'Message [Refresh token not found! Refresh is not possible.] code [205]';
     expect(oauth2Provider.refreshAccessToken(dto, {
-      refreshToken: faker.internet.password(),
+      refreshToken: 'pass',
     })).rejects.toThrowError(errorMsg);
   });
 

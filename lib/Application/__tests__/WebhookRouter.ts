@@ -1,4 +1,3 @@
-import faker from 'faker';
 import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
 import { Db } from 'mongodb';
@@ -44,7 +43,7 @@ describe('tests for WebhookRouter', () => {
     try {
       await db.dropCollection(ApplicationInstall.getCollection());
       const repo = await dbClient.getRepository(ApplicationInstall);
-      user = faker.name.firstName();
+      user = 'user';
       name = webhookApplication.getName();
 
       appInstall = new ApplicationInstall()
