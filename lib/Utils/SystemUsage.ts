@@ -20,7 +20,7 @@ export function getCpuTimes(): ICpuTimes {
       cpuStartTime: Number(stats[21]),
     };
   } catch (e) {
-    if (e instanceof Error) logger.error(e.message);
+    if (e instanceof Error) logger.error(e.message, {});
     return {
       cpuUserCodeTime: 0,
       cpuKernelCodeTime: 0,
@@ -38,7 +38,7 @@ export function getCpuUsage(): number {
 
     return (totalTime / HERTZ / seconds) * 100;
   } catch (e) {
-    if (e instanceof Error) logger.error(e.message);
+    if (e instanceof Error) logger.error(e.message, {});
     return 0;
   }
 }

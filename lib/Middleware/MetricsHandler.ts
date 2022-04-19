@@ -21,10 +21,10 @@ function afterResponse(
     getCorrelationId(req.headers),
     getNodeId(req.headers),
     getCorrelationId(req.headers),
-  ).catch((e) => (logger.error(e?.message ?? e)));
+  ).catch((e) => (logger.error(e?.message ?? e, req)));
 
   // eslint-disable-next-line max-len
-  logger.debug(`Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`, logger.ctxFromReq(req));
+  logger.debug(`Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`, req);
 }
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {

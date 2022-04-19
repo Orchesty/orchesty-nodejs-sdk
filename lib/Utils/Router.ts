@@ -22,12 +22,12 @@ function logResponseProcess(res: Response, dto: ProcessDto) {
   if (isSuccessResultCode(res.getHeader(createKey(RESULT_CODE)) as number ?? 0)) {
     logger.info(
       `Request successfully processed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
-      logger.ctxFromDto(dto),
+      dto,
     );
   } else {
     logger.error(
       `Request process failed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
-      logger.ctxFromDto(dto),
+      dto,
     );
   }
 }
@@ -39,7 +39,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     try {
       res.setHeader(key, String(value));
     } catch (ex) {
-      logger.error(`Can't set header [${key}:${value}]`);
+      logger.error(`Can't set header [${key}:${value}]`, dto);
     }
   });
 
@@ -65,6 +65,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
         logger.error(
           // eslint-disable-next-line max-len
           `Can't set header [${createKey(RESULT_DETAIL)}:${JSON.stringify(e.stack === undefined ? '' : e.stack.replace(/\r?\n|\r/g, ''))}]`,
+          dto,
         );
       }
     }
@@ -80,7 +81,7 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
       );
     }
   } catch (ex) {
-    logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`);
+    logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`, dto);
   }
 
   logResponseProcess(res, dto);

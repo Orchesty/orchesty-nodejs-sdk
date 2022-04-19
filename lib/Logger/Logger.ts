@@ -23,6 +23,7 @@ export interface ILogContext {
     result_message?: string;
     error?: Error;
     data?: string;
+    isForUi?: boolean;
 }
 
 interface ILoggerFormat {
@@ -43,6 +44,7 @@ interface ILoggerFormat {
         trace?: string,
     };
     data?: string;
+    isForUi?: boolean;
 }
 
 export class Logger {
@@ -58,8 +60,8 @@ export class Logger {
      * @param {string} message
      * @param {ILogContext} context
      */
-  public debug(message: string, context?: ILogContext): void {
-    this.log(Severity.DEBUG, message, context || {});
+  public debug(message: string, context: ILogContext | ProcessDto | Request): void {
+    this.log(Severity.DEBUG, message, this._ctxFromReqDto(context));
   }
 
   /**
@@ -67,8 +69,8 @@ export class Logger {
      * @param {string} message
      * @param {ILogContext} context
      */
-  public info(message: string, context?: ILogContext): void {
-    this.log(Severity.INFO, message, context || {});
+  public info(message: string, context: ILogContext | ProcessDto | Request): void {
+    this.log(Severity.INFO, message, this._ctxFromReqDto(context));
   }
 
   /**
@@ -76,8 +78,8 @@ export class Logger {
      * @param {string} message
      * @param {ILogContext} context
      */
-  public warn(message: string, context?: ILogContext): void {
-    this.log(Severity.WARNING, message, context || {});
+  public warn(message: string, context: ILogContext | ProcessDto | Request): void {
+    this.log(Severity.WARNING, message, this._ctxFromReqDto(context));
   }
 
   /**
@@ -85,54 +87,9 @@ export class Logger {
      * @param {string} message
      * @param {ILogContext} context
      */
-  public error(message: string, context?: ILogContext): void {
-    this.log(Severity.ERROR, message, context || {});
+  public error(message: string, context: ILogContext | ProcessDto | Request): void {
+    this.log(Severity.ERROR, message, this._ctxFromReqDto(context));
   }
-
-  /**
-     *
-     * @param {ProcessDto} dto
-     * @param {Error} err
-     * @return {ILogContext}
-     */
-  public ctxFromDto = (dto: ProcessDto, err?: Error): ILogContext => {
-    const ctx: ILogContext = {
-      node_id: headers.getNodeId(dto.headers),
-      correlation_id: headers.getCorrelationId(dto.headers),
-      topology_id: headers.getTopologyId(dto.headers),
-      process_id: headers.getProcessId(dto.headers),
-      parent_id: headers.getParentId(dto.headers),
-      sequence_id: headers.getSequenceId(dto.headers),
-    };
-
-    if (err) {
-      ctx.error = err;
-    }
-
-    return ctx;
-  };
-
-  /**
-    *
-    * @param req
-    * @param err
-    */
-  public ctxFromReq = (req: Request, err?: Error): ILogContext => {
-    const ctx: ILogContext = {
-      node_id: headers.getNodeId(req.headers),
-      correlation_id: headers.getCorrelationId(req.headers),
-      topology_id: headers.getTopologyId(req.headers),
-      process_id: headers.getProcessId(req.headers),
-      parent_id: headers.getParentId(req.headers),
-      sequence_id: headers.getSequenceId(req.headers),
-    };
-
-    if (err) {
-      ctx.error = err;
-    }
-
-    return ctx;
-  };
 
   /**
      *
@@ -140,14 +97,16 @@ export class Logger {
      * @param {string} message
      * @param {ILogContext} context
      */
-  public log(severity: string, message: string, context?: ILogContext): void {
+  public log(severity: string, message: string, context: ILogContext): void {
     const data = this.format(severity, message, context);
 
     winstonLogger.log(severity, '', data);
-    this.udp.send(JSON.stringify(data))
-      .catch(() => {
-        // unhandled promise rejection caught
-      });
+    if (context.isForUi) {
+      this.udp.send(JSON.stringify(data))
+        .catch(() => {
+          // unhandled promise rejection caught
+        });
+    }
   }
 
   /**
@@ -208,6 +167,76 @@ export class Logger {
     }
 
     return line;
+  };
+
+  private _ctxFromReqDto = (
+    reqRes: Request | ProcessDto | ILogContext,
+    isForUi?: boolean,
+    err?: Error,
+  ): ILogContext => {
+    if (reqRes) {
+      if (reqRes instanceof Request) {
+        return this._ctxFromReq(reqRes as Request, err);
+      }
+      if (reqRes instanceof ProcessDto) {
+        return this._ctxFromDto(reqRes as ProcessDto, isForUi, err);
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return reqRes;
+    }
+
+    return {};
+  };
+
+  /**
+     *
+     * @param {ProcessDto} dto
+     * @param {Error} err
+     * @param isForUi
+     * @return {ILogContext}
+     */
+  private _ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(dto.headers),
+      correlation_id: headers.getCorrelationId(dto.headers),
+      topology_id: headers.getTopologyId(dto.headers),
+      process_id: headers.getProcessId(dto.headers),
+      parent_id: headers.getParentId(dto.headers),
+      sequence_id: headers.getSequenceId(dto.headers),
+    };
+
+    if (err) {
+      ctx.error = err;
+    }
+
+    if (isForUi) {
+      ctx.isForUi = isForUi;
+    }
+
+    return ctx;
+  };
+
+  /**
+     *
+     * @param req
+     * @param err
+     */
+  private _ctxFromReq = (req: Request, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(req.headers),
+      correlation_id: headers.getCorrelationId(req.headers),
+      topology_id: headers.getTopologyId(req.headers),
+      process_id: headers.getProcessId(req.headers),
+      parent_id: headers.getParentId(req.headers),
+      sequence_id: headers.getSequenceId(req.headers),
+    };
+
+    if (err) {
+      ctx.error = err;
+    }
+
+    return ctx;
   };
 }
 

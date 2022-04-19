@@ -31,7 +31,7 @@ export default class CurlSender {
        Url: ${dto.url},
        Headers: ${JSON.stringify(dto.headers)},
        Body: ${dto.body}`,
-        logger.ctxFromDto(dto.debugInfo),
+        dto.debugInfo,
       );
       const response = await fetch(dto.url, req);
       await this._sendMetrics(dto, startTime);
@@ -50,7 +50,7 @@ export default class CurlSender {
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       if (e instanceof Error) {
-        logger.error(e.message, logger.ctxFromDto(dto.debugInfo));
+        logger.error(e.message, dto.debugInfo);
       }
 
       if (e instanceof FetchError) {
@@ -89,7 +89,7 @@ export default class CurlSender {
        Code: ${res.status},
        Message: ${body ?? 'Empty response'},
        Reason: ${res.statusText}`,
-      logger.ctxFromDto(debugInfo),
+      debugInfo,
     );
   }
 
@@ -103,9 +103,9 @@ export default class CurlSender {
         info.getHeader(CORRELATION_ID),
         info.getHeader(USER),
         info.getHeader(APPLICATION),
-      ).catch((e) => (logger.error(e?.message ?? e)));
+      ).catch((e) => (logger.error(e?.message ?? e, info)));
     } catch (e) {
-      if (typeof e === 'string') logger.error(e, logger.ctxFromDto(info));
+      if (typeof e === 'string') logger.error(e, info);
     }
   }
 }
