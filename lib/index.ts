@@ -103,9 +103,9 @@ export function listen(): void {
   expressApp.disable('x-powered-by');
   expressApp.use(errorHandler(container.getRepository(Node)));
   expressApp.listen(appOptions.port, () => {
-    logger.info(`⚡️[server]: Server is running at http://localhost:${appOptions.port}`);
+    logger.info(`⚡️[server]: Server is running at http://localhost:${appOptions.port}`, {});
     routes.forEach((router) => {
-      logger.info(`⚡️[server]: Router '${router.getName()}' loaded.`);
+      logger.info(`⚡️[server]: Router '${router.getName()}' loaded.`, {});
     });
   });
 }
