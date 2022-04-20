@@ -56,19 +56,19 @@ export class Logger {
   }
 
   public debug(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
-    this.log(Severity.DEBUG, message, this._createCtx(context, isForUi));
+    this.log(Severity.DEBUG, message, this.createCtx(context, isForUi));
   }
 
   public info(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
-    this.log(Severity.INFO, message, this._createCtx(context, isForUi));
+    this.log(Severity.INFO, message, this.createCtx(context, isForUi));
   }
 
   public warn(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
-    this.log(Severity.WARNING, message, this._createCtx(context, isForUi));
+    this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
   }
 
   public error(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
-    this.log(Severity.ERROR, message, this._createCtx(context, isForUi));
+    this.log(Severity.ERROR, message, this.createCtx(context, isForUi));
   }
 
   public log(severity: Severity, message: string, context: ILogContext): void {
@@ -83,17 +83,17 @@ export class Logger {
     }
   }
 
-  public _createCtx = (
+  public createCtx = (
     payload: Request | ProcessDto | ILogContext,
     isForUi?: boolean,
     err?: Error,
   ): ILogContext => {
     if (payload) {
       if (payload instanceof Request) {
-        return this._ctxFromReq(payload as Request, err);
+        return this.ctxFromReq(payload as Request, err);
       }
       if (payload instanceof ProcessDto) {
-        return this._ctxFromDto(payload as ProcessDto, isForUi, err);
+        return this.ctxFromDto(payload as ProcessDto, isForUi, err);
       }
       return payload as ILogContext;
     }
@@ -101,7 +101,7 @@ export class Logger {
     return {};
   };
 
-  public _ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
+  public ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(dto.headers),
       correlation_id: headers.getCorrelationId(dto.headers),
@@ -122,7 +122,7 @@ export class Logger {
     return ctx;
   };
 
-  public _ctxFromReq = (req: Request, err?: Error): ILogContext => {
+  public ctxFromReq = (req: Request, err?: Error): ILogContext => {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(req.headers),
       correlation_id: headers.getCorrelationId(req.headers),
