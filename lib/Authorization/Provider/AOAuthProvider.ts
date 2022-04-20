@@ -14,7 +14,7 @@ export default abstract class AOAuthProvider implements IOAuthProvider {
   }
 
   public static throwException(message: string, code: number): void {
-    logger.error(message);
+    logger.error(message, {});
     throw new Error(`Message [${message}] code [${code}]`);
   }
 }

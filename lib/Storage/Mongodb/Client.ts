@@ -32,9 +32,9 @@ export default class MongoDbClient {
   public async reconnect(): Promise<void> {
     try {
       await this._client.connect();
-      logger.info('⚡️[server]: MongoDB Connected.');
+      logger.info('⚡️[server]: MongoDB Connected.', {});
     } catch (err) {
-      if (err instanceof Error) logger.error(err.message);
+      if (err instanceof Error) logger.error(err.message, {});
     }
   }
 

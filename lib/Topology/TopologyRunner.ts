@@ -64,7 +64,7 @@ export default class TopologyRunner {
       const resp = await this._curlSender.send(requestDto);
       if (resp.responseCode !== StatusCodes.OK) {
         errMessage = errMessage.replace('__reason__', 'ResponseCode is not 200');
-        logger.error(errMessage);
+        logger.error(errMessage, processDto);
         throw new OnRepeatException(60, 10, errMessage);
       }
 
@@ -75,7 +75,7 @@ export default class TopologyRunner {
       }
       if (e instanceof Error) {
         errMessage = errMessage.replace('__reason__', e.message || 'unknown');
-        logger.error(e.message || `${errMessage}: Unknown error!`);
+        logger.error(e.message || `${errMessage}: Unknown error!`, processDto);
       }
 
       throw new OnRepeatException(60, 10, errMessage);
