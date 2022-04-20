@@ -25,7 +25,7 @@ async function prepare() {
       [CLIENT_ID]: '**89f69a-44f4-4163-****-3090edc*****',
     });
     await repository.insert(newAppInstall);
-    logger.info('Document inserted');
+    logger.info('Document inserted', {});
   });
 }
 
