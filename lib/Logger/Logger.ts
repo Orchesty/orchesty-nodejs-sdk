@@ -55,49 +55,23 @@ export class Logger {
     this.udp = new Sender(parsed.server, parsed.port);
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public debug(message: string, context: ILogContext | ProcessDto | Request): void {
-    this.log(Severity.DEBUG, message, this._ctxFromReqDto(context));
+  public debug(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.DEBUG, message, this._createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public info(message: string, context: ILogContext | ProcessDto | Request): void {
-    this.log(Severity.INFO, message, this._ctxFromReqDto(context));
+  public info(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.INFO, message, this._createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public warn(message: string, context: ILogContext | ProcessDto | Request): void {
-    this.log(Severity.WARNING, message, this._ctxFromReqDto(context));
+  public warn(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.WARNING, message, this._createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public error(message: string, context: ILogContext | ProcessDto | Request): void {
-    this.log(Severity.ERROR, message, this._ctxFromReqDto(context));
+  public error(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.ERROR, message, this._createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} severity
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public log(severity: string, message: string, context: ILogContext): void {
+  public log(severity: Severity, message: string, context: ILogContext): void {
     const data = this.format(severity, message, context);
 
     winstonLogger.log(severity, '', data);
@@ -109,14 +83,63 @@ export class Logger {
     }
   }
 
-  /**
-   *
-   * @param {string} severity
-   * @param {string} message
-   * @param {ILogContext} context
-   * @return {string}
-   */
-  private format = (severity: string, message: string, context?: ILogContext): ILoggerFormat => {
+  public _createCtx = (
+    payload: Request | ProcessDto | ILogContext,
+    isForUi?: boolean,
+    err?: Error,
+  ): ILogContext => {
+    if (payload) {
+      if (payload instanceof Request) {
+        return this._ctxFromReq(payload as Request, err);
+      }
+      if (payload instanceof ProcessDto) {
+        return this._ctxFromDto(payload as ProcessDto, isForUi, err);
+      }
+      return payload as ILogContext;
+    }
+
+    return {};
+  };
+
+  public _ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(dto.headers),
+      correlation_id: headers.getCorrelationId(dto.headers),
+      topology_id: headers.getTopologyId(dto.headers),
+      process_id: headers.getProcessId(dto.headers),
+      parent_id: headers.getParentId(dto.headers),
+      sequence_id: headers.getSequenceId(dto.headers),
+    };
+
+    if (err) {
+      ctx.error = err;
+    }
+
+    if (isForUi) {
+      ctx.isForUi = isForUi;
+    }
+
+    return ctx;
+  };
+
+  public _ctxFromReq = (req: Request, err?: Error): ILogContext => {
+    const ctx: ILogContext = {
+      node_id: headers.getNodeId(req.headers),
+      correlation_id: headers.getCorrelationId(req.headers),
+      topology_id: headers.getTopologyId(req.headers),
+      process_id: headers.getProcessId(req.headers),
+      parent_id: headers.getParentId(req.headers),
+      sequence_id: headers.getSequenceId(req.headers),
+    };
+
+    if (err) {
+      ctx.error = err;
+    }
+
+    return ctx;
+  };
+
+  private format = (severity: Severity, message: string, context?: ILogContext): ILoggerFormat => {
     const line: ILoggerFormat = {
       timestamp: Date.now(),
       hostname: os.hostname(),
@@ -167,76 +190,6 @@ export class Logger {
     }
 
     return line;
-  };
-
-  private _ctxFromReqDto = (
-    reqRes: Request | ProcessDto | ILogContext,
-    isForUi?: boolean,
-    err?: Error,
-  ): ILogContext => {
-    if (reqRes) {
-      if (reqRes instanceof Request) {
-        return this._ctxFromReq(reqRes as Request, err);
-      }
-      if (reqRes instanceof ProcessDto) {
-        return this._ctxFromDto(reqRes as ProcessDto, isForUi, err);
-      }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return reqRes;
-    }
-
-    return {};
-  };
-
-  /**
-     *
-     * @param {ProcessDto} dto
-     * @param {Error} err
-     * @param isForUi
-     * @return {ILogContext}
-     */
-  private _ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
-    const ctx: ILogContext = {
-      node_id: headers.getNodeId(dto.headers),
-      correlation_id: headers.getCorrelationId(dto.headers),
-      topology_id: headers.getTopologyId(dto.headers),
-      process_id: headers.getProcessId(dto.headers),
-      parent_id: headers.getParentId(dto.headers),
-      sequence_id: headers.getSequenceId(dto.headers),
-    };
-
-    if (err) {
-      ctx.error = err;
-    }
-
-    if (isForUi) {
-      ctx.isForUi = isForUi;
-    }
-
-    return ctx;
-  };
-
-  /**
-     *
-     * @param req
-     * @param err
-     */
-  private _ctxFromReq = (req: Request, err?: Error): ILogContext => {
-    const ctx: ILogContext = {
-      node_id: headers.getNodeId(req.headers),
-      correlation_id: headers.getCorrelationId(req.headers),
-      topology_id: headers.getTopologyId(req.headers),
-      process_id: headers.getProcessId(req.headers),
-      parent_id: headers.getParentId(req.headers),
-      sequence_id: headers.getSequenceId(req.headers),
-    };
-
-    if (err) {
-      ctx.error = err;
-    }
-
-    return ctx;
   };
 }
 
