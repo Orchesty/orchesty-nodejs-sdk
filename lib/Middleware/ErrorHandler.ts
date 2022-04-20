@@ -33,7 +33,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
       CurrentHop: ${getRepeatHops(dto.headers)}, 
       Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
       MaxHops: ${err.getMaxHops()}`,
-        logger.ctxFromDto(dto),
+        dto,
       );
 
       createSuccessResponse(res, dto);

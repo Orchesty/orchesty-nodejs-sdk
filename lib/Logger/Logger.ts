@@ -23,6 +23,7 @@ export interface ILogContext {
     result_message?: string;
     error?: Error;
     data?: string;
+    isForUi?: boolean;
 }
 
 interface ILoggerFormat {
@@ -43,6 +44,7 @@ interface ILoggerFormat {
         trace?: string,
     };
     data?: string;
+    isForUi?: boolean;
 }
 
 export class Logger {
@@ -53,49 +55,53 @@ export class Logger {
     this.udp = new Sender(parsed.server, parsed.port);
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public debug(message: string, context?: ILogContext): void {
-    this.log(Severity.DEBUG, message, context || {});
+  public debug(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.DEBUG, message, this.createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public info(message: string, context?: ILogContext): void {
-    this.log(Severity.INFO, message, context || {});
+  public info(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.INFO, message, this.createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public warn(message: string, context?: ILogContext): void {
-    this.log(Severity.WARNING, message, context || {});
+  public warn(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public error(message: string, context?: ILogContext): void {
-    this.log(Severity.ERROR, message, context || {});
+  public error(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+    this.log(Severity.ERROR, message, this.createCtx(context, isForUi));
   }
 
-  /**
-     *
-     * @param {ProcessDto} dto
-     * @param {Error} err
-     * @return {ILogContext}
-     */
-  public ctxFromDto = (dto: ProcessDto, err?: Error): ILogContext => {
+  public log(severity: Severity, message: string, context: ILogContext): void {
+    const data = this.format(severity, message, context);
+
+    winstonLogger.log(severity, '', data);
+    if (context.isForUi) {
+      this.udp.send(JSON.stringify(data))
+        .catch(() => {
+          // unhandled promise rejection caught
+        });
+    }
+  }
+
+  public createCtx = (
+    payload: Request | ProcessDto | ILogContext,
+    isForUi?: boolean,
+    err?: Error,
+  ): ILogContext => {
+    if (payload) {
+      if (payload instanceof Request) {
+        return this.ctxFromReq(payload as Request, err);
+      }
+      if (payload instanceof ProcessDto) {
+        return this.ctxFromDto(payload as ProcessDto, isForUi, err);
+      }
+      return payload as ILogContext;
+    }
+
+    return {};
+  };
+
+  public ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(dto.headers),
       correlation_id: headers.getCorrelationId(dto.headers),
@@ -109,14 +115,13 @@ export class Logger {
       ctx.error = err;
     }
 
+    if (isForUi) {
+      ctx.isForUi = isForUi;
+    }
+
     return ctx;
   };
 
-  /**
-    *
-    * @param req
-    * @param err
-    */
   public ctxFromReq = (req: Request, err?: Error): ILogContext => {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(req.headers),
@@ -134,30 +139,7 @@ export class Logger {
     return ctx;
   };
 
-  /**
-     *
-     * @param {string} severity
-     * @param {string} message
-     * @param {ILogContext} context
-     */
-  public log(severity: string, message: string, context?: ILogContext): void {
-    const data = this.format(severity, message, context);
-
-    winstonLogger.log(severity, '', data);
-    this.udp.send(JSON.stringify(data))
-      .catch(() => {
-        // unhandled promise rejection caught
-      });
-  }
-
-  /**
-   *
-   * @param {string} severity
-   * @param {string} message
-   * @param {ILogContext} context
-   * @return {string}
-   */
-  private format = (severity: string, message: string, context?: ILogContext): ILoggerFormat => {
+  private format = (severity: Severity, message: string, context?: ILogContext): ILoggerFormat => {
     const line: ILoggerFormat = {
       timestamp: Date.now(),
       hostname: os.hostname(),

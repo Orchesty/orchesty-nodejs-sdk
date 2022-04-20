@@ -8,7 +8,7 @@ export default function bodyParser(req: Request, res: Response, next: NextFuncti
     req.body = data;
 
     // eslint-disable-next-line max-len
-    logger.debug(`Incoming request: Method[${req.method}] Url[${req.url}] Headers[${JSON.stringify(req.headers)}] Body[${req.body}]`, logger.ctxFromReq(req));
+    logger.debug(`Incoming request: Method[${req.method}] Url[${req.url}] Headers[${JSON.stringify(req.headers)}] Body[${req.body}]`, req);
 
     next();
   });
