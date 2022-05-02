@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { Headers } from 'node-fetch';
+import { Headers, HeadersInit } from 'node-fetch';
 import CurlSender from '../Transport/Curl/CurlSender';
 import ResponseDto from '../Transport/Curl/ResponseDto';
 import logger from '../Logger/Logger';
@@ -26,11 +26,12 @@ export default class TopologyRunner {
     node: string,
     processDto: ProcessDto,
     _user?: string,
+    _headers?: HeadersInit,
   ): Promise<ResponseDto> {
     const user = _user !== undefined ? `/user/${_user}` : '';
     const url = `${pipesOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run-by-name`;
 
-    return this._run(url, data, processDto);
+    return this._run(url, data, processDto, _headers);
   }
 
   public async runById(
@@ -39,14 +40,20 @@ export default class TopologyRunner {
     node: string,
     processDto: ProcessDto,
     _user?: string,
+    _headers?: HeadersInit,
   ): Promise<ResponseDto> {
     const user = _user !== undefined ? `/user/${_user}` : '';
     const url = `${pipesOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run`;
 
-    return this._run(url, data, processDto);
+    return this._run(url, data, processDto, _headers);
   }
 
-  private async _run(url: string, data: Record<string, unknown>, processDto: ProcessDto): Promise<ResponseDto> {
+  private async _run(
+    url: string,
+    data: Record<string, unknown>,
+    processDto: ProcessDto,
+    headers?: HeadersInit,
+  ): Promise<ResponseDto> {
     let errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
     try {
       const corrIdKey = createKey(PREV_CORRELATION_ID);
@@ -57,6 +64,7 @@ export default class TopologyRunner {
         processDto,
         JSON.stringify(data),
         new Headers({
+          ...headers ?? {},
           [corrIdKey]: getCorrelationId(processDto.headers) ?? '',
           [nodeIdKey]: getNodeId(processDto.headers) ?? '',
         }),

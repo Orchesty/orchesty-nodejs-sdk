@@ -1,4 +1,4 @@
-import { Headers } from 'node-fetch';
+import { Headers, HeadersInit } from 'node-fetch';
 import { StatusCodes } from 'http-status-codes';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import { container } from '../../../test/TestAbstact';
@@ -21,13 +21,23 @@ jest.mock('../../Logger/Logger', () => ({
   Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
-function mockCurl(curl: CurlSender, url: string): SpyInstance {
+function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInstance {
   return jest.spyOn(curl, 'send').mockImplementation(
     // eslint-disable-next-line @typescript-eslint/require-await
     async (r: RequestDto): Promise<ResponseDto> => {
       const request = r as RequestDto;
       expect(request.method).toBe(HttpMethods.POST);
       expect(request.url).toBe(url);
+      const defaultHeaders = {
+        'pf-previous-correlation-id': '',
+        'pf-previous-node-id': '',
+      };
+
+      if (headers) {
+        expect(request.headers).toStrictEqual(new Headers({ ...defaultHeaders, ...headers }));
+      } else {
+        expect(request.headers).toStrictEqual(new Headers(defaultHeaders));
+      }
 
       return new ResponseDto('{}', StatusCodes.OK, new Headers(new Headers()));
     },
@@ -60,6 +70,22 @@ describe('TopologyRunner tests', () => {
   it('run by name', async () => {
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
     const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto());
+
+    expect(res.responseCode).toEqual(StatusCodes.OK);
+    sender.mockRestore();
+  });
+
+  it('run by name with custom headers', async () => {
+    const header = { 'pf-random-header': '123' };
+    const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name', header);
+    const res = await runner.runByName(
+      {},
+      'topoName',
+      'nodeName',
+      new ProcessDto(),
+      undefined,
+      header,
+    );
 
     expect(res.responseCode).toEqual(StatusCodes.OK);
     sender.mockRestore();
