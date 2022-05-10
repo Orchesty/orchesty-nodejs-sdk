@@ -2,7 +2,7 @@
     "extends": "./tsconfig.json",
     "include": [
         "lib",
-        "test",
+        "test"
     ],
     "exclude": [
         "node_modules",
