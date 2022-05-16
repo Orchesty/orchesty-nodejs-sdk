@@ -1,6 +1,6 @@
 import { Repository as BaseRepo } from 'mongodb-typescript';
 import {
-  Cursor, FilterQuery, MongoClient, ReplaceOneOptions, ObjectId,
+  FindCursor, MongoClient, ObjectId, ReplaceOptions, Filter,
 } from 'mongodb';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
 import CryptManager from '../../Crypt/CryptManager';
@@ -27,23 +27,26 @@ export default class Repository<T> extends BaseRepo<T> {
     return this.Type.name;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async insert(entity: T): Promise<void> {
     this._encrypt(entity);
     return super.insert(entity);
   }
 
-  public async update(entity: T, options?: ReplaceOneOptions): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async update(entity: T, options?: ReplaceOptions): Promise<void> {
     this._encrypt(entity);
     return super.update(entity, options);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async upsert(entity: T): Promise<void> {
     this._encrypt(entity);
     return super.save(entity);
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-explicit-any
-  public async findMany(query?: FilterQuery<T | { _id: any; }>): Promise<T[]> {
+  public async findMany(query: Filter<any>): Promise<T[]> {
     this._decorateQuery(query);
     const entities = await super.find(query)
       .toArray();
@@ -54,13 +57,13 @@ export default class Repository<T> extends BaseRepo<T> {
   }
 
   /* eslint-disable */
-  public find = (query?: FilterQuery<T | { _id: any; }>): Cursor<T> => {
+  public find = (query: Filter<T>): FindCursor<T> => {
     throw new Error('Use findMany method!');
   };
   /* eslint-enable */
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/naming-convention
-  public async findOne(query?: FilterQuery<T | { _id: any; }>): Promise<T | null> {
+  public async findOne(query?: Filter<any>): Promise<T | null> {
     this._decorateQuery(query);
     const entity = await super.findOne(query);
     if (entity) {
@@ -139,7 +142,7 @@ export default class Repository<T> extends BaseRepo<T> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/naming-convention
-  private _decorateQuery(query?: FilterQuery<T | { _id: any; }>): void {
+  private _decorateQuery(query?: Filter<any>): void {
     Object.entries(this._filters)
       .forEach((item) => {
         item[1].decorate(this.Type, query);

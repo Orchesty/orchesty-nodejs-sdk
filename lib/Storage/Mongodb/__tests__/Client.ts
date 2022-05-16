@@ -34,11 +34,6 @@ describe('Test MongoDb Storage', () => {
     await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
-  it('IsConnected', async () => {
-    await dbClient.reconnect();
-    expect(dbClient.isConnected()).toBeTruthy();
-  });
-
   it('repository', async () => {
     const appInstallRepo = await dbClient.getRepository(ApplicationInstall);
     expect(appInstallRepo).toBeInstanceOf(Repository);

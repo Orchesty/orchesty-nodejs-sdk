@@ -177,7 +177,7 @@ describe('Tests for repository', () => {
   it('repository - find', async () => {
     const repo = await dbClient.getRepository(ClassWithoutDeleted);
     expect(() => {
-      repo.find();
+      repo.find({});
     }).toThrow('Use findMany method!');
   });
 });

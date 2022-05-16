@@ -12,9 +12,7 @@ export default class MongoDbClient {
   private readonly _client: MongoClient;
 
   constructor(private _dsn: string, private _cryptManager: CryptManager, private _container: DIContainer) {
-    this._client = new MongoClient(this._dsn, {
-      useUnifiedTopology: true, useNewUrlParser: true, connectTimeoutMS: 10000, keepAlive: true,
-    });
+    this._client = new MongoClient(this._dsn, { connectTimeoutMS: 10000, keepAlive: true });
   }
 
   get client(): MongoClient {
@@ -23,10 +21,6 @@ export default class MongoDbClient {
 
   public async down(): Promise<void> {
     await this._client.close(true);
-  }
-
-  public isConnected(): boolean {
-    return this._client.isConnected();
   }
 
   public async reconnect(): Promise<void> {
@@ -39,18 +33,12 @@ export default class MongoDbClient {
   }
 
   public async db(name?: string): Promise<Db> {
-    if (!this._client.isConnected()) {
-      await this.reconnect();
-    }
+    await this._client.connect();
 
     return this._client.db(name);
   }
 
   public async getRepository<T extends IDocument>(className: ClassType<T>): Promise<Repository<T>> {
-    if (!this._client.isConnected()) {
-      await this.reconnect();
-    }
-
     try {
       const repo = this._container.getRepository(className);
       await repo.createIndexes(true);
