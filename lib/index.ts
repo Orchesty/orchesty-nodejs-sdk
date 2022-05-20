@@ -1,4 +1,5 @@
 import express from 'express';
+import promMiddleware from 'express-prometheus-middleware';
 import DIContainer from './DIContainer/Container';
 import CommonLoader from './Commons/CommonLoader';
 import ConnectorRouter from './Connector/ConnectorRouter';
@@ -41,6 +42,13 @@ const expressApp: express.Application = express();
 
 expressApp.use(metricsHandler);
 expressApp.use(bodyParser);
+expressApp.use(promMiddleware({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+  requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+  responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+}));
 
 export async function initiateContainer(): Promise<void> {
   // Instantiate core services
