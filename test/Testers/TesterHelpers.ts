@@ -161,8 +161,13 @@ export function mockNodeCurl(
     return mockCurl(file, sender, _prefix, _index);
   }
 
-  if (Reflect.has(node, 'sender') && Reflect.get(node, 'sender') !== undefined) {
+  if (
+    Reflect.has(node, 'sender')
+    && Reflect.get(node, 'sender') !== undefined
+    && !_exclude.includes(_prefix)
+  ) {
     return mockCurl(file, sender, _prefix, _index);
   }
+
   return undefined;
 }
