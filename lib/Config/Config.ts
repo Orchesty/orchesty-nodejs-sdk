@@ -26,6 +26,6 @@ export const cryptOptions = {
 };
 
 export const pipesOptions = {
-  backend: process.env.BACKEND_URL || '',
+  backend: process.env.BACKEND_URL || process.env.BACKEND_DSN || '',
   startingPoint: process.env.STARTING_POINT_DSN || '',
 };
