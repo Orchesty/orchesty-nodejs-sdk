@@ -1,7 +1,7 @@
 import TestOAuth2Application from '../TestOAuth2Application';
 import { OAuth2Provider } from '../../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
-import { AUTHORIZATION_SETTINGS } from '../../../lib/Application/Base/AApplication';
+import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 
 // Mock Logger module
@@ -20,7 +20,7 @@ describe('Test OAuth2 application', () => {
     appInstall.setUser('testUser');
     appInstall.setName('testKey');
     appInstall.addSettings({
-      [AUTHORIZATION_SETTINGS]: {
+      [AUTHORIZATION_FORM]: {
         [CLIENT_SECRET]: 'testSecret',
         [CLIENT_ID]: 'testClientId',
       },

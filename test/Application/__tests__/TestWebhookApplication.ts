@@ -31,33 +31,40 @@ describe('Tests for webhook application', () => {
   it('getSettingsForm', () => {
     /* eslint-disable @typescript-eslint/naming-convention */
     const expected = {
-      _fields: [
+      _forms: [
         {
-          _choices: [],
           _description: '',
+          _fields: [
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'testKey',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'password',
+              _value: null,
+            },
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'person',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'text',
+              _value: null,
+            },
+          ],
           _key: 'testKey',
-          _label: 'testLabel',
-          _type: 'password',
-          _value: null,
-          _disabled: false,
-          _readOnly: false,
-          _required: false,
-        },
-        {
-          _choices: [],
-          _description: '',
-          _key: 'person',
-          _label: 'testLabel',
-          _type: 'text',
-          _value: null,
-          _disabled: false,
-          _readOnly: false,
-          _required: false,
+          _publicName: 'testPublicName',
         },
       ],
     };
     /* eslint-enable @typescript-eslint/naming-convention */
-    expect(app.getSettingsForm()).toEqual(expected);
+    expect(app.getFormStack()).toEqual(expected);
   });
 
   it('getWebhookSubscribeRequestDto', () => {

@@ -23,10 +23,17 @@ export interface IApplication extends IName {
 
   getApplicationType(): ApplicationTypeEnum;
 
-  setApplicationSettings(
+  saveApplicationForms(
     applicationInstall: ApplicationInstall,
     settings: IApplicationSettings
   ): Promise<ApplicationInstall> | ApplicationInstall;
+
+  savePassword(
+      applicationInstall: ApplicationInstall,
+      formKey: string,
+      fieldKey: string,
+      password: string,
+  ): ApplicationInstall;
 
   isAuthorized(applicationInstall: ApplicationInstall): boolean;
 

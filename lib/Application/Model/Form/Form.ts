@@ -1,7 +1,12 @@
-import Field, { IFieldArray } from './Field';
+import Field, { IField } from './Field';
 
 export default class Form {
+  private _description = '';
+
   private _fields: Field[] = [];
+
+  constructor(private _key: string, private _publicName: string) {
+  }
 
   public addField(field: Field): Form {
     this.fields.push(field);
@@ -12,12 +17,44 @@ export default class Form {
     return this._fields;
   }
 
-  public toArray(): IFieldArray[] {
-    const fieldsArray: IFieldArray[] = [];
+  public set description(value: string) {
+    this._description = value;
+  }
+
+  public get description(): string {
+    return this._description;
+  }
+
+  public get key(): string {
+    return this._key;
+  }
+
+  public set publicName(value: string) {
+    this._publicName = value;
+  }
+
+  public get publicName(): string {
+    return this._publicName;
+  }
+
+  public toArray(): IForm {
+    const fields: IField[] = [];
     this.fields.forEach((element) => {
-      fieldsArray.push(element.toArray);
+      fields.push(element.toArray);
     });
 
-    return fieldsArray;
+    return {
+      key: this.key,
+      publicName: this.publicName,
+      description: this.description,
+      fields,
+    };
   }
+}
+
+export interface IForm {
+  key: string,
+  publicName: string,
+  description: string,
+  fields: IField[],
 }

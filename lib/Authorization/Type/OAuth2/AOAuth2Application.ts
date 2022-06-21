@@ -1,22 +1,16 @@
-import {
-  CLIENT_ID, CLIENT_SECRET, FRONTEND_REDIRECT_URL, IOAuth2Application,
-} from './IOAuth2Application';
-import AApplication, { AUTHORIZATION_SETTINGS, FORM } from '../../../Application/Base/AApplication';
+import { FRONTEND_REDIRECT_URL, IOAuth2Application } from './IOAuth2Application';
+import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
 import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
-import { ApplicationInstall, IApplicationSettings } from '../../../Application/Database/ApplicationInstall';
+import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { TOKEN } from '../Basic/ABasicApplication';
-import Field, { IFieldArray } from '../../../Application/Model/Form/Field';
+import Field from '../../../Application/Model/Form/Field';
 import FieldType from '../../../Application/Model/Form/FieldType';
 import OAuth2Dto from '../../Provider/Dto/OAuth2Dto';
 import {
   ACCESS_TOKEN, EXPIRES, IToken, OAuth2Provider,
 } from '../../Provider/OAuth2/OAuth2Provider';
 import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
-
-export const CREDENTIALS = [
-  CLIENT_ID,
-  CLIENT_SECRET,
-];
+import { IForm } from '../../../Application/Model/Form/Form';
 
 export default abstract class AOAuth2Application extends AApplication implements IOAuth2Application {
   constructor(protected _provider: OAuth2Provider) {
@@ -42,26 +36,30 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public isAuthorized = (
     applicationInstall: ApplicationInstall,
-  ): boolean => !!applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[TOKEN]?.[ACCESS_TOKEN];
+  ): boolean => !!applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[TOKEN]?.[ACCESS_TOKEN];
 
-  public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
-    const formFields = super.getApplicationForm(applicationInstall);
+  public getApplicationForms(applicationInstall: ApplicationInstall): Record<string, IForm> {
+    const forms = super.getApplicationForms(applicationInstall);
 
     const redirectField = new Field(
       FieldType.TEXT,
       FRONTEND_REDIRECT_URL,
       'Redirect URL',
       this._provider.getRedirectUri(),
-    ).setReadOnly(true).toArray;
+    )
+      .setReadOnly(true)
+      .toArray;
 
-    formFields.push(redirectField);
+    if (forms[AUTHORIZATION_FORM]) {
+      forms[AUTHORIZATION_FORM].fields.push(redirectField);
+    }
 
-    return formFields;
+    return forms;
   }
 
   public getFrontendRedirectUrl = (
     applicationInstall: ApplicationInstall,
-  ): string => applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[FRONTEND_REDIRECT_URL];
+  ): string => applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[FRONTEND_REDIRECT_URL];
 
   public async refreshAuthorization(applicationInstall: ApplicationInstall): Promise<ApplicationInstall> {
     const token = await this._provider.refreshAccessToken(
@@ -73,7 +71,7 @@ export default abstract class AOAuth2Application extends AApplication implements
     applicationInstall.setExpires(token[EXPIRES] ?? undefined);
 
     const settings = applicationInstall.getSettings();
-    settings[AUTHORIZATION_SETTINGS][TOKEN] = token;
+    settings[AUTHORIZATION_FORM][TOKEN] = token;
     applicationInstall.setSettings(settings);
 
     return applicationInstall;
@@ -98,43 +96,22 @@ export default abstract class AOAuth2Application extends AApplication implements
     }
 
     const settings = applicationInstall.getSettings();
-    this._createAuthSettings(applicationInstall);
-    settings[AUTHORIZATION_SETTINGS][TOKEN] = tokenFromProvider;
+    settings[AUTHORIZATION_FORM][TOKEN] = tokenFromProvider;
     applicationInstall.setSettings(settings);
   }
 
-  public setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): void {
-    this._createAuthSettings(applicationInstall);
+  public setFrontendRedirectUrl = (applicationInstall: ApplicationInstall, redirectUrl: string): void => {
     const settings = applicationInstall.getSettings();
-    settings[AUTHORIZATION_SETTINGS][FRONTEND_REDIRECT_URL] = redirectUrl;
+    settings[AUTHORIZATION_FORM][FRONTEND_REDIRECT_URL] = redirectUrl;
     applicationInstall.setSettings(settings);
-  }
+  };
 
   public getAccessToken = (applicationInstall: ApplicationInstall): string => {
-    if (applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN]) {
-      return applicationInstall.getSettings()[AUTHORIZATION_SETTINGS][TOKEN][ACCESS_TOKEN];
+    if (applicationInstall.getSettings()[AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN]) {
+      return applicationInstall.getSettings()[AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN];
     }
     throw new Error('There is no access token');
   };
-
-  public async setApplicationSettings(
-    applicationInstall: ApplicationInstall,
-    settings: IApplicationSettings,
-  ): Promise<ApplicationInstall> {
-    await super.setApplicationSettings(applicationInstall, settings);
-    this._createAuthSettings(applicationInstall);
-
-    const sett = applicationInstall.getSettings();
-    Object.entries(sett[FORM]).forEach((item) => {
-      if (CREDENTIALS.includes(item[0])) {
-        // eslint-disable-next-line prefer-destructuring
-        sett[AUTHORIZATION_SETTINGS][item[0]] = item[1];
-      }
-    });
-    applicationInstall.setSettings(sett);
-
-    return applicationInstall;
-  }
 
   public createDto(applicationInstall: ApplicationInstall, redirectUrl = ''): OAuth2Dto {
     const dto = new OAuth2Dto(applicationInstall, this.getAuthUrl(), this.getTokenUrl());
@@ -148,7 +125,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public getTokens = (
     applicationInstall: ApplicationInstall,
-  ): IToken => applicationInstall.getSettings()?.[AUTHORIZATION_SETTINGS]?.[TOKEN];
+  ): IToken => applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[TOKEN];
 
   protected _getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA;
 
@@ -157,12 +134,4 @@ export default abstract class AOAuth2Application extends AApplication implements
       authorizationMethod: 'body',
     },
   });
-
-  protected _createAuthSettings = (applicationInstall: ApplicationInstall): ApplicationInstall => {
-    if (!Object.prototype.hasOwnProperty.call(applicationInstall.getSettings(), AUTHORIZATION_SETTINGS)) {
-      applicationInstall.addSettings({ [AUTHORIZATION_SETTINGS]: {} });
-      return applicationInstall;
-    }
-    return applicationInstall;
-  };
 }

@@ -4,15 +4,13 @@ import Annotation from '../../Utils/Annotation';
 import { IApplication } from '../Base/IApplication';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
 import HttpMethods from '../../Transport/HttpMethods';
-import { IBasicApplication } from '../../Authorization/Type/Basic/IBasicApplication';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
 import ApplicationLoader from '../ApplicationLoader';
-import AApplication, { FORM, IApplicationArray } from '../Base/AApplication';
-import { IFieldArray } from '../Model/Form/Field';
+import AApplication, { IApplicationArray } from '../Base/AApplication';
+import { IField } from '../Model/Form/Field';
 import { isWebhook } from '../Base/ApplicationTypeEnum';
 import WebhookManager from './WebhookManager';
-import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
 
 const AUTHORIZED = 'authorized';
 const APPLICATION_SETTINGS = 'applicationSettings';
@@ -59,43 +57,35 @@ export default class ApplicationManager {
     name: string,
     user: string,
     data: IApplicationSettings,
-  ): Promise<{ [key: string]: unknown | IFieldArray[] }> {
+  ): Promise<{ [key: string]: unknown | IField[] }> {
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    const res = (await app.setApplicationSettings(appInstall as ApplicationInstall, data)).toArray();
+    const res = (await app.saveApplicationForms(appInstall as ApplicationInstall, data)).toArray();
     await this._repository.update(appInstall);
 
     return {
       ...res,
-      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
     };
   }
 
   public async saveApplicationPassword(
     name: string,
     user: string,
+    formKey: string,
+    fieldKey: string,
     password: string,
   ): Promise<{ [key: string]: unknown }> {
-    const app = this.getApplication(name) as IBasicApplication;
+    const app = this.getApplication(name);
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    let settings = appInstall.getSettings();
-    if (settings[FORM] && settings[FORM][PASSWORD]) {
-      settings[FORM][PASSWORD] = password;
-    } else if (settings[FORM]) {
-      settings[FORM] = { ...settings[FORM], [PASSWORD]: password };
-    } else {
-      settings = { ...settings, [FORM]: { [PASSWORD]: password } };
-    }
-
-    appInstall.addSettings(settings);
-    const res = app.setApplicationPassword(appInstall, password).toArray();
+    const res = app.savePassword(appInstall, formKey, fieldKey, password).toArray();
     await this._repository.update(appInstall);
 
     return {
       ...res,
-      [APPLICATION_SETTINGS]: (app as unknown as AApplication).getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: (app as unknown as AApplication).getApplicationForms(appInstall),
     };
   }
 
@@ -124,7 +114,7 @@ export default class ApplicationManager {
   public async installApplication(
     name: string,
     user: string,
-  ): Promise<{ [key: string]: unknown | boolean | IFieldArray[] }> {
+  ): Promise<{ [key: string]: unknown | boolean | IField[] }> {
     let appInstall: ApplicationInstall | null = await this._repository.findByNameAndUser(name, user);
     if (appInstall) {
       // Todo : need to be changed to custom error that doesn't return 500
@@ -138,7 +128,7 @@ export default class ApplicationManager {
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
-      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
     };
   }
 
@@ -153,7 +143,7 @@ export default class ApplicationManager {
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
-      [APPLICATION_SETTINGS]: app.getApplicationForm(appInstall),
+      [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
       webhookSettings: isWebhook(app.getApplicationType())
         ? await this._webhookManager.getWebhooks(app, user)
         : [],

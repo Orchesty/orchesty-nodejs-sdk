@@ -7,7 +7,7 @@ import { getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
 import TestWebhookApplication from '../../../../test/Application/TestWebhookApplication';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
-import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
+import { AUTHORIZATION_FORM } from '../../Base/AApplication';
 import { PASSWORD, TOKEN, USER } from '../../../Authorization/Type/Basic/ABasicApplication';
 import ResponseDto from '../../../Transport/Curl/ResponseDto';
 
@@ -39,7 +39,7 @@ describe('Tests for webhookManager', () => {
       .setName('webhookName')
       .setSettings({
         key: 'value',
-        [AUTHORIZATION_SETTINGS]: {
+        [AUTHORIZATION_FORM]: {
           [USER]: 'user',
           [PASSWORD]: 'password',
           [TOKEN]: 'token',
