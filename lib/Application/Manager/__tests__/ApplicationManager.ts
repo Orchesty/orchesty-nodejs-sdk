@@ -2,13 +2,13 @@ import { Request } from 'express';
 import ApplicationManager from '../ApplicationManager';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import TestBasicApplication from '../../../../test/Application/TestBasicApplication';
-import { ApplicationInstall } from '../../Database/ApplicationInstall';
+import { ApplicationInstall, IApplicationSettings } from '../../Database/ApplicationInstall';
 import { getTestContainer } from '../../../../test/TestAbstact';
 import CoreServices from '../../../DIContainer/CoreServices';
 import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Provider';
 import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
 import DIContainer from '../../../DIContainer/Container';
-import { AUTHORIZATION_SETTINGS } from '../../Base/AApplication';
+import { AUTHORIZATION_FORM } from '../../Base/AApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 import ApplicationLoader from '../../ApplicationLoader';
 import WebhookManager from '../WebhookManager';
@@ -16,6 +16,8 @@ import CurlSender from '../../../Transport/Curl/CurlSender';
 import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
 import Webhook from '../../Database/Webhook';
 import WebhookRepository from '../../Database/WebhookRepository';
+import { PASSWORD } from '../../../Authorization/Type/Basic/ABasicApplication';
+import { IField } from '../../Model/Form/Field';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
@@ -74,7 +76,7 @@ describe('ApplicationManager tests', () => {
       .setName('oauth2application')
       .setSettings({
         key: 'value',
-        [AUTHORIZATION_SETTINGS]: { [FRONTEND_REDIRECT_URL]: 'url' },
+        [AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' },
       });
 
     await repo.insert(appInstallOAuth);
@@ -162,15 +164,26 @@ describe('ApplicationManager tests', () => {
 
     expect(dbInstall).toHaveProperty('id');
     expect(dbInstall).toHaveProperty('applicationSettings');
-    expect(dbInstall.applicationSettings).toHaveLength(2);
+    expect(AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
+    expect('testForm' in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
   });
 
   it('saveApplicationPassword', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dbInstall = await appManager.saveApplicationPassword('test', 'user', 'passs') as any;
+    const dbInstall = await appManager.saveApplicationPassword(
+      'test',
+      'user',
+      AUTHORIZATION_FORM,
+      PASSWORD,
+      'passs',
+    );
     expect(dbInstall.key).toEqual('test');
     expect(dbInstall.user).toEqual('user');
-    expect(dbInstall.applicationSettings[0].value).toBeTruthy();
+    expect(AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fieldPassword = ((dbInstall as any).applicationSettings[AUTHORIZATION_FORM].fields as IField[])
+      .find((field) => field.key);
+    expect(fieldPassword).toBeTruthy();
   });
 
   it('authorizationApplication', async () => {

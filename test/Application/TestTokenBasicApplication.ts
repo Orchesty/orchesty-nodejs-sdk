@@ -1,7 +1,7 @@
 import { BodyInit } from 'node-fetch';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
-import { ABasicApplication, PASSWORD, USER } from '../../lib/Authorization/Type/Basic/ABasicApplication';
+import { ABasicApplication, TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import Form from '../../lib/Application/Model/Form/Form';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
@@ -10,18 +10,7 @@ import ProcessDto from '../../lib/Utils/ProcessDto';
 import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
 import FormStack from '../../lib/Application/Model/Form/FormStack';
 
-export default class TestBasicApplication extends ABasicApplication {
-  // eslint-disable-next-line class-methods-use-this
-  public syncTestSyncMethod(): string {
-    return JSON.stringify({
-      param1: 'p1',
-      param2: 'p2',
-    });
-  }
-
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  public async syncTestSyncMethodVoid(): Promise<void> {}
-
+export default class TestTokenBasicApplication extends ABasicApplication {
   public getDescription = (): string => 'Test description';
 
   public getName = (): string => 'test';
@@ -29,25 +18,14 @@ export default class TestBasicApplication extends ABasicApplication {
   public getPublicName = (): string => 'Test application';
 
   public getFormStack = (): FormStack => {
-    const label = 'testLabel';
-
-    const fieldText = new Field(FieldType.TEXT, USER, label);
-    const field = new Field(FieldType.PASSWORD, PASSWORD, label);
+    const label = 'testToken';
+    const fieldToken = new Field(FieldType.TEXT, TOKEN, label);
 
     const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
-    form.addField(field);
-    form.addField(fieldText);
-
-    const fieldText1 = new Field(FieldType.TEXT, 'host', label);
-    const field1 = new Field(FieldType.TEXT, 'database', label);
-
-    const form1 = new Form('testForm', 'testPublicName');
-    form1.addField(field1);
-    form1.addField(fieldText1);
+    form.addField(fieldToken);
 
     const formStack = new FormStack();
-    formStack.addForm(form);
-    return formStack.addForm(form1);
+    return formStack.addForm(form);
   };
 
   public getRequestDto = (

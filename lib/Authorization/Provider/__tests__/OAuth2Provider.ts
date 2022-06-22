@@ -1,6 +1,6 @@
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
-import { AUTHORIZATION_SETTINGS } from '../../../Application/Base/AApplication';
+import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import AOAuthProvider from '../AOAuthProvider';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
@@ -24,7 +24,7 @@ describe('OAuth2Provider tests', () => {
 
   it('authorize ', () => {
     // eslint-disable-next-line max-len
-    appInstall.addSettings({ [AUTHORIZATION_SETTINGS]: { [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****', [CLIENT_ID]: '**469040-****-4e03-861e-e19da38*****' } });
+    appInstall.addSettings({ [AUTHORIZATION_FORM]: { [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****', [CLIENT_ID]: '**469040-****-4e03-861e-e19da38*****' } });
     const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
     dto.setCustomAppDependencies(user, app);
     expect(oauth2Provider.authorize(dto, scope)).toEqual(

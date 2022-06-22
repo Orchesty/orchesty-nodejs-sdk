@@ -7,6 +7,7 @@ import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeE
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
+import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
 
 describe('Test application', () => {
   const user = 'Jakub';
@@ -48,71 +49,81 @@ describe('Test application', () => {
   it('getSettingsForm', () => {
     const app = new TestBasicApplication();
     const expected = {
-      _fields: [
+      _forms: [
         {
-          _choices: [],
           _description: '',
-          _key: PASSWORD,
-          _label: 'testLabel',
-          _type: 'password',
-          _value: null,
-          _disabled: false,
-          _readOnly: false,
-          _required: false,
+          _fields: [
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'password',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'password',
+              _value: null,
+            },
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'user',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'text',
+              _value: null,
+            },
+          ],
+          _key: 'authorization_form',
+          _publicName: 'testPublicName',
         },
         {
-          _choices: [],
           _description: '',
-          _key: 'person',
-          _label: 'testLabel',
-          _type: 'text',
-          _value: null,
-          _disabled: false,
-          _readOnly: false,
-          _required: false,
+          _fields: [
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'database',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'text',
+              _value: null,
+            },
+            {
+              _choices: [],
+              _description: '',
+              _disabled: false,
+              _key: 'host',
+              _label: 'testLabel',
+              _readOnly: false,
+              _required: false,
+              _type: 'text',
+              _value: null,
+            },
+          ],
+          _key: 'testForm',
+          _publicName: 'testPublicName',
         },
       ],
     };
-    expect(app.getSettingsForm()).toEqual(expected);
+    expect(app.getFormStack()).toEqual(expected);
   });
 
   it('setApplicationSettings', async () => {
     const app = new TestBasicApplication();
     let appInstall = new ApplicationInstall();
     const expected = {
-      authorization_settings: {
-        password: pass,
-        token,
-        user,
-      },
+      [AUTHORIZATION_FORM]: { [PASSWORD]: pass, user },
     };
-    appInstall = await app.setApplicationSettings(appInstall, { form: { user, password: pass, token } });
+    appInstall = await app.saveApplicationForms(
+      appInstall,
+      { [AUTHORIZATION_FORM]: { user, [PASSWORD]: pass, token } },
+    );
     expect(appInstall.getSettings()).toEqual(expected);
-  });
-
-  it('setApplicationSettingsAddPerson', async () => {
-    const app = new TestBasicApplication();
-    let appInstall = new ApplicationInstall();
-    const expected = {
-      form: {
-        person: 'test',
-      },
-    };
-    appInstall = await app.setApplicationSettings(appInstall, { person: 'test' });
-    expect(appInstall.getSettings()).toEqual(expected);
-  });
-
-  it('getApplicationForm', async () => {
-    const app = new TestBasicApplication();
-    const appInstall = new ApplicationInstall();
-    const sett = { form: { user, password: pass, token } };
-    const result = await app.setApplicationSettings(appInstall, sett);
-    expect(result).toBeInstanceOf(ApplicationInstall);
-    const resultSett = result.getSettings();
-    expect(resultSett).toHaveProperty('authorization_settings');
-    expect(result.getSettings().authorization_settings.user).toEqual(user);
-    expect(result.getSettings().authorization_settings.password).toEqual(pass);
-    expect(result.getSettings().authorization_settings.token).toEqual(token);
   });
 
   it('getUri', () => {
@@ -140,32 +151,66 @@ describe('Test application', () => {
     const appInstall = new ApplicationInstall();
     const sett = { form: { person: user, [PASSWORD]: pass } };
     appInstall.addSettings(sett);
-    const res = app.getApplicationForm(appInstall);
-    expect(res).toEqual(
-      [
-        {
-          choices: [],
-          description: '',
-          disabled: false,
-          key: PASSWORD,
-          label: 'testLabel',
-          readOnly: false,
-          required: false,
-          type: 'password',
-          value: true,
-        },
-        {
-          choices: [],
-          description: '',
-          disabled: false,
-          key: 'person',
-          label: 'testLabel',
-          readOnly: false,
-          required: false,
-          type: 'text',
-          value: 'Jakub',
-        },
-      ],
-    );
+    const res = app.getApplicationForms(appInstall);
+    expect(res).toEqual({
+      authorization_form: {
+        description: '',
+        fields: [
+          {
+            choices: [],
+            description: '',
+            disabled: false,
+            key: 'password',
+            label: 'testLabel',
+            readOnly: false,
+            required: false,
+            type: 'password',
+            value: null,
+          },
+          {
+            choices: [],
+            description: '',
+            disabled: false,
+            key: 'user',
+            label: 'testLabel',
+            readOnly: false,
+            required: false,
+            type: 'text',
+            value: null,
+          },
+        ],
+        key: 'authorization_form',
+        publicName: 'testPublicName',
+      },
+      testForm: {
+        description: '',
+        fields: [
+          {
+            choices: [],
+            description: '',
+            disabled: false,
+            key: 'database',
+            label: 'testLabel',
+            readOnly: false,
+            required: false,
+            type: 'text',
+            value: null,
+          },
+          {
+            choices: [],
+            description: '',
+            disabled: false,
+            key: 'host',
+            label: 'testLabel',
+            readOnly: false,
+            required: false,
+            type: 'text',
+            value: null,
+          },
+        ],
+        key: 'testForm',
+        publicName: 'testPublicName',
+      },
+    });
   });
 });

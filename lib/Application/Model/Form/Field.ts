@@ -1,6 +1,6 @@
 import FieldType from './FieldType';
 
-export interface IFieldArray {
+export interface IField {
     type: FieldType;
     key: string;
     value: unknown;
@@ -66,7 +66,7 @@ export default class Field {
     return this._disabled;
   }
 
-  public get toArray(): IFieldArray {
+  public get toArray(): IField {
     return {
       type: this.type,
       key: this.key,

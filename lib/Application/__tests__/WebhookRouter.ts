@@ -6,7 +6,7 @@ import CoreServices from '../../DIContainer/CoreServices';
 import { IApplication } from '../Base/IApplication';
 import DIContainer from '../../DIContainer/Container';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
-import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
+import { AUTHORIZATION_FORM } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
@@ -50,7 +50,7 @@ describe('tests for WebhookRouter', () => {
         .setUser(user)
         .setName(name);
       appInstall.setSettings({
-        [AUTHORIZATION_SETTINGS]: {
+        [AUTHORIZATION_FORM]: {
           [CLIENT_ID]: 'client id 1',
         },
       });
