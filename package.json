@@ -1,5 +1,5 @@
 {
-  "name": "pipes-nodejs-sdk",
+  "name": "@orchesty/nodejs-sdk",
   "version": "1.2.8",
   "description": "",
   "main": "dist/lib/index.js",
