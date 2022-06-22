@@ -95,11 +95,11 @@ export class ApplicationRouter extends ACommonRouter {
 
     this._app.route('/applications/:name/users/:user/password').put(async (req, res, next) => {
       const { name, user } = req.params;
-      const { password } = JSON.parse(req.body);
-      if (!password) {
-        throw Error('Missing "password" query parameter.');
+      const { password, formKey, fieldKey } = JSON.parse(req.body);
+      if (!password || !formKey || !fieldKey) {
+        throw Error('Missing required parameters [password, formKey, fieldKey] in body.');
       }
-      const response = await this._manager.saveApplicationPassword(name, user, password);
+      const response = await this._manager.saveApplicationPassword(name, user, formKey, fieldKey, password);
       res.status(StatusCodes.OK);
       res.json(response);
       next();

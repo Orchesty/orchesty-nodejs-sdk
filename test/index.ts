@@ -20,7 +20,7 @@ async function prepare() {
 
     const testApp = container.getApplication(name);
 
-    testApp.setApplicationSettings(newAppInstall, {
+    testApp.saveApplicationForms(newAppInstall, {
       [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****',
       [CLIENT_ID]: '**89f69a-44f4-4163-****-3090edc*****',
     });

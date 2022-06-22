@@ -9,6 +9,8 @@ import HttpMethods from '../../lib/Transport/HttpMethods';
 import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
 import ProcessDto from '../../lib/Utils/ProcessDto';
+import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import FormStack from '../../lib/Application/Model/Form/FormStack';
 
 export default class TestOAuth2Application extends AOAuth2Application {
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';
@@ -27,15 +29,17 @@ export default class TestOAuth2Application extends AOAuth2Application {
     data?: BodyInit,
   ): RequestDto => new RequestDto(url ?? '', HttpMethods.GET, dto, data);
 
-  public getSettingsForm = (): Form => {
+  public getFormStack = (): FormStack => {
     const label = 'testLabel';
     const fieldClientId = new Field(FieldType.TEXT, CLIENT_ID, label);
     const fieldClientSecret = new Field(FieldType.PASSWORD, CLIENT_SECRET, label);
 
-    const form = new Form();
+    const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
     form.addField(fieldClientId);
     form.addField(fieldClientSecret);
-    return form;
+
+    const formStack = new FormStack();
+    return formStack.addForm(form);
   };
 
   public getTokenUrl = (): string => 'https://identity.idoklad.cz/server/connect/token';

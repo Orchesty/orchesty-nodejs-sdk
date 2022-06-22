@@ -15,6 +15,7 @@ import CommonLoader from '../lib/Commons/CommonLoader';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestWebhookApplication from './Application/TestWebhookApplication';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
+import Metrics from '../lib/Metrics/Metrics';
 
 jest.mock('node-fetch', () => fetchMock.sandbox());
 
@@ -76,6 +77,31 @@ export function mockRouter(): {
   return {
     postFn, getFn, routeFn, express, loader,
   };
+}
+
+export async function dropCollection(collection: string): Promise<void> {
+  const dm = c.get(CoreServices.MONGO);
+  const db = await dm.db();
+
+  try {
+    await db.dropCollection(collection);
+    if (c.has(CoreServices.REDIS)) {
+      const redis = c.get(CoreServices.REDIS);
+      await redis.dropAll();
+    }
+  } catch {
+    // ignore
+  }
+}
+
+export async function closeConnections(): Promise<void> {
+  const dm = c.get(CoreServices.MONGO);
+  await dm.down();
+  await (container.get(CoreServices.METRICS) as Metrics).close();
+  if (c.has(CoreServices.REDIS)) {
+    const redis = c.get(CoreServices.REDIS);
+    await redis.dropAll();
+  }
 }
 
 export const mockedFetch: FetchMockStatic = mf as unknown as FetchMockStatic;

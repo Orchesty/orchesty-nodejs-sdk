@@ -11,6 +11,7 @@ import FieldType from '../../lib/Application/Model/Form/FieldType';
 import WebhookSubscription from '../../lib/Application/Model/Webhook/WebhookSubscription';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
 import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum';
+import FormStack from '../../lib/Application/Model/Form/FormStack';
 
 export default class TestWebhookApplication extends ABasicApplication implements IWebhookApplication {
   public getDescription = (): string => 'Test webhook description';
@@ -29,15 +30,17 @@ export default class TestWebhookApplication extends ABasicApplication implements
     data?: BodyInit,
   ): RequestDto => new RequestDto(url ?? '', method, dto, data);
 
-  public getSettingsForm = (): Form => {
+  public getFormStack = (): FormStack => {
     const label = 'testLabel';
     const fieldText = new Field(FieldType.TEXT, 'person', label);
     const field = new Field(FieldType.PASSWORD, 'testKey', label);
 
-    const form = new Form();
+    const form = new Form('testKey', 'testPublicName');
     form.addField(field);
     form.addField(fieldText);
-    return form;
+
+    const formStack = new FormStack();
+    return formStack.addForm(form);
   };
 
   public getWebhookSubscribeRequestDto = (

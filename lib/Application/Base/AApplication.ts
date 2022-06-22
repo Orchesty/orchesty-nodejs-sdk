@@ -1,19 +1,18 @@
 import * as fs from 'fs';
 import { contentType } from 'mime-types';
-import path from 'node:path';
 import { BodyInit } from 'node-fetch';
+import path from 'path';
 import { IApplication } from './IApplication';
-import Form from '../Model/Form/Form';
+import { IForm } from '../Model/Form/Form';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import FieldType from '../Model/Form/FieldType';
 import ApplicationTypeEnum from './ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
-import { IFieldArray } from '../Model/Form/Field';
 import ProcessDto from '../../Utils/ProcessDto';
+import FormStack from '../Model/Form/FormStack';
 
-export const FORM = 'form';
-export const AUTHORIZATION_SETTINGS = 'authorization_settings';
+export const AUTHORIZATION_FORM = 'authorization_form';
 
 export interface IApplicationArray {
     name: string;
@@ -37,7 +36,7 @@ export default abstract class AApplication implements IApplication {
 
   public abstract getDescription (): string;
 
-  public abstract getSettingsForm (): Form;
+  public abstract getFormStack (): FormStack;
 
   public getApplicationType = (): ApplicationTypeEnum => ApplicationTypeEnum.CRON;
 
@@ -64,40 +63,59 @@ export default abstract class AApplication implements IApplication {
     return null;
   }
 
-  public getApplicationForm(applicationInstall: ApplicationInstall): IFieldArray[] {
-    const settings = applicationInstall.getSettings()[FORM] ?? [];
-    const form = this.getSettingsForm();
-    form.fields.forEach((field) => {
-      if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
-        if (field.type === FieldType.PASSWORD) {
-          field.setValue(true);
-        } else {
-          field.setValue(settings[field.key]);
+  public getApplicationForms(applicationInstall: ApplicationInstall): Record<string, IForm> {
+    const settings = applicationInstall.getSettings();
+    const formStack = this.getFormStack();
+    formStack.getForms().forEach((form) => {
+      form.fields.forEach((field) => {
+        if (form.key in settings && field.key in settings[form.key]) {
+          if (field.type === FieldType.PASSWORD) {
+            field.setValue(true);
+          } else {
+            field.setValue(settings[form.key][field.key]);
+          }
         }
-      }
+      });
     });
 
-    this._customFormReplace(form, applicationInstall);
+    this._customFormReplace(formStack, applicationInstall);
 
-    return form.toArray();
+    return formStack.toArray();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  public async setApplicationSettings(applicationInstall: ApplicationInstall, settings: IApplicationSettings):
-     Promise<ApplicationInstall> {
+  public async saveApplicationForms(
+    applicationInstall: ApplicationInstall,
+    settings: IApplicationSettings,
+  ): Promise<ApplicationInstall> {
     const preparedSettings: IApplicationSettings = {};
 
-    this.getSettingsForm().fields.forEach((field) => {
-      if (Object.prototype.hasOwnProperty.call(settings, field.key)) {
-        preparedSettings[field.key] = settings[field.key];
-      }
+    this.getFormStack().getForms().forEach((form) => {
+      form.fields.forEach((field) => {
+        if (form.key in settings && field.key in settings[form.key]) {
+          const currentFrom = preparedSettings[form.key];
+          if (currentFrom) {
+            preparedSettings[form.key][field.key] = settings[form.key][field.key];
+          } else {
+            preparedSettings[form.key] = { [field.key]: settings[form.key][field.key] };
+          }
+        }
+      });
     });
+
     if (Object.keys(preparedSettings).length > 0) {
-      applicationInstall.addSettings({ [FORM]: preparedSettings });
+      applicationInstall.addSettings(preparedSettings);
     }
 
     return applicationInstall;
   }
+
+  public savePassword = (
+    applicationInstall: ApplicationInstall,
+    formKey: string,
+    fieldKey: string,
+    password: string,
+  ): ApplicationInstall => applicationInstall.addSettings({ [formKey]: { [fieldKey]: password } });
 
   public getUri = (url?: string): URL => new URL(url ?? '');
 
@@ -115,6 +133,6 @@ export default abstract class AApplication implements IApplication {
   }
 
   // eslint-disable-next-line
-  protected _customFormReplace(form: Form, applicationInstall: ApplicationInstall): void {
+  protected _customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void {
   }
 }

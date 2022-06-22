@@ -1,17 +1,20 @@
 import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { expressApp, getTestContainer } from '../../../test/TestAbstact';
+import {
+  closeConnections, dropCollection, expressApp, getTestContainer,
+} from '../../../test/TestAbstact';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
-import { AUTHORIZATION_SETTINGS } from '../Base/AApplication';
+import { AUTHORIZATION_FORM } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import Metrics from '../../Metrics/Metrics';
 import assertions from './assertions.json';
 import DIContainer from '../../DIContainer/Container';
 import { IApplication } from '../Base/IApplication';
 import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
+import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
+import { IField } from '../Model/Form/Field';
 
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),
@@ -39,46 +42,42 @@ describe('Test ApplicationRouter', () => {
     application = container.getApplication('test');
     oAuthApplication = container.getApplication('oauth2application');
     provider = container.get(CoreServices.OAUTH2_PROVIDER);
+    dbClient = container.get(CoreServices.MONGO);
   });
 
   /* eslint-enable @typescript-eslint/naming-convention */
   beforeEach(async () => {
-    dbClient = container.get(CoreServices.MONGO);
-    const db = await dbClient.db();
-    try {
-      await db.dropCollection(ApplicationInstall.getCollection());
-      const repo = await dbClient.getRepository(ApplicationInstall);
-      user = 'user';
-      name = oAuthApplication.getName();
-      authorizationURL = 'example.com';
+    await dropCollection(ApplicationInstall.getCollection());
+    const repo = await dbClient.getRepository(ApplicationInstall);
 
-      appInstall = new ApplicationInstall()
-        .setUser(user)
-        .setName(name);
-      appInstall.setSettings({
-        [AUTHORIZATION_SETTINGS]: {
-          [CLIENT_ID]: 'client id 1',
+    user = 'user';
+    name = oAuthApplication.getName();
+
+    authorizationURL = 'example.com';
+
+    appInstall = new ApplicationInstall()
+      .setUser(user)
+      .setName(name);
+    appInstall.setSettings({
+      [AUTHORIZATION_FORM]: {
+        [CLIENT_ID]: 'client id 1',
+      },
+    });
+
+    await repo.insert(appInstall);
+    Reflect.set(provider, '_createClient', () => ({
+      getToken: () => ({
+        token: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
         },
-      });
-
-      await repo.insert(appInstall);
-      Reflect.set(provider, '_createClient', () => ({
-        getToken: () => ({
-          token: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
-          },
-        }),
-        authorizeURL: () => authorizationURL,
-      }));
-    } catch (e) {
-      // Ignore non-existent
-    }
+      }),
+      authorizeURL: () => authorizationURL,
+    }));
   });
 
   afterAll(async () => {
-    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
-    await (container.get(CoreServices.METRICS) as Metrics).close();
+    await closeConnections();
   });
 
   it('get /applications route', async () => {
@@ -236,10 +235,16 @@ describe('Test ApplicationRouter', () => {
     const password = 'pass';
     await supertest(expressApp)
       .put(applicationUrl)
-      .send({ password })
+      .send({ password, formKey: [AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
       .expect((response) => {
-        const responsePassword = JSON.parse(response.text).applicationSettings[0].value;
-        expect(responsePassword).toBeTruthy();
+        const jsonResponse = JSON.parse(response.text);
+        if (AUTHORIZATION_FORM in jsonResponse.applicationSettings) {
+          const fieldPassword = (jsonResponse.applicationSettings[AUTHORIZATION_FORM].fields as IField[])
+            .find((field) => field.key);
+          expect(fieldPassword?.value).toBeTruthy();
+        } else {
+          expect(false).toBeTruthy();
+        }
       });
   });
 
