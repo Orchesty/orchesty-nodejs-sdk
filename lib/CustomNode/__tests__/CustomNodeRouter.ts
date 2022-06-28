@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
+import { REPEAT_INTERVAL, REPEAT_MAX_HOPS } from '../../Utils/Headers';
 import CustomNodeRouter from '../CustomNodeRouter';
 import {
   expressApp, getTestContainer, mockRouter,
@@ -84,15 +85,21 @@ describe('Test CustomNodeRouter', () => {
       .expect(StatusCodes.OK, '[]');
   });
 
-  it('post /custom-node/:name/process route', () => {
+  it('post /custom-node/:name/process route', async () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
-    supertest(expressApp)
-      .post(customNodeUrl)
-      .expect(StatusCodes.OK, (err, res) => {
-        expect(err === null).toBeTruthy();
-        const jsonData = JSON.parse(res.text);
-        expect(jsonData).toEqual({ test: 'custom', inner: { one: 2, date: jsonData.inner?.date } });
-      });
+    const res = await supertest(expressApp)
+      .post(customNodeUrl);
+    const exp = {
+      body: { test: 'custom', inner: { date: '1656404204916', one: 2 } },
+      headers: {
+        'result-code': '0',
+        'result-message': 'Processed successfully.',
+      },
+    };
+
+    exp.body.inner.date = res.body.body.inner.date;
+
+    expect(res.body.body).toEqual(exp.body);
   });
 
   it('post /custom-node/:name/process route - onRepeatException', async () => {
@@ -102,10 +109,15 @@ describe('Test CustomNodeRouter', () => {
     const onRepeatExceptionCustomNodeUrl = `/custom-node/${testOnRepeatExceptionCustom.getName()}/process`;
     const resp = await supertest(expressApp)
       .post(onRepeatExceptionCustomNodeUrl)
-      .set('pf-node-id', node.getId());
+      .send(JSON.stringify({
+        headers: {
+          'node-id': node.getId(),
+        },
+        body: {},
+      }));
     expect(resp.status).toBe(200);
-    expect(resp.header['pf-repeat-interval']).toBe('60');
-    expect(resp.header['pf-repeat-max-hops']).toBe('10');
+    expect(resp.body.headers[REPEAT_INTERVAL]).toBe('60');
+    expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('10');
   });
 
   it('post /custom-node/:name/process route - onRepeatException, custom repeater', async () => {
@@ -117,9 +129,14 @@ describe('Test CustomNodeRouter', () => {
     const onRepeatExceptionCustomNodeUrl = `/custom-node/${testOnRepeatExceptionCustom.getName()}/process`;
     const resp = await supertest(expressApp)
       .post(onRepeatExceptionCustomNodeUrl)
-      .set('pf-node-id', node.getId());
+      .send(JSON.stringify({
+        headers: {
+          'node-id': node.getId(),
+        },
+        body: {},
+      }));
     expect(resp.status).toBe(200);
-    expect(resp.header['pf-repeat-interval']).toBe('30');
-    expect(resp.header['pf-repeat-max-hops']).toBe('2');
+    expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
+    expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');
   });
 });

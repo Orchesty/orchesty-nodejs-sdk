@@ -1,6 +1,3 @@
-// Framework prefix
-const PREFIX = 'pf-';
-
 // Framework headers
 export const PREV_CORRELATION_ID = 'previous-correlation-id';
 export const CORRELATION_ID = 'correlation-id';
@@ -34,8 +31,6 @@ export const LIMITER_KEY = 'limiter-key';
 // Batch headers
 export const BATCH_CURSOR = 'cursor';
 
-const WHITE_LIST = ['content-type'];
-
 export type HttpHeaders = NodeJS.Dict<string | string[]>
 
 export enum CommonHeaders {
@@ -46,32 +41,12 @@ export enum CommonHeaders {
 
 export const JSON_TYPE = 'application/json';
 
-function existPrefix(key: string): boolean {
-  return key.startsWith(PREFIX);
-}
-
-export function createKey(key: string): string {
-  return `${PREFIX}${key}`.toLowerCase();
-}
-
 export function get(key: string, headers: HttpHeaders): string | undefined {
-  if (headers[createKey(key)]) {
-    return String(headers[createKey(key)]);
+  if (headers[key]) {
+    return String(headers[key]);
   }
 
   return undefined;
-}
-
-export function clear(headers: HttpHeaders): HttpHeaders {
-  const res: HttpHeaders = {};
-  Object.entries(headers).forEach(
-    ([key, value]) => {
-      if (WHITE_LIST.includes(key.toLowerCase()) || existPrefix(key.toLowerCase())) {
-        res[key] = value;
-      }
-    },
-  );
-  return res;
 }
 
 export function getCorrelationId(headers: HttpHeaders): string | undefined {

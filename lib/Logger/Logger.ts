@@ -2,7 +2,7 @@
 import * as os from 'os';
 import { Sender } from 'metrics-sender/dist/lib/udp/Sender';
 import { Request } from 'express';
-import ProcessDto from '../Utils/ProcessDto';
+import AProcessDto from '../Utils/AProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import * as headers from '../Utils/Headers';
 import { loggerOptions } from '../Config/Config';
@@ -55,19 +55,19 @@ export class Logger {
     this.udp = new Sender(parsed.server, parsed.port);
   }
 
-  public debug(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+  public debug(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
     this.log(Severity.DEBUG, message, this.createCtx(context, isForUi));
   }
 
-  public info(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+  public info(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
     this.log(Severity.INFO, message, this.createCtx(context, isForUi));
   }
 
-  public warn(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+  public warn(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
     this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
   }
 
-  public error(message: string, context: ILogContext | ProcessDto | Request, isForUi = false): void {
+  public error(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
     this.log(Severity.ERROR, message, this.createCtx(context, isForUi));
   }
 
@@ -84,7 +84,7 @@ export class Logger {
   }
 
   public createCtx = (
-    payload: Request | ProcessDto | ILogContext,
+    payload: Request | AProcessDto | ILogContext,
     isForUi?: boolean,
     err?: Error,
   ): ILogContext => {
@@ -92,8 +92,8 @@ export class Logger {
       if (payload instanceof Request) {
         return this.ctxFromReq(payload as Request, err);
       }
-      if (payload instanceof ProcessDto) {
-        return this.ctxFromDto(payload as ProcessDto, isForUi, err);
+      if (payload instanceof AProcessDto) {
+        return this.ctxFromDto(payload as AProcessDto, isForUi, err);
       }
       return payload as ILogContext;
     }
@@ -101,7 +101,7 @@ export class Logger {
     return {};
   };
 
-  public ctxFromDto = (dto: ProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
+  public ctxFromDto = (dto: AProcessDto, isForUi?: boolean, err?: Error): ILogContext => {
     const ctx: ILogContext = {
       node_id: headers.getNodeId(dto.headers),
       correlation_id: headers.getCorrelationId(dto.headers),

@@ -1,6 +1,7 @@
+import BatchProcessDto from '../BatchProcessDto';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
-import { WORKER_FOLLOWERS } from '../Headers';
+import { BATCH_CURSOR, WORKER_FOLLOWERS } from '../Headers';
 
 describe('Tests ProcessDto utils', () => {
   it('GetData', () => {
@@ -19,11 +20,11 @@ describe('Tests ProcessDto utils', () => {
   });
 
   it('ShouldRemoveBatchCursor', () => {
-    const dto = new ProcessDto();
+    const dto = new BatchProcessDto();
     const cursorName = 'name';
     dto.setBatchCursor(cursorName);
     dto.removeBatchCursor();
-    expect(dto.headers['pf-cursor']).toBeUndefined();
+    expect(dto.headers[BATCH_CURSOR]).toBeUndefined();
   });
 
   it('setJson', () => {
@@ -35,14 +36,14 @@ describe('Tests ProcessDto utils', () => {
 
   it('GetHeaders', () => {
     const dto = new ProcessDto();
-    dto.headers = { 'pf-some': 'header' };
+    dto.headers = { some: 'header' };
 
-    expect(dto.headers).toEqual({ 'pf-some': 'header' });
+    expect(dto.headers).toEqual({ some: 'header' });
   });
 
   it('GetHeader', () => {
     const dto = new ProcessDto();
-    dto.headers = { 'pf-some': 'header' };
+    dto.headers = { some: 'header' };
 
     expect(dto.getHeader('some')).toEqual('header');
     expect(dto.getHeader('none', 'default')).toEqual('default');
@@ -156,11 +157,11 @@ describe('Tests ProcessDto utils', () => {
 
     dto.removeForceFollowers();
 
-    expect(dto.headers).toEqual({ 'pf-worker-followers': '[{"name":"abc", "id": "123"}]' });
+    expect(dto.headers).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
   });
 
   it('removeBatchCursor removes iterate-only cursor correctly', () => {
-    const dto = new ProcessDto();
+    const dto = new BatchProcessDto();
     dto.setBatchCursor('0', true);
 
     dto.removeBatchCursor();
@@ -169,7 +170,7 @@ describe('Tests ProcessDto utils', () => {
   });
 
   it('removeBatchCursor removes batch-with-cursor cursor correctly', () => {
-    const dto = new ProcessDto();
+    const dto = new BatchProcessDto();
     dto.setBatchCursor('0');
 
     dto.removeBatchCursor();

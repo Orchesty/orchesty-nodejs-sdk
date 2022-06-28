@@ -68,7 +68,7 @@ describe('Test AConnector', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 205, new Headers({}));
     testConnector.evaluateStatusCode(response, dto, 'error');
-    expect(dto.headers).toEqual({ 'pf-result-code': '1006', 'pf-result-message': 'error' });
+    expect(dto.headers).toEqual({ 'result-code': '1006', 'result-message': 'error' });
   });
 
   it('it should return applicationInstall', async () => {
@@ -82,7 +82,7 @@ describe('Test AConnector', () => {
     testConnector.setDb(mongoDbClient);
     testConnector.setApplication(application);
     const dto = new ProcessDto();
-    dto.headers = { 'pf-user': user };
+    dto.headers = { user };
     const res = await testConnector.getApplicationInstallFromHeaders(dto);
     expect(res.getUser()).toEqual(user);
   });
