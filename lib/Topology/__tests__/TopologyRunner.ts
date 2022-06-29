@@ -29,8 +29,8 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
       expect(request.method).toBe(HttpMethods.POST);
       expect(request.url).toBe(url);
       const defaultHeaders = {
-        'pf-previous-correlation-id': '',
-        'pf-previous-node-id': '',
+        'previous-correlation-id': '',
+        'previous-node-id': '',
       };
 
       if (headers) {
@@ -76,7 +76,7 @@ describe('TopologyRunner tests', () => {
   });
 
   it('run by name with custom headers', async () => {
-    const header = { 'pf-random-header': '123' };
+    const header = { 'random-header': '123' };
     const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name', header);
     const res = await runner.runByName(
       {},

@@ -1,15 +1,16 @@
-import { ICommonNode } from '../../lib/Commons/ICommonNode';
-import ProcessDto from '../../lib/Utils/ProcessDto';
+import { IBatchNode } from '../../lib/Batch/IBatchNode';
+import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 
 const CURSOR = 'testCursor';
 
-export default class TestBatch implements ICommonNode {
+export default class TestBatch implements IBatchNode {
   getName = (): string => 'testbatch';
 
-  processAction = (_dto: ProcessDto): ProcessDto => {
+  processAction = (_dto: BatchProcessDto): BatchProcessDto => {
     const dto = _dto;
-    dto.data = '{dataTest: testValue}';
-    dto.jsonData = [{ dataTest: 'testValue' }];
+    dto.addItem({
+      dataTest: 'testValue',
+    });
 
     if (dto.getBatchCursor() === CURSOR) {
       dto.removeBatchCursor();

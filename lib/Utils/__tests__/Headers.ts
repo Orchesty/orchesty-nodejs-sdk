@@ -1,9 +1,7 @@
 import {
   HttpHeaders,
   NODE_ID,
-  createKey,
   get,
-  clear,
   getCorrelationId,
   getNodeId,
   getProcessId,
@@ -14,22 +12,17 @@ import {
 } from '../Headers';
 
 const mockedHeaders: HttpHeaders = {
-  'pf-node-id': 'nodeId',
-  'pf-correlation-id': 'correlationId',
-  'pf-process-id': 'processId',
-  'pf-parent-id': 'parentId',
-  'pf-sequence-id': '1',
-  'pf-repeat-hops': '2',
-  'pf-repeat-max-hops': '10',
+  'node-id': 'nodeId',
+  'correlation-id': 'correlationId',
+  'process-id': 'processId',
+  'parent-id': 'parentId',
+  'sequence-id': '1',
+  'repeat-hops': '2',
+  'repeat-max-hops': '10',
   fake: 'header',
 };
 
 describe('Test headers utils', () => {
-  it('createKey', () => {
-    const k = createKey('new-test-key');
-    expect(k).toEqual('pf-new-test-key');
-  });
-
   it('get header by key', () => {
     const v = get(NODE_ID, mockedHeaders);
     expect(v).toEqual('nodeId');
@@ -38,21 +31,6 @@ describe('Test headers utils', () => {
   it('get non-exist key in headers', () => {
     const v = get('non-exist', mockedHeaders);
     expect(v).toBeUndefined();
-  });
-
-  it('clear unsupported headers', () => {
-    const cleanedHeaders = clear(mockedHeaders);
-    expect(cleanedHeaders).toEqual(
-      {
-        'pf-node-id': 'nodeId',
-        'pf-correlation-id': 'correlationId',
-        'pf-process-id': 'processId',
-        'pf-parent-id': 'parentId',
-        'pf-sequence-id': '1',
-        'pf-repeat-hops': '2',
-        'pf-repeat-max-hops': '10',
-      },
-    );
   });
 
   it('getCorrelationId', () => {
@@ -82,7 +60,7 @@ describe('Test headers utils', () => {
 
   it('getSequenceId if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['pf-sequence-id']);
+    delete (updatedHeaders['sequence-id']);
     const v = getSequenceId(updatedHeaders);
     expect(v).toEqual(0);
   });
@@ -94,7 +72,7 @@ describe('Test headers utils', () => {
 
   it('getRepeatHops if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['pf-repeat-hops']);
+    delete (updatedHeaders['repeat-hops']);
     const v = getRepeatHops(updatedHeaders);
     expect(v).toEqual(0);
   });
@@ -106,7 +84,7 @@ describe('Test headers utils', () => {
 
   it('getRepeaterMaxHops if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['pf-repeat-max-hops']);
+    delete (updatedHeaders['repeat-max-hops']);
     const v = getRepeaterMaxHops(updatedHeaders);
     expect(v).toEqual(0);
   });

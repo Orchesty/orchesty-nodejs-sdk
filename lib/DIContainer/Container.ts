@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClassType } from 'mongodb-typescript/lib/repository';
+import { IBatchNode } from '../Batch/IBatchNode';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
 import { IApplication } from '../Application/Base/IApplication';
@@ -73,11 +74,11 @@ export default class DIContainer {
     return this.get(`${APPLICATION_PREFIX}.${name}`);
   }
 
-  setBatch(service: ICommonNode): void {
+  setBatch(service: IBatchNode): void {
     this.set(`${BATCH_PREFIX}.${service.getName()}`, service);
   }
 
-  getBatch(name: string): ICommonNode {
+  getBatch(name: string): IBatchNode {
     return this.get(`${BATCH_PREFIX}.${name}`);
   }
 

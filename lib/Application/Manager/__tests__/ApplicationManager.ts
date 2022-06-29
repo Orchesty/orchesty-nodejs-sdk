@@ -40,7 +40,7 @@ jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
 describe('ApplicationManager tests', () => {
   // Mock Request/Response of Express
   const mockedRequest = () => ({
-    headers: { 'pf-node-id': '123' },
+    headers: { 'node-id': '123' },
     body: '{"body": "aaa"}',
   });
 
