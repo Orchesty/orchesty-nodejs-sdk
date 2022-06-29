@@ -89,15 +89,15 @@ describe('Test CustomNodeRouter', () => {
     const customNodeUrl = `/custom-node/${customNode.getName()}/process`;
     const res = await supertest(expressApp)
       .post(customNodeUrl);
+
+    const resBody = JSON.parse(res.body.body);
     const exp = {
-      body: { test: 'custom', inner: { date: '1656404204916', one: 2 } },
+      body: JSON.stringify({ test: 'custom', inner: { date: resBody.inner.date, one: 2 } }),
       headers: {
         'result-code': '0',
         'result-message': 'Processed successfully.',
       },
     };
-
-    exp.body.inner.date = res.body.body.inner.date;
 
     expect(res.body.body).toEqual(exp.body);
   });

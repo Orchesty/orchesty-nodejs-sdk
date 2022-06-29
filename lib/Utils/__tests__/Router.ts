@@ -18,7 +18,7 @@ jest.mock('../../Logger/Logger', () => ({
 const mockedRequest = () => ({
   body: JSON.stringify({
     headers: { 'node-id': '123' },
-    body: { body: 'aaa' },
+    body: JSON.stringify({ body: 'aaa' }),
   }),
 });
 

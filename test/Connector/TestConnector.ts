@@ -28,7 +28,7 @@ export default class TestConnector extends AConnector {
         if (responseDto.responseCode !== 200 && responseDto.responseCode !== 201) {
           throw new OnRepeatException();
         }
-        dto.jsonData = responseDto.body;
+        dto.data = responseDto.body;
       }),
     );
 

@@ -292,7 +292,7 @@ export default class TopologyTester {
   private static _pushMultiple(nextDto: ProcessDto[], out: BatchProcessDto): void {
     out.messages.forEach((message) => {
       const dto = new ProcessDto();
-      dto.jsonData = message.body;
+      dto.data = message.body;
       dto.headers = {
         ...out.headers,
         ...(message.headers || {}),

@@ -38,7 +38,7 @@ describe('Tests for BatchRouter', () => {
     await supertest(expressApp)
       .post(batchUrl)
       .expect(StatusCodes.OK, JSON.stringify({
-        body: [{ headers: null, body: { dataTest: 'testValue' } }],
+        body: JSON.stringify([{ headers: null, body: JSON.stringify({ dataTest: 'testValue' }) }]),
         headers: {
           cursor: 'testCursor',
           'result-message':

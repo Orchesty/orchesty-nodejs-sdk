@@ -1,11 +1,9 @@
-import {
-  BATCH_CURSOR, HttpHeaders,
-} from './Headers';
+import { BATCH_CURSOR, HttpHeaders } from './Headers';
 import AProcessDto from './ProcessDto';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
-  body:    string, // Is string to support XML fe.
+  body: string, // Is string to support XML fe.
   headers: Record<string, string | string[]> | null,
 }
 
@@ -20,7 +18,7 @@ export default class BatchProcessDto extends AProcessDto {
 
   addItem(body: unknown): BatchProcessDto {
     let b = body;
-    if (typeof body != 'string') {
+    if (typeof body !== 'string') {
       b = JSON.stringify(body);
     }
 
