@@ -49,7 +49,10 @@ describe('Test ConnectorRouter', () => {
     const connectorUrl = `/connector/${connector.getName()}/action`;
     await supertest(expressApp)
       .post(connectorUrl)
-      .expect(StatusCodes.OK, { response: 'mockedResponse' });
+      .expect(StatusCodes.OK, {
+        body: { response: 'mockedResponse' },
+        headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
+      });
   });
 
   it('get /connector/list route', async () => {

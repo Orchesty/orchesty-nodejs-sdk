@@ -1,6 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
+import AProcessDto from '../../lib/Utils/AProcessDto';
+import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
 import { ICommonNode } from '../../lib/Commons/ICommonNode';
@@ -109,7 +111,7 @@ export default class TopologyTester {
     });
   };
 
-  private async _recursiveRunner(node: TestNode, dto: ProcessDto, prefix: string, _index = 0): Promise<ProcessDto[]> {
+  private async _recursiveRunner(node: TestNode, dto: AProcessDto, prefix: string, _index = 0): Promise<AProcessDto[]> {
     // Get worker instance from container
     let worker: ICommonNode | null;
     switch (node.type) {
@@ -140,10 +142,16 @@ export default class TopologyTester {
     dto.removeHeader(RESULT_MESSAGE);
 
     const nextDto: ProcessDto[] = [];
-    let out: ProcessDto;
+    let out: AProcessDto;
     try {
       if (worker) {
-        out = await this._processAction(worker, node, this._cloneProcessDto(dto), prefix, index);
+        out = await this._processAction(
+          worker,
+          node,
+          this._cloneProcessDto(dto, undefined, node.type === 'batch'),
+          prefix,
+          index,
+        );
       } else {
         out = this._cloneProcessDto(dto);
       }
@@ -158,12 +166,12 @@ export default class TopologyTester {
     }
 
     let { followers } = node;
-    const results: ProcessDto[] = [];
+    const results: AProcessDto[] = [];
     switch (get(RESULT_CODE, out.headers)) {
       // Status has not provided => success
       case undefined:
         if (node.type === 'batch') {
-          this._pushMultiple(nextDto, out);
+          TopologyTester._pushMultiple(nextDto, out as BatchProcessDto);
         } else {
           nextDto.push(out);
         }
@@ -192,16 +200,14 @@ export default class TopologyTester {
       // Repeat batch until cursor ends and send only one message
       case ResultCode.BATCH_CURSOR_ONLY.toString():
         index += 1;
-        dto.setBatchCursor(out.getBatchCursor());
         dto.removeHeader(RESULT_CODE);
         [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
         nextDto.push(this._cloneProcessDto(out, {}));
         break;
       // Repeat batch until cursor ends and store message
       case ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString():
-        this._pushMultiple(nextDto, out);
+        TopologyTester._pushMultiple(nextDto, out as BatchProcessDto);
         index += 1;
-        dto.setBatchCursor(out.getBatchCursor());
         dto.removeHeader(RESULT_CODE);
         [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
         break;
@@ -240,10 +246,10 @@ export default class TopologyTester {
   private async _processAction(
     worker: ICommonNode,
     node: TestNode,
-    dto: ProcessDto,
+    dto: AProcessDto,
     prefix: string,
     index = 0,
-  ): Promise<ProcessDto> {
+  ): Promise<AProcessDto> {
     const spy = mockNodeCurl(
       worker,
       this._file,
@@ -259,7 +265,19 @@ export default class TopologyTester {
     return out;
   }
 
-  private _cloneProcessDto = (dto: ProcessDto, body?: Record<string, undefined>): ProcessDto => {
+  private _cloneProcessDto = (
+    dto: ProcessDto,
+    body?: Record<string, undefined>,
+    asBatch = false,
+  ): ProcessDto => {
+    if (asBatch) {
+      const clone = new BatchProcessDto();
+      clone.headers = dto.headers;
+      clone.setBridgeData(body ? JSON.stringify(body) : dto.data);
+
+      return clone;
+    }
+
     const clone = new ProcessDto();
     clone.headers = dto.headers;
     if (body) {
@@ -271,9 +289,16 @@ export default class TopologyTester {
     return clone;
   };
 
-  private _pushMultiple(nextDto: ProcessDto[], out: ProcessDto): void {
-    (out.jsonData as Array<Record<string, undefined>>).forEach((item) => {
-      nextDto.push(this._cloneProcessDto(out, item));
+  private static _pushMultiple(nextDto: ProcessDto[], out: BatchProcessDto): void {
+    out.messages.forEach((message) => {
+      const dto = new ProcessDto();
+      dto.data = message.body;
+      dto.headers = {
+        ...out.headers,
+        ...(message.headers || {}),
+      };
+
+      nextDto.push(dto);
     });
 
     if ((out.jsonData as unknown[])?.length <= 0) {
