@@ -3,7 +3,6 @@ import { ApplicationInstall } from '../Application/Database/ApplicationInstall';
 import MongoDbClient from '../Storage/Mongodb/Client';
 import { IApplication } from '../Application/Base/IApplication';
 import ProcessDto from '../Utils/ProcessDto';
-import { get, USER } from '../Utils/Headers';
 
 export default abstract class ACommonNode implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -62,8 +61,8 @@ export default abstract class ACommonNode implements ICommonNode {
     return appInstall;
   }
 
-  protected async _getApplicationInstallFromHeaders(dto: ProcessDto): Promise<ApplicationInstall> {
-    const user = get(USER, dto.headers);
+  protected async _getApplicationInstallFromProcess(dto: ProcessDto): Promise<ApplicationInstall> {
+    const { user } = dto;
     if (!user) {
       throw Error('User not defined');
     }

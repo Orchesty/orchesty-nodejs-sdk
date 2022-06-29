@@ -16,14 +16,14 @@ export default class BatchProcessDto extends AProcessDto {
     this._headers = commonHeaders;
   }
 
-  addItem(body: unknown): BatchProcessDto {
+  addItem(body: unknown, user?: string): BatchProcessDto {
     let b = body;
     if (typeof body !== 'string') {
       b = JSON.stringify(body);
     }
 
     this._messages.push({
-      headers: null,
+      headers: user ? { user } : null,
       body: b as string,
     });
 
