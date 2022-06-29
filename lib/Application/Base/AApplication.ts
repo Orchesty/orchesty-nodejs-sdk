@@ -9,8 +9,8 @@ import FieldType from '../Model/Form/FieldType';
 import ApplicationTypeEnum from './ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
-import ProcessDto from '../../Utils/ProcessDto';
 import FormStack from '../Model/Form/FormStack';
+import AProcessDto from '../../Utils/AProcessDto';
 
 export const AUTHORIZATION_FORM = 'authorization_form';
 
@@ -43,7 +43,7 @@ export default abstract class AApplication implements IApplication {
   public abstract isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
   public abstract getRequestDto (
-    dto: ProcessDto,
+    dto: AProcessDto,
     applicationInstall: ApplicationInstall,
     method: string,
     url?: string,

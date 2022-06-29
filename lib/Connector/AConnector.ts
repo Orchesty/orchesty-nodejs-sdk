@@ -1,8 +1,8 @@
 import CurlSender from '../Transport/Curl/CurlSender';
 import ACommonNode from '../Commons/ACommonNode';
-import ProcessDto from '../Utils/ProcessDto';
 import ResultCode from '../Utils/ResultCode';
 import ResponseDto from '../Transport/Curl/ResponseDto';
+import AProcessDto from '../Utils/AProcessDto';
 
 export default abstract class AConnector extends ACommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -10,7 +10,7 @@ export default abstract class AConnector extends ACommonNode {
 
   protected _okStatuses = [200, 201];
 
-  public evaluateStatusCode(res: ResponseDto, dto: ProcessDto, message?: string): boolean {
+  public evaluateStatusCode(res: ResponseDto, dto: AProcessDto, message?: string): boolean {
     if (this._okStatuses.includes(res.responseCode)) {
       return true;
     }

@@ -1,7 +1,7 @@
 import { BodyInit, HeaderInit, Headers } from 'node-fetch';
 import { IRequestDto } from '../IRequestDto';
-import ProcessDto from '../../Utils/ProcessDto';
 import HttpMethods from '../HttpMethods';
+import AProcessDto from '../../Utils/AProcessDto';
 
 export default class RequestDto implements IRequestDto {
   private _timeout: number;
@@ -9,7 +9,7 @@ export default class RequestDto implements IRequestDto {
   constructor(
     private _url: string,
     private _method: HttpMethods,
-    private _debugInfo: ProcessDto,
+    private _debugInfo: AProcessDto,
     private _body?: BodyInit,
     private _headers: HeaderInit = new Headers(),
   ) {
@@ -56,11 +56,11 @@ export default class RequestDto implements IRequestDto {
     return this._timeout;
   }
 
-  get debugInfo(): ProcessDto {
+  get debugInfo(): AProcessDto {
     return this._debugInfo;
   }
 
-  set debugInfo(dto: ProcessDto) {
+  set debugInfo(dto: AProcessDto) {
     this._debugInfo = dto;
   }
 }

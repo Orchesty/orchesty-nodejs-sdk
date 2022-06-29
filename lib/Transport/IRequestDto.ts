@@ -1,6 +1,6 @@
 import { BodyInit, HeaderInit } from 'node-fetch';
-import ProcessDto from '../Utils/ProcessDto';
 import HttpMethods from './HttpMethods';
+import AProcessDto from '../Utils/AProcessDto';
 
 export interface IRequestDto {
     url: string;
@@ -8,5 +8,5 @@ export interface IRequestDto {
     body?: BodyInit;
     headers: HeaderInit;
     timeout: number;
-    debugInfo: ProcessDto | undefined;
+    debugInfo: AProcessDto | undefined;
 }

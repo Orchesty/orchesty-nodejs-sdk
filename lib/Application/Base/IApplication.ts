@@ -5,14 +5,14 @@ import RequestDto from '../../Transport/Curl/RequestDto';
 import { IApplicationArray } from './AApplication';
 import HttpMethods from '../../Transport/HttpMethods';
 import { IName } from '../../Commons/IName';
-import ProcessDto from '../../Utils/ProcessDto';
 import ApplicationTypeEnum from './ApplicationTypeEnum';
+import AProcessDto from '../../Utils/AProcessDto';
 
 export interface IApplication extends IName {
 
   getRequestDto
   (
-    dto: ProcessDto,
+    dto: AProcessDto,
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,

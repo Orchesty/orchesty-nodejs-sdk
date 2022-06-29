@@ -1,7 +1,7 @@
-import ProcessDto from '../../Utils/ProcessDto';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
+import AProcessDto from '../../Utils/AProcessDto';
 
 export interface ILimitedApplication {
 
-  injectLimit(dto: ProcessDto, appInstall: ApplicationInstall): ProcessDto;
+  injectLimit(dto: AProcessDto, appInstall: ApplicationInstall): AProcessDto;
 }
