@@ -29,6 +29,16 @@ export default abstract class AProcessDto {
     this._free = true;
   }
 
+  get user(): string | undefined {
+    const value = this._headers.user;
+
+    return value ? String(value) : undefined;
+  }
+
+  set user(value: string | undefined) {
+    this._headers.user = value;
+  }
+
   get data(): string {
     return this._data;
   }
