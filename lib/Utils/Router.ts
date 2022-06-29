@@ -1,10 +1,12 @@
 import { Mutex } from 'async-mutex';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import AProcessDto from './AProcessDto';
+import BatchProcessDto from './BatchProcessDto';
 import ProcessDto from './ProcessDto';
 import logger from '../Logger/Logger';
 import {
-  createKey, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
+  HttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
 } from './Headers';
 import ResultCode, { isSuccessResultCode } from './ResultCode';
 import { appOptions } from '../Config/Config';
@@ -18,36 +20,34 @@ export function formatError(e: Error): IErrorResponse {
   return { result: 'error', message: e.message };
 }
 
-function logResponseProcess(res: Response, dto: ProcessDto) {
-  if (isSuccessResultCode(res.getHeader(createKey(RESULT_CODE)) as number ?? 0)) {
+interface IBridgeRequestDto {
+  body: string,
+  headers: HttpHeaders,
+}
+
+function logResponseProcess(dto: AProcessDto) {
+  if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0') as string, 10))) {
     logger.info(
-      `Request successfully processed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
+      `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE)}]`,
       dto,
     );
   } else {
     logger.error(
-      `Request process failed. Message: [${res.getHeader(createKey(RESULT_MESSAGE))}]`,
+      `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE)}]`,
       dto,
     );
   }
 }
 
-export function createErrorResponse(req: Request, res: Response, dto: ProcessDto, e?: Error): void {
+export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error): void {
+  const dto = _dto;
   res.status(500);
-
-  Object.entries(dto.headers).forEach(([key, value]) => {
-    try {
-      res.setHeader(key, String(value));
-    } catch (ex) {
-      logger.error(`Can't set header [${key}:${value}]`, dto);
-    }
-  });
 
   let message = 'Error occurred: unknown reason';
   let responseBody = { result: 'Unknown error', message: 'Unknown error occurred.' };
 
-  if (!res.hasHeader(createKey(RESULT_CODE))) {
-    res.setHeader(createKey(RESULT_CODE), ResultCode.STOP_AND_FAILED);
+  if (!(RESULT_CODE in dto.headers)) {
+    dto.headers[RESULT_CODE] = ResultCode.STOP_AND_FAILED.toString();
   }
 
   if (e) {
@@ -55,62 +55,52 @@ export function createErrorResponse(req: Request, res: Response, dto: ProcessDto
     message = `Error occurred: ${e.message}`;
     responseBody = formatError(e);
 
-    if (appOptions.debug && !res.hasHeader(createKey(RESULT_DETAIL))) {
-      try {
-        res.setHeader(
-          createKey(RESULT_DETAIL),
-          e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')),
-        );
-      } catch (ex) {
-        logger.error(
-          // eslint-disable-next-line max-len
-          `Can't set header [${createKey(RESULT_DETAIL)}:${JSON.stringify(e.stack === undefined ? '' : e.stack.replace(/\r?\n|\r/g, ''))}]`,
-          dto,
-        );
-      }
+    if (appOptions.debug && !dto.getHeader(RESULT_DETAIL)) {
+      dto.headers[RESULT_DETAIL] = e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, ''));
     }
   }
 
-  try {
-    if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-      res.setHeader(createKey(RESULT_MESSAGE), message.replace(/\r?\n|\r/g, ''));
-    } else {
-      res.setHeader(
-        createKey(RESULT_MESSAGE),
-        `Error: ${message.replace(/\r?\n|\r/g, '')}, Original result: ${res.getHeader(RESULT_MESSAGE)}`,
-      );
-    }
-  } catch (ex) {
-    logger.error(`Can't set header [${createKey(RESULT_MESSAGE)}:${message}]`, dto);
+  const msg = message.replace(/\r?\n|\r/g, '');
+  if (!(RESULT_MESSAGE in dto.headers)) {
+    dto.headers[RESULT_MESSAGE] = msg;
+  } else {
+    dto.headers[RESULT_MESSAGE] = `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`;
   }
 
-  logResponseProcess(res, dto);
+  logResponseProcess(dto);
   res.json(responseBody);
 }
 
-export function createSuccessResponse(res: Response, dto: ProcessDto): void {
+export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
+  const dto = _dto;
   res.status(StatusCodes.OK);
 
-  Object.entries(dto.headers).forEach(([key, value]) => {
-    res.setHeader(key, String(value));
-  });
-
-  if (!res.hasHeader(createKey(RESULT_CODE))) {
-    res.setHeader(createKey(RESULT_CODE), ResultCode.SUCCESS);
+  if (!(RESULT_CODE in dto.headers)) {
+    dto.headers[RESULT_CODE] = ResultCode.SUCCESS.toString();
   }
 
-  if (!res.hasHeader(createKey(RESULT_MESSAGE))) {
-    res.setHeader(createKey(RESULT_MESSAGE), 'Processed successfully.');
+  if (!(RESULT_MESSAGE in dto.headers)) {
+    dto.headers[RESULT_MESSAGE] = 'Processed successfully.';
   }
 
-  logResponseProcess(res, dto);
-  res.send(dto.data);
+  res.setHeader('Content-Type', 'application/json');
+  logResponseProcess(dto);
+  res.send(JSON.stringify({
+    body: dto.getBridgeData(),
+    headers: dto.headers,
+  } as IBridgeRequestDto));
 }
 
 const mutex = new Mutex();
 const dtoPool = new Array(100).fill(0);
 for (let i = 0; i < 100; i += 1) {
   dtoPool[i] = new ProcessDto();
+}
+
+const batchMutex = new Mutex();
+const batchDtoPool = new Array(20).fill(0);
+for (let i = 0; i < 20; i += 1) {
+  batchDtoPool[i] = new BatchProcessDto();
 }
 
 async function getFreeDto(): Promise<ProcessDto> {
@@ -133,11 +123,42 @@ async function getFreeDto(): Promise<ProcessDto> {
   });
 }
 
+async function getFreeBatchDto(): Promise<BatchProcessDto> {
+  // Should CPU still be a concern, implement linked list for faster search
+  // In case of Memory concern, limit maximum pool size and await for free objects
+  return batchMutex.runExclusive(() => {
+    for (let i = 0; i < dtoPool.length; i += 1) {
+      if (batchDtoPool[i].free) {
+        batchDtoPool[i].free = false;
+
+        return batchDtoPool[i];
+      }
+    }
+
+    const dto = new BatchProcessDto();
+    dto.free = false;
+    batchDtoPool.push(dto);
+
+    return dto;
+  });
+}
+
 export async function createProcessDto(req: Request): Promise<ProcessDto> {
   const dto = await getFreeDto();
+  const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
-  dto.data = req.body;
-  dto.headers = req.headers;
+  dto.data = parsed.body || '{}';
+  dto.headers = parsed.headers || {};
+
+  return dto;
+}
+
+export async function createBatchProcessDto(req: Request): Promise<BatchProcessDto> {
+  const dto = await getFreeBatchDto();
+  const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
+
+  dto.setBridgeData(parsed.body || '{}');
+  dto.headers = parsed.headers || {};
 
   return dto;
 }

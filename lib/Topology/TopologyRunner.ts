@@ -9,7 +9,7 @@ import HttpMethods from '../Transport/HttpMethods';
 import OnRepeatException from '../Exception/OnRepeatException';
 import ProcessDto from '../Utils/ProcessDto';
 import {
-  createKey, getCorrelationId, getNodeId, PREV_CORRELATION_ID, PREV_NODE_ID,
+  getCorrelationId, getNodeId, PREV_CORRELATION_ID, PREV_NODE_ID,
 } from '../Utils/Headers';
 
 export default class TopologyRunner {
@@ -56,8 +56,6 @@ export default class TopologyRunner {
   ): Promise<ResponseDto> {
     let errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
     try {
-      const corrIdKey = createKey(PREV_CORRELATION_ID);
-      const nodeIdKey = createKey(PREV_NODE_ID);
       const requestDto = new RequestDto(
         url,
         HttpMethods.POST,
@@ -65,8 +63,8 @@ export default class TopologyRunner {
         JSON.stringify(data),
         new Headers({
           ...headers ?? {},
-          [corrIdKey]: getCorrelationId(processDto.headers) ?? '',
-          [nodeIdKey]: getNodeId(processDto.headers) ?? '',
+          [PREV_CORRELATION_ID]: getCorrelationId(processDto.headers) ?? '',
+          [PREV_NODE_ID]: getNodeId(processDto.headers) ?? '',
         }),
       );
       const resp = await this._curlSender.send(requestDto);

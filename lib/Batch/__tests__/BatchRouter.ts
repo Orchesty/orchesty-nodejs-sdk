@@ -10,6 +10,7 @@ import { ICommonNode } from '../../Commons/ICommonNode';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
+  info: () => jest.fn(),
   error: () => jest.fn(),
   debug: () => jest.fn(),
   ctxFromDto: () => jest.fn(),
@@ -36,7 +37,15 @@ describe('Tests for BatchRouter', () => {
     const batchUrl = `/batch/${batch.getName()}/action`;
     await supertest(expressApp)
       .post(batchUrl)
-      .expect(StatusCodes.OK, '[{"dataTest":"testValue"}]');
+      .expect(StatusCodes.OK, JSON.stringify({
+        body: JSON.stringify([{ headers: null, body: JSON.stringify({ dataTest: 'testValue' }) }]),
+        headers: {
+          cursor: 'testCursor',
+          'result-message':
+            'Message will be used as a iterator with cursor [testCursor]. Data will be send to follower(s).',
+          'result-code': '1010',
+        },
+      }));
   });
 
   it('get /batch/:name/action/test route', async () => {

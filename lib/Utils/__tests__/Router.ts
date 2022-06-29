@@ -5,6 +5,7 @@ import { NODE_ID } from '../Headers';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
+  info: () => jest.fn(),
   error: () => jest.fn(),
   debug: () => jest.fn(),
   ctxFromDto: () => jest.fn(),
@@ -15,8 +16,10 @@ jest.mock('../../Logger/Logger', () => ({
 
 // Mock Request/Response of Express
 const mockedRequest = () => ({
-  headers: { 'pf-node-id': '123' },
-  body: '{"body": "aaa"}',
+  body: JSON.stringify({
+    headers: { 'node-id': '123' },
+    body: JSON.stringify({ body: 'aaa' }),
+  }),
 });
 
 function mockRequest(): Request {
@@ -69,9 +72,6 @@ describe('tests Router Utils', () => {
     createErrorResponse(mockRequest(), res, new ProcessDto(), new Error('err message'));
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
-    expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(3);
   });
 
   it('createErrorResponse with error without stackTrace', () => {
@@ -83,9 +83,6 @@ describe('tests Router Utils', () => {
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
-    expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(3);
   });
 
   it('createErrorResponse with error & exist all headers', () => {
@@ -97,9 +94,6 @@ describe('tests Router Utils', () => {
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
-    expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(3);
-    expect(setHeaderMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse with error & with header', () => {
@@ -112,9 +106,6 @@ describe('tests Router Utils', () => {
     createErrorResponse(mockRequest(), res, dto, err);
     expect(statusMock).toBeCalledTimes(2);
     expect(jsonMock).toBeCalledTimes(1);
-    expect(hasHeaderMock).toBeCalledTimes(3);
-    expect(getHeaderMock).toBeCalledTimes(3);
-    expect(setHeaderMock).toBeCalledTimes(2);
   });
 
   it('createErrorResponse without error', () => {
@@ -124,9 +115,6 @@ describe('tests Router Utils', () => {
     createErrorResponse(mockRequest(), res, new ProcessDto());
     expect(statusMock).toBeCalledTimes(1);
     expect(jsonMock).toBeCalledTimes(1);
-    expect(hasHeaderMock).toBeCalledTimes(2);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(2);
   });
 
   it('createSuccessResponse', () => {
@@ -138,9 +126,6 @@ describe('tests Router Utils', () => {
     createSuccessResponse(res, dto);
     expect(statusMock).toBeCalledTimes(1);
     expect(jsonMock).toBeCalledTimes(0);
-    expect(hasHeaderMock).toBeCalledTimes(2);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(3);
   });
 
   it('createSuccessResponse exist all headers', () => {
@@ -152,9 +137,6 @@ describe('tests Router Utils', () => {
     createSuccessResponse(res, dto);
     expect(statusMock).toBeCalledTimes(1);
     expect(jsonMock).toBeCalledTimes(0);
-    expect(hasHeaderMock).toBeCalledTimes(2);
-    expect(getHeaderMock).toBeCalledTimes(2);
-    expect(setHeaderMock).toBeCalledTimes(1);
   });
 
   it('createProcessDto', async () => {

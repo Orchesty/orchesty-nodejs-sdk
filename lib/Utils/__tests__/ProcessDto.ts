@@ -18,14 +18,6 @@ describe('Tests ProcessDto utils', () => {
     expect(dto.jsonData).toEqual({ some: 'data' });
   });
 
-  it('ShouldRemoveBatchCursor', () => {
-    const dto = new ProcessDto();
-    const cursorName = 'name';
-    dto.setBatchCursor(cursorName);
-    dto.removeBatchCursor();
-    expect(dto.headers['pf-cursor']).toBeUndefined();
-  });
-
   it('setJson', () => {
     const dto = new ProcessDto();
     dto.jsonData = { some: 'data' };
@@ -35,14 +27,14 @@ describe('Tests ProcessDto utils', () => {
 
   it('GetHeaders', () => {
     const dto = new ProcessDto();
-    dto.headers = { 'pf-some': 'header' };
+    dto.headers = { some: 'header' };
 
-    expect(dto.headers).toEqual({ 'pf-some': 'header' });
+    expect(dto.headers).toEqual({ some: 'header' });
   });
 
   it('GetHeader', () => {
     const dto = new ProcessDto();
-    dto.headers = { 'pf-some': 'header' };
+    dto.headers = { some: 'header' };
 
     expect(dto.getHeader('some')).toEqual('header');
     expect(dto.getHeader('none', 'default')).toEqual('default');
@@ -156,25 +148,7 @@ describe('Tests ProcessDto utils', () => {
 
     dto.removeForceFollowers();
 
-    expect(dto.headers).toEqual({ 'pf-worker-followers': '[{"name":"abc", "id": "123"}]' });
-  });
-
-  it('removeBatchCursor removes iterate-only cursor correctly', () => {
-    const dto = new ProcessDto();
-    dto.setBatchCursor('0', true);
-
-    dto.removeBatchCursor();
-
-    expect(dto.headers).toEqual({});
-  });
-
-  it('removeBatchCursor removes batch-with-cursor cursor correctly', () => {
-    const dto = new ProcessDto();
-    dto.setBatchCursor('0');
-
-    dto.removeBatchCursor();
-
-    expect(dto.headers).toEqual({});
+    expect(dto.headers).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
   });
 
   it('removeRepeater removes headers correctly', () => {
