@@ -147,7 +147,7 @@ export async function createProcessDto(req: Request): Promise<ProcessDto> {
   const dto = await getFreeDto();
   const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
-  dto.jsonData = parsed.body || {};
+  dto.data = parsed.body || '{}';
   dto.headers = parsed.headers || {};
 
   return dto;
