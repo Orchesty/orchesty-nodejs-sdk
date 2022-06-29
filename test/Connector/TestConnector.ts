@@ -9,7 +9,7 @@ export default class TestConnector extends AConnector {
   public getName = (): string => 'test';
 
   public async getApplicationInstallFromHeaders(dto: ProcessDto): Promise<ApplicationInstall> {
-    return this._getApplicationInstallFromHeaders(dto);
+    return this._getApplicationInstallFromProcess(dto);
   }
 
   public async processAction(_dto: ProcessDto): Promise<ProcessDto> {
