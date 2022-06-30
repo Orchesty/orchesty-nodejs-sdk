@@ -1,9 +1,9 @@
-import { IBatchNode } from '../../lib/Batch/IBatchNode';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
+import ABatchNode from '../../lib/Batch/ABatchNode';
 
 const CURSOR = 'testCursor';
 
-export default class TestBatch implements IBatchNode {
+export default class TestBatch extends ABatchNode {
   getName = (): string => 'testbatch';
 
   processAction = (_dto: BatchProcessDto): BatchProcessDto => {
