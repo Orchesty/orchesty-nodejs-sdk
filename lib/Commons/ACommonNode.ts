@@ -7,10 +7,10 @@ import AProcessDto from '../Utils/AProcessDto';
 
 export default abstract class ACommonNode implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  private application?: IApplication;
+  protected application?: IApplication;
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  private db?: MongoDbClient;
+  protected db?: MongoDbClient;
 
   public abstract processAction(dto: ProcessDto): Promise<ProcessDto> | ProcessDto;
 

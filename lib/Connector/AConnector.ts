@@ -3,10 +3,12 @@ import ACommonNode from '../Commons/ACommonNode';
 import ResultCode from '../Utils/ResultCode';
 import ResponseDto from '../Transport/Curl/ResponseDto';
 import AProcessDto from '../Utils/AProcessDto';
+import { IApplication } from '../Application/Base/IApplication';
+import MongoDbClient from '../Storage/Mongodb/Client';
 
 export default abstract class AConnector extends ACommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  private sender?: CurlSender;
+  protected sender?: CurlSender;
 
   protected _okStatuses = [200, 201];
 
@@ -21,6 +23,18 @@ export default abstract class AConnector extends ACommonNode {
     );
 
     return false;
+  }
+
+  public setApplication(application: IApplication): AConnector {
+    this.application = application;
+
+    return this;
+  }
+
+  public setDb(db: MongoDbClient): AConnector {
+    this.db = db;
+
+    return this;
   }
 
   public setSender(sender: CurlSender): AConnector {
