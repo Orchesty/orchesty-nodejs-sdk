@@ -6,7 +6,7 @@ import AProcessDto from '../Utils/AProcessDto';
 
 export default abstract class AConnector extends ACommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  private sender?: CurlSender;
+  protected sender?: CurlSender;
 
   protected _okStatuses = [200, 201];
 
