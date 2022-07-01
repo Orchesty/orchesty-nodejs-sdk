@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
