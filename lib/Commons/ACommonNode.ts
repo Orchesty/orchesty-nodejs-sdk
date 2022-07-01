@@ -16,13 +16,13 @@ export default abstract class ACommonNode implements ICommonNode {
 
   public abstract getName(): string;
 
-  public setApplication(application: IApplication): ACommonNode {
+  public setApplication(application: IApplication): this {
     this.application = application;
 
     return this;
   }
 
-  public setDb(db: MongoDbClient): ACommonNode {
+  public setDb(db: MongoDbClient): this {
     this.db = db;
 
     return this;
