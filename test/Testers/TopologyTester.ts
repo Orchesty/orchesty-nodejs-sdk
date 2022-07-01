@@ -36,7 +36,7 @@ export default class TopologyTester {
     dto: ProcessDto,
     _prefix = '',
     _startingPoint?: string,
-  ): Promise<ProcessDto[]> {
+  ): Promise<AProcessDto[]> {
     // Parse BPMN scheme
     this._nodes = this._parseTopologyFile(topologyPath);
 
@@ -47,7 +47,7 @@ export default class TopologyTester {
     }
 
     // Iterate over all nodes
-    const results: ProcessDto[] = [];
+    const results: AProcessDto[] = [];
     while (starts.length > 0) {
       const startNode = starts.shift();
       if (startNode) {
@@ -259,17 +259,22 @@ export default class TopologyTester {
       this._forceMock,
       this._excludeList,
     );
-    const out = await worker.processAction(dto);
+    let toProcess = dto;
+    if (node.type === 'batch' && dto instanceof ProcessDto) {
+      toProcess = this._cloneProcessDto(dto, undefined, true);
+    }
+
+    const out = await worker.processAction(toProcess);
     spy?.mockRestore();
 
     return out;
   }
 
   private _cloneProcessDto = (
-    dto: ProcessDto,
+    dto: AProcessDto,
     body?: Record<string, undefined>,
     asBatch = false,
-  ): ProcessDto => {
+  ): AProcessDto => {
     if (asBatch) {
       const clone = new BatchProcessDto();
       clone.headers = dto.headers;
