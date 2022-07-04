@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -47,21 +47,21 @@
   },
   "devDependencies": {
     "@types/jest": "^28.1.4",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.0.1",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.30.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.4",
+    "@typescript-eslint/parser": "^5.30.4",
     "autocannon": "^7.9.0",
-    "eslint": "^8.18.0",
+    "eslint": "^8.19.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-import-resolver-typescript": "^3.1.2",
+    "eslint-import-resolver-typescript": "^3.2.1",
     "eslint-plugin-import": "^2.26.0",
     "fetch-mock": "^9.11.0",
     "fetch-mock-jest": "^1.5.1",
     "jest": "^28.1.2",
     "nodemon": "^2.0.18",
-    "supertest": "^6.2.3",
+    "supertest": "^6.2.4",
     "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.8.2"
   }
 }
