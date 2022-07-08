@@ -9,6 +9,7 @@ import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
 import { APPLICATION_PREFIX } from '../../lib/Application/ApplicationRouter';
 import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
 import { BATCH_PREFIX } from '../../lib/Batch/BatchRouter';
+import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 
 export default class NodeTester {
   constructor(private _container: DIContainer, private _file: string, private _forceMock = false) {
@@ -63,13 +64,23 @@ export default class NodeTester {
       .toString()) as IDtoData;
 
     const spy = mockNodeCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix, 0, this._forceMock);
-    const dto = new ProcessDto();
-    dto.jsonData = input.data;
+    let dto;
+    if (nodePrefix === BATCH_PREFIX) {
+      dto = new BatchProcessDto();
+      dto.setBridgeData(JSON.stringify(input.data));
+    } else {
+      dto = new ProcessDto();
+      dto.jsonData = input.data;
+    }
     dto.headers = input.headers;
 
     try {
       const res = await node.processAction(dto);
       let resData = dto.jsonData;
+      if (nodePrefix === BATCH_PREFIX) {
+        resData = JSON.parse(dto.getBridgeData() as string);
+      }
+
       if (output.replacement?.data) {
         Object.keys(output.replacement?.data).forEach((_key) => {
           const keys = _key.split('.');
