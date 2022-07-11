@@ -16,7 +16,7 @@ export interface IApplication extends IName {
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
-    data?: BodyInit,
+    data?: BodyInit|unknown,
   ): RequestDto | Promise<RequestDto>;
 
   getAuthorizationType(): AuthorizationTypeEnum;

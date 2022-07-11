@@ -47,7 +47,7 @@ export default abstract class AApplication implements IApplication {
     applicationInstall: ApplicationInstall,
     method: string,
     url?: string,
-    data?: BodyInit
+    data?: BodyInit|unknown
   ): RequestDto | Promise<RequestDto>;
 
   public getLogo(): string | null {
