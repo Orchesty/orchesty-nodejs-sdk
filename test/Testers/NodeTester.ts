@@ -57,6 +57,7 @@ export default class NodeTester {
     const node = this._container.get(`${nodePrefix}.${nodeName}`) as AConnector;
     const fileName = path.parse(this._file).name;
     const fileDir = path.parse(this._file).dir;
+    let thrownErr: unknown;
 
     const input = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}input.json`)
       .toString()) as IDtoData;
@@ -95,9 +96,14 @@ export default class NodeTester {
         throw e;
       } else {
         expect(e).toBeInstanceOf(expectedError);
+        thrownErr = e;
       }
     } finally {
       spy?.mockRestore();
+      if (expectedError && !thrownErr) {
+        // eslint-disable-next-line no-unsafe-finally
+        throw new Error(`Error [${expectedError}] expected but non thrown.`);
+      }
     }
   }
 }

@@ -24,6 +24,10 @@ export default class RequestDto implements IRequestDto {
     this._body = body;
   }
 
+  public setJsonBody(body: unknown): void {
+    this._body = JSON.stringify(body);
+  }
+
   get headers(): HeaderInit {
     return this._headers;
   }
