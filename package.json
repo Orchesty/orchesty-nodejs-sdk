@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "@types/simple-oauth2": "^4.1.1",
     "@types/sodium-native": "^2.3.5",
     "async-mutex": "^0.3.2",
+    "deepmerge": "^4.2.2",
     "express": "~5.0.0-beta.1",
     "express-prometheus-middleware": "^1.2.0",
     "fast-xml-parser": "^4.0.9",
@@ -32,7 +33,7 @@
     "luxon": "^3.0.1",
     "metrics-sender": "^0.0.10",
     "mime-types": "^2.1.35",
-    "mongodb": "^4.7.0",
+    "mongodb": "^4.8.0",
     "mongodb-typescript": "github:hanaboso/mongodb-typescript#mongodb-update",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
@@ -46,22 +47,22 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
-    "@types/jest": "^28.1.4",
-    "@types/node": "^18.0.3",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.0.6",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
     "autocannon": "^7.9.0",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-import-resolver-typescript": "^3.2.5",
+    "eslint-import-resolver-typescript": "^3.2.7",
     "eslint-plugin-import": "^2.26.0",
     "fetch-mock": "^9.11.0",
     "fetch-mock-jest": "^1.5.1",
-    "jest": "^28.1.2",
+    "jest": "^28.1.3",
     "nodemon": "^2.0.19",
     "supertest": "^6.2.4",
-    "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.2"
+    "ts-jest": "^28.0.7",
+    "ts-node": "^10.9.1"
   }
 }

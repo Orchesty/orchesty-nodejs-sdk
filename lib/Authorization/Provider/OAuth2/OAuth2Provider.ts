@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import { AccessToken, AuthorizationCode } from 'simple-oauth2';
 import AOAuthProvider from '../AOAuthProvider';
 import { IOAuth2Provider } from './IOAuth2Provider';
@@ -106,6 +107,6 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
         authorizePath: authUrl.pathname,
       },
     };
-    return new AuthorizationCode({ ...config, ...customConfig });
+    return new AuthorizationCode(deepmerge(config, customConfig));
   };
 }

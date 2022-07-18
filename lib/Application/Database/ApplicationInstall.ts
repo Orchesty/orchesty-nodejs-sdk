@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import { ignore, index } from 'mongodb-typescript';
 import { DateTime } from 'luxon';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
@@ -118,12 +119,12 @@ export class ApplicationInstall extends ADocument {
   }
 
   public addSettings(setting: IApplicationSettings): ApplicationInstall {
-    this.settings = { ...this.settings, ...setting };
+    this.settings = deepmerge(this.settings, setting);
     return this;
   }
 
   public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): ApplicationInstall {
-    this.nonEncryptedSettings = { ...this.nonEncryptedSettings, ...nonEncryptedSettings };
+    this.nonEncryptedSettings = deepmerge(this.nonEncryptedSettings, nonEncryptedSettings);
     return this;
   }
 

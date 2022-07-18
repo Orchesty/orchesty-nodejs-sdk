@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import { Headers, HeadersInit } from 'node-fetch';
 import { StatusCodes } from 'http-status-codes';
 import CurlSender from '../../Transport/Curl/CurlSender';
@@ -34,7 +35,8 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
       };
 
       if (headers) {
-        expect(request.headers).toStrictEqual(new Headers({ ...defaultHeaders, ...headers }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect(request.headers).toStrictEqual(new Headers(deepmerge(defaultHeaders as any, headers as any)));
       } else {
         expect(request.headers).toStrictEqual(new Headers(defaultHeaders));
       }
