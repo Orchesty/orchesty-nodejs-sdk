@@ -1,4 +1,4 @@
-import { FRONTEND_REDIRECT_URL, IOAuth2Application } from './IOAuth2Application';
+import { FRONTEND_REDIRECT_URL, IOAuth2Application, OAUTH_REDIRECT_URL } from './IOAuth2Application';
 import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
 import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
@@ -43,7 +43,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
     const redirectField = new Field(
       FieldType.TEXT,
-      FRONTEND_REDIRECT_URL,
+      OAUTH_REDIRECT_URL,
       'Redirect URL',
       this._provider.getRedirectUri(),
     )

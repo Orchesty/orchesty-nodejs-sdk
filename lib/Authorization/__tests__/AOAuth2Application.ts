@@ -69,7 +69,7 @@ describe('Test AOAuth2Application', () => {
   });
 
   it('should get application form data', () => {
-    const keysToBeReturned = ['client_id', 'client_secret', 'frontend_redirect_url'];
+    const keysToBeReturned = ['client_id', 'client_secret', 'redirect_url'];
     const appInstall = new ApplicationInstall()
       .setUser('user')
       .setName(oAuthApplication.getName());
