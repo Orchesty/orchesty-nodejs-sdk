@@ -154,10 +154,16 @@ export default class ApplicationManager {
     const appInstalls = await this._repository.findMany({ user });
     return {
       items: appInstalls.map((appInstall) => {
-        const app = (this.getApplication(appInstall.getName()) as AApplication);
+        let app: IApplication|undefined;
+        try {
+          app = (this.getApplication(appInstall.getName()) as AApplication);
+        } catch (e) {
+          ///
+        }
+
         return {
           ...appInstall.toArray(),
-          [AUTHORIZED]: app.isAuthorized(appInstall),
+          [AUTHORIZED]: app?.isAuthorized(appInstall) ?? false,
         };
       }),
     };
