@@ -13,14 +13,18 @@ export default class CustomNodeRouter extends ACommonRouter {
 
   configureRoutes(): express.Application {
     this._app.route('/custom-node/:name/process').post(async (req, res, next) => {
-      const customNode = this._loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
-      const dto = await customNode.processAction(await createProcessDto(req));
+      try {
+        const customNode = this._loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
+        const dto = await customNode.processAction(await createProcessDto(req));
 
-      createSuccessResponse(res, dto);
-      res.on('finish', () => {
-        dto.free = true;
-      });
-      next();
+        createSuccessResponse(res, dto);
+        res.on('finish', () => {
+          dto.free = true;
+        });
+        next();
+      } catch (e) {
+        next(e);
+      }
     });
 
     this._app.route('/custom-node/:name/process/test').get(async (req, res, next) => {
