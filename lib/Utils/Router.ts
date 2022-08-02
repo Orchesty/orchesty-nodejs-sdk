@@ -44,7 +44,6 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
   res.status(500);
 
   let message = 'Error occurred: unknown reason';
-  let responseBody = { result: 'Unknown error', message: 'Unknown error occurred.' };
 
   if (!(RESULT_CODE in dto.headers)) {
     dto.headers[RESULT_CODE] = ResultCode.STOP_AND_FAILED.toString();
@@ -53,7 +52,6 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
   if (e) {
     res.status(400);
     message = `Error occurred: ${e.message}`;
-    responseBody = formatError(e);
 
     if (appOptions.debug && !dto.getHeader(RESULT_DETAIL)) {
       dto.headers[RESULT_DETAIL] = e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, ''));
@@ -67,8 +65,12 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
     dto.headers[RESULT_MESSAGE] = `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`;
   }
 
+  res.setHeader('Content-Type', 'application/json');
   logResponseProcess(dto);
-  res.json(responseBody);
+  res.send(JSON.stringify({
+    body: dto.getBridgeData(),
+    headers: dto.headers,
+  } as IBridgeRequestDto));
 }
 
 export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
