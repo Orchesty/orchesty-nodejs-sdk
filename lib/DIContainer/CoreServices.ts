@@ -1,16 +1,17 @@
 // eslint-disable-next-line no-shadow
 enum CoreServices {
-  CRYPT_MANAGER = 'hbpf.core.crypt_manager',
-  MONGO = 'hbpf.core.mongo',
-  LOADER = 'hbpf.core.common_loader',
   APP_LOADER = 'hbpf.core.app_loader',
   APP_MANAGER = 'hbpf.core.app_manager',
-  WEBHOOK_MANAGER = 'hbpf.core.webhook_manager',
-  OAUTH2_PROVIDER = 'hbpf.core.oauth2_provider',
+  CACHE = 'hbpf.core.cache',
+  CRYPT_MANAGER = 'hbpf.core.crypt_manager',
   CURL = 'hbpf.core.curl_sender',
+  LOADER = 'hbpf.core.common_loader',
   METRICS = 'hbpf.core.metrics',
-  TOPOLOGY_RUNNER = 'hbpf.core.topology_runner',
+  MONGO = 'hbpf.core.mongo',
+  OAUTH2_PROVIDER = 'hbpf.core.oauth2_provider',
   REDIS = 'hbpf.core.redis',
+  TOPOLOGY_RUNNER = 'hbpf.core.topology_runner',
+  WEBHOOK_MANAGER = 'hbpf.core.webhook_manager',
 }
 
 export default CoreServices;
