@@ -66,55 +66,55 @@ function mockResponse(
 
 describe('tests Router Utils', () => {
   it('createErrorResponse', () => {
-    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(false);
-    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
+    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(false);
+    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), new Error('err message'));
     expect(statusMock).toBeCalledTimes(2);
-    expect(jsonMock).toBeCalledTimes(1);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse with error without stackTrace', () => {
-    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(false);
-    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
+    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(false);
+    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
     const err = new Error('err message');
     err.stack = undefined;
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
-    expect(jsonMock).toBeCalledTimes(1);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse with error & exist all headers', () => {
-    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(true);
-    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
+    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(true);
+    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
     const err = new Error('err message');
     err.stack = undefined;
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
     expect(statusMock).toBeCalledTimes(2);
-    expect(jsonMock).toBeCalledTimes(1);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse with error & with header', () => {
-    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(true);
-    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
+    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(true);
+    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
     const err = new Error('err message');
     const dto = new ProcessDto();
     dto.addHeader('authorization', 'bearer token');
     err.stack = undefined;
     createErrorResponse(mockRequest(), res, dto, err);
     expect(statusMock).toBeCalledTimes(2);
-    expect(jsonMock).toBeCalledTimes(1);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createErrorResponse without error', () => {
-    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock] = mockResponseFn(false);
-    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock);
+    const [statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock] = mockResponseFn(false);
+    const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
     createErrorResponse(mockRequest(), res, new ProcessDto());
     expect(statusMock).toBeCalledTimes(1);
-    expect(jsonMock).toBeCalledTimes(1);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createSuccessResponse', () => {
@@ -125,7 +125,7 @@ describe('tests Router Utils', () => {
 
     createSuccessResponse(res, dto);
     expect(statusMock).toBeCalledTimes(1);
-    expect(jsonMock).toBeCalledTimes(0);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createSuccessResponse exist all headers', () => {
@@ -136,7 +136,7 @@ describe('tests Router Utils', () => {
 
     createSuccessResponse(res, dto);
     expect(statusMock).toBeCalledTimes(1);
-    expect(jsonMock).toBeCalledTimes(0);
+    expect(sendMock).toBeCalledTimes(1);
   });
 
   it('createProcessDto', async () => {

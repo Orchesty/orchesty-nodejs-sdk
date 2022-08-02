@@ -17,14 +17,18 @@ export default class BatchRouter extends ACommonRouter {
   configureRoutes(): express.Application {
     this._app.route('/batch/:name/action')
       .post(async (req, res, next) => {
-        const batch = this._loader.get(BATCH_PREFIX, req.params.name) as IBatchNode;
-        const dto = await batch.processAction(await createBatchProcessDto(req));
+        try {
+          const batch = this._loader.get(BATCH_PREFIX, req.params.name) as IBatchNode;
+          const dto = await batch.processAction(await createBatchProcessDto(req));
 
-        createSuccessResponse(res, dto);
-        res.on('finish', () => {
-          dto.free = true;
-        });
-        next();
+          createSuccessResponse(res, dto);
+          res.on('finish', () => {
+            dto.free = true;
+          });
+          next();
+        } catch (e) {
+          next(e);
+        }
       });
 
     this._app.route('/batch/:name/action/test')
