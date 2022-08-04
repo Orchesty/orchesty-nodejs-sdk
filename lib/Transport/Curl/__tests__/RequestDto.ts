@@ -1,6 +1,7 @@
 import RequestDto from '../RequestDto';
 import HttpMethods from '../../HttpMethods';
 import ProcessDto from '../../../Utils/ProcessDto';
+import { CommonHeaders } from '../../../Utils/Headers';
 
 describe('RequestDto tests', () => {
   const url = 'https://www.google.com';
@@ -37,6 +38,12 @@ describe('RequestDto tests', () => {
     const newHeader = { newHeaderParam: 'newHeaderParam' };
     requestDto.headers = newHeader;
     expect(requestDto.headers).toEqual(newHeader);
+  });
+  it('addHeaders', () => {
+    const newHeaders = { [CommonHeaders.CONTENT_TYPE]: 'text' };
+    requestDto.addHeaders(newHeaders);
+
+    expect(requestDto.headers).toEqual({ ...newHeaders, ...{ newHeaderParam: 'newHeaderParam' } });
   });
   it('setMethod', () => {
     const newMethod = HttpMethods.PUT;

@@ -11,7 +11,7 @@ import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export interface ICurlMock {
-  body: Record<string, unknown>,
+  body: Record<string, unknown>|string,
   code: number,
   http: string,
   headers: { [key: string]: string },
@@ -71,7 +71,7 @@ export function walkRecursive(body: any, keys: string[], value: string): any {
     // eslint-disable-next-line no-param-reassign
     body[first] = walkRecursive(body[first], keys, value);
   } else if (first && !body[first]) {
-    // Ignore key if don't exist in output data
+    // Ignore key if not exist in output data
     return body;
   } else {
     // eslint-disable-next-line no-param-reassign
@@ -124,18 +124,24 @@ export function mockCurl(
           throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${expectedUrl}] received.`);
         }
 
+        let newBody = '';
+        if (typeof curl.body === 'string') {
+          newBody = curl.body;
+        } else {
+          newBody = JSON.stringify(curl.body || {});
+        }
+
         if (aC && !aC.includes(curl.code || 200)) {
           if (!mC) {
             // eslint-disable-next-line no-param-reassign
             mC = (res: Response, body: string) => body;
           }
 
-          const newBody = JSON.stringify(curl.body || {});
           throw new OnRepeatException(s ?? 60, h ?? 10, mC(new Response(newBody), newBody));
         }
 
         return new ResponseDto(
-          JSON.stringify(curl.body || {}),
+          newBody,
           curl.code || 200,
           new Headers(curl.headers || new Headers()),
         );

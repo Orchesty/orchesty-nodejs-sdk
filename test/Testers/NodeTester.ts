@@ -12,7 +12,12 @@ import { BATCH_PREFIX } from '../../lib/Batch/BatchRouter';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 
 export default class NodeTester {
-  constructor(private _container: DIContainer, private _file: string, private _forceMock = false) {
+  constructor(
+    private _container: DIContainer,
+    private _file: string,
+    private _forceMock = false,
+    private _exclude?: string[],
+  ) {
   }
 
   public async testConnector(
@@ -64,7 +69,16 @@ export default class NodeTester {
     const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output.json`)
       .toString()) as IDtoData;
 
-    const spy = mockNodeCurl(node, this._file, this._container.get(CoreServices.CURL), _prefix, 0, this._forceMock);
+    const spy = mockNodeCurl(
+      node,
+      this._file,
+      this._container.get(CoreServices.CURL),
+      _prefix,
+      0,
+      this._forceMock,
+      this._exclude,
+    );
+
     let dto;
     if (nodePrefix === BATCH_PREFIX) {
       dto = new BatchProcessDto();

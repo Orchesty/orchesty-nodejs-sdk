@@ -36,6 +36,7 @@ export type HttpHeaders = NodeJS.Dict<string | string[]>
 export enum CommonHeaders {
   CONTENT_TYPE = 'Content-Type',
   ACCEPT = 'Accept',
+  ACCEPT_ENCODING = 'Accept-Encoding',
   AUTHORIZATION = 'Authorization',
 }
 
