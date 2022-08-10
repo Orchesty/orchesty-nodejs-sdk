@@ -65,8 +65,8 @@ export class ApplicationInstall extends ADocument {
     return this;
   }
 
-  public setDeleted(): ApplicationInstall {
-    this.deleted = true;
+  public setDeleted(deleted = true): ApplicationInstall {
+    this.deleted = deleted;
     return this;
   }
 
