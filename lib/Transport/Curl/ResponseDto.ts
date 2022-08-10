@@ -1,7 +1,7 @@
 import { Headers } from 'node-fetch';
 import { IResponseDto } from '../IResponseDto';
 
-export default class ResponseDto implements IResponseDto {
+export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
   constructor(
     private readonly _body: string,
     private readonly _code: number,
@@ -18,7 +18,7 @@ export default class ResponseDto implements IResponseDto {
     return this._body;
   }
 
-  get jsonBody(): unknown {
+  get jsonBody(): JsonBody {
     return JSON.parse(this._body);
   }
 

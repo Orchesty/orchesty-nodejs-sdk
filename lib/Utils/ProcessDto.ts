@@ -1,6 +1,6 @@
 import AProcessDto from './AProcessDto';
 
-export default class ProcessDto extends AProcessDto {
+export default class ProcessDto<JsonData = unknown> extends AProcessDto {
   get data(): string {
     return this._data;
   }
@@ -9,7 +9,7 @@ export default class ProcessDto extends AProcessDto {
     this._data = data;
   }
 
-  get jsonData(): unknown {
+  get jsonData(): JsonData {
     return JSON.parse(this._data || '{}');
   }
 

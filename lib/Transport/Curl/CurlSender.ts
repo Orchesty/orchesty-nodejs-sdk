@@ -13,14 +13,14 @@ export default class CurlSender {
   constructor(private _metrics: Metrics) {
   }
 
-  public send = async (
+  public send = async <JsonBody = unknown>(
     dto: RequestDto,
     allowedCodes?: number[],
     sec = 60,
     hops = 10,
     // eslint-disable-next-line @typescript-eslint/require-await
     logMessageCallback = async (res: Response, body: string) => `status: ${res.status}, body: ${body}`,
-  ): Promise<ResponseDto> => {
+  ): Promise<ResponseDto<JsonBody>> => {
     const startTime = Metrics.getCurrentMetrics();
     try {
       const req = CurlSender._createInitFromDto(dto);
