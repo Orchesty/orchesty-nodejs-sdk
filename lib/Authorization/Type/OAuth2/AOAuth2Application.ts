@@ -84,6 +84,8 @@ export default abstract class AOAuth2Application extends AApplication implements
     const tokenFromProvider = await this._provider.getAccessToken(
       this.createDto(applicationInstall),
       token.code,
+      this.getScopes(applicationInstall),
+      this._getScopesSeparator(),
       this._getProviderCustomOptions(),
     );
 

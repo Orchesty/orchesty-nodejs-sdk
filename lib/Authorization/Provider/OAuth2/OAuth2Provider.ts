@@ -40,11 +40,18 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     return `${authUrl}&access_type=offline`;
   }
 
-  public async getAccessToken(dto: IOAuth2Dto, code: string, customConfig = {}): Promise<IToken> {
+  public async getAccessToken(
+    dto: IOAuth2Dto,
+    code: string,
+    scopes: string[],
+    separator: string = ScopeSeparatorEnum.COMMA,
+    customConfig = {},
+  ): Promise<IToken> {
     const tokenParams = {
       code,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uri: dto.isRedirectUrl() ? dto.getRedirectUrl() : this.getRedirectUri(),
+      scope: scopes.join(separator),
     };
 
     const client = this._createClient(dto, customConfig);
