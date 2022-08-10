@@ -3,15 +3,13 @@ import RedisPool from 'node-redis-connection-pool/dist/src/RedisConnectionPool';
 export default class Redis {
   private _client: RedisPool;
 
-  constructor(private _host: string) {
+  constructor(url: string) {
     this._client = new RedisPool({
       name: 'redis',
       poolOptions: {
         max: 5,
       },
-      redisOptions: {
-        host: _host,
-      },
+      redisOptions: { url },
     });
   }
 
