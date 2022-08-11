@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.21",
+  "version": "2.0.22",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -12,7 +12,7 @@
     "lint": "eslint lib test --ext .ts --fix",
     "lint-ci": "eslint lib test --ext .ts",
     "start": "nodemon test/index.ts",
-    "build": "rm -rf dist && tsc -d -p tsconfig.prod.json"
+    "build": "rm -rf dist && tsc -d -p tsconfig.prod.json && cp package.json ./dist/package.json"
   },
   "keywords": [],
   "author": "info@hanaboso.com",

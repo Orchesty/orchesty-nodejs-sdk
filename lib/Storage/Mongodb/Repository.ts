@@ -1,4 +1,4 @@
-import { Repository as BaseRepo } from 'mongodb-typescript';
+import { dehydrate, Repository as BaseRepo } from 'mongodb-typescript';
 import {
   FindCursor, MongoClient, ObjectId, ReplaceOptions, Filter,
 } from 'mongodb';
@@ -31,6 +31,12 @@ export default class Repository<T> extends BaseRepo<T> {
   public async insert(entity: T): Promise<void> {
     this._encrypt(entity);
     return super.insert(entity);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async insertMany(entities: T[]): Promise<void> {
+    const plain = entities.map((entity) => dehydrate<T>(entity));
+    await this.collection.insertMany(plain);
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -105,6 +111,11 @@ export default class Repository<T> extends BaseRepo<T> {
     } else {
       await super.remove(entity);
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-explicit-any
+  public async removeMany(query: Filter<any>): Promise<void> {
+    await this.collection.deleteMany(query);
   }
 
   public enableFilter(name: string): void | Error {

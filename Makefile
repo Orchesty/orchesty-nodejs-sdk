@@ -18,7 +18,7 @@ init: docker-up-force install
 
 publish:
 	pnpm run build
-	pnpm publish
+	pnpm publish dist
 
 docker-compose.ci.yml:
 	# Comment out any port forwarding
