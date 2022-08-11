@@ -10,6 +10,9 @@ import { APPLICATION_PREFIX } from '../../lib/Application/ApplicationRouter';
 import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
 import { BATCH_PREFIX } from '../../lib/Batch/BatchRouter';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
+import { RESULT_CODE, RESULT_MESSAGE } from '../../lib/Utils/Headers';
+import { isBatchResultCode } from '../../lib/Utils/ResultCode';
+import AProcessDto from '../../lib/Utils/AProcessDto';
 
 export default class NodeTester {
   constructor(
@@ -57,16 +60,19 @@ export default class NodeTester {
     nodePrefix: string,
     _prefix = '',
     expectedError?: unknown,
+    _index = 0,
+    _batchProcessDto: AProcessDto = new BatchProcessDto(),
   ): Promise<void> {
     const prefix = _prefix !== '' ? `${_prefix}-` : '';
     const node = this._container.get(`${nodePrefix}.${nodeName}`) as AConnector;
     const fileName = path.parse(this._file).name;
     const fileDir = path.parse(this._file).dir;
     let thrownErr: unknown;
+    const index = _index !== 0 ? `${_index}` : '';
 
     const input = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}input.json`)
       .toString()) as IDtoData;
-    const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output.json`)
+    const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output${index}.json`)
       .toString()) as IDtoData;
 
     const spy = mockNodeCurl(
@@ -74,20 +80,20 @@ export default class NodeTester {
       this._file,
       this._container.get(CoreServices.CURL),
       _prefix,
-      0,
+      _index,
       this._forceMock,
       this._exclude,
     );
 
     let dto;
     if (nodePrefix === BATCH_PREFIX) {
-      dto = new BatchProcessDto();
+      dto = _batchProcessDto as BatchProcessDto;
       dto.setBridgeData(JSON.stringify(input.data));
     } else {
       dto = new ProcessDto();
       dto.jsonData = input.data;
     }
-    dto.headers = input.headers;
+    dto.headers = { ...input.headers, ...dto.headers };
 
     try {
       const res = await node.processAction(dto);
@@ -105,6 +111,14 @@ export default class NodeTester {
 
       expect(res.headers).toEqual(output.headers);
       expect(resData).toEqual(output.data);
+
+      if (nodePrefix === BATCH_PREFIX && isBatchResultCode(Number(res.getHeader(RESULT_CODE)))) {
+        res.removeHeader(RESULT_CODE);
+        res.removeHeader(RESULT_MESSAGE);
+        const newDto = new BatchProcessDto();
+        newDto.headers = res.headers;
+        await this._testNode(nodeName, nodePrefix, _prefix, expectedError, _index + 1, newDto);
+      }
     } catch (e) {
       if (!expectedError) {
         throw e;

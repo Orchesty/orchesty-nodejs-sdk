@@ -34,4 +34,8 @@ export function isSuccessResultCode(code: number): boolean {
   ].includes(code);
 }
 
+export function isBatchResultCode(code: number): boolean {
+  return [ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS].includes(code);
+}
+
 export default ResultCode;
