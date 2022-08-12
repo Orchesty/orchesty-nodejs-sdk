@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
+import { INode } from '../../lib/Commons/INode';
 import DIContainer from '../../lib/DIContainer/Container';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import { IDtoData, mockNodeCurl, walkRecursive } from './TesterHelpers';
-import AConnector from '../../lib/Connector/AConnector';
 import CoreServices from '../../lib/DIContainer/CoreServices';
 import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
 import { APPLICATION_PREFIX } from '../../lib/Application/ApplicationRouter';
@@ -64,7 +64,7 @@ export default class NodeTester {
     _batchProcessDto: AProcessDto = new BatchProcessDto(),
   ): Promise<void> {
     const prefix = _prefix !== '' ? `${_prefix}-` : '';
-    const node = this._container.get(`${nodePrefix}.${nodeName}`) as AConnector;
+    const node = this._container.get(`${nodePrefix}.${nodeName}`) as INode;
     const fileName = path.parse(this._file).name;
     const fileDir = path.parse(this._file).dir;
     let thrownErr: unknown;

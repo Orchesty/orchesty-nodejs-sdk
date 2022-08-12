@@ -6,7 +6,7 @@ import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
 import DIContainer from '../../DIContainer/Container';
-import { ICommonNode } from '../../Commons/ICommonNode';
+import { IBatchNode } from '../IBatchNode';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
@@ -21,7 +21,7 @@ jest.mock('../../Logger/Logger', () => ({
 
 describe('Tests for BatchRouter', () => {
   let container: DIContainer;
-  let batch: ICommonNode;
+  let batch: IBatchNode;
 
   beforeAll(async () => {
     container = await getTestContainer();
