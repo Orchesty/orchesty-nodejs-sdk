@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { Headers, Response } from 'node-fetch';
 import { unescape } from 'querystring';
-import { ICommonNode } from '../../lib/Commons/ICommonNode';
+import { INode } from '../../lib/Commons/INode';
 import AConnector from '../../lib/Connector/AConnector';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
@@ -155,7 +155,7 @@ export function mockCurl(
 }
 
 export function mockNodeCurl(
-  node: ICommonNode|AConnector,
+  node: INode|AConnector,
   file: string,
   sender: CurlSender,
   _prefix = '',

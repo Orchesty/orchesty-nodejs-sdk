@@ -25,6 +25,24 @@ describe('Tests ProcessDto utils', () => {
     expect(dto.jsonData).toEqual({ some: 'data' });
   });
 
+  it('setNewJson', () => {
+    interface IA {
+      string: string
+    }
+    interface IB {
+      number: number
+    }
+
+    const dto = new ProcessDto<IA>();
+    dto.jsonData = { string: 'data' };
+    const newType = dto.setNewJsonData({ number: 123 });
+
+    const check = (t: ProcessDto<IB>) => {}; // eslint-disable-line
+    check(newType); // Just to ensure type assertion
+
+    expect(newType.jsonData).toEqual({ number: 123 });
+  });
+
   it('GetHeaders', () => {
     const dto = new ProcessDto();
     dto.headers = { some: 'header' };
