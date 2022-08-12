@@ -1,3 +1,4 @@
+import { IBatchNode } from '../../Batch/IBatchNode';
 import DIContainer from '../Container';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import { getTestContainer } from '../../../test/TestAbstact';
@@ -23,7 +24,7 @@ describe('Test DIContainer', () => {
   let container: DIContainer;
   let testConnector: ICommonNode;
   let testCustom: ICommonNode;
-  let testBatch: ICommonNode;
+  let testBatch: IBatchNode;
   let testApp: IApplication;
 
   beforeAll(async () => {

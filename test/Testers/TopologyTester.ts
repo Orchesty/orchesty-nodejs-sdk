@@ -1,11 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
 import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
+import { INode } from '../../lib/Commons/INode';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import DIContainer from '../../lib/DIContainer/Container';
-import { ICommonNode } from '../../lib/Commons/ICommonNode';
 import {
   FORCE_TARGET_QUEUE,
   get,
@@ -113,7 +113,7 @@ export default class TopologyTester {
 
   private async _recursiveRunner(node: TestNode, dto: AProcessDto, prefix: string, _index = 0): Promise<AProcessDto[]> {
     // Get worker instance from container
-    let worker: ICommonNode | null;
+    let worker: INode | null;
     switch (node.type) {
       case 'connector':
         worker = this._container.getConnector(node.name);
@@ -141,7 +141,7 @@ export default class TopologyTester {
     dto.addHeader(WORKER_FOLLOWERS, JSON.stringify(node.toWorkerFollowerHeader()));
     dto.removeHeader(RESULT_MESSAGE);
 
-    const nextDto: ProcessDto[] = [];
+    const nextDto: AProcessDto[] = [];
     let out: AProcessDto;
     try {
       if (worker) {
@@ -244,7 +244,7 @@ export default class TopologyTester {
   }
 
   private async _processAction(
-    worker: ICommonNode,
+    worker: INode,
     node: TestNode,
     dto: AProcessDto,
     prefix: string,
@@ -294,7 +294,7 @@ export default class TopologyTester {
     return clone;
   };
 
-  private static _pushMultiple(nextDto: ProcessDto[], out: BatchProcessDto): void {
+  private static _pushMultiple(nextDto: AProcessDto[], out: BatchProcessDto): void {
     out.messages.forEach((message) => {
       const dto = new ProcessDto();
       dto.data = message.body;
