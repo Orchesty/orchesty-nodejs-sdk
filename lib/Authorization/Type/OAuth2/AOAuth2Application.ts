@@ -30,7 +30,7 @@ export default abstract class AOAuth2Application extends AApplication implements
       this.createDto(applicationInstall),
       this.getScopes(applicationInstall),
       this._getScopesSeparator(),
-      this._getProviderCustomOptions(),
+      this._getProviderCustomOptions(applicationInstall),
     );
   }
 
@@ -65,7 +65,7 @@ export default abstract class AOAuth2Application extends AApplication implements
     const token = await this._provider.refreshAccessToken(
       this.createDto(applicationInstall),
       this.getTokens(applicationInstall),
-      this._getProviderCustomOptions(),
+      this._getProviderCustomOptions(applicationInstall),
     );
 
     applicationInstall.setExpires(token[EXPIRES] ?? undefined);
@@ -86,7 +86,7 @@ export default abstract class AOAuth2Application extends AApplication implements
       token.code,
       this.getScopes(applicationInstall),
       this._getScopesSeparator(),
-      this._getProviderCustomOptions(),
+      this._getProviderCustomOptions(applicationInstall),
     );
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,7 +131,8 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   protected _getScopesSeparator = (): string => ScopeSeparatorEnum.COMMA;
 
-  protected _getProviderCustomOptions = (): Record<string, unknown> => ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _getProviderCustomOptions = (applicationInstall: ApplicationInstall): Record<string, unknown> => ({
     options: {
       authorizationMethod: 'body',
     },
