@@ -10,6 +10,8 @@ async function prepare(): Promise<void> {
   const name = 'oauth2application';
   const user = 'user';
   const db = container.get(CoreServices.MONGO) as MongoDbClient;
+
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   db.getRepository(ApplicationInstall).then(async (repository) => {
     const appInstall = await repository.findOne({ key: name, user });
     if (appInstall) {
@@ -20,6 +22,7 @@ async function prepare(): Promise<void> {
 
     const testApp = container.getApplication(name);
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     testApp.saveApplicationForms(newAppInstall, {
       [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****',
       [CLIENT_ID]: '**89f69a-44f4-4163-****-3090edc*****',
@@ -29,4 +32,5 @@ async function prepare(): Promise<void> {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 prepare().then(listen);

@@ -5,11 +5,11 @@ import { PASSWORD, TOKEN, USER } from '../../../lib/Authorization/Type/Basic/ABa
 import TestTokenBasicApplication from '../TestTokenBasicApplication';
 
 describe('Application authorize tests', () => {
-  it('isAuthorized', () => {
+  it('isAuthorized', async () => {
     const basicApp = new TestBasicApplication();
     const appInstall = new ApplicationInstall();
     const settings = { [AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' } };
-    basicApp.saveApplicationForms(appInstall, settings);
+    await basicApp.saveApplicationForms(appInstall, settings);
     expect(basicApp.isAuthorized(appInstall)).toEqual(true);
   });
 
@@ -20,11 +20,11 @@ describe('Application authorize tests', () => {
     expect(basicApp.isAuthorized(appInstall)).toEqual(false);
   });
 
-  it('setApplicationToken', () => {
+  it('setApplicationToken', async () => {
     const basicApp = new TestTokenBasicApplication();
     const appInstall = new ApplicationInstall();
     const settings = { [AUTHORIZATION_FORM]: { [TOKEN]: 'token' } };
-    basicApp.saveApplicationForms(appInstall, settings);
+    await basicApp.saveApplicationForms(appInstall, settings);
     expect(basicApp.isAuthorized(appInstall)).toEqual(true);
   });
 

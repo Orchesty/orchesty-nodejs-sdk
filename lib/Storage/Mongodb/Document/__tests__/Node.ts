@@ -50,8 +50,8 @@ describe('tests for Node', () => {
     await nodeRepository.remove(node);
   });
 
-  afterAll(() => {
-    (container.get(CoreServices.MONGO) as MongoDbClient).down();
+  afterAll(async () => {
+    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
   });
 
   it('get system setting as string', async () => {
