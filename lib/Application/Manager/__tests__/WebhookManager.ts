@@ -69,6 +69,7 @@ describe('Tests for webhookManager', () => {
       'https://sp.orchesty.com/webhook/topologies/testWebhook/nodes/testNode/token/mockedToken',
       new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers()),
     );
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     expect(await webhookManager.subscribeWebhooks(
       appInstall.getName(),
       appInstall.getUser(),
@@ -82,6 +83,7 @@ describe('Tests for webhookManager', () => {
       new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers()),
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     expect(await webhookManager.unsubscribeWebhooks(
       appInstall.getName(),
       appInstall.getUser(),
