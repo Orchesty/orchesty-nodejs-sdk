@@ -28,21 +28,21 @@ export interface IApplicationArray {
 export default abstract class AApplication implements IApplication {
   protected _logoFilename = 'logo.svg';
 
-  public abstract getAuthorizationType (): AuthorizationTypeEnum;
+  public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
-  public abstract getPublicName (): string;
+  public abstract getPublicName(): string;
 
-  public abstract getName (): string;
+  public abstract getName(): string;
 
-  public abstract getDescription (): string;
+  public abstract getDescription(): string;
 
-  public abstract getFormStack (): FormStack;
+  public abstract getFormStack(): FormStack;
 
   public getApplicationType = (): ApplicationTypeEnum => ApplicationTypeEnum.CRON;
 
   public abstract isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-  public abstract getRequestDto (
+  public abstract getRequestDto(
     dto: AProcessDto,
     applicationInstall: ApplicationInstall,
     method: string,
