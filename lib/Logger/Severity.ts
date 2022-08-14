@@ -3,7 +3,7 @@ enum Severity {
     DEBUG = 'debug',
     INFO = 'info',
     WARNING = 'warn',
-    ERROR = 'error'
+    ERROR = 'error',
 }
 
 export default Severity;
