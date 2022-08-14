@@ -48,7 +48,7 @@ interface ILoggerFormat {
 }
 
 export class Logger {
-  private udp: Sender;
+  private readonly udp: Sender;
 
   public constructor() {
     const parsed = parseInfluxDsn(loggerOptions.dsn);
@@ -139,7 +139,7 @@ export class Logger {
     return ctx;
   };
 
-  private format = (severity: Severity, message: string, context?: ILogContext): ILoggerFormat => {
+  private readonly format = (severity: Severity, message: string, context?: ILogContext): ILoggerFormat => {
     const line: ILoggerFormat = {
       timestamp: Date.now(),
       hostname: os.hostname(),

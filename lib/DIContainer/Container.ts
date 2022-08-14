@@ -12,7 +12,7 @@ import Repository from '../Storage/Mongodb/Repository';
 const REPOSITORY = 'repository';
 
 export default class DIContainer {
-  private _services: Map<string, any>;
+  private readonly _services: Map<string, any>;
 
   public constructor() {
     this._services = new Map<string, any>();

@@ -27,10 +27,10 @@ const LENGTH = 25;
 
 export default class WebhookManager {
   public constructor(
-    private _loader: ApplicationLoader,
-    private _curl: CurlSender,
-    private _webhookRepository: WebhookRepository<Webhook>,
-    private _appRepository: ApplicationInstallRepository<ApplicationInstall>,
+    private readonly _loader: ApplicationLoader,
+    private readonly _curl: CurlSender,
+    private readonly _webhookRepository: WebhookRepository<Webhook>,
+    private readonly _appRepository: ApplicationInstallRepository<ApplicationInstall>,
   ) {
   }
 
@@ -151,7 +151,7 @@ export default class WebhookManager {
     return appInstall;
   }
 
-  private _validateBody = (data: IWebhookBody): void => {
+  private readonly _validateBody = (data: IWebhookBody): void => {
     if (!data.name && !data.topology) {
       throw new Error('Required parameter [name, topology] not found.');
     }

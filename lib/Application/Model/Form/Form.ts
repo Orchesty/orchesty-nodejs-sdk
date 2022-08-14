@@ -3,9 +3,9 @@ import Field, { IField } from './Field';
 export default class Form {
   private _description = '';
 
-  private _fields: Field[] = [];
+  private readonly _fields: Field[] = [];
 
-  public constructor(private _key: string, private _publicName: string) {
+  public constructor(private readonly _key: string, private _publicName: string) {
   }
 
   public addField(field: Field): Form {

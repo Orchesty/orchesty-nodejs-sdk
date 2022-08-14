@@ -19,7 +19,7 @@ export default class ApplicationLoader extends CommonLoader {
     return list;
   }
 
-  private _compare = (a: IApplicationArray, b: IApplicationArray): number => {
+  private readonly _compare = (a: IApplicationArray, b: IApplicationArray): number => {
     if (a.name.toLowerCase() < b.name.toLowerCase()) {
       return -1;
     }

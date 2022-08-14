@@ -5,9 +5,9 @@ export const MONGO = 'mongo';
 
 export default class MetricsSenderLoader {
   public constructor(
-    private _metricsService: string,
-    private _influxSender?: IMetricsSender,
-    private _mongoSender?: IMetricsSender,
+    private readonly _metricsService: string,
+    private readonly _influxSender?: IMetricsSender,
+    private readonly _mongoSender?: IMetricsSender,
   ) {
   }
 

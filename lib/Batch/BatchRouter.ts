@@ -7,11 +7,8 @@ import { IBatchNode } from './IBatchNode';
 export const BATCH_PREFIX = 'hbpf.batch';
 
 export default class BatchRouter extends ACommonRouter {
-  private _loader: CommonLoader;
-
-  public constructor(app: express.Application, loader: CommonLoader) {
+  public constructor(app: express.Application, private readonly _loader: CommonLoader) {
     super(app, 'BatchRouter');
-    this._loader = loader;
   }
 
   public configureRoutes(): express.Application {

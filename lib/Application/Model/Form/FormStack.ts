@@ -1,7 +1,7 @@
 import Form, { IForm } from './Form';
 
 export default class FormStack {
-  private _forms: Form[] = [];
+  private readonly _forms: Form[] = [];
 
   public toArray(): Record<string, IForm> {
     const output: Record<string, IForm> = {};

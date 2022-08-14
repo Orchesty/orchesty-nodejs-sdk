@@ -12,7 +12,7 @@ export interface ICacheCallback<T> {
 const MAX_TRY = 15;
 
 export default class CacheService {
-  public constructor(private _redis: Redis, private _curlSender: CurlSender) {
+  public constructor(private readonly _redis: Redis, private readonly _curlSender: CurlSender) {
   }
 
   public async entry<T>(

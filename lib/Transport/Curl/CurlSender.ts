@@ -10,7 +10,7 @@ import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import OnRepeatException from '../../Exception/OnRepeatException';
 
 export default class CurlSender {
-  public constructor(private _metrics: Metrics) {
+  public constructor(private readonly _metrics: Metrics) {
   }
 
   public send = async <JsonBody = unknown>(

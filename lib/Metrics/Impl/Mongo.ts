@@ -5,7 +5,7 @@ import logger from '../../Logger/Logger';
 import { IMetricsFields } from '../Metrics';
 
 export default class Mongo implements IMetricsSender {
-  public constructor(private _client: MongoDbClient) {
+  public constructor(private readonly _client: MongoDbClient) {
   }
 
   public async send(measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> {

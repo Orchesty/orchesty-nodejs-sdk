@@ -16,7 +16,7 @@ export default class Repository<T> extends BaseRepo<T> {
     Type: ClassType<T>,
     mongo: MongoClient,
     collection: string,
-    private _crypt: CryptManager,
+    private readonly _crypt: CryptManager,
     options?: RepositoryOptions,
   ) {
     super(Type, mongo, collection, options);

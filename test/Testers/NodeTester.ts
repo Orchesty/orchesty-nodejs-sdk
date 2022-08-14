@@ -16,10 +16,10 @@ import AProcessDto from '../../lib/Utils/AProcessDto';
 
 export default class NodeTester {
   public constructor(
-    private _container: DIContainer,
-    private _file: string,
-    private _forceMock = false,
-    private _exclude?: string[],
+    private readonly _container: DIContainer,
+    private readonly _file: string,
+    private readonly _forceMock = false,
+    private readonly _exclude?: string[],
   ) {
   }
 

@@ -3,10 +3,10 @@ export const TOPOLOGY = 'topology';
 
 export default class WebhookSubscription {
   public constructor(
-    private _name: string,
-    private _node: string,
-    private _topology: string,
-    private _parameters: Record<string, string> = {},
+    private readonly _name: string,
+    private readonly _node: string,
+    private readonly _topology: string,
+    private readonly _parameters: Record<string, string> = {},
   ) {
   }
 

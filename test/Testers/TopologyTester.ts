@@ -24,10 +24,10 @@ export default class TopologyTester {
   private _nodes: TestNode[] = [];
 
   public constructor(
-    private _container: DIContainer,
-    private _file: string,
-    private _forceMock = false,
-    private _excludeList: string[] = [],
+    private readonly _container: DIContainer,
+    private readonly _file: string,
+    private readonly _forceMock = false,
+    private readonly _excludeList: string[] = [],
   ) {
   }
 
@@ -70,7 +70,7 @@ export default class TopologyTester {
     return results;
   }
 
-  private _parseTopologyFile = (path: string): TestNode[] => {
+  private readonly _parseTopologyFile = (path: string): TestNode[] => {
     const buff = fs.readFileSync(path);
     const res = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true }).parse(buff.toString());
 
@@ -98,7 +98,7 @@ export default class TopologyTester {
     return nodes;
   };
 
-  private _pushNodes = (_srcList: Record<string, string>[], dstList: TestNode[]): void => {
+  private readonly _pushNodes = (_srcList: Record<string, string>[], dstList: TestNode[]): void => {
     let list = _srcList;
     if (!Array.isArray(list)) {
       list = [list];
@@ -270,7 +270,7 @@ export default class TopologyTester {
     return out;
   }
 
-  private _cloneProcessDto = (
+  private readonly _cloneProcessDto = (
     dto: AProcessDto,
     body?: Record<string, undefined>,
     asBatch = false,

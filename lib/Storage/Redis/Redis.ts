@@ -1,7 +1,7 @@
 import RedisPool from 'node-redis-connection-pool/dist/src/RedisConnectionPool';
 
 export default class Redis {
-  private _client: RedisPool;
+  private readonly _client: RedisPool;
 
   public constructor(url: string) {
     this._client = new RedisPool({

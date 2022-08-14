@@ -2,7 +2,7 @@ import MongoDbClient from '../Mongodb/Client';
 import ETLDocument from './Document/ETLDocument';
 
 export default class ETLManager {
-  public constructor(private _db: MongoDbClient) {}
+  public constructor(private readonly _db: MongoDbClient) {}
 
   public async getData(user: string, application: string, processId: string): Promise<ETLDocument[]> {
     return (await this._db.getRepository(ETLDocument))

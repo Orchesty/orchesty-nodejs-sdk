@@ -7,11 +7,8 @@ import { ICommonNode } from '../Commons/ICommonNode';
 export const CONNECTOR_PREFIX = 'hbpf.connector';
 
 export default class ConnectorRouter extends ACommonRouter {
-  private _loader: CommonLoader;
-
-  public constructor(app: express.Application, loader: CommonLoader) {
+  public constructor(app: express.Application, private readonly _loader: CommonLoader) {
     super(app, 'ConnectorRouter');
-    this._loader = loader;
   }
 
   public configureRoutes(): express.Application {

@@ -23,7 +23,7 @@ const SHA256 = 'sha256';
 const BASE64 = 'base64';
 
 export default class WindWalkerCrypt extends ACryptImpl {
-  private _cache;
+  private readonly _cache;
 
   private _secureHMACKey = '';
 
@@ -31,7 +31,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
 
   private _iv?: Buffer;
 
-  public constructor(private _secretKey: string, prefix = '002_') {
+  public constructor(private readonly _secretKey: string, prefix = '002_') {
     super(prefix);
 
     this._cache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });

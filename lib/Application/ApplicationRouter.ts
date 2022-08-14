@@ -7,7 +7,7 @@ import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider'
 export const APPLICATION_PREFIX = 'hbpf.application';
 
 export class ApplicationRouter extends ACommonRouter {
-  public constructor(app: express.Application, private _manager: ApplicationManager) {
+  public constructor(app: express.Application, private readonly _manager: ApplicationManager) {
     super(app, 'ApplicationRouter');
   }
 

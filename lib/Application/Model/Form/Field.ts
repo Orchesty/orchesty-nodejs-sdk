@@ -22,8 +22,8 @@ export default class Field {
   private _choices: unknown[] = [];
 
   public constructor(
-    private _type: FieldType,
-    private _key: string,
+    private readonly _type: FieldType,
+    private readonly _key: string,
     private _label: string,
     private _value: unknown = null,
     private _required: boolean = false,

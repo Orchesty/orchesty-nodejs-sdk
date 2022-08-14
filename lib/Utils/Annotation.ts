@@ -25,7 +25,7 @@ export default class Annotation {
     return props;
   };
 
-  private static _formatSyncMethodName = (input: string[]): string[] => {
+  private static readonly _formatSyncMethodName = (input: string[]): string[] => {
     const formattedInput: string[] = [];
     input.forEach((method) => {
       if (method.length > 4) {

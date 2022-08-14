@@ -4,7 +4,7 @@ import WebhookManager from './Manager/WebhookManager';
 
 // eslint-disable-next-line import/prefer-default-export
 export class WebhookRouter extends ACommonRouter {
-  public constructor(app: express.Application, private _manager: WebhookManager) {
+  public constructor(app: express.Application, private readonly _manager: WebhookManager) {
     super(app, 'WebhookRouter');
   }
 

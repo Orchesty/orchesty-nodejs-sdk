@@ -108,7 +108,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     };
   }
 
-  private _createClient = (dto: IOAuth2Dto, customConfig = {}): AuthorizationCode => {
+  private readonly _createClient = (dto: IOAuth2Dto, customConfig = {}): AuthorizationCode => {
     const tokenUrl = new URL(dto.getTokenUrl());
     const authUrl = new URL(dto.getAuthorizationUrl());
     const config = {
