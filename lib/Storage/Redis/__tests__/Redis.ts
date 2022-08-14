@@ -18,7 +18,7 @@ let redis: Redis;
 
 describe('Tests for redis', () => {
   beforeAll(() => {
-    redis = new Redis(process.env.REDIS_DSN || '');
+    redis = new Redis(process.env.REDIS_DSN ?? '');
   });
 
   afterAll(async () => {

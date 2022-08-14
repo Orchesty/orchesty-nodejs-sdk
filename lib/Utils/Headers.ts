@@ -75,13 +75,13 @@ export function getParentId(headers: HttpHeaders): string | undefined {
 }
 
 export function getSequenceId(headers: HttpHeaders): number {
-  return parseInt(get(SEQUENCE_ID, headers) || '0', 10);
+  return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
 }
 
 export function getRepeatHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_HOPS, headers) || '0', 10);
+  return parseInt(get(REPEAT_HOPS, headers) ?? '0', 10);
 }
 
 export function getRepeaterMaxHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_MAX_HOPS, headers) || '0', 10);
+  return parseInt(get(REPEAT_MAX_HOPS, headers) ?? '0', 10);
 }

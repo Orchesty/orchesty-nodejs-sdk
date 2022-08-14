@@ -300,7 +300,7 @@ export default class TopologyTester {
       dto.data = message.body;
       dto.headers = {
         ...out.headers,
-        ...message.headers || {},
+        ...message.headers ?? {},
       };
 
       nextDto.push(dto);

@@ -20,7 +20,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
 
     if (err instanceof OnRepeatException) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) || '') });
+      const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) ?? '') });
       const repeaterSettings = node?.getSystemConfigsFromString()?.repeater;
       if (repeaterSettings?.enabled) {
         dto.setRepeater(repeaterSettings.interval, repeaterSettings.hops, err.message);
