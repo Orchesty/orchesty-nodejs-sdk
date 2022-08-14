@@ -21,8 +21,8 @@ export function formatError(e: Error): IErrorResponse {
 }
 
 interface IBridgeRequestDto {
-  body: string,
-  headers: HttpHeaders,
+  body: string;
+  headers: HttpHeaders;
 }
 
 function logResponseProcess(dto: AProcessDto): void {

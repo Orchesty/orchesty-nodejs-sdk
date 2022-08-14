@@ -49,11 +49,11 @@ export async function getTestContainer(): Promise<DIContainer> {
 }
 
 export function mockRouter(): {
-  postFn: jest.Mock,
-  getFn: jest.Mock,
-  routeFn: jest.Mock,
-  express: Application,
-  loader: CommonLoader,
+  postFn: jest.Mock;
+  getFn: jest.Mock;
+  routeFn: jest.Mock;
+  express: Application;
+  loader: CommonLoader;
 } {
   const postFn = jest.fn();
   const getFn = jest.fn();

@@ -11,28 +11,28 @@ import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export interface ICurlMock {
-  body: Record<string, unknown>|string,
-  code: number,
-  http: string,
-  headers: Record<string, string>,
+  body: Record<string, unknown>|string;
+  code: number;
+  http: string;
+  headers: Record<string, string>;
   httpReplacement?:
   {
-    query?: Record<string, string>
-    path?: Record<string, string>
-  },
+    query?: Record<string, string>;
+    path?: Record<string, string>;
+  };
 }
 
 export interface IDtoData {
-  headers: Record<string, string>,
-  data: Record<string, unknown>,
+  headers: Record<string, string>;
+  data: Record<string, unknown>;
   replacement?: {
-    data?: Record<string, string>
-  }
+    data?: Record<string, string>;
+  };
 }
 
 export interface ILightNode {
-  name: string,
-  id: string,
+  name: string;
+  id: string;
 }
 
 export class TestNode implements ILightNode {

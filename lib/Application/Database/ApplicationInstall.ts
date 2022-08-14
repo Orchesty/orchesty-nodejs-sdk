@@ -7,7 +7,7 @@ import ADocument from '../../Storage/Mongodb/ADocument';
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IApplicationSettings {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any
+  [key: string]: any;
 }
 
 export class ApplicationInstall extends ADocument {

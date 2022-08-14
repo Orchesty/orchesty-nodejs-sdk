@@ -3,8 +3,8 @@ import AProcessDto from './AProcessDto';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
-  body: string, // Is string to support XML fe.
-  headers: Record<string, string | string[]> | null,
+  body: string; // Is string to support XML fe.
+  headers: Record<string, string | string[]> | null;
 }
 
 export default class BatchProcessDto extends AProcessDto {

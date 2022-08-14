@@ -2,19 +2,19 @@ import ADeletableDocument from './ADeletableDocument';
 
 interface ISystemConfigs {
   sdk: {
-    host: string,
-  },
+    host: string;
+  };
   bridge: {
-    host: string,
-  },
+    host: string;
+  };
   rabbit: {
-    prefetch: string,
-  },
+    prefetch: string;
+  };
   repeater: {
-    enabled: boolean,
-    hops: number,
-    interval: number,
-  }
+    enabled: boolean;
+    hops: number;
+    interval: number;
+  };
 }
 
 export default class Node extends ADeletableDocument {

@@ -40,8 +40,8 @@ interface ILoggerFormat {
   result_code?: ResultCode;
   result_message?: string;
   stacktrace?: {
-    message: string,
-    trace?: string,
+    message: string;
+    trace?: string;
   };
   data?: string;
   isForUi?: boolean;

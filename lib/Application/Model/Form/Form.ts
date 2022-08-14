@@ -53,8 +53,8 @@ export default class Form {
 }
 
 export interface IForm {
-  key: string,
-  publicName: string,
-  description: string,
-  fields: IField[],
+  key: string;
+  publicName: string;
+  description: string;
+  fields: IField[];
 }

@@ -12,15 +12,15 @@ import ApplicationInstallRepository from '../Database/ApplicationInstallReposito
 import AApplication from '../Base/AApplication';
 
 interface IWebhookBody {
-  name?: string,
-  topology?: string,
+  name?: string;
+  topology?: string;
 }
 
 interface IWebhookForm {
-  name: string,
-  default: boolean,
-  enabled: boolean,
-  topology: string
+  name: string;
+  default: boolean;
+  enabled: boolean;
+  topology: string;
 }
 
 const LENGTH = 25;

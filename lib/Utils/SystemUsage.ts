@@ -5,9 +5,9 @@ const FILE_PROC_UPTIME = '/proc/uptime';
 const HERTZ = 100;
 
 export interface ICpuTimes {
-  cpuUserCodeTime: number
-  cpuKernelCodeTime: number
-  cpuStartTime: number
+  cpuUserCodeTime: number;
+  cpuKernelCodeTime: number;
+  cpuStartTime: number;
 }
 
 export function getCpuTimes(): ICpuTimes {

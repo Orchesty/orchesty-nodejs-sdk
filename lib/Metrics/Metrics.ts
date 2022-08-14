@@ -6,14 +6,14 @@ import logger from '../Logger/Logger';
 import MetricsSenderLoader from './MetricsSenderLoader';
 
 export interface IStartMetrics {
-  timestamp: number,
-  cpu: ICpuTimes,
+  timestamp: number;
+  cpu: ICpuTimes;
 }
 
 export interface ITimesMetrics {
-  requestDuration: number,
-  userTime: number,
-  kernelTime: number,
+  requestDuration: number;
+  userTime: number;
+  kernelTime: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
