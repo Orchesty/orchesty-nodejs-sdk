@@ -61,7 +61,7 @@ export default class ApplicationManager {
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
-    const res = (await app.saveApplicationForms(appInstall as ApplicationInstall, data)).toArray();
+    const res = (await app.saveApplicationForms(appInstall, data)).toArray();
     await this._repository.update(appInstall);
 
     return {

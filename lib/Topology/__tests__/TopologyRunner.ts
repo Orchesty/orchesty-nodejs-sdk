@@ -26,7 +26,7 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
   return jest.spyOn(curl, 'send').mockImplementation(
     // eslint-disable-next-line @typescript-eslint/require-await
     async (r: RequestDto): Promise<ResponseDto> => {
-      const request = r as RequestDto;
+      const request = r;
       expect(request.method).toBe(HttpMethods.POST);
       expect(request.url).toBe(url);
       const defaultHeaders = {

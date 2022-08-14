@@ -99,7 +99,7 @@ describe('CryptManager tests', () => {
     const encryptedObj = man.encrypt(obj);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const decryptedObj = man.decrypt(encryptedObj) as any;
+    const decryptedObj = man.decrypt(encryptedObj);
     const decrypted = man.decrypt(decryptedObj.str);
 
     expect(decryptedObj).toEqual(obj);

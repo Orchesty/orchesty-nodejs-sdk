@@ -93,7 +93,7 @@ export class Logger {
         return this.ctxFromReq(payload as Request, err);
       }
       if (payload instanceof AProcessDto) {
-        return this.ctxFromDto(payload as AProcessDto, isForUi, err);
+        return this.ctxFromDto(payload, isForUi, err);
       }
       return payload as ILogContext;
     }
