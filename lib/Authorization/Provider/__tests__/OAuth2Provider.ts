@@ -22,7 +22,7 @@ describe('OAuth2Provider tests', () => {
   const oauth2Provider = new OAuth2Provider('testBackend');
   const appInstall = new ApplicationInstall();
 
-  it('authorize ', () => {
+  it('authorize', () => {
     // eslint-disable-next-line max-len
     appInstall.addSettings({ [AUTHORIZATION_FORM]: { [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****', [CLIENT_ID]: '**469040-****-4e03-861e-e19da38*****' } });
     const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
@@ -32,7 +32,7 @@ describe('OAuth2Provider tests', () => {
     );
   });
 
-  it('it should throw an exception when refresh the user token and the token is not found inside the request ', async () => {
+  it('should throw an exception when refresh the user token and the token is not found inside the request', async () => {
     const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
     const errorMsg = 'Message [Refresh token not found! Refresh is not possible.] code [205]';
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -41,7 +41,7 @@ describe('OAuth2Provider tests', () => {
     })).rejects.toThrow(errorMsg);
   });
 
-  it('throwException ', () => {
+  it('throwException', () => {
     const message = 'testThrow';
     const code = 666;
 

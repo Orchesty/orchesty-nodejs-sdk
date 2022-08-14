@@ -13,7 +13,7 @@ jest.mock('../../../lib/Logger/Logger', () => ({
 }));
 
 describe('Test OAuth2 application', () => {
-  it('should ', () => {
+  it('should', () => {
     const provider = new OAuth2Provider('testoauth2');
     const app = new TestOAuth2Application(provider);
     const appInstall = new ApplicationInstall();

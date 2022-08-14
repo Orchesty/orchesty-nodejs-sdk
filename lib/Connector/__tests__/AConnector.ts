@@ -39,40 +39,40 @@ describe('Test AConnector', () => {
     await (container.get(CoreServices.METRICS) as Metrics).close();
   });
 
-  it('it should set database of connector', () => {
+  it('should set database of connector', () => {
     testConnector.setDb(mongoDbClient);
     const testConnectorDatabaseURL = Reflect.get(testConnector, 'db')._dsn;
     expect(process.env.MONGODB_DSN).toEqual(testConnectorDatabaseURL);
   });
 
-  it('it should set application of connector', () => {
+  it('should set application of connector', () => {
     const application = new TestBasicApplication();
     testConnector.setApplication(application);
     const testConnectorApplicationName = (Reflect.get(testConnector, 'application') as IApplication).getName();
     expect(application.getName()).toEqual(testConnectorApplicationName);
   });
 
-  it('it should set sender of connector', () => {
+  it('should set sender of connector', () => {
     testConnector.setSender(curlSender);
     const testConnectorCurlSender = Reflect.get(testConnector, 'sender');
     expect(testConnectorCurlSender).toEqual(curlSender);
   });
 
-  it('it shouldnt set dto stop process on dto', () => {
+  it('shouldnt set dto stop process on dto', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 200, new Headers({}));
     testConnector.evaluateStatusCode(response, dto, 'error');
     expect(dto.headers).toEqual({});
   });
 
-  it('it should set dto stop process on dto', () => {
+  it('should set dto stop process on dto', () => {
     const dto = new ProcessDto();
     const response = new ResponseDto('body', 205, new Headers({}));
     testConnector.evaluateStatusCode(response, dto, 'error');
     expect(dto.headers).toEqual({ 'result-code': '1006', 'result-message': 'error' });
   });
 
-  it('it should return applicationInstall', async () => {
+  it('should return applicationInstall', async () => {
     const repo = await mongoDbClient.getRepository(ApplicationInstall);
     const app = new ApplicationInstall();
     const user = 'testUser';
@@ -88,7 +88,7 @@ describe('Test AConnector', () => {
     expect(res.getUser()).toEqual(user);
   });
 
-  it('it should throw error', async () => {
+  it('should throw error', async () => {
     const repo = await mongoDbClient.getRepository(ApplicationInstall);
     const app = new ApplicationInstall();
     const user = 'testUser';

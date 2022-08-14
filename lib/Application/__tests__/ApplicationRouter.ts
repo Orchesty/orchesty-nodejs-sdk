@@ -134,7 +134,7 @@ describe('Test ApplicationRouter', () => {
       .expect(StatusCodes.OK, expectedResult);
   });
 
-  it('throw error on get /applications/:name/users/:user/authorize route cause ', async () => {
+  it('throw error on get /applications/:name/users/:user/authorize route cause', async () => {
     // Todo : 500 response
     const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
     await supertest(expressApp)

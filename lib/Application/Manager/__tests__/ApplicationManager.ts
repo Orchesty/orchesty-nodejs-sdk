@@ -229,7 +229,7 @@ describe('ApplicationManager tests', () => {
       .toEqual('url');
   });
 
-  it('it should throw an exception when have application not found when save application settings', async () => {
+  it('should throw an exception when have application not found when save application settings', async () => {
     const appSettings = {
       param1: 'p1',
     };

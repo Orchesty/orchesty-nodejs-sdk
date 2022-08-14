@@ -9,7 +9,7 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 describe('Test system usages', () => {
-  it('getCpuTimes ', () => {
+  it('getCpuTimes', () => {
     const cpuTimes = getCpuTimes();
 
     expect(cpuTimes).toHaveProperty('cpuUserCodeTime');
@@ -20,11 +20,11 @@ describe('Test system usages', () => {
     expect(typeof cpuTimes.cpuStartTime).toEqual('number');
   });
 
-  it('getCpuUsage ', () => {
+  it('getCpuUsage', () => {
     expect(typeof getCpuUsage()).toEqual('number');
   });
 
-  it('getCurrentTimestamp ', () => {
+  it('getCurrentTimestamp', () => {
     expect(typeof getCurrentTimestamp()).toEqual('number');
   });
 });
