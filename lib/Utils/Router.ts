@@ -109,11 +109,11 @@ async function getFreeDto(): Promise<ProcessDto> {
   // Should CPU still be a concern, implement linked list for faster search
   // In case of Memory concern, limit maximum pool size and await for free objects
   return mutex.runExclusive(() => {
-    for (let i = 0; i < dtoPool.length; i += 1) {
-      if (dtoPool[i].free) {
-        dtoPool[i].free = false;
+    for (const dto of dtoPool) {
+      if (dto.free) {
+        dto.free = false;
 
-        return dtoPool[i];
+        return dto;
       }
     }
 
@@ -129,19 +129,19 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
   // Should CPU still be a concern, implement linked list for faster search
   // In case of Memory concern, limit maximum pool size and await for free objects
   return batchMutex.runExclusive(() => {
-    for (let i = 0; i < batchDtoPool.length; i += 1) {
-      if (batchDtoPool[i].free) {
-        batchDtoPool[i].free = false;
+    for (const batchDto of batchDtoPool) {
+      if (batchDto.free) {
+        batchDto.free = false;
 
-        return batchDtoPool[i];
+        return batchDto;
       }
     }
 
-    const dto = new BatchProcessDto();
-    dto.free = false;
-    batchDtoPool.push(dto);
+    const batchDto = new BatchProcessDto();
+    batchDto.free = false;
+    batchDtoPool.push(batchDto);
 
-    return dto;
+    return batchDto;
   });
 }
 

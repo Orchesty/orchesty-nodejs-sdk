@@ -219,8 +219,7 @@ export default class TopologyTester {
         }
     }
 
-    for (let i = 0; i < nextDto.length; i += 1) {
-      const d = nextDto[i];
+    for (const d of nextDto) {
       // Prepare out ProcessDto for followers
       d.removeRepeater();
       d.removeHeader(RESULT_CODE);
@@ -229,8 +228,7 @@ export default class TopologyTester {
       if (followers.length <= 0) {
         results.push(d);
       } else {
-        for (let j = 0; j < followers.length; j += 1) {
-          const follower = followers[j];
+        for (const follower of followers) {
           const fIndex = this._nodes.findIndex((n) => n.id === follower.id);
           results.push(
             // eslint-disable-next-line no-await-in-loop
