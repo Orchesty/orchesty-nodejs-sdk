@@ -1,12 +1,12 @@
 // eslint-disable-next-line no-shadow
 export enum HttpMethods {
-  GET= 'GET',
-  POST= 'POST',
-  PUT= 'PUT',
-  PATCH= 'PATCH',
-  DELETE= 'DELETE',
-  OPTIONS= 'OPTIONS',
-  HEAD= 'HEAD',
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS',
+  HEAD = 'HEAD',
 }
 
 export function parseHttpMethod(method: HttpMethods | string): HttpMethods {

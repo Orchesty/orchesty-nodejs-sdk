@@ -11,7 +11,7 @@ import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export interface ICurlMock {
-  body: Record<string, unknown>|string;
+  body: Record<string, unknown> | string;
   code: number;
   http: string;
   headers: Record<string, string>;

@@ -16,7 +16,7 @@ export const AUTHORIZATION_FORM = 'authorization_form';
 
 export interface IApplicationArray {
   name: string;
-  logo: string|null;
+  logo: string | null;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   authorization_type: AuthorizationTypeEnum;
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -47,7 +47,7 @@ export default abstract class AApplication implements IApplication {
     applicationInstall: ApplicationInstall,
     method: string,
     url?: string,
-    data?: BodyInit|unknown // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+    data?: BodyInit | unknown // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
   ): Promise<RequestDto> | RequestDto;
 
   public getLogo(): string | null {

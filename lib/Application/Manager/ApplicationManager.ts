@@ -154,7 +154,7 @@ export default class ApplicationManager {
     const appInstalls = await this._repository.findMany({ user });
     return {
       items: appInstalls.map((appInstall) => {
-        let app: IApplication|undefined;
+        let app: IApplication | undefined;
         try {
           app = this.getApplication(appInstall.getName()) as AApplication;
         } catch (e) {
