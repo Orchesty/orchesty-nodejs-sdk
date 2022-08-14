@@ -15,7 +15,7 @@ import { isBatchResultCode } from '../../lib/Utils/ResultCode';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 
 export default class NodeTester {
-  constructor(
+  public constructor(
     private _container: DIContainer,
     private _file: string,
     private _forceMock = false,

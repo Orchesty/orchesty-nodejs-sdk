@@ -6,7 +6,7 @@ import AProcessDto from '../../Utils/AProcessDto';
 export default class RequestDto implements IRequestDto {
   private _timeout: number;
 
-  constructor(
+  public constructor(
     private _url: string,
     private _method: HttpMethods,
     private _debugInfo: AProcessDto,
@@ -16,11 +16,11 @@ export default class RequestDto implements IRequestDto {
     this._timeout = 30000; // 30sec as a default timeout
   }
 
-  get body(): BodyInit | undefined {
+  public get body(): BodyInit | undefined {
     return this._body;
   }
 
-  set body(body: BodyInit | undefined) {
+  public set body(body: BodyInit | undefined) {
     this._body = body;
   }
 
@@ -28,11 +28,11 @@ export default class RequestDto implements IRequestDto {
     this._body = JSON.stringify(body);
   }
 
-  get headers(): HeaderInit {
+  public get headers(): HeaderInit {
     return this._headers;
   }
 
-  set headers(headers: HeaderInit) {
+  public set headers(headers: HeaderInit) {
     this._headers = headers;
   }
 
@@ -42,35 +42,35 @@ export default class RequestDto implements IRequestDto {
     return this;
   }
 
-  get method(): HttpMethods {
+  public get method(): HttpMethods {
     return this._method;
   }
 
-  set method(method: HttpMethods) {
+  public set method(method: HttpMethods) {
     this._method = method;
   }
 
-  get url(): string {
+  public get url(): string {
     return this._url;
   }
 
-  set url(url: string) {
+  public set url(url: string) {
     this._url = url;
   }
 
-  set timeout(ms: number) {
+  public set timeout(ms: number) {
     this._timeout = ms;
   }
 
-  get timeout(): number {
+  public get timeout(): number {
     return this._timeout;
   }
 
-  get debugInfo(): AProcessDto {
+  public get debugInfo(): AProcessDto {
     return this._debugInfo;
   }
 
-  set debugInfo(dto: AProcessDto) {
+  public set debugInfo(dto: AProcessDto) {
     this._debugInfo = dto;
   }
 }

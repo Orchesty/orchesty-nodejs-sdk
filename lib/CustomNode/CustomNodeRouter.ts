@@ -7,11 +7,11 @@ import { ICommonNode } from '../Commons/ICommonNode';
 export const CUSTOM_NODE_PREFIX = 'hbpf.custom-node';
 
 export default class CustomNodeRouter extends ACommonRouter {
-  constructor(app: express.Application, private _loader: CommonLoader) {
+  public constructor(app: express.Application, private _loader: CommonLoader) {
     super(app, 'CustomNodeRouter');
   }
 
-  configureRoutes(): express.Application {
+  public configureRoutes(): express.Application {
     this._app.route('/custom-node/:name/process').post(async (req, res, next) => {
       try {
         const customNode = this._loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;

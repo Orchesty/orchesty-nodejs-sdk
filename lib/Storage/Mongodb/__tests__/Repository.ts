@@ -19,15 +19,15 @@ jest.mock('../../../Logger/Logger', () => ({
 let dbClient: MongoDbClient;
 
 class ClassWithoutDeleted extends ADocument {
-  user = 'withoutDeleted';
+  public user = 'withoutDeleted';
 
-  edited = false;
+  public edited = false;
 }
 
 class ClassWithDeleted extends ADocument {
-  user = 'withDeleted';
+  public user = 'withDeleted';
 
-  deleted = false;
+  public deleted = false;
 
   public getDeleted(): boolean {
     return this.deleted;

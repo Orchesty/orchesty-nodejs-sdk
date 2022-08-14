@@ -6,7 +6,7 @@ export default class CryptManager {
   private _providers: Record<string, ICrypt> = {};
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(providers: any[] = []) {
+  public constructor(providers: any[] = []) {
     providers.forEach((provider) => {
       if (typeof provider.getType === 'function' && provider.getType() === NAME) {
         this._providers[provider.getPrefix()] = provider;

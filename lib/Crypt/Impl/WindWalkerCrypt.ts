@@ -31,7 +31,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
 
   private _iv?: Buffer;
 
-  constructor(private _secretKey: string, prefix = '002_') {
+  public constructor(private _secretKey: string, prefix = '002_') {
     super(prefix);
 
     this._cache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });

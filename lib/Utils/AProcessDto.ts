@@ -23,35 +23,35 @@ export default abstract class AProcessDto {
 
   protected _data: string;
 
-  constructor() {
+  public constructor() {
     this._data = '';
     this._headers = {};
     this._free = true;
   }
 
-  get user(): string | undefined {
+  public get user(): string | undefined {
     const value = this._headers.user;
 
     return value ? String(value) : undefined;
   }
 
-  set user(value: string | undefined) {
+  public set user(value: string | undefined) {
     this._headers.user = value;
   }
 
-  get data(): string {
+  public get data(): string {
     return this._data;
   }
 
-  get jsonData(): unknown {
+  public get jsonData(): unknown {
     return JSON.parse(this._data || '{}');
   }
 
-  get free(): boolean {
+  public get free(): boolean {
     return this._free;
   }
 
-  set free(free: boolean) {
+  public set free(free: boolean) {
     if (free) {
       this._clearData();
       this._headers = {};
@@ -59,47 +59,47 @@ export default abstract class AProcessDto {
     this._free = free;
   }
 
-  get headers(): HttpHeaders {
+  public get headers(): HttpHeaders {
     return this._headers;
   }
 
-  set headers(headers: HttpHeaders) {
+  public set headers(headers: HttpHeaders) {
     this._headers = headers;
   }
 
-  addHeader(key: string, value: string): void {
+  public addHeader(key: string, value: string): void {
     this._headers[key] = value;
   }
 
-  removeHeader(key: string): void {
+  public removeHeader(key: string): void {
     delete (this._headers[key]);
   }
 
-  removeHeaders(): void {
+  public removeHeaders(): void {
     this._headers = {};
   }
 
-  getHeader(key: string, defaultValue?: string): string | undefined {
+  public getHeader(key: string, defaultValue?: string): string | undefined {
     const value = this._headers[key];
 
     return value ? String(value) : defaultValue;
   }
 
-  setSuccessProcess(message = 'Message has been processed successfully.'): void {
+  public setSuccessProcess(message = 'Message has been processed successfully.'): void {
     this._setStatusHeader(ResultCode.SUCCESS, message);
   }
 
-  setStopProcess(status: ResultCode, reason: string): void {
+  public setStopProcess(status: ResultCode, reason: string): void {
     AProcessDto._validateStatus(status);
 
     this._setStatusHeader(status, reason);
   }
 
-  setLimitExceeded(reason: string): void {
+  public setLimitExceeded(reason: string): void {
     this._setStatusHeader(ResultCode.LIMIT_EXCEEDED, reason);
   }
 
-  setRepeater(interval: number, maxHops: number, reason: string): void {
+  public setRepeater(interval: number, maxHops: number, reason: string): void {
     if (interval < 1) {
       throw new Error('Value interval is obligatory and can not be lower than 0');
     }
@@ -113,7 +113,7 @@ export default abstract class AProcessDto {
     this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
   }
 
-  removeRepeater(): void {
+  public removeRepeater(): void {
     this.removeHeader(REPEAT_INTERVAL);
     this.removeHeader(REPEAT_MAX_HOPS);
     this.removeHeader(REPEAT_HOPS);
@@ -121,12 +121,12 @@ export default abstract class AProcessDto {
     this._removeRelatedHeaders([ResultCode.REPEAT]);
   }
 
-  setLimiter(key: string, time: number, amount: number): void {
+  public setLimiter(key: string, time: number, amount: number): void {
     const lk = util.format('%s;%s;%s', AProcessDto._decorateLimitKey(key), time, amount);
     this.addHeader(LIMITER_KEY, lk);
   }
 
-  setLimiterWithGroup(
+  public setLimiterWithGroup(
     key: string,
     time: number,
     amount: number,
@@ -146,11 +146,11 @@ export default abstract class AProcessDto {
     this.addHeader(LIMITER_KEY, lk);
   }
 
-  removeLimiter(): void {
+  public removeLimiter(): void {
     this.removeHeader(LIMITER_KEY);
   }
 
-  setForceFollowers(...followers: string[]): void {
+  public setForceFollowers(...followers: string[]): void {
     const workerFollowers: {name: string; id: string}[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
     const filtered = workerFollowers.filter((item) => followers.includes(item.name));
     const targetQueues = filtered.map((item) => item.id).join(',');
@@ -168,12 +168,12 @@ export default abstract class AProcessDto {
     );
   }
 
-  removeForceFollowers(): void {
+  public removeForceFollowers(): void {
     this.removeHeader(FORCE_TARGET_QUEUE);
     this._removeRelatedHeaders([ResultCode.FORWARD_TO_TARGET_QUEUE]);
   }
 
-  getBridgeData(): unknown {
+  public getBridgeData(): unknown {
     return this._data;
   }
 

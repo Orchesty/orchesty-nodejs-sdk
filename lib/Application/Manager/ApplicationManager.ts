@@ -16,7 +16,7 @@ const AUTHORIZED = 'authorized';
 const APPLICATION_SETTINGS = 'applicationSettings';
 
 export default class ApplicationManager {
-  constructor(
+  public constructor(
       private _repository: ApplicationInstallRepository<ApplicationInstall>,
       private _loader: ApplicationLoader,
       private _webhookManager: WebhookManager,

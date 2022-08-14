@@ -4,9 +4,9 @@ import ABatchNode from '../../lib/Batch/ABatchNode';
 const CURSOR = 'testCursor';
 
 export default class TestBatch extends ABatchNode {
-  getName = (): string => 'testbatch';
+  public getName = (): string => 'testbatch';
 
-  processAction = (_dto: BatchProcessDto): BatchProcessDto => {
+  public processAction = (_dto: BatchProcessDto): BatchProcessDto => {
     const dto = _dto;
     dto.addItem({
       dataTest: 'testValue',

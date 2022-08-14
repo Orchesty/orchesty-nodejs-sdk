@@ -9,12 +9,12 @@ export const BATCH_PREFIX = 'hbpf.batch';
 export default class BatchRouter extends ACommonRouter {
   private _loader: CommonLoader;
 
-  constructor(app: express.Application, loader: CommonLoader) {
+  public constructor(app: express.Application, loader: CommonLoader) {
     super(app, 'BatchRouter');
     this._loader = loader;
   }
 
-  configureRoutes(): express.Application {
+  public configureRoutes(): express.Application {
     this._app.route('/batch/:name/action')
       .post(async (req, res, next) => {
         try {

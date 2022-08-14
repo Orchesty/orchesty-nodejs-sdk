@@ -3,7 +3,7 @@ import logger from '../../Logger/Logger';
 import Application from '../../Utils/Application';
 
 export default abstract class AOAuthProvider implements IOAuthProvider {
-  constructor(private _backend: string) {
+  public constructor(private _backend: string) {
   }
 
   public getRedirectUri(): string {

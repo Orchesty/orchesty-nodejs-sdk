@@ -10,7 +10,7 @@ export interface IBatchMessage {
 export default class BatchProcessDto extends AProcessDto {
   private _messages: IBatchMessage[];
 
-  constructor(commonHeaders: HttpHeaders = {}) {
+  public constructor(commonHeaders: HttpHeaders = {}) {
     super();
     this._messages = [];
     this._headers = commonHeaders;
@@ -44,11 +44,11 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  get messages(): IBatchMessage[] {
+  public get messages(): IBatchMessage[] {
     return this._messages;
   }
 
-  set messages(messages: IBatchMessage[]) {
+  public set messages(messages: IBatchMessage[]) {
     this._messages = messages;
   }
 
@@ -76,7 +76,7 @@ export default class BatchProcessDto extends AProcessDto {
     this._removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
   }
 
-  public setBridgeData(data: string) {
+  public setBridgeData(data: string): void {
     this._data = data;
   }
 

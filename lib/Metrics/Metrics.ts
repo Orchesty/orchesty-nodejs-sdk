@@ -23,7 +23,7 @@ export interface IMetricsFields {
 }
 
 export default class Metrics {
-  constructor(private _loader: MetricsSenderLoader) {
+  public constructor(private _loader: MetricsSenderLoader) {
   }
 
   public async close(): Promise<void> {

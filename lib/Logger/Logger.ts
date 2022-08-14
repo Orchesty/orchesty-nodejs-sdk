@@ -50,7 +50,7 @@ interface ILoggerFormat {
 export class Logger {
   private udp: Sender;
 
-  constructor() {
+  public constructor() {
     const parsed = parseInfluxDsn(loggerOptions.dsn);
     this.udp = new Sender(parsed.server, parsed.port);
   }

@@ -13,7 +13,7 @@ import {
 } from '../Utils/Headers';
 
 export default class TopologyRunner {
-  constructor(private _curlSender: CurlSender) {
+  public constructor(private _curlSender: CurlSender) {
   }
 
   public static getWebhookUrl(topology: string, node: string, token: string): string {

@@ -23,7 +23,7 @@ import OnRepeatException from '../../lib/Exception/OnRepeatException';
 export default class TopologyTester {
   private _nodes: TestNode[] = [];
 
-  constructor(
+  public constructor(
     private _container: DIContainer,
     private _file: string,
     private _forceMock = false,

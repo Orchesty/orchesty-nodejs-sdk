@@ -13,7 +13,7 @@ import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
 import { IForm } from '../../../Application/Model/Form/Form';
 
 export default abstract class AOAuth2Application extends AApplication implements IOAuth2Application {
-  constructor(protected _provider: OAuth2Provider) {
+  public constructor(protected _provider: OAuth2Provider) {
     super();
   }
 

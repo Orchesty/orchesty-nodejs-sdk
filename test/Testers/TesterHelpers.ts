@@ -36,21 +36,13 @@ export interface ILightNode {
 }
 
 export class TestNode implements ILightNode {
-  id: string;
-
-  name: string;
-
-  type: string;
-
-  previous: ILightNode[] = [];
-
-  followers: ILightNode[] = [];
-
-  constructor(id: string, name: string, type: string) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-  }
+  public constructor(
+      public id: string,
+      public name: string,
+      public type: string,
+      public previous: ILightNode[] = [],
+      public followers: ILightNode[] = [],
+  ) {}
 
   public toWorkerFollowerHeader(): {id: string; name: string}[] {
     const res: {id: string; name: string}[] = [];

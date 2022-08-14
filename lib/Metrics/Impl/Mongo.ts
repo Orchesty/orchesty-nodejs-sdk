@@ -5,10 +5,10 @@ import logger from '../../Logger/Logger';
 import { IMetricsFields } from '../Metrics';
 
 export default class Mongo implements IMetricsSender {
-  constructor(private _client: MongoDbClient) {
+  public constructor(private _client: MongoDbClient) {
   }
 
-  async send(measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> {
+  public async send(measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> {
     try {
       const db = await this._client.db();
       await db.collection(measurement).insertOne({ fields, tags });
@@ -19,7 +19,7 @@ export default class Mongo implements IMetricsSender {
     }
   }
 
-  async close(): Promise<boolean> {
+  public async close(): Promise<boolean> {
     await this._client.down();
     return true;
   }

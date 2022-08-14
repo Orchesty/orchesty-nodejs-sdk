@@ -2,7 +2,7 @@ export default class OnRepeatException extends Error {
   // interval in seconds
   private _interval: number;
 
-  constructor(seconds = 60, private _maxHops: number = 10, message?: string) {
+  public constructor(seconds = 60, private _maxHops: number = 10, message?: string) {
     super(message);
 
     this._interval = seconds;

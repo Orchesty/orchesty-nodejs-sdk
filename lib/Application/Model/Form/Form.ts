@@ -5,7 +5,7 @@ export default class Form {
 
   private _fields: Field[] = [];
 
-  constructor(private _key: string, private _publicName: string) {
+  public constructor(private _key: string, private _publicName: string) {
   }
 
   public addField(field: Field): Form {

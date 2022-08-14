@@ -9,12 +9,12 @@ export const CONNECTOR_PREFIX = 'hbpf.connector';
 export default class ConnectorRouter extends ACommonRouter {
   private _loader: CommonLoader;
 
-  constructor(app: express.Application, loader: CommonLoader) {
+  public constructor(app: express.Application, loader: CommonLoader) {
     super(app, 'ConnectorRouter');
     this._loader = loader;
   }
 
-  configureRoutes(): express.Application {
+  public configureRoutes(): express.Application {
     this._app.route('/connector/:name/action').post(async (req, res, next) => {
       try {
         const connector = this._loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;

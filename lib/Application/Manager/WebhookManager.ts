@@ -26,7 +26,7 @@ interface IWebhookForm {
 const LENGTH = 25;
 
 export default class WebhookManager {
-  constructor(
+  public constructor(
       private _loader: ApplicationLoader,
       private _curl: CurlSender,
       private _webhookRepository: WebhookRepository<Webhook>,

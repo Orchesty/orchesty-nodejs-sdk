@@ -11,11 +11,11 @@ import DIContainer from '../../DIContainer/Container';
 export default class MongoDbClient {
   private readonly _client: MongoClient;
 
-  constructor(private _dsn: string, private _cryptManager: CryptManager, private _container: DIContainer) {
+  public constructor(private _dsn: string, private _cryptManager: CryptManager, private _container: DIContainer) {
     this._client = new MongoClient(this._dsn, { connectTimeoutMS: 10000, keepAlive: true });
   }
 
-  get client(): MongoClient {
+  public get client(): MongoClient {
     return this._client;
   }
 

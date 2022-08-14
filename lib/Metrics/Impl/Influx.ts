@@ -5,7 +5,7 @@ import { parseInfluxDsn } from '../../Utils/DsnParser';
 import { IMetricsFields } from '../Metrics';
 
 export default class Influx implements IMetricsSender {
-  send = async (measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> => {
+  public send = async (measurement: string, fields: IMetricsFields, tags: ITagsMap): Promise<boolean> => {
     try {
       const parsed = parseInfluxDsn(metricsOptions.dsn);
       const client = new Metrics(measurement, tags, parsed.server, parsed.port);
@@ -18,5 +18,5 @@ export default class Influx implements IMetricsSender {
   };
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  close = async (): Promise<boolean> => true;
+  public close = async (): Promise<boolean> => true;
 }

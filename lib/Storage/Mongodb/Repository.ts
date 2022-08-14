@@ -11,7 +11,7 @@ import filters from './Filters';
 export default class Repository<T> extends BaseRepo<T> {
   private readonly _filters: Record<string, IQueryFilter>;
 
-  constructor(
+  public constructor(
     // eslint-disable-next-line @typescript-eslint/naming-convention
     Type: ClassType<T>,
     mongo: MongoClient,
@@ -23,7 +23,7 @@ export default class Repository<T> extends BaseRepo<T> {
     this._filters = filters;
   }
 
-  get name(): string {
+  public get name(): string {
     return this.Type.name;
   }
 

@@ -4,7 +4,7 @@ export const INFLUX = 'influx';
 export const MONGO = 'mongo';
 
 export default class MetricsSenderLoader {
-  constructor(
+  public constructor(
     private _metricsService: string,
     private _influxSender?: IMetricsSender,
     private _mongoSender?: IMetricsSender,
