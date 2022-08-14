@@ -58,7 +58,7 @@ describe('tests for MetricsSenderLoader', () => {
       .toThrow('Influx metrics sender has not been set.');
   });
 
-  it('getSender - influx: undefined', () => {
+  it('getSender - unknown: undefined', () => {
     const invalidService = 'Invalid';
     const metricsSenderLoader = new MetricsSenderLoader(invalidService, undefined, undefined);
     expect(() => {

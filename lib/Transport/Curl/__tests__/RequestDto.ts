@@ -22,7 +22,7 @@ describe('RequestDto tests', () => {
   it('getUrl', () => {
     expect(requestDto.url).toEqual(url);
   });
-  it('getMethod', () => {
+  it('getTimeout', () => {
     expect(requestDto.timeout).toEqual(30000);
   });
   it('getDebugInfo', () => {
