@@ -3,7 +3,9 @@ import logger from '../Logger/Logger';
 
 export default function bodyParser(req: Request, res: Response, next: NextFunction): void {
   let data = '';
-  req.on('data', (chunk) => { data += chunk; });
+  req.on('data', (chunk) => {
+    data += chunk;
+  });
   req.on('end', () => {
     req.body = data;
 

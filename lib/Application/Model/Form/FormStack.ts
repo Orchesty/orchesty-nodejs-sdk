@@ -6,7 +6,9 @@ export default class FormStack {
   public toArray(): Record<string, IForm> {
     const output: Record<string, IForm> = {};
 
-    this._forms.forEach((form) => { output[form.key] = form.toArray(); });
+    this._forms.forEach((form) => {
+      output[form.key] = form.toArray();
+    });
 
     return output;
   }
