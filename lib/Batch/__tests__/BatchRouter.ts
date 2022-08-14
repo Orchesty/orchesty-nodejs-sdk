@@ -64,9 +64,9 @@ describe('Tests for BatchRouter', () => {
   it('test configureRoutes', () => {
     const mock = mockRouter();
     const router = new BatchRouter(mock.express, mock.loader);
-    expect(mock.routeFn).toBeCalledTimes(3);
-    expect(mock.getFn).toBeCalledTimes(2);
-    expect(mock.postFn).toBeCalledTimes(1);
+    expect(mock.routeFn).toHaveBeenCalledTimes(3);
+    expect(mock.getFn).toHaveBeenCalledTimes(2);
+    expect(mock.postFn).toHaveBeenCalledTimes(1);
     expect(router.getName()).toEqual('BatchRouter');
   });
 });

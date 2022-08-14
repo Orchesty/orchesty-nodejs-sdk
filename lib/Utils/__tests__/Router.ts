@@ -70,8 +70,8 @@ describe('tests Router Utils', () => {
     const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), new Error('err message'));
-    expect(statusMock).toBeCalledTimes(2);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(2);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createErrorResponse with error without stackTrace', () => {
@@ -81,8 +81,8 @@ describe('tests Router Utils', () => {
     err.stack = undefined;
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
-    expect(statusMock).toBeCalledTimes(2);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(2);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createErrorResponse with error & exist all headers', () => {
@@ -92,8 +92,8 @@ describe('tests Router Utils', () => {
     err.stack = undefined;
 
     createErrorResponse(mockRequest(), res, new ProcessDto(), err);
-    expect(statusMock).toBeCalledTimes(2);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(2);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createErrorResponse with error & with header', () => {
@@ -104,8 +104,8 @@ describe('tests Router Utils', () => {
     dto.addHeader('authorization', 'bearer token');
     err.stack = undefined;
     createErrorResponse(mockRequest(), res, dto, err);
-    expect(statusMock).toBeCalledTimes(2);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(2);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createErrorResponse without error', () => {
@@ -113,8 +113,8 @@ describe('tests Router Utils', () => {
     const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
     createErrorResponse(mockRequest(), res, new ProcessDto());
-    expect(statusMock).toBeCalledTimes(1);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(1);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createSuccessResponse', () => {
@@ -124,8 +124,8 @@ describe('tests Router Utils', () => {
     dto.addHeader(NODE_ID, '123');
 
     createSuccessResponse(res, dto);
-    expect(statusMock).toBeCalledTimes(1);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(1);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createSuccessResponse exist all headers', () => {
@@ -135,8 +135,8 @@ describe('tests Router Utils', () => {
     dto.addHeader(NODE_ID, '123');
 
     createSuccessResponse(res, dto);
-    expect(statusMock).toBeCalledTimes(1);
-    expect(sendMock).toBeCalledTimes(1);
+    expect(statusMock).toHaveBeenCalledTimes(1);
+    expect(sendMock).toHaveBeenCalledTimes(1);
   });
 
   it('createProcessDto', async () => {

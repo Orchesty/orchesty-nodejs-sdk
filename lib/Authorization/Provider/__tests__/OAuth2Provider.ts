@@ -38,7 +38,7 @@ describe('OAuth2Provider tests', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     expect(oauth2Provider.refreshAccessToken(dto, {
       refreshToken: 'pass',
-    })).rejects.toThrowError(errorMsg);
+    })).rejects.toThrow(errorMsg);
   });
 
   it('throwException ', () => {
