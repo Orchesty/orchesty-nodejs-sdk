@@ -43,6 +43,7 @@ export class ApplicationRouter extends ACommonRouter {
       const url = await this._manager.authorizationApplication(
         req.params.name,
         req.params.user,
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         redirectUrl.toString(),
       );
 
@@ -66,6 +67,7 @@ export class ApplicationRouter extends ACommonRouter {
       if (!state) {
         throw Error('Missing "state" query parameter.');
       }
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       const stateDecode = OAuth2Provider.stateDecode(state.toString());
       const url = await this._manager.saveAuthorizationToken(
         stateDecode.name,
