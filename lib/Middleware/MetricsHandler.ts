@@ -11,7 +11,7 @@ function afterResponse(
   next: NextFunction,
   startMetrics: IStartMetrics,
   sender: Metrics,
-) {
+): void {
   res.removeListener('finish', afterResponse);
   next();
 

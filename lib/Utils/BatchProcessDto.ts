@@ -84,7 +84,7 @@ export default class BatchProcessDto extends AProcessDto {
     return JSON.stringify(this._messages);
   }
 
-  protected _clearData() {
+  protected _clearData(): void {
     this.messages = [];
   }
 }

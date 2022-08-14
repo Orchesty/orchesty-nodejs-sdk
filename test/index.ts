@@ -5,7 +5,7 @@ import logger from '../lib/Logger/Logger';
 import CoreServices from '../lib/DIContainer/CoreServices';
 import { getTestContainer, listen } from './TestAbstact';
 
-async function prepare() {
+async function prepare(): Promise<void> {
   const container = await getTestContainer();
   const name = 'oauth2application';
   const user = 'user';

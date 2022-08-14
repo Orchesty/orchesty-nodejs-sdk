@@ -136,7 +136,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
     [, this._secureHMACKey] = WindWalkerCrypt._strSplit(buff.toString('hex'), PBKDF2_HASH_BYTE_SIZE);
   }
 
-  private static _repeatToLength(key: string, length: number) {
+  private static _repeatToLength(key: string, length: number): string {
     let newKey = key.repeat(Math.ceil(length / key.length));
     newKey = newKey.substring(0, length);
 

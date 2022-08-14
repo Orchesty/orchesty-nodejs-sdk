@@ -39,7 +39,7 @@ jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
 
 describe('ApplicationManager tests', () => {
   // Mock Request/Response of Express
-  const mockedRequest = () => ({
+  const mockedRequest = (): { body: string, headers: Record<string, string> } => ({
     headers: { 'node-id': '123' },
     body: '{"body": "aaa"}',
   });

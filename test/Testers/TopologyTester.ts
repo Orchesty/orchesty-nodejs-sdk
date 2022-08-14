@@ -98,7 +98,7 @@ export default class TopologyTester {
     return nodes;
   };
 
-  private _pushNodes = (_srcList: Record<string, string>[], dstList: TestNode[]) => {
+  private _pushNodes = (_srcList: Record<string, string>[], dstList: TestNode[]): void => {
     let list = _srcList;
     if (!Array.isArray(list)) {
       list = [list];

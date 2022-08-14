@@ -15,7 +15,7 @@ jest.mock('../../Logger/Logger', () => ({
 }));
 
 // Mock Request/Response of Express
-const mockedRequest = () => ({
+const mockedRequest = (): { body: string } => ({
   body: JSON.stringify({
     headers: { 'node-id': '123' },
     body: JSON.stringify({ body: 'aaa' }),
@@ -33,7 +33,7 @@ const mockedResponse = (
   setHeader: () => void,
   json?: () => void,
   send?: () => void,
-) => ({
+): Record<string, (() => void) | undefined> => ({
   status,
   hasHeader,
   getHeader,
@@ -42,7 +42,7 @@ const mockedResponse = (
   send,
 });
 
-function mockResponseFn(hasHeader: boolean) {
+function mockResponseFn(hasHeader: boolean): jest.Mock[] {
   const statusMock = jest.fn().mockReturnValue(false);
   const hasHeaderMock = jest.fn().mockReturnValue(hasHeader);
   const getHeaderMock = jest.fn().mockReturnValue(hasHeader);
@@ -60,7 +60,7 @@ function mockResponse(
   setHeader: () => void,
   json?: () => void,
   send?: () => void,
-) {
+): Response {
   return mockedResponse(status, hasHeader, getHeader, setHeader, json, send) as unknown as Response;
 }
 

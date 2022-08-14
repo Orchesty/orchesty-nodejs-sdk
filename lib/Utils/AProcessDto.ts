@@ -95,7 +95,7 @@ export default abstract class AProcessDto {
     this._setStatusHeader(status, reason);
   }
 
-  setLimitExceeded(reason: string) {
+  setLimitExceeded(reason: string): void {
     this._setStatusHeader(ResultCode.LIMIT_EXCEEDED, reason);
   }
 
@@ -181,7 +181,7 @@ export default abstract class AProcessDto {
     this._data = '';
   }
 
-  protected _setStatusHeader(value: ResultCode, message?: string) {
+  protected _setStatusHeader(value: ResultCode, message?: string): void {
     if (message) {
       this.addHeader(RESULT_MESSAGE, message.replace(/\r?\n|\r/g, ''));
     }

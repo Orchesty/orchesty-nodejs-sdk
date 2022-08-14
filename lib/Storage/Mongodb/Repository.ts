@@ -132,7 +132,7 @@ export default class Repository<T> extends BaseRepo<T> {
     this._filters[name].active(false);
   }
 
-  private _encrypt(entity: T) {
+  private _encrypt(entity: T): void {
     if (Object.prototype.hasOwnProperty.call(entity, 'settings')
       && Object.prototype.hasOwnProperty.call(entity, 'encryptedSettings')
     ) {
@@ -142,7 +142,7 @@ export default class Repository<T> extends BaseRepo<T> {
     }
   }
 
-  private _decrypt(entity: T) {
+  private _decrypt(entity: T): void {
     if (Object.prototype.hasOwnProperty.call(entity, 'settings')
       && Object.prototype.hasOwnProperty.call(entity, 'encryptedSettings')
     ) {
