@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-shadow
-export enum HttpMethods {
+enum HttpMethods {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',
