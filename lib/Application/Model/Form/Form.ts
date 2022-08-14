@@ -8,7 +8,7 @@ export default class Form {
   public constructor(private readonly _key: string, private _publicName: string) {
   }
 
-  public addField(field: Field): Form {
+  public addField(field: Field): this {
     this.fields.push(field);
     return this;
   }

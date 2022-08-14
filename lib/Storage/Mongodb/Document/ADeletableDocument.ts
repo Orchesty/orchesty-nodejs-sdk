@@ -8,7 +8,7 @@ export default class ADeletableDocument extends ADocument {
     return this.deleted;
   }
 
-  public setDeleted(): ADeletableDocument {
+  public setDeleted(): this {
     this.deleted = true;
     return this;
   }

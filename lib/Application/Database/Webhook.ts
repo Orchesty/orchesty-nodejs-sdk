@@ -30,7 +30,7 @@ export default class Webhook extends ADocument {
     return this.name;
   }
 
-  public setName(name: string): Webhook {
+  public setName(name: string): this {
     this.name = name;
     return this;
   }
@@ -39,7 +39,7 @@ export default class Webhook extends ADocument {
     return this.user;
   }
 
-  public setUser(user: string): Webhook {
+  public setUser(user: string): this {
     this.user = user;
     return this;
   }
@@ -48,7 +48,7 @@ export default class Webhook extends ADocument {
     return this.token;
   }
 
-  public setToken(token: string): Webhook {
+  public setToken(token: string): this {
     this.token = token;
     return this;
   }
@@ -57,7 +57,7 @@ export default class Webhook extends ADocument {
     return this.node;
   }
 
-  public setNode(node: string): Webhook {
+  public setNode(node: string): this {
     this.node = node;
     return this;
   }
@@ -66,7 +66,7 @@ export default class Webhook extends ADocument {
     return this.topology;
   }
 
-  public setTopology(topology: string): Webhook {
+  public setTopology(topology: string): this {
     this.topology = topology;
     return this;
   }
@@ -75,7 +75,7 @@ export default class Webhook extends ADocument {
     return this.application;
   }
 
-  public setApplication(application: string): Webhook {
+  public setApplication(application: string): this {
     this.application = application;
     return this;
   }
@@ -84,7 +84,7 @@ export default class Webhook extends ADocument {
     return this.webhookId;
   }
 
-  public setWebhookId(webhookId: string): Webhook {
+  public setWebhookId(webhookId: string): this {
     this.webhookId = webhookId;
     return this;
   }
@@ -93,7 +93,7 @@ export default class Webhook extends ADocument {
     return this.unsubscribeFailed;
   }
 
-  public setUnsubscribeFailed(unsubscribeFailed: boolean): Webhook {
+  public setUnsubscribeFailed(unsubscribeFailed: boolean): this {
     this.unsubscribeFailed = unsubscribeFailed;
     return this;
   }

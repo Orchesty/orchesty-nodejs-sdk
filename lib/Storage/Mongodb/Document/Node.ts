@@ -32,7 +32,7 @@ export default class Node extends ADeletableDocument {
     return this.systemConfigs;
   }
 
-  public setConfigs(systemConfigs: ISystemConfigs): Node {
+  public setConfigs(systemConfigs: ISystemConfigs): this {
     this.systemConfigs = JSON.stringify(systemConfigs);
     return this;
   }

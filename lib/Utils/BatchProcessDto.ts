@@ -16,7 +16,7 @@ export default class BatchProcessDto extends AProcessDto {
     this._headers = commonHeaders;
   }
 
-  public addItem(body: unknown, user?: string): BatchProcessDto {
+  public addItem(body: unknown, user?: string): this {
     let b = body;
     if (typeof body !== 'string') {
       b = JSON.stringify(body);
@@ -30,7 +30,7 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  public setItemList(list: unknown[] | string[]): BatchProcessDto {
+  public setItemList(list: unknown[] | string[]): this {
     list.forEach((it) => {
       this.addItem(it);
     });
@@ -38,7 +38,7 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  public addMessage(message: IBatchMessage): BatchProcessDto {
+  public addMessage(message: IBatchMessage): this {
     this._messages.push(message);
 
     return this;

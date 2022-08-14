@@ -17,7 +17,7 @@ export default class FormStack {
     return this._forms;
   }
 
-  public addForm(form: Form): FormStack {
+  public addForm(form: Form): this {
     this._forms.push(form);
     return this;
   }

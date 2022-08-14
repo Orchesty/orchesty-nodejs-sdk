@@ -61,12 +61,12 @@ export class ApplicationInstall extends ADocument {
     return this.updated;
   }
 
-  public setUpdated(): ApplicationInstall {
+  public setUpdated(): this {
     this.updated = DateTimeUtils.utcDate;
     return this;
   }
 
-  public setDeleted(deleted = true): ApplicationInstall {
+  public setDeleted(deleted = true): this {
     this.deleted = deleted;
     return this;
   }
@@ -79,7 +79,7 @@ export class ApplicationInstall extends ADocument {
     return this.user;
   }
 
-  public setUser(user: string): ApplicationInstall {
+  public setUser(user: string): this {
     this.user = user;
 
     return this;
@@ -89,7 +89,7 @@ export class ApplicationInstall extends ADocument {
     return this.expires;
   }
 
-  public setExpires(expires?: Date): ApplicationInstall {
+  public setExpires(expires?: Date): this {
     this.expires = expires;
     return this;
   }
@@ -98,33 +98,33 @@ export class ApplicationInstall extends ADocument {
     return this.key;
   }
 
-  public setName(name: string): ApplicationInstall {
+  public setName(name: string): this {
     this.key = name;
 
     return this;
   }
 
-  public setSettings(settings: IApplicationSettings): ApplicationInstall {
+  public setSettings(settings: IApplicationSettings): this {
     this.settings = settings;
     return this;
   }
 
-  public setNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): ApplicationInstall {
+  public setNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
     this.nonEncryptedSettings = nonEncryptedSettings;
     return this;
   }
 
-  public setEncryptedSettings(encryptedSettings: string): ApplicationInstall {
+  public setEncryptedSettings(encryptedSettings: string): this {
     this.encryptedSettings = encryptedSettings;
     return this;
   }
 
-  public addSettings(setting: IApplicationSettings): ApplicationInstall {
+  public addSettings(setting: IApplicationSettings): this {
     this.settings = deepmerge(this.settings, setting);
     return this;
   }
 
-  public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): ApplicationInstall {
+  public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
     this.nonEncryptedSettings = deepmerge(this.nonEncryptedSettings, nonEncryptedSettings);
     return this;
   }

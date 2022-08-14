@@ -36,7 +36,7 @@ export default class RequestDto implements IRequestDto {
     this._headers = headers;
   }
 
-  public addHeaders(headers: HeaderInit): RequestDto {
+  public addHeaders(headers: HeaderInit): this {
     this._headers = { ...this._headers, ...headers };
 
     return this;

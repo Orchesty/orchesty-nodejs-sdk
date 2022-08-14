@@ -80,37 +80,37 @@ export default class Field {
     };
   }
 
-  public setLabel(label: string): Field {
+  public setLabel(label: string): this {
     this._label = label;
     return this;
   }
 
-  public setValue(value: unknown): Field {
+  public setValue(value: unknown): this {
     this._value = value;
     return this;
   }
 
-  public setDescription(description: string): Field {
+  public setDescription(description: string): this {
     this._description = description;
     return this;
   }
 
-  public setRequired(required: boolean): Field {
+  public setRequired(required: boolean): this {
     this._required = required;
     return this;
   }
 
-  public setReadOnly(readOnly: boolean): Field {
+  public setReadOnly(readOnly: boolean): this {
     this._readOnly = readOnly;
     return this;
   }
 
-  public setDisabled(disabled: boolean): Field {
+  public setDisabled(disabled: boolean): this {
     this._disabled = disabled;
     return this;
   }
 
-  public setChoices(choices: unknown[]): Field {
+  public setChoices(choices: unknown[]): this {
     this._choices = choices;
     return this;
   }

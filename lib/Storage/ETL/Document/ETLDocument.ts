@@ -28,7 +28,7 @@ export default class ETLDocument extends ADocument {
     return this.user;
   }
 
-  public setUser(user: string): ETLDocument {
+  public setUser(user: string): this {
     this.user = user;
 
     return this;
@@ -38,7 +38,7 @@ export default class ETLDocument extends ADocument {
     return this.application;
   }
 
-  public setApplication(application: string): ETLDocument {
+  public setApplication(application: string): this {
     this.application = application;
 
     return this;
@@ -48,7 +48,7 @@ export default class ETLDocument extends ADocument {
     return this.processId;
   }
 
-  public setProcessId(processId: string): ETLDocument {
+  public setProcessId(processId: string): this {
     this.processId = processId;
 
     return this;
@@ -62,7 +62,7 @@ export default class ETLDocument extends ADocument {
     return JSON.parse(this.data);
   }
 
-  public setData(jsonData: unknown): ETLDocument {
+  public setData(jsonData: unknown): this {
     this.data = JSON.stringify(jsonData);
 
     return this;

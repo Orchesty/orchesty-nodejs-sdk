@@ -33,7 +33,7 @@ class ClassWithDeleted extends ADocument {
     return this.deleted;
   }
 
-  public setDeleted(): ClassWithDeleted {
+  public setDeleted(): this {
     this.deleted = true;
     return this;
   }
