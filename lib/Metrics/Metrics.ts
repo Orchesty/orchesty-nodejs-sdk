@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ITagsMap } from 'metrics-sender/dist/lib/metrics/Metrics';
-import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
+import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
 import MetricsSenderLoader from './MetricsSenderLoader';
 
 export interface IStartMetrics {

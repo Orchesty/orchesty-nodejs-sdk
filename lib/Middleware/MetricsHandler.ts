@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import logger from '../Logger/Logger';
-import { getCorrelationId, getNodeId } from '../Utils/Headers';
-import Metrics, { IStartMetrics } from '../Metrics/Metrics';
-import { container } from '../index';
 import CoreServices from '../DIContainer/CoreServices';
+import { container } from '../index';
+import logger from '../Logger/Logger';
+import Metrics, { IStartMetrics } from '../Metrics/Metrics';
+import { getCorrelationId, getNodeId } from '../Utils/Headers';
 
 function afterResponse(
   req: Request,

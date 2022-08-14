@@ -1,7 +1,7 @@
 import { ITagsMap, Metrics } from 'metrics-sender/dist/lib/metrics/Metrics';
-import { IMetricsSender } from '../IMetricsSender';
 import { metricsOptions } from '../../Config/Config';
 import { parseInfluxDsn } from '../../Utils/DsnParser';
+import { IMetricsSender } from '../IMetricsSender';
 import { IMetricsFields } from '../Metrics';
 
 export default class Influx implements IMetricsSender {

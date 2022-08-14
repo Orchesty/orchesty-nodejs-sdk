@@ -2,22 +2,22 @@ import { Application } from 'express';
 import { FetchMockStatic } from 'fetch-mock';
 import fetchMock from 'fetch-mock-jest';
 import mf from 'node-fetch';
-import DIContainer from '../lib/DIContainer/Container';
-import MongoDbClient from '../lib/Storage/Mongodb/Client';
-import Redis from '../lib/Storage/Redis/Redis';
-import TestConnector from './Connector/TestConnector';
-import TestBasicApplication from './Application/TestBasicApplication';
-import CoreServices from '../lib/DIContainer/CoreServices';
-import TestOAuth2Application from './Application/TestOAuth2Application';
 import {
   container as c, expressApp as e, initiateContainer, listen as l,
 } from '../lib';
-import TestBatch from './Batch/TestBatch';
 import CommonLoader from '../lib/Commons/CommonLoader';
-import TestCustomNode from './CustomNode/TestCustomNode';
-import TestWebhookApplication from './Application/TestWebhookApplication';
-import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
+import DIContainer from '../lib/DIContainer/Container';
+import CoreServices from '../lib/DIContainer/CoreServices';
 import Metrics from '../lib/Metrics/Metrics';
+import MongoDbClient from '../lib/Storage/Mongodb/Client';
+import Redis from '../lib/Storage/Redis/Redis';
+import TestBasicApplication from './Application/TestBasicApplication';
+import TestOAuth2Application from './Application/TestOAuth2Application';
+import TestWebhookApplication from './Application/TestWebhookApplication';
+import TestBatch from './Batch/TestBatch';
+import TestConnector from './Connector/TestConnector';
+import TestCustomNode from './CustomNode/TestCustomNode';
+import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
 
 jest.mock('node-fetch', () => fetchMock.sandbox());
 

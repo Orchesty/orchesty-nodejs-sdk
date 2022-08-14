@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import * as os from 'os';
-import { Sender } from 'metrics-sender/dist/lib/udp/Sender';
 import { Request } from 'express';
-import AProcessDto from '../Utils/AProcessDto';
-import ResultCode from '../Utils/ResultCode';
-import * as headers from '../Utils/Headers';
+import { Sender } from 'metrics-sender/dist/lib/udp/Sender';
+import * as os from 'os';
 import { loggerOptions } from '../Config/Config';
-import winstonLogger from './Winston';
-import Severity from './Severity';
+import AProcessDto from '../Utils/AProcessDto';
 import { parseInfluxDsn } from '../Utils/DsnParser';
+import * as headers from '../Utils/Headers';
+import ResultCode from '../Utils/ResultCode';
+import Severity from './Severity';
+import winstonLogger from './Winston';
 
 export interface ILogContext {
   topology_id?: string;

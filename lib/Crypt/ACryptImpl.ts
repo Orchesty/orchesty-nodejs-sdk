@@ -1,5 +1,5 @@
-import { ICrypt, NAME } from './ICrypt';
 import { PREFIX_LENGTH } from './CryptManager';
+import { ICrypt, NAME } from './ICrypt';
 
 abstract class ACryptImpl implements ICrypt {
   public abstract decrypt(data: string): unknown;

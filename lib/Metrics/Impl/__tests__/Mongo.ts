@@ -1,9 +1,9 @@
 import { getTestContainer } from '../../../../test/TestAbstact';
-import CoreServices from '../../../DIContainer/CoreServices';
-import Mongo from '../Mongo';
 import { metricsOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
+import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
+import Mongo from '../Mongo';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({

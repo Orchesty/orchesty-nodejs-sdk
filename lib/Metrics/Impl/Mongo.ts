@@ -1,7 +1,7 @@
 import { ITagsMap } from 'metrics-sender/dist/lib/metrics/Metrics';
+import logger from '../../Logger/Logger';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { IMetricsSender } from '../IMetricsSender';
-import logger from '../../Logger/Logger';
 import { IMetricsFields } from '../Metrics';
 
 export default class Mongo implements IMetricsSender {

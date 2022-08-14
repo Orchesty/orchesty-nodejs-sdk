@@ -1,7 +1,7 @@
 import CommonLoader from '../Commons/CommonLoader';
-import { IApplication } from './Base/IApplication';
-import { IApplicationArray } from './Base/AApplication';
 import { APPLICATION_PREFIX } from './ApplicationRouter';
+import { IApplicationArray } from './Base/AApplication';
+import { IApplication } from './Base/IApplication';
 
 export default class ApplicationLoader extends CommonLoader {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

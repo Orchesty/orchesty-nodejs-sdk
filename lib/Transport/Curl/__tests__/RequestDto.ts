@@ -1,7 +1,7 @@
-import RequestDto from '../RequestDto';
-import HttpMethods from '../../HttpMethods';
-import ProcessDto from '../../../Utils/ProcessDto';
 import { CommonHeaders } from '../../../Utils/Headers';
+import ProcessDto from '../../../Utils/ProcessDto';
+import HttpMethods from '../../HttpMethods';
+import RequestDto from '../RequestDto';
 
 describe('RequestDto tests', () => {
   const url = 'https://www.google.com';

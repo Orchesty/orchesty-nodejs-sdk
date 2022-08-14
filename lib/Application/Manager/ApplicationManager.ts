@@ -1,15 +1,15 @@
 import { Request } from 'express';
-import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
-import Annotation from '../../Utils/Annotation';
-import { IApplication } from '../Base/IApplication';
-import { APPLICATION_PREFIX } from '../ApplicationRouter';
-import HttpMethods from '../../Transport/HttpMethods';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
+import HttpMethods from '../../Transport/HttpMethods';
+import Annotation from '../../Utils/Annotation';
 import ApplicationLoader from '../ApplicationLoader';
+import { APPLICATION_PREFIX } from '../ApplicationRouter';
 import AApplication, { IApplicationArray } from '../Base/AApplication';
-import { IField } from '../Model/Form/Field';
 import { isWebhook } from '../Base/ApplicationTypeEnum';
+import { IApplication } from '../Base/IApplication';
+import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
+import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
+import { IField } from '../Model/Form/Field';
 import WebhookManager from './WebhookManager';
 
 const AUTHORIZED = 'authorized';

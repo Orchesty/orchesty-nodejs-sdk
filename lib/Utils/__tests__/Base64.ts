@@ -1,4 +1,4 @@
-import { encode, decode } from '../Base64';
+import { decode, encode } from '../Base64';
 
 describe('Base64', () => {
   it('encode ', () => {

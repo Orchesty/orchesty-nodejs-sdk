@@ -1,12 +1,12 @@
 import { Db, MongoClient } from 'mongodb';
 import { ClassType } from 'mongodb-typescript';
+import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
+import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
+import CryptManager from '../../Crypt/CryptManager';
+import DIContainer from '../../DIContainer/Container';
 import logger from '../../Logger/Logger';
 import { IDocument } from './ADocument';
 import Repository from './Repository';
-import CryptManager from '../../Crypt/CryptManager';
-import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
-import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
-import DIContainer from '../../DIContainer/Container';
 
 export default class MongoDbClient {
   private readonly _client: MongoClient;

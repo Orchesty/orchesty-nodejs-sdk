@@ -1,5 +1,5 @@
-import { ApplicationInstall } from '../Database/ApplicationInstall';
 import AProcessDto from '../../Utils/AProcessDto';
+import { ApplicationInstall } from '../Database/ApplicationInstall';
 
 export interface ILimitedApplication {
 

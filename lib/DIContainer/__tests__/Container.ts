@@ -1,15 +1,15 @@
-import { IBatchNode } from '../../Batch/IBatchNode';
-import DIContainer from '../Container';
-import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import { getTestContainer } from '../../../test/TestAbstact';
 import { APPLICATION_PREFIX } from '../../Application/ApplicationRouter';
-import { BATCH_PREFIX } from '../../Batch/BatchRouter';
-import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
-import { ICommonNode } from '../../Commons/ICommonNode';
 import { IApplication } from '../../Application/Base/IApplication';
-import CoreServices from '../CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import { BATCH_PREFIX } from '../../Batch/BatchRouter';
+import { IBatchNode } from '../../Batch/IBatchNode';
+import { ICommonNode } from '../../Commons/ICommonNode';
+import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
+import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
 import Metrics from '../../Metrics/Metrics';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import DIContainer from '../Container';
+import CoreServices from '../CoreServices';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

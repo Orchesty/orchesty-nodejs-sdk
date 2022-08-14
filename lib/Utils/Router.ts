@@ -1,15 +1,15 @@
 import { Mutex } from 'async-mutex';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { appOptions } from '../Config/Config';
+import logger from '../Logger/Logger';
 import AProcessDto from './AProcessDto';
 import BatchProcessDto from './BatchProcessDto';
-import ProcessDto from './ProcessDto';
-import logger from '../Logger/Logger';
 import {
   HttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE,
 } from './Headers';
+import ProcessDto from './ProcessDto';
 import ResultCode, { isSuccessResultCode } from './ResultCode';
-import { appOptions } from '../Config/Config';
 
 interface IErrorResponse {
   result: string;

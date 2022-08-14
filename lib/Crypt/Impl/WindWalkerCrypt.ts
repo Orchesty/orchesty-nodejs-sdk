@@ -1,19 +1,19 @@
+import { Buffer } from 'buffer';
 import {
   createHmac,
   pbkdf2Sync,
   pseudoRandomBytes,
 } from 'crypto';
+import NodeCache from 'node-cache';
 import { serialize, unserialize } from 'php-serialize';
 import {
+  crypto_secretbox_easy,
   crypto_secretbox_KEYBYTES,
   crypto_secretbox_MACBYTES,
-  crypto_secretbox_easy,
   crypto_secretbox_open_easy,
   randombytes_buf,
   sodium_memzero,
 } from 'sodium-native';
-import { Buffer } from 'buffer';
-import NodeCache from 'node-cache';
 import ACryptImpl from '../ACryptImpl';
 
 const PBKDF2_SALT_BYTE_SIZE = 32;

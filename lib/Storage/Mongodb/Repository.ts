@@ -1,12 +1,12 @@
-import { dehydrate, Repository as BaseRepo } from 'mongodb-typescript';
 import {
-  FindCursor, MongoClient, ObjectId, ReplaceOptions, Filter,
-} from 'mongodb';
+  Filter,
+  FindCursor, MongoClient, ObjectId, ReplaceOptions } from 'mongodb';
+import { dehydrate, Repository as BaseRepo } from 'mongodb-typescript';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
-import CryptManager from '../../Crypt/CryptManager';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
-import { IQueryFilter } from './Filters/AQueryFilter';
+import CryptManager from '../../Crypt/CryptManager';
 import filters from './Filters';
+import { IQueryFilter } from './Filters/AQueryFilter';
 
 export default class Repository<T> extends BaseRepo<T> {
   private readonly _filters: Record<string, IQueryFilter>;

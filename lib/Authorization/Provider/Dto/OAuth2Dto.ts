@@ -1,7 +1,7 @@
-import { IOAuth2Dto } from './IOAuth2Dto';
-import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
+import { IOAuth2Dto } from './IOAuth2Dto';
 
 export default class OAuth2Dto implements IOAuth2Dto {
   private readonly _clientId = '';

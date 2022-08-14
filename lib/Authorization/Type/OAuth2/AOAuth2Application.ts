@@ -1,16 +1,16 @@
-import { FRONTEND_REDIRECT_URL, IOAuth2Application, OAUTH_REDIRECT_URL } from './IOAuth2Application';
 import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
-import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
-import { TOKEN } from '../Basic/ABasicApplication';
 import Field from '../../../Application/Model/Form/Field';
 import FieldType from '../../../Application/Model/Form/FieldType';
+import { IForm } from '../../../Application/Model/Form/Form';
+import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
 import OAuth2Dto from '../../Provider/Dto/OAuth2Dto';
 import {
   ACCESS_TOKEN, EXPIRES, IToken, OAuth2Provider,
 } from '../../Provider/OAuth2/OAuth2Provider';
 import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
-import { IForm } from '../../../Application/Model/Form/Form';
+import { TOKEN } from '../Basic/ABasicApplication';
+import { FRONTEND_REDIRECT_URL, IOAuth2Application, OAUTH_REDIRECT_URL } from './IOAuth2Application';
 
 export default abstract class AOAuth2Application extends AApplication implements IOAuth2Application {
   public constructor(protected _provider: OAuth2Provider) {

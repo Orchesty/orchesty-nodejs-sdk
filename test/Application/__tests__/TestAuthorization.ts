@@ -1,7 +1,7 @@
-import TestBasicApplication from '../TestBasicApplication';
-import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
+import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import { PASSWORD, TOKEN, USER } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
+import TestBasicApplication from '../TestBasicApplication';
 import TestTokenBasicApplication from '../TestTokenBasicApplication';
 
 describe('Application authorize tests', () => {

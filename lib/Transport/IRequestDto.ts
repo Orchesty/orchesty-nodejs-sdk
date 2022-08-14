@@ -1,6 +1,6 @@
 import { BodyInit, HeaderInit } from 'node-fetch';
-import HttpMethods from './HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
+import HttpMethods from './HttpMethods';
 
 export interface IRequestDto {
   url: string;

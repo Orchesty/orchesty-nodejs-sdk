@@ -1,5 +1,5 @@
-import Influx from '../Influx';
 import { metricsOptions } from '../../../Config/Config';
+import Influx from '../Influx';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({

@@ -1,8 +1,8 @@
-import TestOAuth2Application from '../TestOAuth2Application';
-import { OAuth2Provider } from '../../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
-import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
+import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import { OAuth2Provider } from '../../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID, CLIENT_SECRET } from '../../../lib/Authorization/Type/OAuth2/IOAuth2Application';
+import TestOAuth2Application from '../TestOAuth2Application';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({

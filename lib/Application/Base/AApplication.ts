@@ -2,15 +2,15 @@ import * as fs from 'fs';
 import { contentType } from 'mime-types';
 import { BodyInit } from 'node-fetch';
 import path from 'path';
-import { IApplication } from './IApplication';
-import { IForm } from '../Model/Form/Form';
-import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
-import FieldType from '../Model/Form/FieldType';
-import ApplicationTypeEnum from './ApplicationTypeEnum';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import RequestDto from '../../Transport/Curl/RequestDto';
-import FormStack from '../Model/Form/FormStack';
 import AProcessDto from '../../Utils/AProcessDto';
+import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
+import FieldType from '../Model/Form/FieldType';
+import { IForm } from '../Model/Form/Form';
+import FormStack from '../Model/Form/FormStack';
+import ApplicationTypeEnum from './ApplicationTypeEnum';
+import { IApplication } from './IApplication';
 
 export const AUTHORIZATION_FORM = 'authorization_form';
 

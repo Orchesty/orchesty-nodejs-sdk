@@ -1,12 +1,12 @@
 import { BodyInit } from 'node-fetch';
-import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
-import RequestDto from '../../Transport/Curl/RequestDto';
-import { IApplicationArray } from './AApplication';
-import HttpMethods from '../../Transport/HttpMethods';
 import { IName } from '../../Commons/IName';
-import ApplicationTypeEnum from './ApplicationTypeEnum';
+import RequestDto from '../../Transport/Curl/RequestDto';
+import HttpMethods from '../../Transport/HttpMethods';
 import AProcessDto from '../../Utils/AProcessDto';
+import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
+import { IApplicationArray } from './AApplication';
+import ApplicationTypeEnum from './ApplicationTypeEnum';
 
 export interface IApplication extends IName {
 

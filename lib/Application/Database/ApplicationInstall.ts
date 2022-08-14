@@ -1,8 +1,8 @@
 import deepmerge from 'deepmerge';
-import { ignore, index } from 'mongodb-typescript';
 import { DateTime } from 'luxon';
-import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
+import { ignore, index } from 'mongodb-typescript';
 import ADocument from '../../Storage/Mongodb/ADocument';
+import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IApplicationSettings {

@@ -1,16 +1,16 @@
 import { Headers } from 'node-fetch';
-import { getTestContainer } from '../../../test/TestAbstact';
-import TestConnector from '../../../test/Connector/TestConnector';
-import { IApplication } from '../../Application/Base/IApplication';
-import CoreServices from '../../DIContainer/CoreServices';
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
+import TestConnector from '../../../test/Connector/TestConnector';
+import { getTestContainer } from '../../../test/TestAbstact';
+import { IApplication } from '../../Application/Base/IApplication';
+import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
+import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import CurlSender from '../../Transport/Curl/CurlSender';
-import Metrics from '../../Metrics/Metrics';
-import ProcessDto from '../../Utils/ProcessDto';
-import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import ResponseDto from '../../Transport/Curl/ResponseDto';
+import ProcessDto from '../../Utils/ProcessDto';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

@@ -1,5 +1,5 @@
-import { id, objectId } from 'mongodb-typescript';
 import { ObjectId } from 'mongodb';
+import { id, objectId } from 'mongodb-typescript';
 
 export interface IDocument {
   getCollection(): string;

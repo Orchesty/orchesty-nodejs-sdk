@@ -1,15 +1,15 @@
-import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
 import { Db } from 'mongodb';
+import supertest from 'supertest';
 import { expressApp, getTestContainer } from '../../../test/TestAbstact';
-import CoreServices from '../../DIContainer/CoreServices';
-import { IApplication } from '../Base/IApplication';
-import DIContainer from '../../DIContainer/Container';
-import { ApplicationInstall } from '../Database/ApplicationInstall';
-import { AUTHORIZATION_FORM } from '../Base/AApplication';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
 import Metrics from '../../Metrics/Metrics';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import { AUTHORIZATION_FORM } from '../Base/AApplication';
+import { IApplication } from '../Base/IApplication';
+import { ApplicationInstall } from '../Database/ApplicationInstall';
 
 let webhookApplication: IApplication;
 let container: DIContainer;

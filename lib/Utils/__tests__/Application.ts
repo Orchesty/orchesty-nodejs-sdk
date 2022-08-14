@@ -1,5 +1,5 @@
-import Application from '../Application';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
+import Application from '../Application';
 
 describe('Application utils tests', () => {
   it('generateUrl with appInstall', () => {

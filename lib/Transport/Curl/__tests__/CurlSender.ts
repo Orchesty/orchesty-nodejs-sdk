@@ -1,12 +1,12 @@
-import CurlSender from '../CurlSender';
+import { getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
+import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
-import { getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
-import RequestDto from '../RequestDto';
-import HttpMethods from '../../HttpMethods';
-import DIContainer from '../../../DIContainer/Container';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ProcessDto from '../../../Utils/ProcessDto';
+import HttpMethods from '../../HttpMethods';
+import CurlSender from '../CurlSender';
+import RequestDto from '../RequestDto';
 
 let container: DIContainer;
 let curlSender: CurlSender;

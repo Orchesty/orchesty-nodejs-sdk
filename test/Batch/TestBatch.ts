@@ -1,5 +1,5 @@
-import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import ABatchNode from '../../lib/Batch/ABatchNode';
+import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 
 const CURSOR = 'testCursor';
 

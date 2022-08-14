@@ -1,17 +1,17 @@
 import { BodyInit } from 'node-fetch';
+import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum';
 import { IWebhookApplication } from '../../lib/Application/Base/IWebhookApplication';
-import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
-import ProcessDto from '../../lib/Utils/ProcessDto';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
-import HttpMethods from '../../lib/Transport/HttpMethods';
-import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import Form from '../../lib/Application/Model/Form/Form';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
-import WebhookSubscription from '../../lib/Application/Model/Webhook/WebhookSubscription';
-import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
-import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum';
+import Form from '../../lib/Application/Model/Form/Form';
 import FormStack from '../../lib/Application/Model/Form/FormStack';
+import WebhookSubscription from '../../lib/Application/Model/Webhook/WebhookSubscription';
+import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
+import RequestDto from '../../lib/Transport/Curl/RequestDto';
+import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
+import HttpMethods from '../../lib/Transport/HttpMethods';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestWebhookApplication extends ABasicApplication implements IWebhookApplication {
   public getDescription = (): string => 'Test webhook description';

@@ -1,6 +1,6 @@
-import { IOAuthProvider } from './IOAuthProvider';
 import logger from '../../Logger/Logger';
 import Application from '../../Utils/Application';
+import { IOAuthProvider } from './IOAuthProvider';
 
 export default abstract class AOAuthProvider implements IOAuthProvider {
   public constructor(private readonly _backend: string) {

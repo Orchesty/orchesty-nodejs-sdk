@@ -1,13 +1,13 @@
 import TestOAuth2Application from '../../../test/Application/TestOAuth2Application';
 import { getTestContainer } from '../../../test/TestAbstact';
-import CoreServices from '../../DIContainer/CoreServices';
-import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../Application/Base/AApplication';
-import { TOKEN } from '../Type/Basic/ABasicApplication';
-import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
-import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
+import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
+import { ACCESS_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
+import { TOKEN } from '../Type/Basic/ABasicApplication';
+import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

@@ -1,8 +1,8 @@
-import CurlSender from '../Transport/Curl/CurlSender';
 import ACommonNode from '../Commons/ACommonNode';
-import ResultCode from '../Utils/ResultCode';
+import CurlSender from '../Transport/Curl/CurlSender';
 import ResponseDto from '../Transport/Curl/ResponseDto';
 import AProcessDto from '../Utils/AProcessDto';
+import ResultCode from '../Utils/ResultCode';
 
 export default abstract class AConnector extends ACommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention

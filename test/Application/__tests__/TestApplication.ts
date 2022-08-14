@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import TestBasicApplication from '../TestBasicApplication';
-import HttpMethods from '../../../lib/Transport/HttpMethods';
-import RequestDto from '../../../lib/Transport/Curl/RequestDto';
-import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEnum';
-import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
-import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
-import ProcessDto from '../../../lib/Utils/ProcessDto';
-import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
 import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
+import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEnum';
+import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
+import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
+import RequestDto from '../../../lib/Transport/Curl/RequestDto';
+import HttpMethods from '../../../lib/Transport/HttpMethods';
+import ProcessDto from '../../../lib/Utils/ProcessDto';
+import TestBasicApplication from '../TestBasicApplication';
 
 describe('Test application', () => {
   const user = 'Jakub';

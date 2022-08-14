@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClassType } from 'mongodb-typescript/lib/repository';
+import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
+import { IApplication } from '../Application/Base/IApplication';
+import { BATCH_PREFIX } from '../Batch/BatchRouter';
 import { IBatchNode } from '../Batch/IBatchNode';
+import { ICommonNode } from '../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
-import { IApplication } from '../Application/Base/IApplication';
-import { ICommonNode } from '../Commons/ICommonNode';
-import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
-import { BATCH_PREFIX } from '../Batch/BatchRouter';
 import Repository from '../Storage/Mongodb/Repository';
 
 const REPOSITORY = 'repository';

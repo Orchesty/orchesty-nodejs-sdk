@@ -1,18 +1,18 @@
-import path from 'path';
 import fs from 'fs';
-import { INode } from '../../lib/Commons/INode';
-import DIContainer from '../../lib/DIContainer/Container';
-import ProcessDto from '../../lib/Utils/ProcessDto';
-import { IDtoData, mockNodeCurl, walkRecursive } from './TesterHelpers';
-import CoreServices from '../../lib/DIContainer/CoreServices';
-import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
+import path from 'path';
 import { APPLICATION_PREFIX } from '../../lib/Application/ApplicationRouter';
-import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
 import { BATCH_PREFIX } from '../../lib/Batch/BatchRouter';
+import { INode } from '../../lib/Commons/INode';
+import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
+import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
+import DIContainer from '../../lib/DIContainer/Container';
+import CoreServices from '../../lib/DIContainer/CoreServices';
+import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import { RESULT_CODE, RESULT_MESSAGE } from '../../lib/Utils/Headers';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 import { isBatchResultCode } from '../../lib/Utils/ResultCode';
-import AProcessDto from '../../lib/Utils/AProcessDto';
+import { IDtoData, mockNodeCurl, walkRecursive } from './TesterHelpers';
 
 export default class NodeTester {
   public constructor(

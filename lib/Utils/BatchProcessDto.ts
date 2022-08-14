@@ -1,5 +1,5 @@
-import { BATCH_CURSOR, HttpHeaders } from './Headers';
 import AProcessDto from './AProcessDto';
+import { BATCH_CURSOR, HttpHeaders } from './Headers';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {

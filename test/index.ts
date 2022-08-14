@@ -1,8 +1,8 @@
 import { ApplicationInstall } from '../lib/Application/Database/ApplicationInstall';
-import MongoDbClient from '../lib/Storage/Mongodb/Client';
 import { CLIENT_ID, CLIENT_SECRET } from '../lib/Authorization/Type/OAuth2/IOAuth2Application';
-import logger from '../lib/Logger/Logger';
 import CoreServices from '../lib/DIContainer/CoreServices';
+import logger from '../lib/Logger/Logger';
+import MongoDbClient from '../lib/Storage/Mongodb/Client';
 import { getTestContainer, listen } from './TestAbstact';
 
 async function prepare(): Promise<void> {

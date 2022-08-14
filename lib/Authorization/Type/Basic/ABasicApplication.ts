@@ -1,7 +1,7 @@
 import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
-import { IBasicApplication } from './IBasicApplication';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
+import { IBasicApplication } from './IBasicApplication';
 
 export const USER = 'user';
 export const PASSWORD = 'password';

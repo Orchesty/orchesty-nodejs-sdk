@@ -1,8 +1,8 @@
-import OAuth2Dto from '../Dto/OAuth2Dto';
-import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import AOAuthProvider from '../AOAuthProvider';
+import OAuth2Dto from '../Dto/OAuth2Dto';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
 // Mock Logger module

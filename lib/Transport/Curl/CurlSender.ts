@@ -1,13 +1,13 @@
 import fetch, { FetchError, RequestInit, Response } from 'node-fetch';
-import RequestDto from './RequestDto';
+import OnRepeatException from '../../Exception/OnRepeatException';
 import logger from '../../Logger/Logger';
-import ResponseDto from './ResponseDto';
+import Severity from '../../Logger/Severity';
+import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import {
   APPLICATION, CORRELATION_ID, NODE_ID, USER,
 } from '../../Utils/Headers';
-import Severity from '../../Logger/Severity';
-import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
-import OnRepeatException from '../../Exception/OnRepeatException';
+import RequestDto from './RequestDto';
+import ResponseDto from './ResponseDto';
 
 export default class CurlSender {
   public constructor(private readonly _metrics: Metrics) {

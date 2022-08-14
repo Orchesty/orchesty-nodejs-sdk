@@ -1,12 +1,12 @@
-import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import ConnectorRouter from '../ConnectorRouter';
+import supertest from 'supertest';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
-import Metrics from '../../Metrics/Metrics';
-import DIContainer from '../../DIContainer/Container';
 import { ICommonNode } from '../../Commons/ICommonNode';
+import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
+import Metrics from '../../Metrics/Metrics';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import ConnectorRouter from '../ConnectorRouter';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

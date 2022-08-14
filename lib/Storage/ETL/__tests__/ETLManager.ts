@@ -1,13 +1,13 @@
 import assert from 'assert';
-import CryptManager from '../../../Crypt/CryptManager';
-import MongoDbClient from '../../Mongodb/Client';
 import { getTestContainer } from '../../../../test/TestAbstact';
-import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
 import { storageOptions } from '../../../Config/Config';
-import ETLManager from '../ETLManager';
+import CryptManager from '../../../Crypt/CryptManager';
+import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
+import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
-import DIContainer from '../../../DIContainer/Container';
+import MongoDbClient from '../../Mongodb/Client';
+import ETLManager from '../ETLManager';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({

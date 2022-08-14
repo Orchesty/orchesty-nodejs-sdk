@@ -1,6 +1,6 @@
 import winston from 'winston';
-import Severity from './Severity';
 import { appOptions } from '../Config/Config';
+import Severity from './Severity';
 
 let level;
 switch (appOptions.env) {

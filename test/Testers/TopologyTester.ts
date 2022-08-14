@@ -1,11 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
-import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
+import * as fs from 'fs';
 import { INode } from '../../lib/Commons/INode';
+import DIContainer from '../../lib/DIContainer/Container';
+import CoreServices from '../../lib/DIContainer/CoreServices';
+import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
-import ProcessDto from '../../lib/Utils/ProcessDto';
-import DIContainer from '../../lib/DIContainer/Container';
 import {
   FORCE_TARGET_QUEUE,
   get,
@@ -15,10 +16,9 @@ import {
   RESULT_MESSAGE,
   WORKER_FOLLOWERS,
 } from '../../lib/Utils/Headers';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 import ResultCode from '../../lib/Utils/ResultCode';
 import { mockNodeCurl, TestNode } from './TesterHelpers';
-import CoreServices from '../../lib/DIContainer/CoreServices';
-import OnRepeatException from '../../lib/Exception/OnRepeatException';
 
 export default class TopologyTester {
   private _nodes: TestNode[] = [];

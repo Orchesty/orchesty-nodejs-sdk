@@ -1,8 +1,8 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
 import ACommonRouter from '../Commons/ACommonRouter';
 import ApplicationManager from './Manager/ApplicationManager';
-import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
 
 export const APPLICATION_PREFIX = 'hbpf.application';
 

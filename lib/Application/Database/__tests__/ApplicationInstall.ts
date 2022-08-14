@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { ApplicationInstall } from '../ApplicationInstall';
 import DateTimeUtils, { DATE_TIME } from '../../../Utils/DateTimeUtils';
+import { ApplicationInstall } from '../ApplicationInstall';
 
 describe('ApplicationInstall tests', () => {
   const appInstall = new ApplicationInstall();

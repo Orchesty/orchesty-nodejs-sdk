@@ -1,8 +1,8 @@
-import { IApplication } from './IApplication';
 import RequestDto from '../../Transport/Curl/RequestDto';
+import ResponseDto from '../../Transport/Curl/ResponseDto';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 import WebhookSubscription from '../Model/Webhook/WebhookSubscription';
-import ResponseDto from '../../Transport/Curl/ResponseDto';
+import { IApplication } from './IApplication';
 
 export interface IWebhookApplication extends IApplication {
 

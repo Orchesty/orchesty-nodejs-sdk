@@ -1,14 +1,14 @@
-import path from 'path';
 import fs from 'fs';
 import { Headers, Response } from 'node-fetch';
+import path from 'path';
 import { unescape } from 'querystring';
 import { INode } from '../../lib/Commons/INode';
 import AConnector from '../../lib/Connector/AConnector';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
 import SpyInstance = jest.SpyInstance;
-import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
+import CurlSender from '../../lib/Transport/Curl/CurlSender';
 
 export interface ICurlMock {
   body: Record<string, unknown> | string;

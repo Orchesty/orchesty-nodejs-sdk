@@ -1,6 +1,6 @@
 import ACommonNode from '../../lib/Commons/ACommonNode';
-import ProcessDto from '../../lib/Utils/ProcessDto';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestOnRepeatExceptionNode extends ACommonNode {
   public getName = (): string => 'testOnRepeatExceptionCustom';

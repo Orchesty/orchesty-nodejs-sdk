@@ -1,5 +1,5 @@
-import Annotation from '../Annotation';
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
+import Annotation from '../Annotation';
 
 describe('Annotation utils tests', () => {
   it('getAllMethods ', () => {

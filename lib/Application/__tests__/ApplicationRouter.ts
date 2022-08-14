@@ -1,20 +1,20 @@
-import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
+import supertest from 'supertest';
 import {
   closeConnections, dropCollection, expressApp, getTestContainer,
 } from '../../../test/TestAbstact';
-import { ApplicationInstall } from '../Database/ApplicationInstall';
+import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
+import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
+import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
+import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
 import { AUTHORIZATION_FORM } from '../Base/AApplication';
-import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import assertions from './assertions.json';
-import DIContainer from '../../DIContainer/Container';
 import { IApplication } from '../Base/IApplication';
-import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
-import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
+import { ApplicationInstall } from '../Database/ApplicationInstall';
 import { IField } from '../Model/Form/Field';
+import assertions from './assertions.json';
 
 jest.mock('../../Logger/Logger', () => ({
   error: () => jest.fn(),

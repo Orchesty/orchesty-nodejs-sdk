@@ -1,18 +1,18 @@
 import deepmerge from 'deepmerge';
-import { Headers, HeadersInit } from 'node-fetch';
 import { StatusCodes } from 'http-status-codes';
-import CurlSender from '../../Transport/Curl/CurlSender';
+import { Headers, HeadersInit } from 'node-fetch';
 import { container } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
+import CurlSender from '../../Transport/Curl/CurlSender';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import ResponseDto from '../../Transport/Curl/ResponseDto';
 import HttpMethods from '../../Transport/HttpMethods';
 import SpyInstance = jest.SpyInstance;
-import TopologyRunner from '../TopologyRunner';
 import { initiateContainer } from '../../index';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics from '../../Metrics/Metrics';
+import MongoDbClient from '../../Storage/Mongodb/Client';
 import ProcessDto from '../../Utils/ProcessDto';
+import TopologyRunner from '../TopologyRunner';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

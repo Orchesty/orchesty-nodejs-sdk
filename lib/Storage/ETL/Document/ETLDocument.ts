@@ -1,6 +1,6 @@
 import { index } from 'mongodb-typescript';
-import ADocument from '../../Mongodb/ADocument';
 import DateTimeUtils from '../../../Utils/DateTimeUtils';
+import ADocument from '../../Mongodb/ADocument';
 
 export default class ETLDocument extends ADocument {
   /* eslint-disable @typescript-eslint/naming-convention */

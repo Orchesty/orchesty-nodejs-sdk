@@ -1,14 +1,14 @@
 import {
-  HttpHeaders,
-  NODE_ID,
   get,
   getCorrelationId,
   getNodeId,
-  getProcessId,
   getParentId,
-  getSequenceId,
-  getRepeatHops,
+  getProcessId,
   getRepeaterMaxHops,
+  getRepeatHops,
+  getSequenceId,
+  HttpHeaders,
+  NODE_ID,
 } from '../Headers';
 
 const mockedHeaders: HttpHeaders = {

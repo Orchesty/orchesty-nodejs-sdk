@@ -1,9 +1,9 @@
-import { ICpuTimes } from '../../Utils/SystemUsage';
-import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
-import CoreServices from '../../DIContainer/CoreServices';
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
+import { ICpuTimes } from '../../Utils/SystemUsage';
+import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

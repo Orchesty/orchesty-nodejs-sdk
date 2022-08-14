@@ -1,13 +1,13 @@
-import { mockCurl } from '../TesterHelpers';
-import { container } from '../../TestAbstact';
+import { initiateContainer } from '../../../lib';
 import CoreServices from '../../../lib/DIContainer/CoreServices';
+import Metrics from '../../../lib/Metrics/Metrics';
+import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../../lib/Transport/HttpMethods';
-import { initiateContainer } from '../../../lib';
-import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
-import Metrics from '../../../lib/Metrics/Metrics';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
+import { container } from '../../TestAbstact';
+import { mockCurl } from '../TesterHelpers';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({

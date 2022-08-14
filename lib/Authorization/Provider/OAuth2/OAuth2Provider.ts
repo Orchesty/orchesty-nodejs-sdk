@@ -1,11 +1,11 @@
 import deepmerge from 'deepmerge';
 import { AccessToken, AuthorizationCode } from 'simple-oauth2';
-import AOAuthProvider from '../AOAuthProvider';
-import { IOAuth2Provider } from './IOAuth2Provider';
-import OAuth2Dto from '../Dto/OAuth2Dto';
-import { IOAuth2Dto } from '../Dto/IOAuth2Dto';
-import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
 import { decode, encode } from '../../../Utils/Base64';
+import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
+import AOAuthProvider from '../AOAuthProvider';
+import { IOAuth2Dto } from '../Dto/IOAuth2Dto';
+import OAuth2Dto from '../Dto/OAuth2Dto';
+import { IOAuth2Provider } from './IOAuth2Provider';
 
 export const REFRESH_TOKEN = 'refreshToken';
 export const ACCESS_TOKEN = 'accessToken';

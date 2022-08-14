@@ -1,9 +1,9 @@
-import { ICommonNode } from './ICommonNode';
+import { IApplication } from '../Application/Base/IApplication';
 import { ApplicationInstall } from '../Application/Database/ApplicationInstall';
 import MongoDbClient from '../Storage/Mongodb/Client';
-import { IApplication } from '../Application/Base/IApplication';
-import ProcessDto from '../Utils/ProcessDto';
 import AProcessDto from '../Utils/AProcessDto';
+import ProcessDto from '../Utils/ProcessDto';
+import { ICommonNode } from './ICommonNode';
 
 export default abstract class ACommonNode implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention

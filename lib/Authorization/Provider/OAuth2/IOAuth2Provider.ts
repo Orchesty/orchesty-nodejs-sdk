@@ -1,7 +1,7 @@
-import { IToken } from './OAuth2Provider';
-import { IOAuthProvider } from '../IOAuthProvider';
-import OAuth2Dto from '../Dto/OAuth2Dto';
 import { IOAuth2Dto } from '../Dto/IOAuth2Dto';
+import OAuth2Dto from '../Dto/OAuth2Dto';
+import { IOAuthProvider } from '../IOAuthProvider';
+import { IToken } from './OAuth2Provider';
 
 export interface IOAuth2Provider extends IOAuthProvider {
 

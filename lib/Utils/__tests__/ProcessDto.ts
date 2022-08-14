@@ -1,6 +1,6 @@
+import { WORKER_FOLLOWERS } from '../Headers';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
-import { WORKER_FOLLOWERS } from '../Headers';
 
 describe('Tests ProcessDto utils', () => {
   it('GetData', () => {

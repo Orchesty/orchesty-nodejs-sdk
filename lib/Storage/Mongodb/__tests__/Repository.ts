@@ -1,12 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import { ObjectId } from 'mongodb';
 import { getTestContainer } from '../../../../test/TestAbstact';
+import DIContainer from '../../../DIContainer/Container';
+import CoreServices from '../../../DIContainer/CoreServices';
+import Metrics from '../../../Metrics/Metrics';
 import ADocument from '../ADocument';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
-import CoreServices from '../../../DIContainer/CoreServices';
-import DIContainer from '../../../DIContainer/Container';
-import Metrics from '../../../Metrics/Metrics';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({

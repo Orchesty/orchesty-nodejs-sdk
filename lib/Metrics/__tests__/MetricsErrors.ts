@@ -1,8 +1,8 @@
-import Metrics, { ITimesMetrics } from '../Metrics';
 import { getTestContainer } from '../../../test/TestAbstact';
-import CoreServices from '../../DIContainer/CoreServices';
 import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
+import Metrics, { ITimesMetrics } from '../Metrics';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({

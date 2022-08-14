@@ -1,6 +1,6 @@
-import Form from '../Form';
 import Field from '../Field';
 import FieldType from '../FieldType';
+import Form from '../Form';
 
 describe('Test form', () => {
   it('getFields', () => {

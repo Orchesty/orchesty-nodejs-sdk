@@ -1,11 +1,11 @@
 import { Headers } from 'node-fetch';
-import TestWebhookApplication from '../TestWebhookApplication';
+import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
+import RequestDto from '../../../lib/Transport/Curl/RequestDto';
+import ResponseDto from '../../../lib/Transport/Curl/ResponseDto';
 import HttpMethods from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
-import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
-import RequestDto from '../../../lib/Transport/Curl/RequestDto';
-import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
-import ResponseDto from '../../../lib/Transport/Curl/ResponseDto';
+import TestWebhookApplication from '../TestWebhookApplication';
 
 let app: TestWebhookApplication;
 

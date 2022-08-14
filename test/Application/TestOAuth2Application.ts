@@ -1,16 +1,16 @@
 import { BodyInit } from 'node-fetch';
-import AOAuth2Application from '../../lib/Authorization/Type/OAuth2/AOAuth2Application';
+import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
-import Form from '../../lib/Application/Model/Form/Form';
-import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
-import HttpMethods from '../../lib/Transport/HttpMethods';
-import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
-import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
-import ProcessDto from '../../lib/Utils/ProcessDto';
-import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import Form from '../../lib/Application/Model/Form/Form';
 import FormStack from '../../lib/Application/Model/Form/FormStack';
+import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
+import AOAuth2Application from '../../lib/Authorization/Type/OAuth2/AOAuth2Application';
+import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
+import RequestDto from '../../lib/Transport/Curl/RequestDto';
+import HttpMethods from '../../lib/Transport/HttpMethods';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestOAuth2Application extends AOAuth2Application {
   public getAuthUrl = (): string => 'https://identity.idoklad.cz/server/connect/authorize';

@@ -1,9 +1,9 @@
-import ProcessDto from '../../lib/Utils/ProcessDto';
+import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
+import AConnector from '../../lib/Connector/AConnector';
+import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import HttpMethods from '../../lib/Transport/HttpMethods';
-import OnRepeatException from '../../lib/Exception/OnRepeatException';
-import AConnector from '../../lib/Connector/AConnector';
-import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestConnector extends AConnector {
   public getName = (): string => 'test';

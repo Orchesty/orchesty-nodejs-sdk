@@ -1,11 +1,11 @@
-import MetricsSenderLoader, { INFLUX, MONGO } from '../MetricsSenderLoader';
-import Influx from '../Impl/Influx';
-import Mongo from '../Impl/Mongo';
-import CoreServices from '../../DIContainer/CoreServices';
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
+import Influx from '../Impl/Influx';
+import Mongo from '../Impl/Mongo';
 import Metrics from '../Metrics';
+import MetricsSenderLoader, { INFLUX, MONGO } from '../MetricsSenderLoader';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
