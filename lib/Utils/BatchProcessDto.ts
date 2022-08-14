@@ -4,7 +4,7 @@ import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
   body: string; // Is string to support XML fe.
-  headers: Record<string, string | string[]> | null;
+  headers: Record<string, string[] | string> | null;
 }
 
 export default class BatchProcessDto extends AProcessDto {
@@ -30,7 +30,7 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  public setItemList(list: unknown[] | string[]): this {
+  public setItemList(list: string[] | unknown[]): this {
     list.forEach((it) => {
       this.addItem(it);
     });

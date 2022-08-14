@@ -147,7 +147,7 @@ export function mockCurl(
 }
 
 export function mockNodeCurl(
-  node: INode|AConnector,
+  node: AConnector | INode,
   file: string,
   sender: CurlSender,
   _prefix = '',

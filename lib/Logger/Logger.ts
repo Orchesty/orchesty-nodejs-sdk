@@ -55,19 +55,19 @@ export class Logger {
     this.udp = new Sender(parsed.server, parsed.port);
   }
 
-  public debug(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
+  public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
     this.log(Severity.DEBUG, message, this.createCtx(context, isForUi));
   }
 
-  public info(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
+  public info(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
     this.log(Severity.INFO, message, this.createCtx(context, isForUi));
   }
 
-  public warn(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
+  public warn(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
     this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
   }
 
-  public error(message: string, context: ILogContext | AProcessDto | Request, isForUi = false): void {
+  public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
     this.log(Severity.ERROR, message, this.createCtx(context, isForUi));
   }
 
@@ -84,7 +84,7 @@ export class Logger {
   }
 
   public createCtx = (
-    payload: Request | AProcessDto | ILogContext,
+    payload: AProcessDto | ILogContext | Request,
     isForUi?: boolean,
     err?: Error,
   ): ILogContext => {

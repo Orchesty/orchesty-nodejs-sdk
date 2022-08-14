@@ -17,7 +17,7 @@ export interface IApplication extends IName {
     method: HttpMethods,
     url?: string,
     data?: BodyInit|unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
-  ): RequestDto | Promise<RequestDto>;
+  ): Promise<RequestDto> | RequestDto;
 
   getAuthorizationType(): AuthorizationTypeEnum;
 
@@ -26,7 +26,7 @@ export interface IApplication extends IName {
   saveApplicationForms(
     applicationInstall: ApplicationInstall,
     settings: IApplicationSettings
-  ): Promise<ApplicationInstall> | ApplicationInstall;
+  ): ApplicationInstall | Promise<ApplicationInstall>;
 
   savePassword(
     applicationInstall: ApplicationInstall,

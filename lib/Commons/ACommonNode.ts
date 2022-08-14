@@ -12,7 +12,7 @@ export default abstract class ACommonNode implements ICommonNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   protected db?: MongoDbClient;
 
-  public abstract processAction(dto: ProcessDto): Promise<ProcessDto> | ProcessDto;
+  public abstract processAction(dto: ProcessDto): ProcessDto | Promise<ProcessDto>;
 
   public abstract getName(): string;
 

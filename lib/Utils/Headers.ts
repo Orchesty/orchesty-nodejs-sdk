@@ -33,7 +33,7 @@ export const BATCH_CURSOR = 'cursor';
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface HttpHeaders {
-  [key: string]: string | string[] | undefined;
+  [key: string]: string[] | string | undefined;
 }
 
 export enum CommonHeaders {
