@@ -27,5 +27,7 @@ describe('Test NodeTester', () => {
   it('output - replacement', async () => {
     const tester = new NodeTester(container, __filename);
     await tester.testCustomNode('testcustom');
+
+    expect(true).toEqual(true);
   });
 });
