@@ -12,7 +12,7 @@ export enum HttpMethods {
 export function parseHttpMethod(method: string | HttpMethods): HttpMethods {
   if (typeof method === 'string') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (<any>HttpMethods)[method];
+    return (HttpMethods as any)[method];
   }
   return method;
 }
