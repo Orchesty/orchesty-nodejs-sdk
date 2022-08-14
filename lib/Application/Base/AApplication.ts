@@ -54,7 +54,7 @@ export default abstract class AApplication implements IApplication {
     try {
       if (fs.existsSync(this._logoFilename)) {
         const bitmap = fs.readFileSync(this._logoFilename);
-        const mimeType = contentType(path.extname(this._logoFilename));
+        const mimeType = contentType(path.extname(this._logoFilename)) as string;
 
         return `data:${mimeType};base64, ${Buffer.from(bitmap).toString('base64')}`;
       }

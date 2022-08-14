@@ -91,6 +91,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
 
   private static _convertAccessToken(accessToken: AccessToken): IToken {
     if (!accessToken?.token?.access_token) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`Token is not received or is not valid. Reason: [${accessToken?.token?.error}]`);
     }
 

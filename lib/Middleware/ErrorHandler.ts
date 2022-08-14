@@ -31,7 +31,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
       logger.debug(
         `Repeater reached with settings: 
       CurrentHop: ${getRepeatHops(dto.headers)}, 
-      Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
+      Interval: ${get(REPEAT_INTERVAL, dto.headers) ?? ''}, 
       MaxHops: ${err.getMaxHops()}`,
         dto,
       );

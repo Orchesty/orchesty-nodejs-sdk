@@ -30,7 +30,7 @@ export default class CurlSender {
        Method: ${dto.method},
        Url: ${dto.url},
        Headers: ${JSON.stringify(dto.headers)},
-       Body: ${dto.body}`,
+       Body: ${dto.body}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
         dto.debugInfo,
       );
       const response = await fetch(dto.url, req);

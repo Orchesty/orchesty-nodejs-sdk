@@ -129,7 +129,7 @@ export default class NodeTester {
     } finally {
       spy?.mockRestore();
       if (expectedError && !thrownErr) {
-        // eslint-disable-next-line no-unsafe-finally
+        // eslint-disable-next-line no-unsafe-finally, @typescript-eslint/restrict-template-expressions
         throw new Error(`Error [${expectedError}] expected but non thrown.`);
       }
     }

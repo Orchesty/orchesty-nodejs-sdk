@@ -28,12 +28,12 @@ interface IBridgeRequestDto {
 function logResponseProcess(dto: AProcessDto): void {
   if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0') as string, 10))) {
     logger.info(
-      `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE)}]`,
+      `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
       dto,
     );
   } else {
     logger.error(
-      `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE)}]`,
+      `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
       dto,
     );
   }
@@ -62,7 +62,7 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
   if (!(RESULT_MESSAGE in dto.headers)) {
     dto.headers[RESULT_MESSAGE] = msg;
   } else {
-    dto.headers[RESULT_MESSAGE] = `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`;
+    dto.headers[RESULT_MESSAGE] = `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE) ?? ''}`;
   }
 
   res.setHeader('Content-Type', 'application/json');

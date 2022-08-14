@@ -55,7 +55,7 @@ export default abstract class ACommonNode implements ICommonNode {
 
     if (!appInstall) {
       throw new Error(
-        `ApplicationInstall with user [${user}] and name [${this._application.getName()}] has not found!`,
+        `ApplicationInstall with user [${user ?? ''}] and name [${this._application.getName()}] has not found!`,
       );
     }
 

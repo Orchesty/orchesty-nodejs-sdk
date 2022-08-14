@@ -7,6 +7,7 @@ export function checkParams(object: Record<string, unknown>, params: unknown): b
       } else {
         /* eslint-disable no-lonely-if */
         if (!Object.prototype.hasOwnProperty.call(object, param)) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           throw Error(`Missing required param [${param}]`);
         }
       }

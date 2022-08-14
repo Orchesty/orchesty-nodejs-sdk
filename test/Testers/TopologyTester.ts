@@ -214,7 +214,7 @@ export default class TopologyTester {
       default:
         if (get(RESULT_CODE, out.headers) !== '0') {
           throw new Error(
-            `Node [${node.name}] has returned non success result code [${get(RESULT_CODE, out.headers)}].`,
+            `Node [${node.name}] has returned non success result code [${get(RESULT_CODE, out.headers) ?? ''}].`,
           );
         }
     }

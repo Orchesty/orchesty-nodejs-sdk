@@ -127,12 +127,12 @@ export default class WindWalkerCrypt extends ACryptImpl {
       pbkdf2SaltBuff = pbkdf2Salt;
     }
 
-    if (!this._cache.has(`pbkdf2_${key}_${pbkdf2SaltBuff}`)) {
+    if (!this._cache.has(`pbkdf2_${key.toString()}_${pbkdf2SaltBuff.toString()}`)) {
       const pbkdf2 = pbkdf2Sync(key, pbkdf2SaltBuff, 12000, PBKDF2_HASH_BYTE_SIZE, 'sha256');
-      this._cache.set(`pbkdf2_${key}_${pbkdf2SaltBuff}`, pbkdf2);
+      this._cache.set(`pbkdf2_${key.toString()}_${pbkdf2SaltBuff.toString()}`, pbkdf2);
     }
 
-    const buff = this._cache.get(`pbkdf2_${key}_${pbkdf2SaltBuff}`) as Buffer;
+    const buff = this._cache.get(`pbkdf2_${key.toString()}_${pbkdf2SaltBuff.toString()}`) as Buffer;
     [, this._secureHMACKey] = WindWalkerCrypt._strSplit(buff.toString('hex'), PBKDF2_HASH_BYTE_SIZE);
   }
 
