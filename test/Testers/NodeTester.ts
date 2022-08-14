@@ -109,7 +109,9 @@ export default class NodeTester {
         });
       }
 
+      /* eslint-disable-next-line jest/no-standalone-expect */
       expect(res.headers).toEqual(output.headers);
+      /* eslint-disable-next-line jest/no-standalone-expect */
       expect(resData).toEqual(output.data);
 
       if (nodePrefix === BATCH_PREFIX && isBatchResultCode(Number(res.getHeader(RESULT_CODE)))) {
@@ -123,6 +125,7 @@ export default class NodeTester {
       if (!expectedError) {
         throw e;
       } else {
+        /* eslint-disable-next-line jest/no-standalone-expect */
         expect(e).toBeInstanceOf(expectedError);
         thrownErr = e;
       }
