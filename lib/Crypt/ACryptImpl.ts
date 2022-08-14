@@ -2,9 +2,9 @@ import { ICrypt, NAME } from './ICrypt';
 import { PREFIX_LENGTH } from './CryptManager';
 
 abstract class ACryptImpl implements ICrypt {
-  public abstract decrypt(data: string): unknown
+  public abstract decrypt(data: string): unknown;
 
-  public abstract encrypt(data: unknown): string
+  public abstract encrypt(data: unknown): string;
 
   protected constructor(protected _prefix: string) {
     if (this.getPrefixLength() !== PREFIX_LENGTH) {
