@@ -6,7 +6,7 @@ export default class WebhookSubscription {
     private _name: string,
     private _node: string,
     private _topology: string,
-    private _parameters: { [key: string]: string } = {},
+    private _parameters: Record<string, string> = {},
   ) {
   }
 
@@ -22,7 +22,7 @@ export default class WebhookSubscription {
     return this._topology;
   }
 
-  public getParameters(): { [key: string]: string } {
+  public getParameters(): Record<string, string> {
     return this._parameters;
   }
 }

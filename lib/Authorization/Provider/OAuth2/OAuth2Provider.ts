@@ -15,6 +15,7 @@ export const ACCESS_TYPE = 'access_type';
 export const STATE = 'state';
 export const OTHERS = 'others';
 
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IToken {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;

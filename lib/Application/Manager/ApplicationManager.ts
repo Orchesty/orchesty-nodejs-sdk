@@ -57,7 +57,7 @@ export default class ApplicationManager {
     name: string,
     user: string,
     data: IApplicationSettings,
-  ): Promise<{ [key: string]: unknown | IField[] }> {
+  ): Promise<Record<string, unknown | IField[]>> {
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
@@ -76,7 +76,7 @@ export default class ApplicationManager {
     formKey: string,
     fieldKey: string,
     password: string,
-  ): Promise<{ [key: string]: unknown }> {
+  ): Promise<Record<string, unknown>> {
     const app = this.getApplication(name);
     const appInstall = await this._loadApplicationInstall(name, user);
 
@@ -102,7 +102,7 @@ export default class ApplicationManager {
   public async saveAuthorizationToken(
     name: string,
     user: string,
-    requestParams: { [key: string]: string },
+    requestParams: Record<string, string>,
   ): Promise<string> {
     const app = this.getApplication(name) as IOAuth2Application;
     const appInstall = await this._loadApplicationInstall(name, user);
@@ -114,7 +114,7 @@ export default class ApplicationManager {
   public async installApplication(
     name: string,
     user: string,
-  ): Promise<{ [key: string]: unknown | boolean | IField[] }> {
+  ): Promise<Record<string, unknown | boolean | IField[]>> {
     let appInstall: ApplicationInstall | null = await this._repository.findByNameAndUser(name, user);
     if (appInstall) {
       // Todo : need to be changed to custom error that doesn't return 500
@@ -137,7 +137,7 @@ export default class ApplicationManager {
     await this._repository.remove(appInstall);
   }
 
-  public async detailApplication(name: string, user: string): Promise<{ [key: string]: unknown }> {
+  public async detailApplication(name: string, user: string): Promise<Record<string, unknown>> {
     const appInstall = await this._loadApplicationInstall(name, user);
     const app = (this.getApplication(appInstall.getName()) as AApplication);
     return {
@@ -150,7 +150,7 @@ export default class ApplicationManager {
     };
   }
 
-  public async userApplications(user: string): Promise<{ [key: string]: unknown }> {
+  public async userApplications(user: string): Promise<Record<string, unknown>> {
     const appInstalls = await this._repository.findMany({ user });
     return {
       items: appInstalls.map((appInstall) => {

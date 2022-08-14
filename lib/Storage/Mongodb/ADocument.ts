@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 
 export interface IDocument {
   getCollection(): string;
-  toArray(): {[key: string]: unknown};
+  toArray(): Record<string, unknown>;
 }
 
 export default abstract class ADocument implements IDocument {
@@ -27,5 +27,5 @@ export default abstract class ADocument implements IDocument {
     return this.name;
   }
 
-  public toArray = (): { [key: string]: unknown } => ({});
+  public toArray = (): Record<string, unknown> => ({});
 }

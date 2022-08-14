@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 import ADocument from '../../Storage/Mongodb/ADocument';
 
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IApplicationSettings {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
@@ -128,7 +129,7 @@ export class ApplicationInstall extends ADocument {
     return this;
   }
 
-  public toArray = (): { [key: string]: unknown } => ({
+  public toArray = (): Record<string, unknown> => ({
     id: this._id?.toHexString() ?? '',
     user: this.user,
     key: this.key,

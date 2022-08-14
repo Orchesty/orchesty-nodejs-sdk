@@ -79,7 +79,7 @@ export default abstract class AOAuth2Application extends AApplication implements
 
   public async setAuthorizationToken(
     applicationInstall: ApplicationInstall,
-    token: { [key: string]: string },
+    token: Record<string, string>,
   ): Promise<void> {
     const tokenFromProvider = await this._provider.getAccessToken(
       this.createDto(applicationInstall),

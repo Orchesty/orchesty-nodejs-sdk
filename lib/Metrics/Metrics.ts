@@ -16,6 +16,7 @@ export interface ITimesMetrics {
   kernelTime: number,
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IMetricsFields {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;

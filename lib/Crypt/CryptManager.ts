@@ -3,7 +3,7 @@ import { ICrypt, NAME } from './ICrypt';
 export const PREFIX_LENGTH = 4;
 
 export default class CryptManager {
-  private _providers: {[key: string]: ICrypt} = {};
+  private _providers: Record<string, ICrypt> = {};
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(providers: any[] = []) {

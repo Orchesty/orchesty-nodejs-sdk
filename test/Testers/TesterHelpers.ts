@@ -14,7 +14,7 @@ export interface ICurlMock {
   body: Record<string, unknown>|string,
   code: number,
   http: string,
-  headers: { [key: string]: string },
+  headers: Record<string, string>,
   httpReplacement?:
     {
       query?: Record<string, string>
@@ -23,7 +23,7 @@ export interface ICurlMock {
 }
 
 export interface IDtoData {
-  headers: { [key: string]: string },
+  headers: Record<string, string>,
   data: Record<string, unknown>,
   replacement?: {
     data?: Record<string, string>

@@ -54,7 +54,7 @@ export class ApplicationRouter extends ACommonRouter {
       const url = await this._manager.saveAuthorizationToken(
         req.params.name,
         req.params.user,
-        req.query as { [key: string]: string },
+        req.query as Record<string, string>,
       );
 
       res.json({ redirectUrl: url });
@@ -70,7 +70,7 @@ export class ApplicationRouter extends ACommonRouter {
       const url = await this._manager.saveAuthorizationToken(
         stateDecode.name,
         stateDecode.user,
-        req.query as { [key: string]: string },
+        req.query as Record<string, string>,
       );
 
       res.json({ redirectUrl: url });

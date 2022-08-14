@@ -9,7 +9,7 @@ import { IQueryFilter } from './Filters/AQueryFilter';
 import filters from './Filters';
 
 export default class Repository<T> extends BaseRepo<T> {
-  private readonly _filters: { [key: string]: IQueryFilter };
+  private readonly _filters: Record<string, IQueryFilter>;
 
   constructor(
     // eslint-disable-next-line @typescript-eslint/naming-convention
