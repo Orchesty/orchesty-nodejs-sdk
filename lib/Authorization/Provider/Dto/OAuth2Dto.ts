@@ -48,7 +48,7 @@ export default class OAuth2Dto implements IOAuth2Dto {
   }
 
   public isCustomApp(): boolean {
-    return (!!this._user && !!this._applicationName);
+    return !!this._user && !!this._applicationName;
   }
 
   public isRedirectUrl(): boolean {

@@ -60,7 +60,7 @@ describe('Test headers utils', () => {
 
   it('getSequenceId if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['sequence-id']);
+    delete updatedHeaders['sequence-id'];
     const v = getSequenceId(updatedHeaders);
     expect(v).toEqual(0);
   });
@@ -72,7 +72,7 @@ describe('Test headers utils', () => {
 
   it('getRepeatHops if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['repeat-hops']);
+    delete updatedHeaders['repeat-hops'];
     const v = getRepeatHops(updatedHeaders);
     expect(v).toEqual(0);
   });
@@ -84,7 +84,7 @@ describe('Test headers utils', () => {
 
   it('getRepeaterMaxHops if not exist', () => {
     const updatedHeaders = mockedHeaders;
-    delete (updatedHeaders['repeat-max-hops']);
+    delete updatedHeaders['repeat-max-hops'];
     const v = getRepeaterMaxHops(updatedHeaders);
     expect(v).toEqual(0);
   });

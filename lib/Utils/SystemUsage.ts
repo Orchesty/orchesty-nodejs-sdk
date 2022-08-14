@@ -34,9 +34,9 @@ export function getCpuUsage(): number {
     const upTime = readFileSync(FILE_PROC_UPTIME).toString().split(' ')[0];
     const cpuTimes = getCpuTimes();
     const totalTime = cpuTimes.cpuUserCodeTime + cpuTimes.cpuKernelCodeTime;
-    const seconds = Number(upTime) - (cpuTimes.cpuStartTime / HERTZ);
+    const seconds = Number(upTime) - cpuTimes.cpuStartTime / HERTZ;
 
-    return (totalTime / HERTZ / seconds) * 100;
+    return totalTime / HERTZ / seconds * 100;
   } catch (e) {
     if (e instanceof Error) logger.error(e.message, {});
     return 0;

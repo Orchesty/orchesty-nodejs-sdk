@@ -19,7 +19,7 @@ export default class Redis {
   }
 
   public async has(key: string): Promise<boolean> {
-    return !!(await this._client.sendCommand('exists', [key]));
+    return !!await this._client.sendCommand('exists', [key]);
   }
 
   public async get(key: string): Promise<string> {

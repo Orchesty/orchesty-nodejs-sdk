@@ -73,7 +73,7 @@ export default abstract class AProcessDto {
 
   public removeHeader(key: string): void {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete (this._headers[key]);
+    delete this._headers[key];
   }
 
   public removeHeaders(): void {

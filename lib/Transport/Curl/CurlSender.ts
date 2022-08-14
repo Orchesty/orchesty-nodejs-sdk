@@ -103,7 +103,7 @@ export default class CurlSender {
         info.getHeader(CORRELATION_ID),
         info.getHeader(USER),
         info.getHeader(APPLICATION),
-      ).catch((e) => (logger.error(e?.message ?? e, info)));
+      ).catch((e) => logger.error(e?.message ?? e, info));
     } catch (e) {
       if (typeof e === 'string') logger.error(e, info);
     }

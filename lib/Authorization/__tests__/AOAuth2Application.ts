@@ -136,7 +136,7 @@ describe('Test AOAuth2Application', () => {
     appInstall.addSettings({ [AUTHORIZATION_FORM]: [] });
     appInstall.addSettings({ form: [] });
     const sett = { user: 'Jakub', password: 'pass', token: 'token' };
-    expect((await oAuthApplication.saveApplicationForms(appInstall, sett))).toBeInstanceOf(ApplicationInstall);
+    expect(await oAuthApplication.saveApplicationForms(appInstall, sett)).toBeInstanceOf(ApplicationInstall);
   });
 
   it('should get token', () => {

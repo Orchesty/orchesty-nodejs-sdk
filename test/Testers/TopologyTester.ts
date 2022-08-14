@@ -194,14 +194,14 @@ export default class TopologyTester {
           throw new Error('Repeater has used last try and still need to repeat.');
         }
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
+        [out] = await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index);
         nextDto.push(out);
         break;
       // Repeat batch until cursor ends and send only one message
       case ResultCode.BATCH_CURSOR_ONLY.toString():
         index += 1;
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
+        [out] = await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index);
         nextDto.push(this._cloneProcessDto(out, {}));
         break;
       // Repeat batch until cursor ends and store message
@@ -209,7 +209,7 @@ export default class TopologyTester {
         TopologyTester._pushMultiple(nextDto, out as BatchProcessDto);
         index += 1;
         dto.removeHeader(RESULT_CODE);
-        [out] = (await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index));
+        [out] = await this._recursiveRunner(node, this._cloneProcessDto(dto), prefix, index);
         break;
       default:
         if (get(RESULT_CODE, out.headers) !== '0') {
@@ -300,7 +300,7 @@ export default class TopologyTester {
       dto.data = message.body;
       dto.headers = {
         ...out.headers,
-        ...(message.headers || {}),
+        ...message.headers || {},
       };
 
       nextDto.push(dto);

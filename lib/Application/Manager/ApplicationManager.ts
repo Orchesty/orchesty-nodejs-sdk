@@ -124,7 +124,7 @@ export default class ApplicationManager {
       .setUser(user)
       .setName(name);
     await this._repository.insert(appInstall);
-    const app = (this.getApplication(appInstall.getName()) as AApplication);
+    const app = this.getApplication(appInstall.getName()) as AApplication;
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
@@ -139,7 +139,7 @@ export default class ApplicationManager {
 
   public async detailApplication(name: string, user: string): Promise<Record<string, unknown>> {
     const appInstall = await this._loadApplicationInstall(name, user);
-    const app = (this.getApplication(appInstall.getName()) as AApplication);
+    const app = this.getApplication(appInstall.getName()) as AApplication;
     return {
       ...app.toArray(),
       [AUTHORIZED]: app.isAuthorized(appInstall),
@@ -156,7 +156,7 @@ export default class ApplicationManager {
       items: appInstalls.map((appInstall) => {
         let app: IApplication|undefined;
         try {
-          app = (this.getApplication(appInstall.getName()) as AApplication);
+          app = this.getApplication(appInstall.getName()) as AApplication;
         } catch (e) {
           ///
         }
