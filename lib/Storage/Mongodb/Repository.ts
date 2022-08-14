@@ -118,14 +118,14 @@ export default class Repository<T> extends BaseRepo<T> {
     await this.collection.deleteMany(query);
   }
 
-  public enableFilter(name: string): void | Error {
+  public enableFilter(name: string): void {
     if (!Object.prototype.hasOwnProperty.call(this._filters, name)) {
       throw new Error('This filter doesn´t exist');
     }
     this._filters[name].active(true);
   }
 
-  public disableFilter(name: string): void | Error {
+  public disableFilter(name: string): void {
     if (!Object.prototype.hasOwnProperty.call(this._filters, name)) {
       throw new Error('This filter doesn´t exist');
     }
