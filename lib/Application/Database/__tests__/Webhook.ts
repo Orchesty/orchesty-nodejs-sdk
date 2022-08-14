@@ -1,6 +1,6 @@
 import Webhook from '../Webhook';
 
-let webhook = new Webhook();
+let webhook: Webhook;
 
 describe('Test for webhooks', () => {
   beforeEach(() => {

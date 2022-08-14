@@ -70,11 +70,11 @@ describe('Tests for webhookManager', () => {
       new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers()),
     );
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    expect(await webhookManager.subscribeWebhooks(
+    await expect(webhookManager.subscribeWebhooks(
       appInstall.getName(),
       appInstall.getUser(),
       { name: 'testName', topology: 'testWebhook' },
-    ));
+    )).resolves.not.toThrow();
   });
 
   it('should unsubscribe webhooks', async () => {
@@ -84,10 +84,10 @@ describe('Tests for webhookManager', () => {
     );
 
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    expect(await webhookManager.unsubscribeWebhooks(
+    await expect(webhookManager.unsubscribeWebhooks(
       appInstall.getName(),
       appInstall.getUser(),
       { name: 'testName', topology: 'testWebhook' },
-    ));
+    )).resolves.not.toThrow();
   });
 });
