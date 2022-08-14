@@ -70,6 +70,7 @@ export default class CacheService {
 
       // Lock
       if (await this._redis.isLocked(lockKey)) {
+        // eslint-disable-next-line @typescript-eslint/return-await
         return this._recurseEntryWithLock<T>(
           cacheKey,
           lockKey,
