@@ -57,7 +57,7 @@ export default class ApplicationManager {
     name: string,
     user: string,
     data: IApplicationSettings,
-  ): Promise<Record<string, unknown | IField[]>> {
+  ): Promise<Record<string, unknown | IField[]>> { // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
     const app = this.getApplication(name) as AApplication;
     const appInstall = await this._loadApplicationInstall(name, user);
 
@@ -114,7 +114,7 @@ export default class ApplicationManager {
   public async installApplication(
     name: string,
     user: string,
-  ): Promise<Record<string, unknown | boolean | IField[]>> {
+  ): Promise<Record<string, unknown | boolean | IField[]>> { // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
     let appInstall: ApplicationInstall | null = await this._repository.findByNameAndUser(name, user);
     if (appInstall) {
       // Todo : need to be changed to custom error that doesn't return 500

@@ -16,7 +16,7 @@ export interface IApplication extends IName {
     applicationInstall: ApplicationInstall,
     method: HttpMethods,
     url?: string,
-    data?: BodyInit|unknown,
+    data?: BodyInit|unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
   ): RequestDto | Promise<RequestDto>;
 
   getAuthorizationType(): AuthorizationTypeEnum;

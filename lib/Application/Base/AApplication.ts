@@ -47,7 +47,7 @@ export default abstract class AApplication implements IApplication {
     applicationInstall: ApplicationInstall,
     method: string,
     url?: string,
-    data?: BodyInit|unknown
+    data?: BodyInit|unknown // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
   ): RequestDto | Promise<RequestDto>;
 
   public getLogo(): string | null {
