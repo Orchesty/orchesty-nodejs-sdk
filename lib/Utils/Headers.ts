@@ -31,7 +31,10 @@ export const LIMITER_KEY = 'limiter-key';
 // Batch headers
 export const BATCH_CURSOR = 'cursor';
 
-export type HttpHeaders = NodeJS.Dict<string | string[]>
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+export interface HttpHeaders {
+  [key: string]: string | string[] | undefined;
+}
 
 export enum CommonHeaders {
   CONTENT_TYPE = 'Content-Type',
