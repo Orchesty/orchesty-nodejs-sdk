@@ -112,7 +112,7 @@ export default class CacheService {
   ): Promise<T> {
     return new Promise((resolve) => {
       // eslint-disable-next-line @typescript-eslint/require-await
-      setTimeout(async () => resolve(this.entryWithLock<T>(
+      setTimeout(() => resolve(this.entryWithLock<T>(
         cacheKey,
         lockKey,
         requestDto,
