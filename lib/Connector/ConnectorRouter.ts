@@ -30,8 +30,8 @@ export default class ConnectorRouter extends ACommonRouter {
       }
     });
 
-    this._app.route('/connector/:name/action/test').get(async (req, res, next) => {
-      await this._loader.get(CONNECTOR_PREFIX, req.params.name);
+    this._app.route('/connector/:name/action/test').get((req, res, next) => {
+      this._loader.get(CONNECTOR_PREFIX, req.params.name);
       res.json([]);
       next();
     });

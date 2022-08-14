@@ -7,9 +7,9 @@ describe('Tests for TestBatch', () => {
     expect(batch.getName()).toEqual('testbatch');
   });
 
-  it('processAction', async () => {
+  it('processAction', () => {
     const batch = new TestBatch();
-    const editedDto = await batch.processAction(new BatchProcessDto());
+    const editedDto = batch.processAction(new BatchProcessDto());
     const { headers } = editedDto;
     expect(headers).toEqual({
       cursor: 'testCursor',

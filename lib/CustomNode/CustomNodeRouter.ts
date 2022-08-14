@@ -27,14 +27,14 @@ export default class CustomNodeRouter extends ACommonRouter {
       }
     });
 
-    this._app.route('/custom-node/:name/process/test').get(async (req, res, next) => {
-      await this._loader.get(CUSTOM_NODE_PREFIX, req.params.name);
+    this._app.route('/custom-node/:name/process/test').get((req, res, next) => {
+      this._loader.get(CUSTOM_NODE_PREFIX, req.params.name);
       res.json([]);
       next();
     });
 
-    this._app.route('/custom-node/list').get(async (req, res, next) => {
-      res.json(await this._loader.getList(CUSTOM_NODE_PREFIX));
+    this._app.route('/custom-node/list').get((req, res, next) => {
+      res.json(this._loader.getList(CUSTOM_NODE_PREFIX));
       next();
     });
 
