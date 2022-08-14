@@ -43,9 +43,9 @@ export default class ApplicationManager {
     if (typeof app[syncMethod] === 'function') {
       let resp;
       if (request.method === HttpMethods.GET) {
-        resp = await app[syncMethod]();
+        resp = await app[syncMethod]();  // eslint-disable-line @typescript-eslint/no-unsafe-call
       } else {
-        resp = await app[syncMethod](request);
+        resp = await app[syncMethod](request); // eslint-disable-line @typescript-eslint/no-unsafe-call
       }
 
       return resp ?? { status: 'ok' };

@@ -106,7 +106,7 @@ export default class Repository<T> extends BaseRepo<T> {
   public async remove(entity: T): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (Object.prototype.hasOwnProperty.call(entity as any, 'deleted')) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call
       await this.update((entity as any).setDeleted());
     } else {
       await super.remove(entity);

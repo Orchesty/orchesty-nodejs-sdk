@@ -3,6 +3,8 @@ import { FetchMockStatic } from 'fetch-mock';
 import fetchMock from 'fetch-mock-jest';
 import mf from 'node-fetch';
 import DIContainer from '../lib/DIContainer/Container';
+import MongoDbClient from '../lib/Storage/Mongodb/Client';
+import Redis from '../lib/Storage/Redis/Redis';
 import TestConnector from './Connector/TestConnector';
 import TestBasicApplication from './Application/TestBasicApplication';
 import CoreServices from '../lib/DIContainer/CoreServices';
@@ -80,13 +82,13 @@ export function mockRouter(): {
 }
 
 export async function dropCollection(collection: string): Promise<void> {
-  const dm = c.get(CoreServices.MONGO);
+  const dm = c.get(CoreServices.MONGO) as MongoDbClient;
   const db = await dm.db();
 
   try {
     await db.dropCollection(collection);
     if (c.has(CoreServices.REDIS)) {
-      const redis = c.get(CoreServices.REDIS);
+      const redis = c.get(CoreServices.REDIS) as Redis;
       await redis.dropAll();
     }
   } catch {
@@ -95,11 +97,11 @@ export async function dropCollection(collection: string): Promise<void> {
 }
 
 export async function closeConnections(): Promise<void> {
-  const dm = c.get(CoreServices.MONGO);
+  const dm = c.get(CoreServices.MONGO) as MongoDbClient;
   await dm.down();
   await (container.get(CoreServices.METRICS) as Metrics).close();
   if (c.has(CoreServices.REDIS)) {
-    const redis = c.get(CoreServices.REDIS);
+    const redis = c.get(CoreServices.REDIS) as Redis;
     await redis.dropAll();
   }
 }

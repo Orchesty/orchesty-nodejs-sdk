@@ -1,6 +1,7 @@
 import { Headers } from 'node-fetch';
 import { getTestContainer } from '../../../test/TestAbstact';
 import TestConnector from '../../../test/Connector/TestConnector';
+import { IApplication } from '../../Application/Base/IApplication';
 import CoreServices from '../../DIContainer/CoreServices';
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
 import DIContainer from '../../DIContainer/Container';
@@ -47,7 +48,7 @@ describe('Test AConnector', () => {
   it('it should set application of connector', () => {
     const application = new TestBasicApplication();
     testConnector.setApplication(application);
-    const testConnectorApplicationName = Reflect.get(testConnector, 'application').getName();
+    const testConnectorApplicationName = (Reflect.get(testConnector, 'application') as IApplication).getName();
     expect(application.getName()).toEqual(testConnectorApplicationName);
   });
 

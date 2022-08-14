@@ -90,10 +90,10 @@ export default abstract class AOAuth2Application extends AApplication implements
     );
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    applicationInstall.setExpires((tokenFromProvider as any)[EXPIRES] ?? undefined);
+    applicationInstall.setExpires(tokenFromProvider[EXPIRES] ?? undefined);
 
     if (Object.prototype.hasOwnProperty.call(tokenFromProvider, EXPIRES)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call
       (tokenFromProvider as any)[EXPIRES] = (tokenFromProvider as any)[EXPIRES].toString();
     }
 

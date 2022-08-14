@@ -129,6 +129,7 @@ export function mockCurl(
             mC = (res: Response, body: string) => body;
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           throw new OnRepeatException(s ?? 60, h ?? 10, mC(new Response(newBody), newBody));
         }
 

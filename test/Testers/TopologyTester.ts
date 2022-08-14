@@ -85,7 +85,7 @@ export default class TopologyTester {
       sequenceFlow = [sequenceFlow];
     }
 
-    sequenceFlow.forEach((line: Record<string, string>) => {
+    (sequenceFlow as Record<string, string>[]).forEach((line: Record<string, string>) => {
       const from = nodes.findIndex((node) => node.id === line['@_sourceRef']);
       const to = nodes.findIndex((node) => node.id === line['@_targetRef']);
 

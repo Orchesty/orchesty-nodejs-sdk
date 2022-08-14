@@ -94,16 +94,10 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
 }
 
 const mutex = new Mutex();
-const dtoPool = new Array(100).fill(0);
-for (let i = 0; i < 100; i += 1) {
-  dtoPool[i] = new ProcessDto();
-}
+const dtoPool: ProcessDto[] = new Array(100).fill(new ProcessDto());
 
 const batchMutex = new Mutex();
-const batchDtoPool = new Array(100).fill(0);
-for (let i = 0; i < 100; i += 1) {
-  batchDtoPool[i] = new BatchProcessDto();
-}
+const batchDtoPool: BatchProcessDto[] = new Array(100).fill(new BatchProcessDto());
 
 async function getFreeDto(): Promise<ProcessDto> {
   // Should CPU still be a concern, implement linked list for faster search
