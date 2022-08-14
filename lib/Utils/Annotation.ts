@@ -14,7 +14,7 @@ export default class Annotation {
                         && inLoopObj[p].name.toLowerCase().startsWith('sync')
                         && p !== 'constructor' // not the constructor
                         && (i === 0 || p !== arr[i - 1]) // not overriding in this prototype
-                        && inLoopProps.indexOf(p) === -1,
+                        && !inLoopProps.includes(p),
           // not overridden in a child
         );
       props = props.concat(Annotation._formatSyncMethodName(listOfPropertyNames));
