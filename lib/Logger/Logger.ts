@@ -11,40 +11,40 @@ import Severity from './Severity';
 import { parseInfluxDsn } from '../Utils/DsnParser';
 
 export interface ILogContext {
-    topology_id?: string;
-    topology_name?: string;
-    node_id?: string;
-    node_name?: string;
-    correlation_id?: string;
-    process_id?: string;
-    parent_id?: string;
-    sequence_id?: number;
-    result_code?: ResultCode;
-    result_message?: string;
-    error?: Error;
-    data?: string;
-    isForUi?: boolean;
+  topology_id?: string;
+  topology_name?: string;
+  node_id?: string;
+  node_name?: string;
+  correlation_id?: string;
+  process_id?: string;
+  parent_id?: string;
+  sequence_id?: number;
+  result_code?: ResultCode;
+  result_message?: string;
+  error?: Error;
+  data?: string;
+  isForUi?: boolean;
 }
 
 interface ILoggerFormat {
-    timestamp: number;
-    hostname: string;
-    type: string;
-    severity: string;
-    message: string;
-    node_id?: string;
-    node_name?: string;
-    topology_id?: string;
-    topology_name?: string;
-    correlation_id?: string;
-    result_code?: ResultCode;
-    result_message?: string;
-    stacktrace?: {
-        message: string,
-        trace?: string,
-    };
-    data?: string;
-    isForUi?: boolean;
+  timestamp: number;
+  hostname: string;
+  type: string;
+  severity: string;
+  message: string;
+  node_id?: string;
+  node_name?: string;
+  topology_id?: string;
+  topology_name?: string;
+  correlation_id?: string;
+  result_code?: ResultCode;
+  result_message?: string;
+  stacktrace?: {
+    message: string,
+    trace?: string,
+  };
+  data?: string;
+  isForUi?: boolean;
 }
 
 export class Logger {

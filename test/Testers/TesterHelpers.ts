@@ -16,10 +16,10 @@ export interface ICurlMock {
   http: string,
   headers: Record<string, string>,
   httpReplacement?:
-    {
-      query?: Record<string, string>
-      path?: Record<string, string>
-    },
+  {
+    query?: Record<string, string>
+    path?: Record<string, string>
+  },
 }
 
 export interface IDtoData {
@@ -37,11 +37,11 @@ export interface ILightNode {
 
 export class TestNode implements ILightNode {
   public constructor(
-      public id: string,
-      public name: string,
-      public type: string,
-      public previous: ILightNode[] = [],
-      public followers: ILightNode[] = [],
+    public id: string,
+    public name: string,
+    public type: string,
+    public previous: ILightNode[] = [],
+    public followers: ILightNode[] = [],
   ) {}
 
   public toWorkerFollowerHeader(): {id: string; name: string}[] {

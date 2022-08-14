@@ -1,23 +1,23 @@
 export interface IOAuth2Dto {
-    getClientId(): string;
+  getClientId(): string;
 
-    getClientSecret(): string;
+  getClientSecret(): string;
 
-    setRedirectUrl(redirectUrl: string): IOAuth2Dto;
+  setRedirectUrl(redirectUrl: string): IOAuth2Dto;
 
-    isRedirectUrl(): boolean;
+  isRedirectUrl(): boolean;
 
-    getRedirectUrl(): string;
+  getRedirectUrl(): string;
 
-    getAuthorizationUrl(): string;
+  getAuthorizationUrl(): string;
 
-    getTokenUrl(): string;
+  getTokenUrl(): string;
 
-    isCustomApp(): boolean;
+  isCustomApp(): boolean;
 
-    getUser(): string;
+  getUser(): string;
 
-    getApplicationKey(): string;
+  getApplicationKey(): string;
 
-    setCustomAppDependencies(user: string, applicationKey: string): void;
+  setCustomAppDependencies(user: string, applicationKey: string): void;
 }

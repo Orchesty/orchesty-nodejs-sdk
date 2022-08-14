@@ -54,7 +54,7 @@ export function mockRouter(): {
   routeFn: jest.Mock,
   express: Application,
   loader: CommonLoader,
-  } {
+} {
   const postFn = jest.fn();
   const getFn = jest.fn();
   const route = {

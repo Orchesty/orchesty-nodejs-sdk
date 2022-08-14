@@ -1,15 +1,15 @@
 import FieldType from './FieldType';
 
 export interface IField {
-    type: FieldType;
-    key: string;
-    value: unknown;
-    label: string;
-    description: string;
-    required: boolean;
-    readOnly: boolean;
-    disabled: boolean;
-    choices: unknown[];
+  type: FieldType;
+  key: string;
+  value: unknown;
+  label: string;
+  description: string;
+  required: boolean;
+  readOnly: boolean;
+  disabled: boolean;
+  choices: unknown[];
 }
 
 export default class Field {
@@ -22,11 +22,11 @@ export default class Field {
   private _choices: unknown[] = [];
 
   public constructor(
-        private _type: FieldType,
-        private _key: string,
-        private _label: string,
-        private _value: unknown = null,
-        private _required: boolean = false,
+    private _type: FieldType,
+    private _key: string,
+    private _label: string,
+    private _value: unknown = null,
+    private _required: boolean = false,
   ) {
   }
 

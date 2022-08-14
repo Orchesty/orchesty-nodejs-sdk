@@ -29,10 +29,10 @@ export interface IApplication extends IName {
   ): Promise<ApplicationInstall> | ApplicationInstall;
 
   savePassword(
-      applicationInstall: ApplicationInstall,
-      formKey: string,
-      fieldKey: string,
-      password: string,
+    applicationInstall: ApplicationInstall,
+    formKey: string,
+    fieldKey: string,
+    password: string,
   ): ApplicationInstall;
 
   isAuthorized(applicationInstall: ApplicationInstall): boolean;

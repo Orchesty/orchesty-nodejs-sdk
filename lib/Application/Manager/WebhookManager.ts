@@ -27,10 +27,10 @@ const LENGTH = 25;
 
 export default class WebhookManager {
   public constructor(
-      private _loader: ApplicationLoader,
-      private _curl: CurlSender,
-      private _webhookRepository: WebhookRepository<Webhook>,
-      private _appRepository: ApplicationInstallRepository<ApplicationInstall>,
+    private _loader: ApplicationLoader,
+    private _curl: CurlSender,
+    private _webhookRepository: WebhookRepository<Webhook>,
+    private _appRepository: ApplicationInstallRepository<ApplicationInstall>,
   ) {
   }
 

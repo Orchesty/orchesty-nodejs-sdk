@@ -15,14 +15,14 @@ import AProcessDto from '../../Utils/AProcessDto';
 export const AUTHORIZATION_FORM = 'authorization_form';
 
 export interface IApplicationArray {
-    name: string;
-    logo: string|null;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    authorization_type: AuthorizationTypeEnum;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    application_type: ApplicationTypeEnum;
-    key: string;
-    description: string;
+  name: string;
+  logo: string|null;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  authorization_type: AuthorizationTypeEnum;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  application_type: ApplicationTypeEnum;
+  key: string;
+  description: string;
 }
 
 export default abstract class AApplication implements IApplication {

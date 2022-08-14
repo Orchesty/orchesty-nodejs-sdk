@@ -17,9 +17,9 @@ const APPLICATION_SETTINGS = 'applicationSettings';
 
 export default class ApplicationManager {
   public constructor(
-      private _repository: ApplicationInstallRepository<ApplicationInstall>,
-      private _loader: ApplicationLoader,
-      private _webhookManager: WebhookManager,
+    private _repository: ApplicationInstallRepository<ApplicationInstall>,
+    private _loader: ApplicationLoader,
+    private _webhookManager: WebhookManager,
   ) {
   }
 
