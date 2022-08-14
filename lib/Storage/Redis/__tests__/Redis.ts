@@ -21,12 +21,12 @@ describe('Tests for redis', () => {
     redis = new Redis(process.env.REDIS_DSN ?? '');
   });
 
-  afterAll(async () => {
-    await redis.close();
-  });
-
   afterEach(async () => {
     await redis.remove(TESTKEY);
+  });
+
+  afterAll(async () => {
+    await redis.close();
   });
 
   it('has', async () => {
