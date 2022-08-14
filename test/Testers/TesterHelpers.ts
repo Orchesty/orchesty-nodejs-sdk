@@ -44,8 +44,8 @@ export class TestNode implements ILightNode {
     public followers: ILightNode[] = [],
   ) {}
 
-  public toWorkerFollowerHeader(): {id: string; name: string}[] {
-    const res: {id: string; name: string}[] = [];
+  public toWorkerFollowerHeader(): { id: string; name: string }[] {
+    const res: { id: string; name: string }[] = [];
     this.followers.forEach((f) => res.push({ id: f.id, name: f.name }));
 
     return res;

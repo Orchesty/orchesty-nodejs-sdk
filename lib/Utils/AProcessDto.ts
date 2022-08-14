@@ -152,7 +152,7 @@ export default abstract class AProcessDto {
   }
 
   public setForceFollowers(...followers: string[]): void {
-    const workerFollowers: {name: string; id: string}[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
+    const workerFollowers: { name: string; id: string }[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
     const filtered = workerFollowers.filter((item) => followers.includes(item.name));
     const targetQueues = filtered.map((item) => item.id).join(',');
 

@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const parseInfluxDsn = (dsn: string): {server: string; port: number} => {
+export const parseInfluxDsn = (dsn: string): { server: string; port: number } => {
   let server;
   let port;
   [server, port] = dsn.split(':');

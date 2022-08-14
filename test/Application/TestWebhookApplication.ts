@@ -65,7 +65,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
     dto: ResponseDto,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     applicationInstall: ApplicationInstall,
-  ): string => (dto.jsonBody as {id: string}).id;
+  ): string => (dto.jsonBody as { id: string }).id;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public processWebhookUnsubscribeResponse = (dto: ResponseDto): boolean => true;
