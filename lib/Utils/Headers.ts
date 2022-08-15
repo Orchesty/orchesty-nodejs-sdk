@@ -38,6 +38,7 @@ export enum CommonHeaders {
   ACCEPT = 'Accept',
   ACCEPT_ENCODING = 'Accept-Encoding',
   AUTHORIZATION = 'Authorization',
+  COOKIE = 'Cookie',
 }
 
 export const JSON_TYPE = 'application/json';
