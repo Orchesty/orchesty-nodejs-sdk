@@ -1,0 +1,16 @@
+{
+    "name": "@hanaboso/eslint-config",
+    "version": "0.0.1",
+    "main": "index.js",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.32",
+        "@typescript-eslint/parser": "^5.32",
+        "eslint": "^8.21",
+        "eslint-import-resolver-typescript": "^3.4",
+        "eslint-plugin-import": "^2.26",
+        "eslint-plugin-jest": "^26.8",
+        "eslint-plugin-promise": "^6.0",
+        "eslint-plugin-simple-import-sort": "^7.0",
+        "typescript": "^4.7"
+    }
+}
