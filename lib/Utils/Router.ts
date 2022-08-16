@@ -100,8 +100,8 @@ for (let i = 0; i < 100; i += 1) {
 }
 
 const batchMutex = new Mutex();
-const batchDtoPool = new Array(20).fill(0);
-for (let i = 0; i < 20; i += 1) {
+const batchDtoPool = new Array(100).fill(0);
+for (let i = 0; i < 100; i += 1) {
   batchDtoPool[i] = new BatchProcessDto();
 }
 
@@ -129,7 +129,7 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
   // Should CPU still be a concern, implement linked list for faster search
   // In case of Memory concern, limit maximum pool size and await for free objects
   return batchMutex.runExclusive(() => {
-    for (let i = 0; i < dtoPool.length; i += 1) {
+    for (let i = 0; i < batchDtoPool.length; i += 1) {
       if (batchDtoPool[i].free) {
         batchDtoPool[i].free = false;
 

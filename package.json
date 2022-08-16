@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.24",
+  "version": "2.0.26",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -49,12 +49,12 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
-    "@types/jest": "^28.1.6",
-    "@types/node": "^18.7.3",
+    "@types/jest": "^28.1.7",
+    "@types/node": "^18.7.5",
     "@types/readline-sync": "^1.4.4",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
     "autocannon": "^7.9.0",
     "eslint": "^8.22.0",
     "eslint-config-airbnb-base": "^15.0.0",

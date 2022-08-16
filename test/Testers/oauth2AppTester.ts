@@ -8,7 +8,7 @@ import CoreServices from '../../lib/DIContainer/CoreServices';
 import ApplicationManager from '../../lib/Application/Manager/ApplicationManager';
 import { OAuth2Provider } from '../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 
-export default async function runCli(di: DIContainer) {
+export default async function runCli(di: DIContainer, customSettings: Record<string, unknown>) {
   const user = 'default_test_user';
 
   const name = question('Insert Application name: ');
@@ -25,6 +25,7 @@ export default async function runCli(di: DIContainer) {
         [CLIENT_SECRET]: clientSecret,
       },
     });
+  appInstall.addSettings(customSettings);
 
   const db = di.get(CoreServices.MONGO) as MongoDbClient;
   const repo = await db.getApplicationRepository();
@@ -54,5 +55,6 @@ export default async function runCli(di: DIContainer) {
   await appManager.saveAuthorizationToken(stateDecode.name, stateDecode.user, parameters);
   const updatedApp = await repo.findByNameAndUser(stateDecode.name, stateDecode.user);
 
+  // eslint-disable-next-line no-console
   console.log(updatedApp?.getSettings());
 }
