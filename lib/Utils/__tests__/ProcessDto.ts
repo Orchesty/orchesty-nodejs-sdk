@@ -3,178 +3,179 @@ import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
 
 describe('Tests ProcessDto utils', () => {
-  it('GetData', () => {
-    const json = '{"some": "data"}';
-    const dto = new ProcessDto();
-    dto.data = json;
+    it('GetData', () => {
+        const json = '{"some": "data"}';
+        const dto = new ProcessDto();
+        dto.data = json;
 
-    expect(dto.data).toEqual(json);
-  });
+        expect(dto.data).toEqual(json);
+    });
 
-  it('GetJsonData', () => {
-    const dto = new ProcessDto();
-    dto.data = '{"some": "data"}';
+    it('GetJsonData', () => {
+        const dto = new ProcessDto();
+        dto.data = '{"some": "data"}';
 
-    expect(dto.jsonData).toEqual({ some: 'data' });
-  });
+        expect(dto.jsonData).toEqual({ some: 'data' });
+    });
 
-  it('setJson', () => {
-    const dto = new ProcessDto();
-    dto.jsonData = { some: 'data' };
+    it('setJson', () => {
+        const dto = new ProcessDto();
+        dto.jsonData = { some: 'data' };
 
-    expect(dto.jsonData).toEqual({ some: 'data' });
-  });
+        expect(dto.jsonData).toEqual({ some: 'data' });
+    });
 
-  it('setNewJson', () => {
-    interface IA {
-      string: string;
-    }
-    interface IB {
-      number: number;
-    }
+    it('setNewJson', () => {
+        interface IA {
+            string: string;
+        }
 
-    const dto = new ProcessDto<IA>();
-    dto.jsonData = { string: 'data' };
-    const newType = dto.setNewJsonData({ number: 123 });
+        interface IB {
+            number: number;
+        }
 
-    const check = (t: ProcessDto<IB>) => {}; // eslint-disable-line
-    check(newType); // Just to ensure type assertion
+        const dto = new ProcessDto<IA>();
+        dto.jsonData = { string: 'data' };
+        const newType = dto.setNewJsonData({ number: 123 });
 
-    expect(newType.jsonData).toEqual({ number: 123 });
-  });
+        const check = (t: ProcessDto<IB>): void => {}; // eslint-disable-line
+        check(newType); // Just to ensure type assertion
 
-  it('GetHeaders', () => {
-    const dto = new ProcessDto();
-    dto.headers = { some: 'header' };
+        expect(newType.jsonData).toEqual({ number: 123 });
+    });
 
-    expect(dto.headers).toEqual({ some: 'header' });
-  });
+    it('GetHeaders', () => {
+        const dto = new ProcessDto();
+        dto.headers = { some: 'header' };
 
-  it('GetHeader', () => {
-    const dto = new ProcessDto();
-    dto.headers = { some: 'header' };
+        expect(dto.headers).toEqual({ some: 'header' });
+    });
 
-    expect(dto.getHeader('some')).toEqual('header');
-    expect(dto.getHeader('none', 'default')).toEqual('default');
-  });
+    it('GetHeader', () => {
+        const dto = new ProcessDto();
+        dto.headers = { some: 'header' };
 
-  it('addHeader', () => {
-    const dto = new ProcessDto();
-    dto.addHeader('new', 'n-header');
+        expect(dto.getHeader('some')).toEqual('header');
+        expect(dto.getHeader('none', 'default')).toEqual('default');
+    });
 
-    expect(dto.getHeader('new')).toEqual('n-header');
-  });
+    it('addHeader', () => {
+        const dto = new ProcessDto();
+        dto.addHeader('new', 'n-header');
 
-  it('removeHeader', () => {
-    const dto = new ProcessDto();
-    dto.addHeader('new', 'n-header');
-    dto.removeHeader('new');
+        expect(dto.getHeader('new')).toEqual('n-header');
+    });
 
-    expect(dto.getHeader('new')).toBeUndefined();
-  });
+    it('removeHeader', () => {
+        const dto = new ProcessDto();
+        dto.addHeader('new', 'n-header');
+        dto.removeHeader('new');
 
-  it('removeHeaders', () => {
-    const dto = new ProcessDto();
-    dto.addHeader('new', 'n-header');
-    dto.removeHeaders();
+        expect(dto.getHeader('new')).toBeUndefined();
+    });
 
-    expect(dto.headers).toEqual({});
-  });
+    it('removeHeaders', () => {
+        const dto = new ProcessDto();
+        dto.addHeader('new', 'n-header');
+        dto.removeHeaders();
 
-  it('setSuccessProcess', () => {
-    const dto = new ProcessDto();
-    dto.setSuccessProcess('ok');
+        expect(dto.headers).toEqual({});
+    });
 
-    expect(dto.getHeader('result-code')).toEqual('0');
-    expect(dto.getHeader('result-message')).toEqual('ok');
-  });
+    it('setSuccessProcess', () => {
+        const dto = new ProcessDto();
+        dto.setSuccessProcess('ok');
 
-  it('setSuccessProcess without message', () => {
-    const dto = new ProcessDto();
-    dto.setSuccessProcess();
+        expect(dto.getHeader('result-code')).toEqual('0');
+        expect(dto.getHeader('result-message')).toEqual('ok');
+    });
 
-    expect(dto.getHeader('result-code')).toEqual('0');
-    expect(dto.getHeader('result-message')).toEqual('Message has been processed successfully.');
-  });
+    it('setSuccessProcess without message', () => {
+        const dto = new ProcessDto();
+        dto.setSuccessProcess();
 
-  it('setStopProcess', () => {
-    const dto = new ProcessDto();
-    dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'nok');
+        expect(dto.getHeader('result-code')).toEqual('0');
+        expect(dto.getHeader('result-message')).toEqual('Message has been processed successfully.');
+    });
 
-    expect(dto.getHeader('result-code')).toEqual('1006');
-    expect(dto.getHeader('result-message')).toEqual('nok');
-  });
+    it('setStopProcess', () => {
+        const dto = new ProcessDto();
+        dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'nok');
 
-  it('setStopProcess with unsupported ResultCode', () => {
-    const dto = new ProcessDto();
-    expect(() => dto.setStopProcess(10000, 'nok')).toThrow(Error);
-  });
+        expect(dto.getHeader('result-code')).toEqual('1006');
+        expect(dto.getHeader('result-message')).toEqual('nok');
+    });
 
-  it('setRepeater and removeRepeater', () => {
-    const dto = new ProcessDto();
-    dto.setRepeater(2, 20, 'rep-message');
+    it('setStopProcess with unsupported ResultCode', () => {
+        const dto = new ProcessDto();
+        expect(() => dto.setStopProcess(10000, 'nok')).toThrow(Error);
+    });
 
-    expect(dto.getHeader('repeat-interval')).toEqual('2');
-    expect(dto.getHeader('repeat-max-hops')).toEqual('20');
-    expect(dto.getHeader('result-code')).toEqual('1001');
-    expect(dto.getHeader('result-message')).toEqual('rep-message');
+    it('setRepeater and removeRepeater', () => {
+        const dto = new ProcessDto();
+        dto.setRepeater(2, 20, 'rep-message');
 
-    dto.removeRepeater();
-    expect(dto.getHeader('repeat-interval')).toBeUndefined();
-    expect(dto.getHeader('repeat-hops')).toBeUndefined();
-    expect(dto.getHeader('repeat-max-hops')).toBeUndefined();
-  });
+        expect(dto.getHeader('repeat-interval')).toEqual('2');
+        expect(dto.getHeader('repeat-max-hops')).toEqual('20');
+        expect(dto.getHeader('result-code')).toEqual('1001');
+        expect(dto.getHeader('result-message')).toEqual('rep-message');
 
-  it('setRepeater without optional attributes', () => {
-    const dto = new ProcessDto();
-    dto.setRepeater(3, 30, 'reason');
+        dto.removeRepeater();
+        expect(dto.getHeader('repeat-interval')).toBeUndefined();
+        expect(dto.getHeader('repeat-hops')).toBeUndefined();
+        expect(dto.getHeader('repeat-max-hops')).toBeUndefined();
+    });
 
-    expect(dto.getHeader('result-code')).toEqual('1001');
-    expect(dto.getHeader('repeat-interval')).toEqual('3');
-    expect(dto.getHeader('repeat-max-hops')).toEqual('30');
-    expect(dto.getHeader('repeat-hops')).toBeUndefined();
-    expect(dto.getHeader('result-message')).toEqual('reason');
-  });
+    it('setRepeater without optional attributes', () => {
+        const dto = new ProcessDto();
+        dto.setRepeater(3, 30, 'reason');
 
-  it('setRepeater with unsupported parameters', () => {
-    const dto = new ProcessDto();
-    expect(() => dto.setRepeater(-1, 1, 'reason')).toThrow(Error);
-    expect(() => dto.setRepeater(1, -1, 'reason')).toThrow(Error);
-  });
+        expect(dto.getHeader('result-code')).toEqual('1001');
+        expect(dto.getHeader('repeat-interval')).toEqual('3');
+        expect(dto.getHeader('repeat-max-hops')).toEqual('30');
+        expect(dto.getHeader('repeat-hops')).toBeUndefined();
+        expect(dto.getHeader('result-message')).toEqual('reason');
+    });
 
-  it('setLimiter and removeLimiter', () => {
-    const dto = new ProcessDto();
-    dto.setLimiter('limit-key|user', 60, 10000);
+    it('setRepeater with unsupported parameters', () => {
+        const dto = new ProcessDto();
+        expect(() => dto.setRepeater(-1, 1, 'reason')).toThrow(Error);
+        expect(() => dto.setRepeater(1, -1, 'reason')).toThrow(Error);
+    });
 
-    expect(dto.getHeader('limiter-key')).toEqual('limit-key|user;60;10000');
+    it('setLimiter and removeLimiter', () => {
+        const dto = new ProcessDto();
+        dto.setLimiter('limit-key|user', 60, 10000);
 
-    dto.removeLimiter();
-    expect(dto.getHeader('limiter-key')).toBeUndefined();
-  });
+        expect(dto.getHeader('limiter-key')).toEqual('limit-key|user;60;10000');
 
-  it('setLimiter without optional attributes', () => {
-    const dto = new ProcessDto();
-    dto.setLimiterWithGroup('limit-key2', 30, 5000, 'group1', 200, 4444);
+        dto.removeLimiter();
+        expect(dto.getHeader('limiter-key')).toBeUndefined();
+    });
 
-    expect(dto.getHeader('limiter-key')).toEqual('limit-key2|;30;5000;group1|;200;4444');
-  });
+    it('setLimiter without optional attributes', () => {
+        const dto = new ProcessDto();
+        dto.setLimiterWithGroup('limit-key2', 30, 5000, 'group1', 200, 4444);
 
-  it('removeForceFollowers removes headers correctly', () => {
-    const dto = new ProcessDto();
-    dto.addHeader(WORKER_FOLLOWERS, '[{"name":"abc", "id": "123"}]');
-    dto.setForceFollowers('abc');
+        expect(dto.getHeader('limiter-key')).toEqual('limit-key2|;30;5000;group1|;200;4444');
+    });
 
-    dto.removeForceFollowers();
+    it('removeForceFollowers removes headers correctly', () => {
+        const dto = new ProcessDto();
+        dto.addHeader(WORKER_FOLLOWERS, '[{"name":"abc", "id": "123"}]');
+        dto.setForceFollowers('abc');
 
-    expect(dto.headers).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
-  });
+        dto.removeForceFollowers();
 
-  it('removeRepeater removes headers correctly', () => {
-    const dto = new ProcessDto();
-    dto.setRepeater(1, 10, 'reason');
+        expect(dto.headers).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
+    });
 
-    dto.removeRepeater();
+    it('removeRepeater removes headers correctly', () => {
+        const dto = new ProcessDto();
+        dto.setRepeater(1, 10, 'reason');
 
-    expect(dto.headers).toEqual({});
-  });
+        dto.removeRepeater();
+
+        expect(dto.headers).toEqual({});
+    });
 });

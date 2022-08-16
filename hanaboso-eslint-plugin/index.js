@@ -1,4 +1,4 @@
-const { EOL } = require('os');
+const {EOL} = require('os');
 let counter = 1;
 
 module.exports = {
@@ -14,5 +14,17 @@ module.exports = {
                 return {};
             },
         },
+        arrow: {
+            create: (context) => {
+                return {
+                    'ClassDeclaration > ClassBody > PropertyDefinition > ArrowFunctionExpression'(node) {
+                        context.report({
+                            node,
+                            message: 'Usage of arrow functions instead of class methods is not allowed.'
+                        });
+                    },
+                };
+            },
+        }
     },
 };

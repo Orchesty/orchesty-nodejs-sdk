@@ -10,64 +10,63 @@ import ConnectorRouter from '../ConnectorRouter';
 
 // Mock Logger module
 jest.mock('../../Logger/Logger', () => ({
-  error: () => jest.fn(),
-  debug: () => jest.fn(),
-  info: () => jest.fn(),
-  log: () => jest.fn(),
-  ctxFromDto: () => jest.fn(),
-  ctxFromReq: () => jest.fn(),
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  Logger: jest.fn().mockImplementation(() => ({})),
+    error: () => jest.fn(),
+    debug: () => jest.fn(),
+    info: () => jest.fn(),
+    log: () => jest.fn(),
+    ctxFromDto: () => jest.fn(),
+    ctxFromReq: () => jest.fn(),
+    Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(() => ({
-  send: () => ({ responseCode: StatusCodes.OK, body: { response: 'mockedResponse' } }),
+    send: () => ({ responseCode: StatusCodes.OK, body: { response: 'mockedResponse' } }),
 })));
 
 describe('Test ConnectorRouter', () => {
-  let container: DIContainer;
-  let connector: ICommonNode;
+    let container: DIContainer;
+    let connector: ICommonNode;
 
-  beforeAll(async () => {
-    container = await getTestContainer();
-    connector = container.getConnector('test');
-  });
+    beforeAll(async () => {
+        container = await getTestContainer();
+        connector = container.getConnector('test');
+    });
 
-  afterAll(async () => {
-    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
-    await (container.get(CoreServices.METRICS) as Metrics).close();
-  });
+    afterAll(async () => {
+        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+        await container.get<Metrics>(CoreServices.METRICS).close();
+    });
 
-  it('get /connector/:name/action/test route', async () => {
-    const connectorUrl = `/connector/${connector.getName()}/action/test`;
-    await supertest(expressApp)
-      .get(connectorUrl)
-      .expect(StatusCodes.OK, '[]');
-  });
+    it('get /connector/:name/action/test route', async () => {
+        const connectorUrl = `/connector/${connector.getName()}/action/test`;
+        await supertest(expressApp)
+            .get(connectorUrl)
+            .expect(StatusCodes.OK, '[]');
+    });
 
-  it('post /connector/:name/action route', async () => {
-    const connectorUrl = `/connector/${connector.getName()}/action`;
-    await supertest(expressApp)
-      .post(connectorUrl)
-      .expect(StatusCodes.OK, {
-        body: { response: 'mockedResponse' },
-        headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
-      });
-  });
+    it('post /connector/:name/action route', async () => {
+        const connectorUrl = `/connector/${connector.getName()}/action`;
+        await supertest(expressApp)
+            .post(connectorUrl)
+            .expect(StatusCodes.OK, {
+                body: { response: 'mockedResponse' },
+                headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
+            });
+    });
 
-  it('get /connector/list route', async () => {
-    const connectorUrl = '/connector/list';
-    await supertest(expressApp)
-      .get(connectorUrl)
-      .expect(StatusCodes.OK, '["test"]');
-  });
+    it('get /connector/list route', async () => {
+        const connectorUrl = '/connector/list';
+        await supertest(expressApp)
+            .get(connectorUrl)
+            .expect(StatusCodes.OK, '["test"]');
+    });
 
-  it('test configureRoutes', () => {
-    const mock = mockRouter();
-    const router = new ConnectorRouter(mock.express, mock.loader);
-    expect(mock.routeFn).toHaveBeenCalledTimes(3);
-    expect(mock.getFn).toHaveBeenCalledTimes(2);
-    expect(mock.postFn).toHaveBeenCalledTimes(1);
-    expect(router.getName()).toEqual('ConnectorRouter');
-  });
+    it('test configureRoutes', () => {
+        const mock = mockRouter();
+        const router = new ConnectorRouter(mock.express, mock.loader);
+        expect(mock.routeFn).toHaveBeenCalledTimes(3);
+        expect(mock.getFn).toHaveBeenCalledTimes(2);
+        expect(mock.postFn).toHaveBeenCalledTimes(1);
+        expect(router.getName()).toEqual('ConnectorRouter');
+    });
 });

@@ -1,26 +1,28 @@
 export default class OnRepeatException extends Error {
-  // interval in seconds
-  private _interval: number;
 
-  public constructor(seconds = 60, private _maxHops: number = 10, message?: string) {
-    super(message);
+    // interval in seconds
+    private interval: number;
 
-    this._interval = seconds;
-  }
+    public constructor(seconds = 60, private maxHops: number = 10, message?: string) {
+        super(message);
 
-  public getInterval(): number {
-    return this._interval;
-  }
+        this.interval = seconds;
+    }
 
-  public setInterval(seconds: number): void {
-    this._interval = seconds;
-  }
+    public getInterval(): number {
+        return this.interval;
+    }
 
-  public getMaxHops(): number {
-    return this._maxHops;
-  }
+    public setInterval(seconds: number): void {
+        this.interval = seconds;
+    }
 
-  public setMaxHops(value: number): void {
-    this._maxHops = value;
-  }
+    public getMaxHops(): number {
+        return this.maxHops;
+    }
+
+    public setMaxHops(value: number): void {
+        this.maxHops = value;
+    }
+
 }

@@ -4,28 +4,30 @@ import { IApplicationArray } from './Base/AApplication';
 import { IApplication } from './Base/IApplication';
 
 export default class ApplicationLoader extends CommonLoader {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getList = (prefix: string): string[] => {
-    throw new Error('Unsupported action!');
-  };
 
-  public getListApplications(): IApplicationArray[] {
-    let list: IApplicationArray[] = [];
-    this._container.getAllByPrefix(APPLICATION_PREFIX)
-      .forEach((obj: IApplication) => {
-        list.push(obj.toArray());
-      });
-    list = list.sort(this._compare);
-    return list;
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getList(prefix: string): string[] {
+        throw new Error('Unsupported action!');
+    }
 
-  private readonly _compare = (a: IApplicationArray, b: IApplicationArray): number => {
-    if (a.name.toLowerCase() < b.name.toLowerCase()) {
-      return -1;
+    public getListApplications(): IApplicationArray[] {
+        let list: IApplicationArray[] = [];
+        this.container.getAllByPrefix(APPLICATION_PREFIX)
+            .forEach((obj: IApplication) => {
+                list.push(obj.toArray());
+            });
+        list = list.sort(this.compare.bind(this));
+        return list;
     }
-    if (a.name.toLowerCase() > b.name.toLowerCase()) {
-      return 1;
+
+    private compare(a: IApplicationArray, b: IApplicationArray): number {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+            return -1;
+        }
+        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+            return 1;
+        }
+        return 0;
     }
-    return 0;
-  };
+
 }

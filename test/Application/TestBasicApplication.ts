@@ -11,50 +11,61 @@ import HttpMethods from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBasicApplication extends ABasicApplication {
-  // eslint-disable-next-line class-methods-use-this
-  public syncTestSyncMethod(): string {
-    return JSON.stringify({
-      param1: 'p1',
-      param2: 'p2',
-    });
-  }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  public async syncTestSyncMethodVoid(): Promise<void> {}
+    // eslint-disable-next-line class-methods-use-this
+    public syncTestSyncMethod(): string {
+        return JSON.stringify({
+            param1: 'p1',
+            param2: 'p2',
+        });
+    }
 
-  public getDescription = (): string => 'Test description';
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+    public async syncTestSyncMethodVoid(): Promise<void> {
+    }
 
-  public getName = (): string => 'test';
+    public getDescription(): string {
+        return 'Test description';
+    }
 
-  public getPublicName = (): string => 'Test application';
+    public getName(): string {
+        return 'test';
+    }
 
-  public getFormStack = (): FormStack => {
-    const label = 'testLabel';
+    public getPublicName(): string {
+        return 'Test application';
+    }
 
-    const fieldText = new Field(FieldType.TEXT, USER, label);
-    const field = new Field(FieldType.PASSWORD, PASSWORD, label);
+    public getFormStack(): FormStack {
+        const label = 'testLabel';
 
-    const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
-    form.addField(field);
-    form.addField(fieldText);
+        const fieldText = new Field(FieldType.TEXT, USER, label);
+        const field = new Field(FieldType.PASSWORD, PASSWORD, label);
 
-    const fieldText1 = new Field(FieldType.TEXT, 'host', label);
-    const field1 = new Field(FieldType.TEXT, 'database', label);
+        const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
+        form.addField(field);
+        form.addField(fieldText);
 
-    const form1 = new Form('testForm', 'testPublicName');
-    form1.addField(field1);
-    form1.addField(fieldText1);
+        const fieldText1 = new Field(FieldType.TEXT, 'host', label);
+        const field1 = new Field(FieldType.TEXT, 'database', label);
 
-    const formStack = new FormStack();
-    formStack.addForm(form);
-    return formStack.addForm(form1);
-  };
+        const form1 = new Form('testForm', 'testPublicName');
+        form1.addField(field1);
+        form1.addField(fieldText1);
 
-  public getRequestDto = (
-    dto: ProcessDto,
-    applicationInstall: ApplicationInstall,
-    method: HttpMethods,
-    url?: string,
-    data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', method, dto, data);
+        const formStack = new FormStack();
+        formStack.addForm(form);
+        return formStack.addForm(form1);
+    }
+
+    public getRequestDto(
+        dto: ProcessDto,
+        applicationInstall: ApplicationInstall,
+        method: HttpMethods,
+        url?: string,
+        data?: BodyInit,
+    ): RequestDto {
+        return new RequestDto(url ?? '', method, dto, data);
+    }
+
 }

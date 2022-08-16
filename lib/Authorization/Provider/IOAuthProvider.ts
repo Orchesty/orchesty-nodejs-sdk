@@ -1,3 +1,3 @@
 export interface IOAuthProvider {
-  getRedirectUri(): string;
+    getRedirectUri(): string;
 }

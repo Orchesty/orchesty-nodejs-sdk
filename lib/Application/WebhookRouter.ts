@@ -4,23 +4,25 @@ import WebhookManager from './Manager/WebhookManager';
 
 // eslint-disable-next-line import/prefer-default-export
 export class WebhookRouter extends ACommonRouter {
-  public constructor(app: express.Application, private readonly _manager: WebhookManager) {
-    super(app, 'WebhookRouter');
-  }
 
-  public configureRoutes(): express.Application {
-    this._app.route('/webhook/applications/:name/users/:user/subscribe').post(async (req, res) => {
-      await this._manager.subscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
+    public constructor(app: express.Application, private readonly manager: WebhookManager) {
+        super(app, 'WebhookRouter');
+    }
 
-      res.json([]);
-    });
+    public configureRoutes(): express.Application {
+        this.app.route('/webhook/applications/:name/users/:user/subscribe').post(async (req, res) => {
+            await this.manager.subscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
 
-    this._app.route('/webhook/applications/:name/users/:user/unsubscribe').post(async (req, res) => {
-      await this._manager.unsubscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
+            res.json([]);
+        });
 
-      res.json([]);
-    });
+        this.app.route('/webhook/applications/:name/users/:user/unsubscribe').post(async (req, res) => {
+            await this.manager.unsubscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
 
-    return this._app;
-  }
+            res.json([]);
+        });
+
+        return this.app;
+    }
+
 }

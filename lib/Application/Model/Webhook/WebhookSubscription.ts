@@ -2,27 +2,29 @@ export const NAME = 'name';
 export const TOPOLOGY = 'topology';
 
 export default class WebhookSubscription {
-  public constructor(
-    private readonly _name: string,
-    private readonly _node: string,
-    private readonly _topology: string,
-    private readonly _parameters: Record<string, string> = {},
-  ) {
-  }
 
-  public getName(): string {
-    return this._name;
-  }
+    public constructor(
+        private readonly name: string,
+        private readonly node: string,
+        private readonly topology: string,
+        private readonly parameters: Record<string, string> = {},
+    ) {
+    }
 
-  public getNode(): string {
-    return this._node;
-  }
+    public getName(): string {
+        return this.name;
+    }
 
-  public getTopology(): string {
-    return this._topology;
-  }
+    public getNode(): string {
+        return this.node;
+    }
 
-  public getParameters(): Record<string, string> {
-    return this._parameters;
-  }
+    public getTopology(): string {
+        return this.topology;
+    }
+
+    public getParameters(): Record<string, string> {
+        return this.parameters;
+    }
+
 }

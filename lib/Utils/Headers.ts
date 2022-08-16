@@ -33,55 +33,55 @@ export const BATCH_CURSOR = 'cursor';
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface HttpHeaders {
-  [key: string]: string[] | string | undefined;
+    [key: string]: string[] | string | undefined;
 }
 
 export enum CommonHeaders {
-  CONTENT_TYPE = 'Content-Type',
-  ACCEPT = 'Accept',
-  ACCEPT_ENCODING = 'Accept-Encoding',
-  AUTHORIZATION = 'Authorization',
-  COOKIE = 'Cookie',
+    CONTENT_TYPE = 'Content-Type',
+    ACCEPT = 'Accept',
+    ACCEPT_ENCODING = 'Accept-Encoding',
+    AUTHORIZATION = 'Authorization',
+    COOKIE = 'Cookie',
 }
 
 export const JSON_TYPE = 'application/json';
 
 export function get(key: string, headers: HttpHeaders): string | undefined {
-  if (headers[key]) {
-    return String(headers[key]);
-  }
+    if (headers[key]) {
+        return String(headers[key]);
+    }
 
-  return undefined;
+    return undefined;
 }
 
 export function getCorrelationId(headers: HttpHeaders): string | undefined {
-  return get(CORRELATION_ID, headers);
+    return get(CORRELATION_ID, headers);
 }
 
 export function getTopologyId(headers: HttpHeaders): string | undefined {
-  return get(TOPOLOGY_ID, headers);
+    return get(TOPOLOGY_ID, headers);
 }
 
 export function getNodeId(headers: HttpHeaders): string | undefined {
-  return get(NODE_ID, headers);
+    return get(NODE_ID, headers);
 }
 
 export function getProcessId(headers: HttpHeaders): string | undefined {
-  return get(PROCESS_ID, headers);
+    return get(PROCESS_ID, headers);
 }
 
 export function getParentId(headers: HttpHeaders): string | undefined {
-  return get(PARENT_ID, headers);
+    return get(PARENT_ID, headers);
 }
 
 export function getSequenceId(headers: HttpHeaders): number {
-  return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
+    return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
 }
 
 export function getRepeatHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_HOPS, headers) ?? '0', 10);
+    return parseInt(get(REPEAT_HOPS, headers) ?? '0', 10);
 }
 
 export function getRepeaterMaxHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_MAX_HOPS, headers) ?? '0', 10);
+    return parseInt(get(REPEAT_MAX_HOPS, headers) ?? '0', 10);
 }

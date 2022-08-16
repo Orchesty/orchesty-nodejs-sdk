@@ -11,28 +11,38 @@ import HttpMethods from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestTokenBasicApplication extends ABasicApplication {
-  public getDescription = (): string => 'Test description';
 
-  public getName = (): string => 'test';
+    public getDescription(): string {
+        return 'Test description';
+    }
 
-  public getPublicName = (): string => 'Test application';
+    public getName(): string {
+        return 'test';
+    }
 
-  public getFormStack = (): FormStack => {
-    const label = 'testToken';
-    const fieldToken = new Field(FieldType.TEXT, TOKEN, label);
+    public getPublicName(): string {
+        return 'Test application';
+    }
 
-    const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
-    form.addField(fieldToken);
+    public getFormStack(): FormStack {
+        const label = 'testToken';
+        const fieldToken = new Field(FieldType.TEXT, TOKEN, label);
 
-    const formStack = new FormStack();
-    return formStack.addForm(form);
-  };
+        const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
+        form.addField(fieldToken);
 
-  public getRequestDto = (
-    dto: ProcessDto,
-    applicationInstall: ApplicationInstall,
-    method: HttpMethods,
-    url?: string,
-    data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', method, dto, data);
+        const formStack = new FormStack();
+        return formStack.addForm(form);
+    }
+
+    public getRequestDto(
+        dto: ProcessDto,
+        applicationInstall: ApplicationInstall,
+        method: HttpMethods,
+        url?: string,
+        data?: BodyInit,
+    ): RequestDto {
+        return new RequestDto(url ?? '', method, dto, data);
+    }
+
 }

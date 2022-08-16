@@ -3,51 +3,46 @@ import { ObjectId } from 'mongodb';
 import OnRepeatException from '../Exception/OnRepeatException';
 import logger from '../Logger/Logger';
 import NodeRepository from '../Storage/Mongodb/Document/NodeRepository';
-import {
-  get,
-  getRepeatHops, NODE_ID,
-  REPEAT_INTERVAL,
-} from '../Utils/Headers';
+import { get, getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
 
 export default function errorHandler(nodeRepository: NodeRepository) {
-  return async (err: Error, req: Request, res: Response, next: NextFunction): Promise<void> => {
-    if (res.headersSent) {
-      next(err);
-      return;
-    }
-    const dto = await createProcessDto(req);
+    return async (err: Error, req: Request, res: Response, next: NextFunction): Promise<void> => {
+        if (res.headersSent) {
+            next(err);
+            return;
+        }
+        const dto = await createProcessDto(req);
 
-    if (err instanceof OnRepeatException) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) ?? '') });
-      const repeaterSettings = node?.getSystemConfigsFromString()?.repeater;
-      if (repeaterSettings?.enabled) {
-        dto.setRepeater(repeaterSettings.interval, repeaterSettings.hops, err.message);
-      } else {
-        dto.setRepeater(err.getInterval(), err.getMaxHops(), err.message);
-      }
+        if (err instanceof OnRepeatException) {
+            const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) ?? '') });
+            const repeaterSettings = node?.getSystemConfigsFromString()?.repeater;
+            if (repeaterSettings?.enabled) {
+                dto.setRepeater(repeaterSettings.interval, repeaterSettings.hops, err.message);
+            } else {
+                dto.setRepeater(err.getInterval(), err.getMaxHops(), err.message);
+            }
 
-      logger.debug(
-        `Repeater reached with settings: 
+            logger.debug(
+                `Repeater reached with settings: 
       CurrentHop: ${getRepeatHops(dto.headers)}, 
-      Interval: ${get(REPEAT_INTERVAL, dto.headers) ?? ''}, 
+      Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
       MaxHops: ${err.getMaxHops()}`,
-        dto,
-      );
+                dto,
+            );
 
-      createSuccessResponse(res, dto);
-      res.on('finish', () => {
-        dto.free = true;
-      });
-      next();
-      return;
-    }
+            createSuccessResponse(res, dto);
+            res.on('finish', () => {
+                dto.free = true;
+            });
+            next();
+            return;
+        }
 
-    createErrorResponse(req, res, dto, err);
-    res.on('finish', () => {
-      dto.free = true;
-    });
-    next();
-  };
+        createErrorResponse(req, res, dto, err);
+        res.on('finish', () => {
+            dto.free = true;
+        });
+        next();
+    };
 }

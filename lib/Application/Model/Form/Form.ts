@@ -1,60 +1,62 @@
 import Field, { IField } from './Field';
 
 export default class Form {
-  private _description = '';
 
-  private readonly _fields: Field[] = [];
+    private clDescription = '';
 
-  public constructor(private readonly _key: string, private _publicName: string) {
-  }
+    private readonly clFields: Field[] = [];
 
-  public addField(field: Field): this {
-    this.fields.push(field);
-    return this;
-  }
+    public constructor(private readonly clKey: string, private clPublicName: string) {
+    }
 
-  public get fields(): Field[] {
-    return this._fields;
-  }
+    public get fields(): Field[] {
+        return this.clFields;
+    }
 
-  public set description(value: string) {
-    this._description = value;
-  }
+    public set description(value: string) {
+        this.clDescription = value;
+    }
 
-  public get description(): string {
-    return this._description;
-  }
+    public get description(): string {
+        return this.clDescription;
+    }
 
-  public get key(): string {
-    return this._key;
-  }
+    public get key(): string {
+        return this.clKey;
+    }
 
-  public set publicName(value: string) {
-    this._publicName = value;
-  }
+    public set publicName(value: string) {
+        this.clPublicName = value;
+    }
 
-  public get publicName(): string {
-    return this._publicName;
-  }
+    public get publicName(): string {
+        return this.clPublicName;
+    }
 
-  public toArray(): IForm {
-    const fields: IField[] = [];
-    this.fields.forEach((element) => {
-      fields.push(element.toArray);
-    });
+    public addField(field: Field): this {
+        this.fields.push(field);
+        return this;
+    }
 
-    return {
-      key: this.key,
-      publicName: this.publicName,
-      description: this.description,
-      fields,
-    };
-  }
+    public toArray(): IForm {
+        const fields: IField[] = [];
+        this.fields.forEach((element) => {
+            fields.push(element.toArray);
+        });
+
+        return {
+            key: this.key,
+            publicName: this.publicName,
+            description: this.description,
+            fields,
+        };
+    }
+
 }
 
 export interface IForm {
-  key: string;
-  publicName: string;
-  description: string;
-  fields: IField[];
+    key: string;
+    publicName: string;
+    description: string;
+    fields: IField[];
 }

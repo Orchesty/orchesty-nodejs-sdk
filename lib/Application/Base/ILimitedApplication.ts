@@ -3,5 +3,5 @@ import { ApplicationInstall } from '../Database/ApplicationInstall';
 
 export interface ILimitedApplication {
 
-  injectLimit(dto: AProcessDto, appInstall: ApplicationInstall): AProcessDto;
+    injectLimit(dto: AProcessDto, appInstall: ApplicationInstall): AProcessDto;
 }

@@ -2,30 +2,37 @@ import { ObjectId } from 'mongodb';
 import { id, objectId } from 'mongodb-typescript';
 
 export interface IDocument {
-  getCollection(): string;
-  toArray(): Record<string, unknown>;
+    getCollection(): string;
+
+    toArray(): Record<string, unknown>;
 }
 
 export default abstract class ADocument implements IDocument {
-  @id @objectId
-  protected _id?: ObjectId;
 
-  public getId(): string {
-    return this._id?.toHexString() ?? '';
-  }
+    @id @objectId
+    protected _id?: ObjectId;
 
-  public getObjectId(): ObjectId {
-    if (!this._id) {
-      throw Error('_id is not set.');
+    public static getCollection(): string {
+        return this.name;
     }
-    return this._id;
-  }
 
-  public getCollection = (): string => ADocument.getCollection();
+    public getId(): string {
+        return this._id?.toHexString() ?? '';
+    }
 
-  public static getCollection(): string {
-    return this.name;
-  }
+    public getObjectId(): ObjectId {
+        if (!this._id) {
+            throw Error('_id is not set.');
+        }
+        return this._id;
+    }
 
-  public toArray = (): Record<string, unknown> => ({});
+    public getCollection(): string {
+        return ADocument.getCollection();
+    }
+
+    public toArray(): Record<string, unknown> {
+        return {};
+    }
+
 }

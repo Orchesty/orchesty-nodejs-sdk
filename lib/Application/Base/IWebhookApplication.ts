@@ -6,21 +6,21 @@ import { IApplication } from './IApplication';
 
 export interface IWebhookApplication extends IApplication {
 
-  getWebhookSubscriptions(): WebhookSubscription[];
+    getWebhookSubscriptions(): WebhookSubscription[];
 
-  getWebhookSubscribeRequestDto(
-    applicationInstall: ApplicationInstall,
-    subscription: WebhookSubscription,
-    url: string,
-  ): RequestDto;
+    getWebhookSubscribeRequestDto(
+        applicationInstall: ApplicationInstall,
+        subscription: WebhookSubscription,
+        url: string,
+    ): RequestDto;
 
-  getWebhookUnsubscribeRequestDto(
-    applicationInstall: ApplicationInstall,
-    id: string
-  ): RequestDto;
+    getWebhookUnsubscribeRequestDto(
+        applicationInstall: ApplicationInstall,
+        id: string,
+    ): RequestDto;
 
-  processWebhookSubscribeResponse(dto: ResponseDto, applicationInstall: ApplicationInstall): string;
+    processWebhookSubscribeResponse(dto: ResponseDto, applicationInstall: ApplicationInstall): string;
 
-  processWebhookUnsubscribeResponse(dto: ResponseDto): boolean;
+    processWebhookUnsubscribeResponse(dto: ResponseDto): boolean;
 
 }

@@ -10,32 +10,32 @@ import ApplicationTypeEnum from './ApplicationTypeEnum';
 
 export interface IApplication extends IName {
 
-  getRequestDto
-  (
-    dto: AProcessDto,
-    applicationInstall: ApplicationInstall,
-    method: HttpMethods,
-    url?: string,
-    data?: BodyInit | unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
-  ): Promise<RequestDto> | RequestDto;
+    getRequestDto
+    (
+        dto: AProcessDto,
+        applicationInstall: ApplicationInstall,
+        method: HttpMethods,
+        url?: string,
+        data?: BodyInit | unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+    ): Promise<RequestDto> | RequestDto;
 
-  getAuthorizationType(): AuthorizationTypeEnum;
+    getAuthorizationType(): AuthorizationTypeEnum;
 
-  getApplicationType(): ApplicationTypeEnum;
+    getApplicationType(): ApplicationTypeEnum;
 
-  saveApplicationForms(
-    applicationInstall: ApplicationInstall,
-    settings: IApplicationSettings
-  ): ApplicationInstall | Promise<ApplicationInstall>;
+    saveApplicationForms(
+        applicationInstall: ApplicationInstall,
+        settings: IApplicationSettings,
+    ): ApplicationInstall | Promise<ApplicationInstall>;
 
-  savePassword(
-    applicationInstall: ApplicationInstall,
-    formKey: string,
-    fieldKey: string,
-    password: string,
-  ): ApplicationInstall;
+    savePassword(
+        applicationInstall: ApplicationInstall,
+        formKey: string,
+        fieldKey: string,
+        password: string,
+    ): ApplicationInstall;
 
-  isAuthorized(applicationInstall: ApplicationInstall): boolean;
+    isAuthorized(applicationInstall: ApplicationInstall): boolean;
 
-  toArray(): IApplicationArray;
+    toArray(): IApplicationArray;
 }

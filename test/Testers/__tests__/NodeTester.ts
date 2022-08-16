@@ -7,27 +7,26 @@ import NodeTester from '../NodeTester';
 
 // Mock Logger module
 jest.mock('../../../lib/Logger/Logger', () => ({
-  error: () => jest.fn(),
-  debug: () => jest.fn(),
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  Logger: jest.fn().mockImplementation(() => ({})),
+    error: () => jest.fn(),
+    debug: () => jest.fn(),
+    Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 describe('Test NodeTester', () => {
-  let container: DIContainer;
-  beforeAll(async () => {
-    container = await getTestContainer();
-  });
+    let container: DIContainer;
+    beforeAll(async () => {
+        container = await getTestContainer();
+    });
 
-  afterAll(async () => {
-    await (container.get(CoreServices.MONGO) as MongoDbClient).down();
-    await (container.get(CoreServices.METRICS) as Metrics).close();
-  });
+    afterAll(async () => {
+        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+        await container.get<Metrics>(CoreServices.METRICS).close();
+    });
 
-  it('output - replacement', async () => {
-    const tester = new NodeTester(container, __filename);
-    await tester.testCustomNode('testcustom');
+    it('output - replacement', async () => {
+        const tester = new NodeTester(container, __filename);
+        await tester.testCustomNode('testcustom');
 
-    expect(true).toEqual(true);
-  });
+        expect(true).toEqual(true);
+    });
 });

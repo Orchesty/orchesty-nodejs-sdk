@@ -2,31 +2,33 @@ import { Headers } from 'node-fetch';
 import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
-  public constructor(
-    private readonly _body: string,
-    private readonly _code: number,
-    private readonly _headers: Headers,
-    private readonly _reason?: string,
-  ) {
-  }
 
-  public get headers(): Headers {
-    return this._headers;
-  }
+    public constructor(
+        private readonly clBody: string,
+        private readonly clCode: number,
+        private readonly clHeaders: Headers,
+        private readonly clReason?: string,
+    ) {
+    }
 
-  public get body(): string {
-    return this._body;
-  }
+    public get headers(): Headers {
+        return this.clHeaders;
+    }
 
-  public get jsonBody(): JsonBody {
-    return JSON.parse(this._body);
-  }
+    public get body(): string {
+        return this.clBody;
+    }
 
-  public get reason(): string | undefined {
-    return this._reason;
-  }
+    public get jsonBody(): JsonBody {
+        return JSON.parse(this.clBody);
+    }
 
-  public get responseCode(): number {
-    return this._code;
-  }
+    public get reason(): string | undefined {
+        return this.clReason;
+    }
+
+    public get responseCode(): number {
+        return this.clCode;
+    }
+
 }

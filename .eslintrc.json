@@ -1,11 +1,12 @@
 {
-  "extends": [
-    "@hanaboso"
-  ],
-  "plugins": [
-    "@hanaboso"
-  ],
-  "rules": {
-    "@hanaboso/progress": "error"
-  }
+    "extends": [
+        "@hanaboso"
+    ],
+    "plugins": [
+        "@hanaboso"
+    ],
+    "rules": {
+        "@hanaboso/progress": "error",
+        "@hanaboso/arrow": "error"
+    }
 }

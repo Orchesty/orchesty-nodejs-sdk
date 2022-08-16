@@ -7,136 +7,138 @@ import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IApplicationSettings {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+    [key: string]: any;
 }
 
 export class ApplicationInstall extends ADocument {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  private deleted = false;
 
-  @index()
-  private user = '';
+    private deleted = false;
 
-  @index()
-  private key = '';
+    @index()
+    private user = '';
 
-  private readonly created: Date;
+    @index()
+    private key = '';
 
-  private updated: Date;
+    private readonly created: Date;
 
-  @index()
-  private expires?: Date;
+    private updated: Date;
 
-  @ignore
-  private settings: IApplicationSettings = {};
+    @index()
+    private expires?: Date;
 
-  private encryptedSettings = '';
+    @ignore
+    private settings: IApplicationSettings = {};
 
-  private nonEncryptedSettings: IApplicationSettings = {};
-  /* eslint-enable @typescript-eslint/naming-convention */
+    private encryptedSettings = '';
 
-  public constructor() {
-    super();
-    this.created = DateTimeUtils.utcDate;
-    this.updated = DateTimeUtils.utcDate;
-  }
+    private nonEncryptedSettings: IApplicationSettings = {};
 
-  public getSettings(): IApplicationSettings {
-    return this.settings;
-  }
+    public constructor() {
+        super();
+        this.created = DateTimeUtils.utcDate;
+        this.updated = DateTimeUtils.utcDate;
+    }
 
-  public getEncryptedSettings(): string {
-    return this.encryptedSettings;
-  }
+    public getSettings(): IApplicationSettings {
+        return this.settings;
+    }
 
-  public getNonEncryptedSettings(): IApplicationSettings {
-    return this.nonEncryptedSettings;
-  }
+    public getEncryptedSettings(): string {
+        return this.encryptedSettings;
+    }
 
-  public getCreated(): Date {
-    return this.created;
-  }
+    public getNonEncryptedSettings(): IApplicationSettings {
+        return this.nonEncryptedSettings;
+    }
 
-  public getUpdated(): Date {
-    return this.updated;
-  }
+    public getCreated(): Date {
+        return this.created;
+    }
 
-  public setUpdated(): this {
-    this.updated = DateTimeUtils.utcDate;
-    return this;
-  }
+    public getUpdated(): Date {
+        return this.updated;
+    }
 
-  public setDeleted(deleted = true): this {
-    this.deleted = deleted;
-    return this;
-  }
+    public setUpdated(): this {
+        this.updated = DateTimeUtils.utcDate;
+        return this;
+    }
 
-  public getDeleted(): boolean {
-    return this.deleted;
-  }
+    public setDeleted(deleted = true): this {
+        this.deleted = deleted;
+        return this;
+    }
 
-  public getUser(): string {
-    return this.user;
-  }
+    public getDeleted(): boolean {
+        return this.deleted;
+    }
 
-  public setUser(user: string): this {
-    this.user = user;
+    public getUser(): string {
+        return this.user;
+    }
 
-    return this;
-  }
+    public setUser(user: string): this {
+        this.user = user;
 
-  public getExpires(): Date | undefined {
-    return this.expires;
-  }
+        return this;
+    }
 
-  public setExpires(expires?: Date): this {
-    this.expires = expires;
-    return this;
-  }
+    public getExpires(): Date | undefined {
+        return this.expires;
+    }
 
-  public getName(): string {
-    return this.key;
-  }
+    public setExpires(expires?: Date): this {
+        this.expires = expires;
+        return this;
+    }
 
-  public setName(name: string): this {
-    this.key = name;
+    public getName(): string {
+        return this.key;
+    }
 
-    return this;
-  }
+    public setName(name: string): this {
+        this.key = name;
 
-  public setSettings(settings: IApplicationSettings): this {
-    this.settings = settings;
-    return this;
-  }
+        return this;
+    }
 
-  public setNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
-    this.nonEncryptedSettings = nonEncryptedSettings;
-    return this;
-  }
+    public setSettings(settings: IApplicationSettings): this {
+        this.settings = settings;
+        return this;
+    }
 
-  public setEncryptedSettings(encryptedSettings: string): this {
-    this.encryptedSettings = encryptedSettings;
-    return this;
-  }
+    public setNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
+        this.nonEncryptedSettings = nonEncryptedSettings;
+        return this;
+    }
 
-  public addSettings(setting: IApplicationSettings): this {
-    this.settings = deepmerge(this.settings, setting);
-    return this;
-  }
+    public setEncryptedSettings(encryptedSettings: string): this {
+        this.encryptedSettings = encryptedSettings;
+        return this;
+    }
 
-  public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
-    this.nonEncryptedSettings = deepmerge(this.nonEncryptedSettings, nonEncryptedSettings);
-    return this;
-  }
+    public addSettings(setting: IApplicationSettings): this {
+        this.settings = deepmerge(this.settings, setting);
+        return this;
+    }
 
-  public toArray = (): Record<string, unknown> => ({
-    id: this._id?.toHexString() ?? '',
-    user: this.user,
-    key: this.key,
-    // settings: this.settings,
-    nonEncryptedSettings: this.nonEncryptedSettings,
-    created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
-    update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),
-    expires: this.expires ? DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.expires), DATE_TIME) : null,
-  });
+    public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
+        this.nonEncryptedSettings = deepmerge(this.nonEncryptedSettings, nonEncryptedSettings);
+        return this;
+    }
+
+    public toArray(): Record<string, unknown> {
+        return {
+            id: this._id?.toHexString() ?? '',
+            user: this.user,
+            key: this.key,
+            // settings: this.settings,
+            nonEncryptedSettings: this.nonEncryptedSettings,
+            created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
+            update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),
+            expires: this.expires ? DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.expires), DATE_TIME) : null,
+        };
+    }
+
 }

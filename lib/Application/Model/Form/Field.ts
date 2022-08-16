@@ -1,117 +1,119 @@
 import FieldType from './FieldType';
 
 export interface IField {
-  type: FieldType;
-  key: string;
-  value: unknown;
-  label: string;
-  description: string;
-  required: boolean;
-  readOnly: boolean;
-  disabled: boolean;
-  choices: unknown[];
+    type: FieldType;
+    key: string;
+    value: unknown;
+    label: string;
+    description: string;
+    required: boolean;
+    readOnly: boolean;
+    disabled: boolean;
+    choices: unknown[];
 }
 
 export default class Field {
-  private _description = '';
 
-  private _readOnly = false;
+    private clDescription = '';
 
-  private _disabled = false;
+    private clReadOnly = false;
 
-  private _choices: unknown[] = [];
+    private clDisabled = false;
 
-  public constructor(
-    private readonly _type: FieldType,
-    private readonly _key: string,
-    private _label: string,
-    private _value: unknown = null,
-    private _required: boolean = false,
-  ) {
-  }
+    private clChoices: unknown[] = [];
 
-  public get type(): FieldType {
-    return this._type;
-  }
+    public constructor(
+        private readonly clType: FieldType,
+        private readonly clKey: string,
+        private clLabel: string,
+        private clValue: unknown = null,
+        private clRequired: boolean = false,
+    ) {
+    }
 
-  public get key(): string {
-    return this._key;
-  }
+    public get type(): FieldType {
+        return this.clType;
+    }
 
-  public get value(): unknown {
-    return this._value;
-  }
+    public get key(): string {
+        return this.clKey;
+    }
 
-  public get label(): string {
-    return this._label;
-  }
+    public get value(): unknown {
+        return this.clValue;
+    }
 
-  public get description(): string {
-    return this._description;
-  }
+    public get label(): string {
+        return this.clLabel;
+    }
 
-  public get choices(): unknown[] {
-    return this._choices;
-  }
+    public get description(): string {
+        return this.clDescription;
+    }
 
-  public get isRequired(): boolean {
-    return this._required;
-  }
+    public get choices(): unknown[] {
+        return this.clChoices;
+    }
 
-  public get isReadOnly(): boolean {
-    return this._readOnly;
-  }
+    public get isRequired(): boolean {
+        return this.clRequired;
+    }
 
-  public get isDisabled(): boolean {
-    return this._disabled;
-  }
+    public get isReadOnly(): boolean {
+        return this.clReadOnly;
+    }
 
-  public get toArray(): IField {
-    return {
-      type: this.type,
-      key: this.key,
-      value: this.value,
-      label: this.label,
-      description: this.description,
-      required: this.isRequired,
-      readOnly: this.isReadOnly,
-      disabled: this.isDisabled,
-      choices: this.choices,
-    };
-  }
+    public get isDisabled(): boolean {
+        return this.clDisabled;
+    }
 
-  public setLabel(label: string): this {
-    this._label = label;
-    return this;
-  }
+    public get toArray(): IField {
+        return {
+            type: this.type,
+            key: this.key,
+            value: this.value,
+            label: this.label,
+            description: this.description,
+            required: this.isRequired,
+            readOnly: this.isReadOnly,
+            disabled: this.isDisabled,
+            choices: this.choices,
+        };
+    }
 
-  public setValue(value: unknown): this {
-    this._value = value;
-    return this;
-  }
+    public setLabel(label: string): this {
+        this.clLabel = label;
+        return this;
+    }
 
-  public setDescription(description: string): this {
-    this._description = description;
-    return this;
-  }
+    public setValue(value: unknown): this {
+        this.clValue = value;
+        return this;
+    }
 
-  public setRequired(required: boolean): this {
-    this._required = required;
-    return this;
-  }
+    public setDescription(description: string): this {
+        this.clDescription = description;
+        return this;
+    }
 
-  public setReadOnly(readOnly: boolean): this {
-    this._readOnly = readOnly;
-    return this;
-  }
+    public setRequired(required: boolean): this {
+        this.clRequired = required;
+        return this;
+    }
 
-  public setDisabled(disabled: boolean): this {
-    this._disabled = disabled;
-    return this;
-  }
+    public setReadOnly(readOnly: boolean): this {
+        this.clReadOnly = readOnly;
+        return this;
+    }
 
-  public setChoices(choices: unknown[]): this {
-    this._choices = choices;
-    return this;
-  }
+    public setDisabled(disabled: boolean): this {
+        this.clDisabled = disabled;
+        return this;
+    }
+
+    public setChoices(choices: unknown[]): this {
+        this.clChoices = choices;
+        return this;
+    }
+
 }

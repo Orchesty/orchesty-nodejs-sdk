@@ -4,21 +4,24 @@ import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 const CURSOR = 'testCursor';
 
 export default class TestBatch extends ABatchNode {
-  public getName = (): string => 'testbatch';
 
-  public processAction = (_dto: BatchProcessDto): BatchProcessDto => {
-    const dto = _dto;
-    dto.addItem({
-      dataTest: 'testValue',
-    });
-
-    if (dto.getBatchCursor() === CURSOR) {
-      dto.removeBatchCursor();
-      return dto;
+    public getName(): string {
+        return 'testbatch';
     }
 
-    dto.setBatchCursor(CURSOR);
+    public processAction(dto: BatchProcessDto): BatchProcessDto {
+        dto.addItem({
+            dataTest: 'testValue',
+        });
 
-    return dto;
-  };
+        if (dto.getBatchCursor() === CURSOR) {
+            dto.removeBatchCursor();
+            return dto;
+        }
+
+        dto.setBatchCursor(CURSOR);
+
+        return dto;
+    }
+
 }

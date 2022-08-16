@@ -10,94 +10,92 @@ import TestWebhookApplication from '../TestWebhookApplication';
 let app: TestWebhookApplication;
 
 describe('Tests for webhook application', () => {
-  beforeEach(() => {
-    app = new TestWebhookApplication();
-  });
+    beforeEach(() => {
+        app = new TestWebhookApplication();
+    });
 
-  it('getRequestDto', () => {
-    const urlValue = 'https://www.google.com';
-    const data = JSON.stringify({ test: 'testData' });
-    const method = HttpMethods.POST;
-    const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
-    expect(requestDto).toBeInstanceOf(RequestDto);
-    expect(requestDto).toHaveProperty('_url', urlValue);
-    expect(requestDto).toHaveProperty('_method', method);
-    expect(requestDto).toHaveProperty('_body', data);
+    it('getRequestDto', () => {
+        const urlValue = 'https://www.google.com';
+        const data = JSON.stringify({ test: 'testData' });
+        const method = HttpMethods.POST;
+        const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
+        expect(requestDto).toBeInstanceOf(RequestDto);
+        expect(requestDto).toHaveProperty('clUrl', urlValue);
+        expect(requestDto).toHaveProperty('clMethod', method);
+        expect(requestDto).toHaveProperty('clBody', data);
 
-    const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
-    expect(requestDtoWithoutUrl).toHaveProperty('_url', '');
-  });
+        const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
+        expect(requestDtoWithoutUrl).toHaveProperty('clUrl', '');
+    });
 
-  it('getSettingsForm', () => {
-    /* eslint-disable @typescript-eslint/naming-convention */
-    const expected = {
-      _forms: [
-        {
-          _description: '',
-          _fields: [
-            {
-              _choices: [],
-              _description: '',
-              _disabled: false,
-              _key: 'testKey',
-              _label: 'testLabel',
-              _readOnly: false,
-              _required: false,
-              _type: 'password',
-              _value: null,
-            },
-            {
-              _choices: [],
-              _description: '',
-              _disabled: false,
-              _key: 'person',
-              _label: 'testLabel',
-              _readOnly: false,
-              _required: false,
-              _type: 'text',
-              _value: null,
-            },
-          ],
-          _key: 'testKey',
-          _publicName: 'testPublicName',
-        },
-      ],
-    };
-    /* eslint-enable @typescript-eslint/naming-convention */
-    expect(app.getFormStack()).toEqual(expected);
-  });
+    it('getSettingsForm', () => {
+        const expected = {
+            forms: [
+                {
+                    clDescription: '',
+                    clFields: [
+                        {
+                            clChoices: [],
+                            clDescription: '',
+                            clDisabled: false,
+                            clKey: 'testKey',
+                            clLabel: 'testLabel',
+                            clReadOnly: false,
+                            clRequired: false,
+                            clType: 'password',
+                            clValue: null,
+                        },
+                        {
+                            clChoices: [],
+                            clDescription: '',
+                            clDisabled: false,
+                            clKey: 'person',
+                            clLabel: 'testLabel',
+                            clReadOnly: false,
+                            clRequired: false,
+                            clType: 'text',
+                            clValue: null,
+                        },
+                    ],
+                    clKey: 'testKey',
+                    clPublicName: 'testPublicName',
+                },
+            ],
+        };
+        expect(app.getFormStack()).toEqual(expected);
+    });
 
-  it('getWebhookSubscribeRequestDto', () => {
-    const subscription = new WebhookSubscription('SubName', 'SubNode', 'SubTopology');
-    const urlValue = 'https://www.google.com';
-    const requestDto = app.getWebhookSubscribeRequestDto(new ApplicationInstall(), subscription, urlValue);
-    expect(requestDto).toBeInstanceOf(RequestDto);
-    expect(requestDto).toHaveProperty('_url', urlValue);
-    expect(requestDto).toHaveProperty('_method', HttpMethods.GET);
-  });
+    it('getWebhookSubscribeRequestDto', () => {
+        const subscription = new WebhookSubscription('SubName', 'SubNode', 'SubTopology');
+        const urlValue = 'https://www.google.com';
+        const requestDto = app.getWebhookSubscribeRequestDto(new ApplicationInstall(), subscription, urlValue);
+        expect(requestDto).toBeInstanceOf(RequestDto);
+        expect(requestDto).toHaveProperty('clUrl', urlValue);
+        expect(requestDto).toHaveProperty('clMethod', HttpMethods.GET);
+    });
 
-  it('getWebhookUnsubscribeRequestDto', () => {
-    const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), '1');
-    expect(requestDto).toBeInstanceOf(RequestDto);
-    expect(requestDto).toHaveProperty('_url', 'unknown/url');
-    expect(requestDto).toHaveProperty('_method', HttpMethods.DELETE);
-  });
+    it('getWebhookUnsubscribeRequestDto', () => {
+        const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), '1');
+        expect(requestDto).toBeInstanceOf(RequestDto);
+        expect(requestDto).toHaveProperty('clUrl', 'unknown/url');
+        expect(requestDto).toHaveProperty('clMethod', HttpMethods.DELETE);
+    });
 
-  it('processWebhookSubscribeResponse', () => {
-    const processResponse = app.processWebhookSubscribeResponse(new ResponseDto(
-      JSON.stringify({ id: '1' }),
-      200,
-      new Headers(),
-    ), new ApplicationInstall());
-    expect(processResponse).toBe('1');
-  });
+    it('processWebhookSubscribeResponse', () => {
+        const processResponse = app.processWebhookSubscribeResponse(new ResponseDto(
+            JSON.stringify({ id: '1' }),
+            200,
+            new Headers(),
+        ), new ApplicationInstall());
+        expect(processResponse).toBe('1');
+    });
 
-  it('processWebhookUnsubscribeResponse', () => {
-    const processResponse = app.processWebhookUnsubscribeResponse(new ResponseDto(
-      JSON.stringify({ id: '1' }),
-      200,
-      new Headers(),
-    ));
-    expect(processResponse).toBeTruthy();
-  });
+    it('processWebhookUnsubscribeResponse', () => {
+        const processResponse = app.processWebhookUnsubscribeResponse(new ResponseDto(
+            JSON.stringify({ id: '1' }),
+            200,
+            new Headers(),
+        ));
+        expect(processResponse).toBeTruthy();
+    });
 });

@@ -1,6 +1,6 @@
 enum ScopeSeparatorEnum {
-  COMMA = ',',
-  SPACE = ' ',
+    COMMA = ',',
+    SPACE = ' ',
 }
 
 export default ScopeSeparatorEnum;

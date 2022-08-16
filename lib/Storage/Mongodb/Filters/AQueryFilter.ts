@@ -1,22 +1,26 @@
 export interface IQueryFilter {
 
-  getName(): string;
+    getName(): string;
 
-  decorate(type: unknown, query: unknown): void;
+    decorate(type: unknown, query: unknown): void;
 
-  active(activate: boolean): void;
+    active(activate: boolean): void;
 }
 
 export default abstract class AQueryFilter implements IQueryFilter {
-  protected _active = true;
 
-  public abstract decorate(type: unknown, query: unknown): void;
+    protected clActive = true;
 
-  public abstract active(activate: boolean): void;
+    public abstract decorate(type: unknown, query: unknown): void;
 
-  public getName = (): string => AQueryFilter.getName();
+    public abstract active(activate: boolean): void;
 
-  public static getName(): string {
-    return this.name;
-  }
+    public static getName(): string {
+        return this.name;
+    }
+
+    public getName(): string {
+        return AQueryFilter.getName();
+    }
+
 }
