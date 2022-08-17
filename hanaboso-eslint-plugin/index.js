@@ -14,6 +14,23 @@ module.exports = {
                 return {};
             },
         },
+        import: {
+            create: (context) => {
+                return {
+                    ImportDeclaration(node) {
+                        const { loc: { start: { line: startLine }, end: { line: endLine } } } = node;
+
+                        if (startLine === endLine ||
+                            startLine === endLine - 2 ||
+                            startLine === endLine - node.specifiers.filter(({ type } ) => type === 'ImportSpecifier').length - 1) {
+                            return;
+                        }
+
+                        context.report({ node, message: 'Usage of multiple imports per one line is not allowed.' });
+                    },
+                };
+            },
+        },
         arrow: {
             create: (context) => {
                 return {

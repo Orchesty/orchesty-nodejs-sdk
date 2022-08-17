@@ -1,11 +1,5 @@
 {
     "extends": [
         "@hanaboso"
-    ],
-    "plugins": [
-        "@hanaboso"
-    ],
-    "rules": {
-        "@hanaboso/arrow": "error"
-    }
+    ]
 }

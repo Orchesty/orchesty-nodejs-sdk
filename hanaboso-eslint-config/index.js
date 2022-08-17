@@ -16,8 +16,12 @@ module.exports = {
         '@typescript-eslint',
         'import',
         'simple-import-sort',
+        '@hanaboso',
     ],
     rules: {
+        '@hanaboso/arrow': 'error',
+        '@hanaboso/import': 'error',
+
         // Eslint
         'one-var': 'off',
         'sort-imports': 'off',
