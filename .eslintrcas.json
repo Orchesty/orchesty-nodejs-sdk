@@ -6,6 +6,7 @@
         "@hanaboso"
     ],
     "rules": {
+        "@hanaboso/progress": "error",
         "@hanaboso/arrow": "error"
     }
 }
