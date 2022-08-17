@@ -16,10 +16,4 @@ export default class ProcessDto<JsonData = unknown> extends AProcessDto {
   set jsonData(body: unknown) {
     this._data = JSON.stringify(body);
   }
-
-  public setNewJsonData<T>(body: T): ProcessDto<T> {
-    this._data = JSON.stringify(body);
-
-    return this as unknown as ProcessDto<T>;
-  }
 }

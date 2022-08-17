@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.26",
+  "version": "2.0.27",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
-    "@types/node": "^18.7.5",
+    "@types/node": "^18.7.6",
     "@types/readline-sync": "^1.4.4",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.33.1",

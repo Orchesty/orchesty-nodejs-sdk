@@ -16,7 +16,7 @@ export default class BatchProcessDto extends AProcessDto {
     this._headers = commonHeaders;
   }
 
-  addItem(body: unknown, user?: string): BatchProcessDto {
+  public addItem(body: unknown, user?: string): BatchProcessDto {
     let b = body;
     if (typeof body !== 'string') {
       b = JSON.stringify(body);
@@ -30,7 +30,7 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  setItemList(list: unknown[] | string[]): BatchProcessDto {
+  public setItemList(list: unknown[] | string[]): BatchProcessDto {
     list.forEach((it) => {
       this.addItem(it);
     });
@@ -38,7 +38,7 @@ export default class BatchProcessDto extends AProcessDto {
     return this;
   }
 
-  addMessage(message: IBatchMessage): BatchProcessDto {
+  public addMessage(message: IBatchMessage): BatchProcessDto {
     this._messages.push(message);
 
     return this;
@@ -52,7 +52,7 @@ export default class BatchProcessDto extends AProcessDto {
     this._messages = messages;
   }
 
-  setBatchCursor(cursor: string, iterateOnly = false): void {
+  public setBatchCursor(cursor: string, iterateOnly = false): void {
     this.addHeader(BATCH_CURSOR, cursor);
     if (iterateOnly) {
       this._setStatusHeader(
@@ -67,16 +67,16 @@ export default class BatchProcessDto extends AProcessDto {
     }
   }
 
-  getBatchCursor(defaultValue = ''): string {
+  public getBatchCursor(defaultValue = ''): string {
     return this.getHeader(BATCH_CURSOR, defaultValue) as string;
   }
 
-  removeBatchCursor(): void {
+  public removeBatchCursor(): void {
     this.removeHeader(BATCH_CURSOR);
     this._removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
   }
 
-  setBridgeData(data: string) {
+  public setBridgeData(data: string) {
     this._data = data;
   }
 
