@@ -9,9 +9,11 @@ import { decode, encode } from '../../../Utils/Base64';
 
 export const REFRESH_TOKEN = 'refreshToken';
 export const ACCESS_TOKEN = 'accessToken';
+export const TOKEN_TYPE = 'tokenType';
 export const EXPIRES = 'expires';
 export const ACCESS_TYPE = 'access_type';
 export const STATE = 'state';
+export const OTHERS = 'others';
 
 export interface IToken {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,11 +93,17 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
       throw new Error(`Token is not received or is not valid. Reason: [${accessToken?.token?.error}]`);
     }
 
+    const {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      access_token, token_type, refresh_token, expires_at, ...others
+    } = accessToken.token;
+
     return {
-      [ACCESS_TOKEN]: accessToken.token.access_token ?? '',
-      tokenType: accessToken.token.token_type ?? '',
-      [REFRESH_TOKEN]: accessToken.token.refresh_token ?? '',
-      [EXPIRES]: accessToken.token.expires_at ?? '',
+      [ACCESS_TOKEN]: access_token,
+      [TOKEN_TYPE]: token_type,
+      [REFRESH_TOKEN]: refresh_token,
+      [EXPIRES]: expires_at,
+      [OTHERS]: others,
     };
   }
 

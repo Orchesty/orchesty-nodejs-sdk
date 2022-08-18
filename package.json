@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "2.0.27",
+  "version": "2.0.28",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -58,7 +58,7 @@
     "autocannon": "^7.9.0",
     "eslint": "^8.22.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-import-resolver-typescript": "^3.4.1",
+    "eslint-import-resolver-typescript": "^3.4.2",
     "eslint-plugin-import": "^2.26.0",
     "fetch-mock": "^9.11.0",
     "fetch-mock-jest": "^1.5.1",
