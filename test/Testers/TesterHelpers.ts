@@ -99,7 +99,7 @@ export function mockCurl(
                     expect(request.getMethod()).toBe(method);
                 } catch (e) {
                     throw new Error(
-                        `HTTP Method for [${index}${_prefix}] should be [${method}], [${request.getMethod()}] received.`,
+                        `HTTP Method for [${index}${_prefix}] should be [${method}], [${request.getMethod()}] received.`, // eslint-disable-line max-len
                     );
                 }
 

@@ -28,7 +28,6 @@ export default class MetricsSenderLoader {
 
             default: {
                 const validOpt = [INFLUX, MONGO];
-                // eslint-disable-next-line max-len
                 throw new Error(`Environment [METRICS_SERVICE=${this.metricsService}] is not a valid option. Valid options are: ${validOpt.join(', ')}`);
             }
         }

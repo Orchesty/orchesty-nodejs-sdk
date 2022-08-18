@@ -22,7 +22,6 @@ describe('OAuth2Provider tests', () => {
     const appInstall = new ApplicationInstall();
 
     it('authorize', () => {
-        // eslint-disable-next-line max-len
         appInstall.addSettings({
             [AUTHORIZATION_FORM]: {
                 [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****',

@@ -83,7 +83,6 @@ export default class WebhookManager {
                     const request = app.getWebhookSubscribeRequestDto(
                         appInstall,
                         subs,
-                        // eslint-disable-next-line max-len
                         `${pipesOptions.startingPoint}/webhook/topologies/${topology}/nodes/${subs.getNode()}/token/${token}`,
                     );
 

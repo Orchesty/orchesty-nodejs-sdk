@@ -23,7 +23,8 @@ export default abstract class ACommonConnector extends ANode {
 
         dto.setStopProcess(
             ResultCode.STOP_AND_FAILED,
-            message ?? `Response code [${res.getResponseCode()}] didn't match allowed codes [${this.okStatuses.join(',')}]`,
+            message
+            ?? `Response code [${res.getResponseCode()}] didn't match allowed codes [${this.okStatuses.join(',')}]`,
         );
 
         return false;

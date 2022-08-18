@@ -63,7 +63,6 @@ describe('tests for MetricsSenderLoader', () => {
         expect(() => {
             metricsSenderLoader.getSender();
         })
-            // eslint-disable-next-line max-len
             .toThrow(`Environment [METRICS_SERVICE=${invalidService}] is not a valid option. Valid options are: influx, mongo`);
     });
 });

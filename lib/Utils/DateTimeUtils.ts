@@ -8,7 +8,7 @@ export default class DateTimeUtils {
     /**
      *
      */
-    public static get utcDate(): Date {
+    public static getUtcDate(): Date {
         return new Date(new Date().toUTCString());
     }
 

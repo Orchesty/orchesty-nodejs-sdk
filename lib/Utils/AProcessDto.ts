@@ -36,8 +36,10 @@ export default abstract class AProcessDto<JsonData = unknown> {
         return value ? String(value) : undefined;
     }
 
-    public setUser(value: string | undefined) {
+    public setUser(value: string | undefined): this {
         this.headers.user = value;
+
+        return this;
     }
 
     public getData(): string {
@@ -52,20 +54,24 @@ export default abstract class AProcessDto<JsonData = unknown> {
         return this.free;
     }
 
-    public setFree(free: boolean) {
+    public setFree(free: boolean): this {
         if (free) {
             this.clearData();
             this.headers = {};
         }
         this.free = free;
+
+        return this;
     }
 
     public getHeaders(): IHttpHeaders {
         return this.headers;
     }
 
-    public setHeaders(headers: IHttpHeaders) {
+    public setHeaders(headers: IHttpHeaders): this {
         this.headers = headers;
+
+        return this;
     }
 
     public addHeader(key: string, value: string): void {
@@ -153,14 +159,12 @@ export default abstract class AProcessDto<JsonData = unknown> {
     }
 
     public setForceFollowers(...followers: string[]): void {
-        // eslint-disable-next-line max-len
         const workerFollowers: { name: string; id: string }[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
         const filtered = workerFollowers.filter((item) => followers.includes(item.name));
         const targetQueues = filtered.map((item) => item.id).join(',');
 
         if (!targetQueues) {
             const workerFollowerNames = workerFollowers.map((follower) => follower.name).join(',');
-            // eslint-disable-next-line max-len
             throw new Error(`Inserted follower(s) [${followers.join(',')}] can't be reached. Available follower(s) [${workerFollowerNames}]`);
         }
 

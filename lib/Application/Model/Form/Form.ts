@@ -13,8 +13,10 @@ export default class Form {
         return this.fields;
     }
 
-    public setDescription(value: string) {
+    public setDescription(value: string): this {
         this.description = value;
+
+        return this;
     }
 
     public getDescription(): string {
@@ -25,8 +27,10 @@ export default class Form {
         return this.key;
     }
 
-    public setPublicName(value: string) {
+    public setPublicName(value: string): this {
         this.publicName = value;
+
+        return this;
     }
 
     public getPublicName(): string {

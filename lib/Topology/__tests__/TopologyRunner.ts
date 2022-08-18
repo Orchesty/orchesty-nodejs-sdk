@@ -34,8 +34,9 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
             };
 
             if (headers) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                expect(request.getHeaders()).toStrictEqual(new Headers(deepmerge(defaultHeaders as any, headers as any)));
+                expect(request.getHeaders())
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    .toStrictEqual(new Headers(deepmerge(defaultHeaders as any, headers as any)));
             } else {
                 expect(request.getHeaders()).toStrictEqual(new Headers(defaultHeaders));
             }

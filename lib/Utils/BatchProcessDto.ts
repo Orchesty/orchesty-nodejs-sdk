@@ -21,8 +21,10 @@ export default class BatchProcessDto extends AProcessDto {
         return this.messages;
     }
 
-    public setMessages(messages: IBatchMessage[]) {
+    public setMessages(messages: IBatchMessage[]): this {
         this.messages = messages;
+
+        return this;
     }
 
     public addItem(body: unknown, user?: string): this {

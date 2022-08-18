@@ -40,7 +40,6 @@ describe('Tests for BatchRouter', () => {
                 body: JSON.stringify([{ headers: null, body: JSON.stringify({ dataTest: 'testValue' }) }]),
                 headers: {
                     cursor: 'testCursor',
-                    // eslint-disable-next-line max-len
                     'result-message': 'Message will be used as a iterator with cursor [testCursor]. Data will be send to follower(s).',
                     'result-code': '1010',
                 },

@@ -79,7 +79,7 @@ describe('ApplicationInstall tests', () => {
     });
 
     it('setExpires', () => {
-        const date = DateTimeUtils.utcDate;
+        const date = DateTimeUtils.getUtcDate();
         appInstall.setExpires(date);
         expect(appInstall.getExpires()).toEqual(date);
     });

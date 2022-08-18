@@ -36,8 +36,8 @@ export class ApplicationInstall extends ADocument {
 
     public constructor() {
         super();
-        this.created = DateTimeUtils.utcDate;
-        this.updated = DateTimeUtils.utcDate;
+        this.created = DateTimeUtils.getUtcDate();
+        this.updated = DateTimeUtils.getUtcDate();
     }
 
     public getSettings(): IApplicationSettings {
@@ -61,7 +61,7 @@ export class ApplicationInstall extends ADocument {
     }
 
     public setUpdated(): this {
-        this.updated = DateTimeUtils.utcDate;
+        this.updated = DateTimeUtils.getUtcDate();
         return this;
     }
 

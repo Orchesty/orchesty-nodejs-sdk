@@ -3,7 +3,7 @@ import DateTimeUtils, { DATE_TIME } from '../DateTimeUtils';
 
 describe('DateTimeUtils tests', () => {
     it('utcDate', () => {
-        const date = DateTimeUtils.utcDate;
+        const date = DateTimeUtils.getUtcDate();
         expect(date).toBeDefined();
         expect(date).toBeInstanceOf(Date);
     });

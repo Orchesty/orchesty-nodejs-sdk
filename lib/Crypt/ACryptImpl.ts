@@ -6,7 +6,6 @@ abstract class ACryptImpl implements ICrypt {
     protected constructor(protected prefix: string) {
         if (this.getPrefixLength() !== PREFIX_LENGTH) {
             throw Error(
-                // eslint-disable-next-line max-len
                 `Crypt prefix of class [${this.constructor.name}] has bad length [${this.getPrefixLength()}], allowed length is ${PREFIX_LENGTH}.`,
             );
         }

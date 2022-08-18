@@ -20,7 +20,7 @@ export default class ETLDocument extends ADocument {
 
     public constructor() {
         super();
-        this.created = DateTimeUtils.utcDate;
+        this.created = DateTimeUtils.getUtcDate();
     }
 
     public getUser(): string {
