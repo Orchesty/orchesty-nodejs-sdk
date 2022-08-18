@@ -6,23 +6,23 @@ describe('Tests ProcessDto utils', () => {
     it('GetData', () => {
         const json = '{"some": "data"}';
         const dto = new ProcessDto();
-        dto.data = json;
+        dto.setData(json);
 
-        expect(dto.data).toEqual(json);
+        expect(dto.getData()).toEqual(json);
     });
 
     it('GetJsonData', () => {
         const dto = new ProcessDto();
-        dto.data = '{"some": "data"}';
+        dto.setData('{"some": "data"}');
 
-        expect(dto.jsonData).toEqual({ some: 'data' });
+        expect(dto.getJsonData()).toEqual({ some: 'data' });
     });
 
     it('setJson', () => {
         const dto = new ProcessDto();
-        dto.jsonData = { some: 'data' };
+        dto.setJsonData({ some: 'data' });
 
-        expect(dto.jsonData).toEqual({ some: 'data' });
+        expect(dto.getJsonData()).toEqual({ some: 'data' });
     });
 
     it('setNewJson', () => {
@@ -35,25 +35,25 @@ describe('Tests ProcessDto utils', () => {
         }
 
         const dto = new ProcessDto<IA>();
-        dto.jsonData = { string: 'data' };
+        dto.setJsonData({ string: 'data' });
         const newType = dto.setNewJsonData({ number: 123 });
 
         const check = (t: ProcessDto<IB>): void => {}; // eslint-disable-line
         check(newType); // Just to ensure type assertion
 
-        expect(newType.jsonData).toEqual({ number: 123 });
+        expect(newType.getJsonData()).toEqual({ number: 123 });
     });
 
     it('GetHeaders', () => {
         const dto = new ProcessDto();
-        dto.headers = { some: 'header' };
+        dto.setHeaders({ some: 'header' });
 
-        expect(dto.headers).toEqual({ some: 'header' });
+        expect(dto.getHeaders()).toEqual({ some: 'header' });
     });
 
     it('GetHeader', () => {
         const dto = new ProcessDto();
-        dto.headers = { some: 'header' };
+        dto.setHeaders({ some: 'header' });
 
         expect(dto.getHeader('some')).toEqual('header');
         expect(dto.getHeader('none', 'default')).toEqual('default');
@@ -79,7 +79,7 @@ describe('Tests ProcessDto utils', () => {
         dto.addHeader('new', 'n-header');
         dto.removeHeaders();
 
-        expect(dto.headers).toEqual({});
+        expect(dto.getHeaders()).toEqual({});
     });
 
     it('setSuccessProcess', () => {
@@ -167,7 +167,7 @@ describe('Tests ProcessDto utils', () => {
 
         dto.removeForceFollowers();
 
-        expect(dto.headers).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
+        expect(dto.getHeaders()).toEqual({ 'worker-followers': '[{"name":"abc", "id": "123"}]' });
     });
 
     it('removeRepeater removes headers correctly', () => {
@@ -176,6 +176,6 @@ describe('Tests ProcessDto utils', () => {
 
         dto.removeRepeater();
 
-        expect(dto.headers).toEqual({});
+        expect(dto.getHeaders()).toEqual({});
     });
 });

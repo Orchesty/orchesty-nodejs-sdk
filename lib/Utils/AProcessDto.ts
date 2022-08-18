@@ -18,71 +18,71 @@ const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONT
 export default abstract class AProcessDto<JsonData = unknown> {
 
     // Do not dare to touch this !! This serves for simple ObjectPool implementation
-    protected clFree: boolean; // eslint-disable-line no-underscore-dangle
+    protected free: boolean; // eslint-disable-line no-underscore-dangle
 
-    protected clHeaders: IHttpHeaders;
+    protected headers: IHttpHeaders;
 
-    protected clData: string;
+    protected data: string;
 
     public constructor() {
-        this.clData = '';
-        this.clHeaders = {};
-        this.clFree = true;
+        this.data = '';
+        this.headers = {};
+        this.free = true;
     }
 
-    public get user(): string | undefined {
-        const value = this.clHeaders.user;
+    public getUser(): string | undefined {
+        const value = this.headers.user;
 
         return value ? String(value) : undefined;
     }
 
-    public set user(value: string | undefined) {
-        this.clHeaders.user = value;
+    public setUser(value: string | undefined) {
+        this.headers.user = value;
     }
 
-    public get data(): string {
-        return this.clData;
+    public getData(): string {
+        return this.data;
     }
 
-    public get jsonData(): JsonData {
-        return JSON.parse(this.clData || '{}');
+    public getJsonData(): JsonData {
+        return JSON.parse(this.data || '{}');
     }
 
-    public get free(): boolean {
-        return this.clFree;
+    public isFree(): boolean {
+        return this.free;
     }
 
-    public set free(free: boolean) {
+    public setFree(free: boolean) {
         if (free) {
             this.clearData();
-            this.clHeaders = {};
+            this.headers = {};
         }
-        this.clFree = free;
+        this.free = free;
     }
 
-    public get headers(): IHttpHeaders {
-        return this.clHeaders;
+    public getHeaders(): IHttpHeaders {
+        return this.headers;
     }
 
-    public set headers(headers: IHttpHeaders) {
-        this.clHeaders = headers;
+    public setHeaders(headers: IHttpHeaders) {
+        this.headers = headers;
     }
 
     public addHeader(key: string, value: string): void {
-        this.clHeaders[key] = value;
+        this.headers[key] = value;
     }
 
     public removeHeader(key: string): void {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete this.clHeaders[key];
+        delete this.headers[key];
     }
 
     public removeHeaders(): void {
-        this.clHeaders = {};
+        this.headers = {};
     }
 
     public getHeader(key: string, defaultValue?: string): string | undefined {
-        const value = this.clHeaders[key];
+        const value = this.headers[key];
 
         return value ? String(value) : defaultValue;
     }
@@ -177,7 +177,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
     }
 
     public getBridgeData(): unknown {
-        return this.clData;
+        return this.data;
     }
 
     protected static decorateLimitKey(key: string): string {
@@ -196,7 +196,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
     }
 
     protected clearData(): void {
-        this.clData = '';
+        this.data = '';
     }
 
     protected setStatusHeader(value: ResultCode, message?: string): void {

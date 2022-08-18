@@ -5,21 +5,21 @@ import Form from '../Form';
 describe('Test form', () => {
     it('getFields', () => {
         const form = new Form('testKey', 'testPublicName');
-        expect(form.fields).toEqual([]);
+        expect(form.getFields()).toEqual([]);
     });
 
     it('addField', () => {
         const form = new Form('testKey', 'testPublicName');
         const field = new Field(FieldType.TEXT, 'testKey', 'testLabel');
         form.addField(field);
-        expect(form.fields).toEqual([field]);
+        expect(form.getFields()).toEqual([field]);
     });
 
     it('toArray', () => {
         const form = new Form('testKey', 'testPublicName');
         const field = new Field(FieldType.TEXT, 'testKey', 'testLabel');
         form.addField(field);
-        form.description = 'testDescription';
+        form.setDescription('testDescription');
         const fieldsArray = form.toArray();
         const params = [
             'type', 'key', 'value', 'label', 'description', 'required', 'readOnly', 'disabled', 'choices',

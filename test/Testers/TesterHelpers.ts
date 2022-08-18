@@ -96,14 +96,14 @@ export function mockCurl(
                 const request = r;
                 const [method, url] = curl.http.split(' ', 2);
                 try {
-                    expect(request.method).toBe(method);
+                    expect(request.getMethod()).toBe(method);
                 } catch (e) {
                     throw new Error(
-                        `HTTP Method for [${index}${_prefix}] should be [${method}], [${request.method}] received.`,
+                        `HTTP Method for [${index}${_prefix}] should be [${method}], [${request.getMethod()}] received.`,
                     );
                 }
 
-                let expectedUrl = request.url;
+                let expectedUrl = request.getUrl();
                 try {
                     if (curl.httpReplacement?.query) {
                         const replacedUrl = new URL(expectedUrl);
@@ -165,8 +165,8 @@ export function mockNodeCurl(
     }
 
     if (
-        Reflect.has(node, 'clSender')
-        && Reflect.get(node, 'clSender') !== undefined
+        Reflect.has(node, 'sender')
+        && Reflect.get(node, 'sender') !== undefined
         && !_exclude.includes(_prefix)
     ) {
         return mockCurl(file, sender, _prefix, _index);

@@ -21,7 +21,7 @@ export default class Repository<T> extends BaseRepo<T> {
         this.filters = filters;
     }
 
-    public get name(): string {
+    public getName(): string {
         return this.Type.name;
     }
 

@@ -83,7 +83,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         applicationInstall: ApplicationInstall,
     ): string {
-        return (dto.jsonBody as { id: string }).id;
+        return (dto.getJsonBody() as { id: string }).id;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

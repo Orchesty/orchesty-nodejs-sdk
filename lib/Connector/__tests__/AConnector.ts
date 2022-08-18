@@ -61,14 +61,14 @@ describe('Test AConnector', () => {
         const dto = new ProcessDto();
         const response = new ResponseDto('body', 200, new Headers({}));
         testConnector.evaluateStatusCode(response, dto, 'error');
-        expect(dto.headers).toEqual({});
+        expect(dto.getHeaders()).toEqual({});
     });
 
     it('should set dto stop process on dto', () => {
         const dto = new ProcessDto();
         const response = new ResponseDto('body', 205, new Headers({}));
         testConnector.evaluateStatusCode(response, dto, 'error');
-        expect(dto.headers).toEqual({ 'result-code': '1006', 'result-message': 'error' });
+        expect(dto.getHeaders()).toEqual({ 'result-code': '1006', 'result-message': 'error' });
     });
 
     it('should return applicationInstall', async () => {
@@ -82,7 +82,7 @@ describe('Test AConnector', () => {
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
         const dto = new ProcessDto();
-        dto.headers = { user };
+        dto.setHeaders({ user });
         const res = await testConnector.getApplicationInstallFromHeaders(dto);
         expect(res.getUser()).toEqual(user);
     });
@@ -98,7 +98,7 @@ describe('Test AConnector', () => {
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
         const dto = new ProcessDto();
-        dto.headers = {};
+        dto.setHeaders({});
         try {
             await testConnector.getApplicationInstallFromHeaders(dto);
         } catch (e) {

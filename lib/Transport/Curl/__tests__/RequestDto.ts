@@ -11,53 +11,53 @@ describe('RequestDto tests', () => {
     const requestDto = new RequestDto(url, method, new ProcessDto(), body, header);
 
     it('getBody', () => {
-        expect(requestDto.body).toEqual(body);
+        expect(requestDto.getBody()).toEqual(body);
     });
     it('getHeader', () => {
-        expect(requestDto.headers).toEqual(header);
+        expect(requestDto.getHeaders()).toEqual(header);
     });
     it('getMethod', () => {
-        expect(requestDto.method).toEqual(method);
+        expect(requestDto.getMethod()).toEqual(method);
     });
     it('getUrl', () => {
-        expect(requestDto.url).toEqual(url);
+        expect(requestDto.getUrl()).toEqual(url);
     });
     it('getTimeout', () => {
-        expect(requestDto.timeout).toEqual(30000);
+        expect(requestDto.getTimeout()).toEqual(30000);
     });
     it('getDebugInfo', () => {
-        requestDto.debugInfo = new ProcessDto();
-        expect(requestDto.debugInfo).toEqual(new ProcessDto());
+        requestDto.setDebugInfo(new ProcessDto());
+        expect(requestDto.getDebugInfo()).toEqual(new ProcessDto());
     });
     it('setBody', () => {
         const newBody = JSON.stringify({ newBody: 'newBody' });
-        requestDto.body = newBody;
-        expect(requestDto.body).toEqual(newBody);
+        requestDto.setBody(newBody);
+        expect(requestDto.getBody()).toEqual(newBody);
     });
     it('setHeaders', () => {
         const newHeader = { newHeaderParam: 'newHeaderParam' };
-        requestDto.headers = newHeader;
-        expect(requestDto.headers).toEqual(newHeader);
+        requestDto.setHeaders(newHeader);
+        expect(requestDto.getHeaders()).toEqual(newHeader);
     });
     it('addHeaders', () => {
         const newHeaders = { [CommonHeaders.CONTENT_TYPE]: 'text' };
         requestDto.addHeaders(newHeaders);
 
-        expect(requestDto.headers).toEqual({ ...newHeaders, ...{ newHeaderParam: 'newHeaderParam' } });
+        expect(requestDto.getHeaders()).toEqual({ ...newHeaders, ...{ newHeaderParam: 'newHeaderParam' } });
     });
     it('setMethod', () => {
         const newMethod = HttpMethods.PUT;
-        requestDto.method = newMethod;
-        expect(requestDto.method).toEqual(newMethod);
+        requestDto.setMethod(newMethod);
+        expect(requestDto.getMethod()).toEqual(newMethod);
     });
     it('setUrl', () => {
         const newUrl = 'https://test.cz';
-        requestDto.url = newUrl;
-        expect(requestDto.url).toEqual(newUrl);
+        requestDto.setUrl(newUrl);
+        expect(requestDto.getUrl()).toEqual(newUrl);
     });
     it('setTimeout', () => {
         const newTimeout = 5000;
-        requestDto.timeout = newTimeout;
-        expect(requestDto.timeout).toEqual(newTimeout);
+        requestDto.setTimeout(newTimeout);
+        expect(requestDto.getTimeout()).toEqual(newTimeout);
     });
 });

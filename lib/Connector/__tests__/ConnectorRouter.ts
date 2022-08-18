@@ -16,11 +16,12 @@ jest.mock('../../Logger/Logger', () => ({
     log: () => jest.fn(),
     ctxFromDto: () => jest.fn(),
     ctxFromReq: () => jest.fn(),
+    createCtx: jest.fn().mockImplementation(() => ({})),
     Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(() => ({
-    send: () => ({ responseCode: StatusCodes.OK, body: { response: 'mockedResponse' } }),
+    send: () => ({ getResponseCode: () => StatusCodes.OK, getBody: () => ({ response: 'mockedResponse' }) }),
 })));
 
 describe('Test ConnectorRouter', () => {

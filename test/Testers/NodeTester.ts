@@ -92,13 +92,13 @@ export default class NodeTester {
             dto.setBridgeData(JSON.stringify(input.data));
         } else {
             dto = new ProcessDto();
-            dto.jsonData = input.data;
+            dto.setJsonData(input.data);
         }
-        dto.headers = { ...input.headers, ...dto.headers };
+        dto.setHeaders({ ...input.headers, ...dto.getHeaders() });
 
         try {
             const res = await node.processAction(dto);
-            let resData = dto.jsonData;
+            let resData = dto.getJsonData();
             if (nodePrefix === BATCH_PREFIX) {
                 resData = JSON.parse(dto.getBridgeData() as string);
             }
@@ -115,7 +115,7 @@ export default class NodeTester {
             }
 
             /* eslint-disable-next-line jest/no-standalone-expect */
-            expect(res.headers).toEqual(output.headers);
+            expect(res.getHeaders()).toEqual(output.headers);
             /* eslint-disable-next-line jest/no-standalone-expect */
             expect(resData).toEqual(output.data);
 
@@ -123,7 +123,7 @@ export default class NodeTester {
                 res.removeHeader(RESULT_CODE);
                 res.removeHeader(RESULT_MESSAGE);
                 const newDto = new BatchProcessDto();
-                newDto.headers = res.headers;
+                newDto.setHeaders(res.getHeaders());
                 await this.testNode(nodeName, nodePrefix, _prefix, expectedError, _index + 1, newDto);
             }
         } catch (e) {

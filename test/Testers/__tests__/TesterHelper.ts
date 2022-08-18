@@ -39,7 +39,7 @@ describe('Test topologyHelper', () => {
             '',
         );
         const res = await sender.send(reqDto);
-        expect(res.jsonBody).toEqual({ product: { one: 1, date: 'some date' } });
+        expect(res.getJsonBody()).toEqual({ product: { one: 1, date: 'some date' } });
 
         spy?.mockRestore();
     });

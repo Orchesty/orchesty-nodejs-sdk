@@ -6,7 +6,7 @@ import { INode } from './INode';
 
 export default abstract class ANode implements INode {
 
-    private app?: IApplication;
+    private application?: IApplication;
 
     private db?: MongoDbClient;
 
@@ -15,7 +15,7 @@ export default abstract class ANode implements INode {
     public abstract getName(): string;
 
     public setApplication(application: IApplication): this {
-        this.app = application;
+        this.application = application;
 
         return this;
     }
@@ -26,15 +26,15 @@ export default abstract class ANode implements INode {
         return this;
     }
 
-    protected get application(): IApplication {
-        if (this.app) {
-            return this.app;
+    protected getApplication(): IApplication {
+        if (this.application) {
+            return this.application;
         }
 
         throw new Error('Application has not been set.');
     }
 
-    protected get dbClient(): MongoDbClient {
+    protected getDbClient(): MongoDbClient {
         if (this.db) {
             return this.db;
         }
@@ -43,17 +43,17 @@ export default abstract class ANode implements INode {
     }
 
     protected async getApplicationInstall(user?: string): Promise<ApplicationInstall> {
-        const repo = await this.dbClient.getApplicationRepository();
+        const repo = await this.getDbClient().getApplicationRepository();
         let appInstall: ApplicationInstall | null;
         if (user) {
-            appInstall = await repo.findByNameAndUser(this.application.getName(), user);
+            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user);
         } else {
-            appInstall = await repo.findOneByName(this.application.getName());
+            appInstall = await repo.findOneByName(this.getApplication().getName());
         }
 
         if (!appInstall) {
             throw new Error(
-                `ApplicationInstall with user [${user}] and name [${this.application.getName()}] has not found!`,
+                `ApplicationInstall with user [${user}] and name [${this.getApplication().getName()}] has not found!`,
             );
         }
 
@@ -61,7 +61,7 @@ export default abstract class ANode implements INode {
     }
 
     protected async getApplicationInstallFromProcess(dto: AProcessDto): Promise<ApplicationInstall> {
-        const { user } = dto;
+        const user = dto.getUser();
         if (!user) {
             throw Error('User not defined');
         }

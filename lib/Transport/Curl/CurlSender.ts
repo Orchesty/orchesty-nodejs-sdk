@@ -26,13 +26,13 @@ export default class CurlSender {
             logger.log(
                 Severity.DEBUG,
                 `Request send.
-       Method: ${dto.method},
-       Url: ${dto.url},
-       Headers: ${JSON.stringify(dto.headers)},
-       Body: ${dto.body}`,
-                dto.debugInfo,
+       Method: ${dto.getMethod()},
+       Url: ${dto.getUrl()},
+       Headers: ${JSON.stringify(dto.getHeaders())},
+       Body: ${dto.getBody()}`,
+                logger.createCtx(dto.getDebugInfo()),
             );
-            const response = await fetch(dto.url, req);
+            const response = await fetch(dto.getUrl(), req);
             await this.sendMetrics(dto, startTime);
             const body = await response.text();
             if (!response.ok) {
@@ -49,7 +49,7 @@ export default class CurlSender {
         } catch (e) {
             await this.sendMetrics(dto, startTime);
             if (e instanceof Error) {
-                logger.error(e.message, dto.debugInfo);
+                logger.error(e.message, dto.getDebugInfo());
             }
 
             if (e instanceof FetchError) {
@@ -64,19 +64,19 @@ export default class CurlSender {
 
     private static createInitFromDto(dto: RequestDto): RequestInit {
         const req: RequestInit = {
-            method: dto.method,
-            headers: dto.headers,
-            timeout: dto.timeout,
+            method: dto.getMethod(),
+            headers: dto.getHeaders(),
+            timeout: dto.getTimeout(),
         };
 
-        if (dto.body !== undefined) {
-            req.body = dto.body;
+        if (dto.getBody() !== undefined) {
+            req.body = dto.getBody();
         }
 
         return req;
     }
 
-    private static log({ debugInfo }: RequestDto, res: Response, level: Severity, body?: string): void {
+    private static log(dto: RequestDto, res: Response, level: Severity, body?: string): void {
         let message = 'Request success.';
         if (res.status > 300) {
             message = 'Request failed.';
@@ -88,12 +88,12 @@ export default class CurlSender {
        Code: ${res.status},
        Message: ${body ?? 'Empty response'},
        Reason: ${res.statusText}`,
-            debugInfo,
+            logger.createCtx(dto.getDebugInfo()),
         );
     }
 
     private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
-        const info = dto.debugInfo;
+        const info = dto.getDebugInfo();
         try {
             const times = Metrics.getTimes(startTimes);
             await this.metrics.sendCurlMetrics(

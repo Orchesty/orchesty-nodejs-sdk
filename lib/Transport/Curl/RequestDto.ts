@@ -5,74 +5,74 @@ import { IRequestDto } from '../IRequestDto';
 
 export default class RequestDto implements IRequestDto {
 
-    private clTimeout: number;
+    private timeout: number;
 
     public constructor(
-        private clUrl: string,
-        private clMethod: HttpMethods,
-        private clDebugInfo: AProcessDto,
-        private clBody?: BodyInit,
-        private clHeaders: HeaderInit = new Headers(),
+        private url: string,
+        private method: HttpMethods,
+        private debugInfo: AProcessDto,
+        private body?: BodyInit,
+        private headers: HeaderInit = new Headers(),
     ) {
-        this.clTimeout = 30000; // 30sec as a default timeout
+        this.timeout = 30000; // 30sec as a default timeout
     }
 
-    public get body(): BodyInit | undefined {
-        return this.clBody;
+    public getBody(): BodyInit | undefined {
+        return this.body;
     }
 
-    public set body(body: BodyInit | undefined) {
-        this.clBody = body;
+    public setBody(body: BodyInit | undefined) {
+        this.body = body;
     }
 
-    public get headers(): HeaderInit {
-        return this.clHeaders;
+    public getHeaders(): HeaderInit {
+        return this.headers;
     }
 
-    public set headers(headers: HeaderInit) {
-        this.clHeaders = headers;
+    public setHeaders(headers: HeaderInit) {
+        this.headers = headers;
     }
 
-    public get method(): HttpMethods {
-        return this.clMethod;
+    public getMethod(): HttpMethods {
+        return this.method;
     }
 
-    public set method(method: HttpMethods) {
-        this.clMethod = method;
+    public setMethod(method: HttpMethods) {
+        this.method = method;
     }
 
-    public get url(): string {
-        return this.clUrl;
+    public getUrl(): string {
+        return this.url;
     }
 
-    public set url(url: string) {
-        this.clUrl = url;
+    public setUrl(url: string) {
+        this.url = url;
     }
 
-    public set timeout(ms: number) {
-        this.clTimeout = ms;
+    public setTimeout(ms: number) {
+        this.timeout = ms;
     }
 
-    public get timeout(): number {
-        return this.clTimeout;
+    public getTimeout(): number {
+        return this.timeout;
     }
 
-    public get debugInfo(): AProcessDto {
-        return this.clDebugInfo;
+    public getDebugInfo(): AProcessDto {
+        return this.debugInfo;
     }
 
-    public set debugInfo(dto: AProcessDto) {
-        this.clDebugInfo = dto;
+    public setDebugInfo(dto: AProcessDto) {
+        this.debugInfo = dto;
     }
 
     public addHeaders(headers: HeaderInit): this {
-        this.clHeaders = { ...this.clHeaders, ...headers };
+        this.headers = { ...this.headers, ...headers };
 
         return this;
     }
 
     public setJsonBody(body: unknown): void {
-        this.clBody = JSON.stringify(body);
+        this.body = JSON.stringify(body);
     }
 
 }

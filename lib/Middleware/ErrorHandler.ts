@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import OnRepeatException from '../Exception/OnRepeatException';
 import logger from '../Logger/Logger';
 import NodeRepository from '../Storage/Mongodb/Document/NodeRepository';
-import { get, getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
+import { getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
 
 export default function errorHandler(nodeRepository: NodeRepository) {
@@ -25,15 +25,15 @@ export default function errorHandler(nodeRepository: NodeRepository) {
 
             logger.debug(
                 `Repeater reached with settings: 
-      CurrentHop: ${getRepeatHops(dto.headers)}, 
-      Interval: ${get(REPEAT_INTERVAL, dto.headers)}, 
+      CurrentHop: ${getRepeatHops(dto.getHeaders())}, 
+      Interval: ${dto.getHeader(REPEAT_INTERVAL)}, 
       MaxHops: ${err.getMaxHops()}`,
                 dto,
             );
 
             createSuccessResponse(res, dto);
             res.on('finish', () => {
-                dto.free = true;
+                dto.setFree(true);
             });
             next();
             return;
@@ -41,7 +41,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
 
         createErrorResponse(req, res, dto, err);
         res.on('finish', () => {
-            dto.free = true;
+            dto.setFree(true);
         });
         next();
     };

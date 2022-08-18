@@ -83,7 +83,7 @@ export default class DIContainer {
     }
 
     public setRepository<T extends object>(repository: Repository<T>): void {
-        this.set(`${REPOSITORY}.${repository.name}`, repository);
+        this.set(`${REPOSITORY}.${repository.getName()}`, repository);
     }
 
     public getRepository<T extends object>(type: ClassType<T>): Repository<T> {

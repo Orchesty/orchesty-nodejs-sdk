@@ -14,105 +14,105 @@ export interface IField {
 
 export default class Field {
 
-    private clDescription = '';
+    private description = '';
 
-    private clReadOnly = false;
+    private readOnly = false;
 
-    private clDisabled = false;
+    private disabled = false;
 
-    private clChoices: unknown[] = [];
+    private choices: unknown[] = [];
 
     public constructor(
-        private readonly clType: FieldType,
-        private readonly clKey: string,
-        private clLabel: string,
-        private clValue: unknown = null,
-        private clRequired: boolean = false,
+        private readonly type: FieldType,
+        private readonly key: string,
+        private label: string,
+        private value: unknown = null,
+        private required: boolean = false,
     ) {
     }
 
-    public get type(): FieldType {
-        return this.clType;
+    public getType(): FieldType {
+        return this.type;
     }
 
-    public get key(): string {
-        return this.clKey;
+    public getKey(): string {
+        return this.key;
     }
 
-    public get value(): unknown {
-        return this.clValue;
+    public getValue(): unknown {
+        return this.value;
     }
 
-    public get label(): string {
-        return this.clLabel;
+    public getLabel(): string {
+        return this.label;
     }
 
-    public get description(): string {
-        return this.clDescription;
+    public getDescription(): string {
+        return this.description;
     }
 
-    public get choices(): unknown[] {
-        return this.clChoices;
+    public getChoices(): unknown[] {
+        return this.choices;
     }
 
-    public get isRequired(): boolean {
-        return this.clRequired;
+    public isRequired(): boolean {
+        return this.required;
     }
 
-    public get isReadOnly(): boolean {
-        return this.clReadOnly;
+    public isReadOnly(): boolean {
+        return this.readOnly;
     }
 
-    public get isDisabled(): boolean {
-        return this.clDisabled;
+    public isDisabled(): boolean {
+        return this.disabled;
     }
 
-    public get toArray(): IField {
+    public toArray(): IField {
         return {
             type: this.type,
             key: this.key,
             value: this.value,
             label: this.label,
             description: this.description,
-            required: this.isRequired,
-            readOnly: this.isReadOnly,
-            disabled: this.isDisabled,
+            required: this.required,
+            readOnly: this.readOnly,
+            disabled: this.disabled,
             choices: this.choices,
         };
     }
 
     public setLabel(label: string): this {
-        this.clLabel = label;
+        this.label = label;
         return this;
     }
 
     public setValue(value: unknown): this {
-        this.clValue = value;
+        this.value = value;
         return this;
     }
 
     public setDescription(description: string): this {
-        this.clDescription = description;
+        this.description = description;
         return this;
     }
 
     public setRequired(required: boolean): this {
-        this.clRequired = required;
+        this.required = required;
         return this;
     }
 
     public setReadOnly(readOnly: boolean): this {
-        this.clReadOnly = readOnly;
+        this.readOnly = readOnly;
         return this;
     }
 
     public setDisabled(disabled: boolean): this {
-        this.clDisabled = disabled;
+        this.disabled = disabled;
         return this;
     }
 
     public setChoices(choices: unknown[]): this {
-        this.clChoices = choices;
+        this.choices = choices;
         return this;
     }
 

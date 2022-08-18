@@ -70,18 +70,18 @@ export async function initiateContainer(): Promise<void> {
     await mongoDbClient.reconnect();
     const applicationInstallRepo = new ApplicationInstallRepository(
         ApplicationInstall,
-        mongoDbClient.client,
+        mongoDbClient.getClient(),
         ApplicationInstall.getCollection(),
         cryptManager,
     );
 
     const webhookRepository = new WebhookRepository(
         Webhook,
-        mongoDbClient.client,
+        mongoDbClient.getClient(),
         Webhook.getCollection(),
         cryptManager,
     );
-    const nodeRepository = new NodeRepository(Node, mongoDbClient.client, Node.getCollection(), cryptManager);
+    const nodeRepository = new NodeRepository(Node, mongoDbClient.getClient(), Node.getCollection(), cryptManager);
 
     const webhookManager = new WebhookManager(appLoader, curlSender, webhookRepository, applicationInstallRepo);
     const appManager = new ApplicationManager(applicationInstallRepo, appLoader, webhookManager);

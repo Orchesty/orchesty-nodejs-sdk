@@ -51,7 +51,7 @@ export default abstract class AOAuth2Application extends AApplication implements
             this.provider.getRedirectUri(),
         )
             .setReadOnly(true)
-            .toArray;
+            .toArray();
 
         if (forms[AUTHORIZATION_FORM]) {
             forms[AUTHORIZATION_FORM].fields.push(redirectField);

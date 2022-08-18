@@ -43,8 +43,8 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
 
     let message = 'Error occurred: unknown reason';
 
-    if (!(RESULT_CODE in dto.headers)) {
-        dto.headers[RESULT_CODE] = ResultCode.STOP_AND_FAILED.toString();
+    if (!(RESULT_CODE in dto.getHeaders())) {
+        dto.addHeader(RESULT_CODE, ResultCode.STOP_AND_FAILED.toString());
     }
 
     if (e) {
@@ -52,22 +52,22 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
         message = `Error occurred: ${e.message}`;
 
         if (appOptions.debug && !dto.getHeader(RESULT_DETAIL)) {
-            dto.headers[RESULT_DETAIL] = e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, ''));
+            dto.addHeader(RESULT_DETAIL, e.stack === undefined ? '' : JSON.stringify(e.stack.replace(/\r?\n|\r/g, '')));
         }
     }
 
     const msg = message.replace(/\r?\n|\r/g, '');
-    if (!(RESULT_MESSAGE in dto.headers)) {
-        dto.headers[RESULT_MESSAGE] = msg;
+    if (!(RESULT_MESSAGE in dto.getHeaders())) {
+        dto.addHeader(RESULT_MESSAGE, msg);
     } else {
-        dto.headers[RESULT_MESSAGE] = `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`;
+        dto.addHeader(RESULT_MESSAGE, `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`);
     }
 
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
-        headers: dto.headers,
+        headers: dto.getHeaders(),
     } as IBridgeRequestDto));
 }
 
@@ -75,19 +75,19 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
     const dto = _dto;
     res.status(StatusCodes.OK);
 
-    if (!(RESULT_CODE in dto.headers)) {
-        dto.headers[RESULT_CODE] = ResultCode.SUCCESS.toString();
+    if (!(RESULT_CODE in dto.getHeaders())) {
+        dto.addHeader(RESULT_CODE, ResultCode.SUCCESS.toString());
     }
 
-    if (!(RESULT_MESSAGE in dto.headers)) {
-        dto.headers[RESULT_MESSAGE] = 'Processed successfully.';
+    if (!(RESULT_MESSAGE in dto.getHeaders())) {
+        dto.addHeader(RESULT_MESSAGE, 'Processed successfully.');
     }
 
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
-        headers: dto.headers,
+        headers: dto.getHeaders(),
     } as IBridgeRequestDto));
 }
 
@@ -102,15 +102,15 @@ async function getFreeDto(): Promise<ProcessDto> {
     // In case of Memory concern, limit maximum pool size and await for free objects
     return mutex.runExclusive(() => {
         for (const dto of dtoPool) {
-            if (dto.free) {
-                dto.free = false;
+            if (dto.isFree()) {
+                dto.setFree(false);
 
                 return dto;
             }
         }
 
         const dto = new ProcessDto();
-        dto.free = false;
+        dto.setFree(false);
         dtoPool.push(dto);
 
         return dto;
@@ -122,15 +122,15 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
     // In case of Memory concern, limit maximum pool size and await for free objects
     return batchMutex.runExclusive(() => {
         for (const batchDto of batchDtoPool) {
-            if (batchDto.free) {
-                batchDto.free = false;
+            if (batchDto.isFree()) {
+                batchDto.setFree(false);
 
                 return batchDto;
             }
         }
 
         const batchDto = new BatchProcessDto();
-        batchDto.free = false;
+        batchDto.setFree(false);
         batchDtoPool.push(batchDto);
 
         return batchDto;
@@ -141,8 +141,8 @@ export async function createProcessDto(req: Request): Promise<ProcessDto> {
     const dto = await getFreeDto();
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
-    dto.data = parsed.body || '{}';
-    dto.headers = parsed.headers || {};
+    dto.setData(parsed.body || '{}');
+    dto.setHeaders(parsed.headers || {});
 
     return dto;
 }
@@ -152,7 +152,7 @@ export async function createBatchProcessDto(req: Request): Promise<BatchProcessD
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
     dto.setBridgeData(parsed.body || '{}');
-    dto.headers = parsed.headers || {};
+    dto.setHeaders(parsed.headers || {});
 
     return dto;
 }

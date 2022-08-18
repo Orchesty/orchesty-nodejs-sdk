@@ -8,7 +8,7 @@ export default class TestCustomNode extends ACommonNode {
     }
 
     public processAction(dto: ProcessDto): ProcessDto {
-        dto.jsonData = { test: 'custom', inner: { date: Date.now().toString(), one: 2 } };
+        dto.setJsonData({ test: 'custom', inner: { date: Date.now().toString(), one: 2 } });
 
         return dto;
     }

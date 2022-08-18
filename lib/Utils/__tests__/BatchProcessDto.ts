@@ -7,7 +7,7 @@ describe('Tests ProcessDto utils', () => {
         const cursorName = 'name';
         dto.setBatchCursor(cursorName);
         dto.removeBatchCursor();
-        expect(dto.headers[BATCH_CURSOR]).toBeUndefined();
+        expect(dto.getHeader(BATCH_CURSOR)).toBeUndefined();
     });
 
     it('removeBatchCursor removes iterate-only cursor correctly', () => {
@@ -16,7 +16,7 @@ describe('Tests ProcessDto utils', () => {
 
         dto.removeBatchCursor();
 
-        expect(dto.headers).toEqual({});
+        expect(dto.getHeaders()).toEqual({});
     });
 
     it('removeBatchCursor removes batch-with-cursor cursor correctly', () => {
@@ -25,6 +25,6 @@ describe('Tests ProcessDto utils', () => {
 
         dto.removeBatchCursor();
 
-        expect(dto.headers).toEqual({});
+        expect(dto.getHeaders()).toEqual({});
     });
 });

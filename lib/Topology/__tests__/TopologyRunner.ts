@@ -26,8 +26,8 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
         // eslint-disable-next-line @typescript-eslint/require-await
         async (r: RequestDto): Promise<ResponseDto> => {
             const request = r;
-            expect(request.method).toBe(HttpMethods.POST);
-            expect(request.url).toBe(url);
+            expect(request.getMethod()).toBe(HttpMethods.POST);
+            expect(request.getUrl()).toBe(url);
             const defaultHeaders = {
                 'previous-correlation-id': '',
                 'previous-node-id': '',
@@ -35,9 +35,9 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
 
             if (headers) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                expect(request.headers).toStrictEqual(new Headers(deepmerge(defaultHeaders as any, headers as any)));
+                expect(request.getHeaders()).toStrictEqual(new Headers(deepmerge(defaultHeaders as any, headers as any)));
             } else {
-                expect(request.headers).toStrictEqual(new Headers(defaultHeaders));
+                expect(request.getHeaders()).toStrictEqual(new Headers(defaultHeaders));
             }
 
             return new ResponseDto('{}', StatusCodes.OK, new Headers(new Headers()));
@@ -72,7 +72,7 @@ describe('TopologyRunner tests', () => {
         const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
         const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto());
 
-        expect(res.responseCode).toEqual(StatusCodes.OK);
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         sender.mockRestore();
     });
 
@@ -88,7 +88,7 @@ describe('TopologyRunner tests', () => {
             header,
         );
 
-        expect(res.responseCode).toEqual(StatusCodes.OK);
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         sender.mockRestore();
     });
 
@@ -96,7 +96,7 @@ describe('TopologyRunner tests', () => {
         const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run-by-name');
         const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto(), 'user');
 
-        expect(res.responseCode).toEqual(StatusCodes.OK);
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         sender.mockRestore();
     });
 
@@ -104,7 +104,7 @@ describe('TopologyRunner tests', () => {
         const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/run');
         const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto());
 
-        expect(res.responseCode).toEqual(StatusCodes.OK);
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         sender.mockRestore();
     });
 
@@ -112,7 +112,7 @@ describe('TopologyRunner tests', () => {
         const sender = mockCurl(curl, 'https://sp.orchesty.com/topologies/topoId/nodes/nodeId/user/user/run');
         const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto(), 'user');
 
-        expect(res.responseCode).toEqual(StatusCodes.OK);
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         sender.mockRestore();
     });
 });

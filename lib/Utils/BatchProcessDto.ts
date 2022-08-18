@@ -9,20 +9,20 @@ export interface IBatchMessage {
 
 export default class BatchProcessDto extends AProcessDto {
 
-    private clMessages: IBatchMessage[];
+    private messages: IBatchMessage[];
 
     public constructor(commonHeaders: IHttpHeaders = {}) {
         super();
-        this.clMessages = [];
-        this.clHeaders = commonHeaders;
+        this.messages = [];
+        this.headers = commonHeaders;
     }
 
-    public get messages(): IBatchMessage[] {
-        return this.clMessages;
+    public getMessages(): IBatchMessage[] {
+        return this.messages;
     }
 
-    public set messages(messages: IBatchMessage[]) {
-        this.clMessages = messages;
+    public setMessages(messages: IBatchMessage[]) {
+        this.messages = messages;
     }
 
     public addItem(body: unknown, user?: string): this {
@@ -31,7 +31,7 @@ export default class BatchProcessDto extends AProcessDto {
             b = JSON.stringify(body);
         }
 
-        this.clMessages.push({
+        this.messages.push({
             headers: user ? { user } : null,
             body: b as string,
         });
@@ -48,7 +48,7 @@ export default class BatchProcessDto extends AProcessDto {
     }
 
     public addMessage(message: IBatchMessage): this {
-        this.clMessages.push(message);
+        this.messages.push(message);
 
         return this;
     }
@@ -78,11 +78,11 @@ export default class BatchProcessDto extends AProcessDto {
     }
 
     public setBridgeData(data: string): void {
-        this.clData = data;
+        this.data = data;
     }
 
     public getBridgeData(): unknown {
-        return JSON.stringify(this.clMessages);
+        return JSON.stringify(this.messages);
     }
 
     protected clearData(): void {

@@ -2,35 +2,35 @@ import Field, { IField } from './Field';
 
 export default class Form {
 
-    private clDescription = '';
+    private description = '';
 
-    private readonly clFields: Field[] = [];
+    private readonly fields: Field[] = [];
 
-    public constructor(private readonly clKey: string, private clPublicName: string) {
+    public constructor(private readonly key: string, private publicName: string) {
     }
 
-    public get fields(): Field[] {
-        return this.clFields;
+    public getFields(): Field[] {
+        return this.fields;
     }
 
-    public set description(value: string) {
-        this.clDescription = value;
+    public setDescription(value: string) {
+        this.description = value;
     }
 
-    public get description(): string {
-        return this.clDescription;
+    public getDescription(): string {
+        return this.description;
     }
 
-    public get key(): string {
-        return this.clKey;
+    public getKey(): string {
+        return this.key;
     }
 
-    public set publicName(value: string) {
-        this.clPublicName = value;
+    public setPublicName(value: string) {
+        this.publicName = value;
     }
 
-    public get publicName(): string {
-        return this.clPublicName;
+    public getPublicName(): string {
+        return this.publicName;
     }
 
     public addField(field: Field): this {
@@ -41,7 +41,7 @@ export default class Form {
     public toArray(): IForm {
         const fields: IField[] = [];
         this.fields.forEach((element) => {
-            fields.push(element.toArray);
+            fields.push(element.toArray());
         });
 
         return {

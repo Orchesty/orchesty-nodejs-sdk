@@ -10,27 +10,27 @@ import Repository from './Repository';
 
 export default class MongoDbClient {
 
-    private readonly clClient: MongoClient;
+    private readonly client: MongoClient;
 
     public constructor(
         private readonly dsn: string,
         private readonly cryptManager: CryptManager,
         private readonly container: DIContainer,
     ) {
-        this.clClient = new MongoClient(this.dsn, { connectTimeoutMS: 10000, keepAlive: true });
+        this.client = new MongoClient(this.dsn, { connectTimeoutMS: 10000, keepAlive: true });
     }
 
-    public get client(): MongoClient {
-        return this.clClient;
+    public getClient(): MongoClient {
+        return this.client;
     }
 
     public async down(): Promise<void> {
-        await this.clClient.close(true);
+        await this.client.close(true);
     }
 
     public async reconnect(): Promise<void> {
         try {
-            await this.clClient.connect();
+            await this.client.connect();
             logger.info('⚡️[server]: MongoDB Connected.', {});
         } catch (err) {
             if (err instanceof Error) {
@@ -40,9 +40,9 @@ export default class MongoDbClient {
     }
 
     public async db(name?: string): Promise<Db> {
-        await this.clClient.connect();
+        await this.client.connect();
 
-        return this.clClient.db(name);
+        return this.client.db(name);
     }
 
     public async getRepository<T extends IDocument>(className: ClassType<T>): Promise<Repository<T>> {
@@ -57,7 +57,7 @@ export default class MongoDbClient {
 
         const repo = new Repository(
             className,
-            this.clClient,
+            this.client,
             (className as unknown as IDocument).getCollection(),
             this.cryptManager,
         );

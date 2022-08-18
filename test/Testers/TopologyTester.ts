@@ -9,7 +9,6 @@ import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import {
     FORCE_TARGET_QUEUE,
-    get,
     REPEAT_HOPS,
     REPEAT_MAX_HOPS,
     RESULT_CODE,
@@ -72,18 +71,18 @@ export default class TopologyTester {
     }
 
     private static pushMultiple(nextDto: AProcessDto[], out: BatchProcessDto): void {
-        out.messages.forEach((message) => {
+        out.getMessages().forEach((message) => {
             const dto = new ProcessDto();
-            dto.data = message.body;
-            dto.headers = {
-                ...out.headers,
+            dto.setData(message.body);
+            dto.setHeaders({
+                ...out.getHeaders(),
                 ...message.headers ?? {},
-            };
+            });
 
             nextDto.push(dto);
         });
 
-        if ((out.jsonData as unknown[]).length <= 0) {
+        if ((out.getJsonData() as unknown[]).length <= 0) {
             nextDto.push(out);
         }
     }
@@ -190,7 +189,7 @@ export default class TopologyTester {
 
         let { followers } = node;
         const results: AProcessDto[] = [];
-        switch (get(RESULT_CODE, out.headers)) {
+        switch (out.getHeader(RESULT_CODE)) {
             // Status has not provided => success
             case undefined:
                 if (node.type === 'batch') {
@@ -205,15 +204,15 @@ export default class TopologyTester {
                 return results;
             // Re routing
             case ResultCode.FORWARD_TO_TARGET_QUEUE.toString():
-                followers = node.reduceFollowersByHeader(...(get(FORCE_TARGET_QUEUE, out.headers) ?? '').split(','));
+                followers = node.reduceFollowersByHeader(...(out.getHeader(FORCE_TARGET_QUEUE) ?? '').split(','));
                 nextDto.push(out);
                 break;
             // Message want to be repeated
             case ResultCode.REPEAT.toString():
                 index += 1;
                 dto.addHeader(REPEAT_HOPS, String(parseInt(out.getHeader(REPEAT_HOPS, '0') as string, 10) + 1));
-                if (parseInt(get(REPEAT_HOPS, out.headers) ?? '0', 10)
-                    >= parseInt(get(REPEAT_MAX_HOPS, out.headers) ?? '0', 10)) {
+                if (parseInt(out.getHeader(REPEAT_HOPS) ?? '0', 10)
+                    >= parseInt(out.getHeader(REPEAT_MAX_HOPS) ?? '0', 10)) {
                     throw new Error('Repeater has used last try and still need to repeat.');
                 }
                 dto.removeHeader(RESULT_CODE);
@@ -235,9 +234,9 @@ export default class TopologyTester {
                 [out] = await this.recursiveRunner(node, this.cloneProcessDto(dto), prefix, index);
                 break;
             default:
-                if (get(RESULT_CODE, out.headers) !== '0') {
+                if (out.getHeader(RESULT_CODE) !== '0') {
                     // eslint-disable-next-line max-len
-                    throw new Error(`Node [${node.name}] has returned non success result code [${get(RESULT_CODE, out.headers)}].`);
+                    throw new Error(`Node [${node.name}] has returned non success result code [${out.getHeader(RESULT_CODE)}].`);
                 }
         }
 
@@ -295,18 +294,18 @@ export default class TopologyTester {
     ): AProcessDto {
         if (asBatch) {
             const clone = new BatchProcessDto();
-            clone.headers = dto.headers;
-            clone.setBridgeData(body ? JSON.stringify(body) : dto.data);
+            clone.setHeaders(dto.getHeaders());
+            clone.setBridgeData(body ? JSON.stringify(body) : dto.getData());
 
             return clone;
         }
 
         const clone = new ProcessDto();
-        clone.headers = dto.headers;
+        clone.setHeaders(dto.getHeaders());
         if (body) {
-            clone.jsonData = body;
+            clone.setJsonData(body);
         } else {
-            clone.data = dto.data;
+            clone.setData(dto.getData());
         }
 
         return clone;

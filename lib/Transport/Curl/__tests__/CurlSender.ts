@@ -17,6 +17,7 @@ jest.mock('../../../Logger/Logger', () => ({
     debug: () => jest.fn(),
     log: () => jest.fn(),
     ctxFromDto: () => jest.fn(),
+    createCtx: () => jest.fn(),
     Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
@@ -43,14 +44,14 @@ describe('tests for curlSender', () => {
             JSON.stringify({ id: '1' }),
         );
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
-        expect((response.jsonBody as { id: string }).id).toBe('1');
+        expect((response.getJsonBody() as { id: string }).id).toBe('1');
     });
 
     it('should test send - 400', async () => {
         const url = 'http://testUrl.com/status';
         mockedFetch.get(url, 400);
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
-        expect(response.responseCode).toBe(400);
+        expect(response.getResponseCode()).toBe(400);
     });
 
     it('should test send - 400 and only 200 is allowed', async () => {

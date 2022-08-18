@@ -62,12 +62,12 @@ export default class TopologyRunner {
                 JSON.stringify(data),
                 new Headers({
                     ...headers ?? {},
-                    [PREV_CORRELATION_ID]: getCorrelationId(processDto.headers) ?? '',
-                    [PREV_NODE_ID]: getNodeId(processDto.headers) ?? '',
+                    [PREV_CORRELATION_ID]: getCorrelationId(processDto.getHeaders()) ?? '',
+                    [PREV_NODE_ID]: getNodeId(processDto.getHeaders()) ?? '',
                 }),
             );
             const resp = await this.curlSender.send(requestDto);
-            if (resp.responseCode !== StatusCodes.OK) {
+            if (resp.getResponseCode() !== StatusCodes.OK) {
                 errMessage = errMessage.replace('__reason__', 'ResponseCode is not 200');
                 logger.error(errMessage, processDto);
                 throw new OnRepeatException(60, 10, errMessage);

@@ -103,12 +103,12 @@ export class Logger {
 
     public ctxFromDto(dto: AProcessDto, isForUi?: boolean, err?: Error): ILogContext {
         const ctx: ILogContext = {
-            node_id: headers.getNodeId(dto.headers),
-            correlation_id: headers.getCorrelationId(dto.headers),
-            topology_id: headers.getTopologyId(dto.headers),
-            process_id: headers.getProcessId(dto.headers),
-            parent_id: headers.getParentId(dto.headers),
-            sequence_id: headers.getSequenceId(dto.headers),
+            node_id: headers.getNodeId(dto.getHeaders()),
+            correlation_id: headers.getCorrelationId(dto.getHeaders()),
+            topology_id: headers.getTopologyId(dto.getHeaders()),
+            process_id: headers.getProcessId(dto.getHeaders()),
+            parent_id: headers.getParentId(dto.getHeaders()),
+            sequence_id: headers.getSequenceId(dto.getHeaders()),
         };
 
         if (err) {

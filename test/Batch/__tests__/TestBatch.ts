@@ -10,8 +10,7 @@ describe('Tests for TestBatch', () => {
     it('processAction', () => {
         const batch = new TestBatch();
         const editedDto = batch.processAction(new BatchProcessDto());
-        const { headers } = editedDto;
-        expect(headers).toEqual({
+        expect(editedDto.getHeaders()).toEqual({
             cursor: 'testCursor',
             'result-code': '1010',
             // eslint-disable-next-line max-len

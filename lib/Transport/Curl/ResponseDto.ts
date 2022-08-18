@@ -4,31 +4,31 @@ import { IResponseDto } from '../IResponseDto';
 export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
 
     public constructor(
-        private readonly clBody: string,
-        private readonly clCode: number,
-        private readonly clHeaders: Headers,
-        private readonly clReason?: string,
+        private readonly body: string,
+        private readonly code: number,
+        private readonly headers: Headers,
+        private readonly reason?: string,
     ) {
     }
 
-    public get headers(): Headers {
-        return this.clHeaders;
+    public getHeaders(): Headers {
+        return this.headers;
     }
 
-    public get body(): string {
-        return this.clBody;
+    public getBody(): string {
+        return this.body;
     }
 
-    public get jsonBody(): JsonBody {
-        return JSON.parse(this.clBody);
+    public getJsonBody(): JsonBody {
+        return JSON.parse(this.body);
     }
 
-    public get reason(): string | undefined {
-        return this.clReason;
+    public getReason(): string | undefined {
+        return this.reason;
     }
 
-    public get responseCode(): number {
-        return this.clCode;
+    public getResponseCode(): number {
+        return this.code;
     }
 
 }

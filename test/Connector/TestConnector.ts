@@ -17,21 +17,21 @@ export default class TestConnector extends AConnector {
 
     public async processAction(_dto: ProcessDto): Promise<ProcessDto> {
         const dto = _dto;
-        dto.jsonData = {
+        dto.setJsonData({
             test: 'ok',
             processed: Date.now()
                 .toString(),
-        };
+        });
 
         await Promise.all(
             [1, 2, 3].map(async () => {
                 const requestDto = new RequestDto('https://jsonplaceholder.typicode.com/users', HttpMethods.GET, _dto, '', { custom: 'header' });
-                requestDto.debugInfo = dto;
-                const responseDto = await this.sender.send(requestDto);
-                if (responseDto.responseCode !== 200 && responseDto.responseCode !== 201) {
+                requestDto.setDebugInfo(dto);
+                const responseDto = await this.getSender().send(requestDto);
+                if (responseDto.getResponseCode() !== 200 && responseDto.getResponseCode() !== 201) {
                     throw new OnRepeatException();
                 }
-                dto.data = responseDto.body;
+                dto.setData(responseDto.getBody());
             }),
         );
 

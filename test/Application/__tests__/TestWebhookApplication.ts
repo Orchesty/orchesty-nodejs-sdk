@@ -20,45 +20,45 @@ describe('Tests for webhook application', () => {
         const method = HttpMethods.POST;
         const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
         expect(requestDto).toBeInstanceOf(RequestDto);
-        expect(requestDto).toHaveProperty('clUrl', urlValue);
-        expect(requestDto).toHaveProperty('clMethod', method);
-        expect(requestDto).toHaveProperty('clBody', data);
+        expect(requestDto).toHaveProperty('url', urlValue);
+        expect(requestDto).toHaveProperty('method', method);
+        expect(requestDto).toHaveProperty('body', data);
 
         const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
-        expect(requestDtoWithoutUrl).toHaveProperty('clUrl', '');
+        expect(requestDtoWithoutUrl).toHaveProperty('url', '');
     });
 
     it('getSettingsForm', () => {
         const expected = {
             forms: [
                 {
-                    clDescription: '',
-                    clFields: [
+                    description: '',
+                    fields: [
                         {
-                            clChoices: [],
-                            clDescription: '',
-                            clDisabled: false,
-                            clKey: 'testKey',
-                            clLabel: 'testLabel',
-                            clReadOnly: false,
-                            clRequired: false,
-                            clType: 'password',
-                            clValue: null,
+                            choices: [],
+                            description: '',
+                            disabled: false,
+                            key: 'testKey',
+                            label: 'testLabel',
+                            readOnly: false,
+                            required: false,
+                            type: 'password',
+                            value: null,
                         },
                         {
-                            clChoices: [],
-                            clDescription: '',
-                            clDisabled: false,
-                            clKey: 'person',
-                            clLabel: 'testLabel',
-                            clReadOnly: false,
-                            clRequired: false,
-                            clType: 'text',
-                            clValue: null,
+                            choices: [],
+                            description: '',
+                            disabled: false,
+                            key: 'person',
+                            label: 'testLabel',
+                            readOnly: false,
+                            required: false,
+                            type: 'text',
+                            value: null,
                         },
                     ],
-                    clKey: 'testKey',
-                    clPublicName: 'testPublicName',
+                    key: 'testKey',
+                    publicName: 'testPublicName',
                 },
             ],
         };
@@ -70,15 +70,15 @@ describe('Tests for webhook application', () => {
         const urlValue = 'https://www.google.com';
         const requestDto = app.getWebhookSubscribeRequestDto(new ApplicationInstall(), subscription, urlValue);
         expect(requestDto).toBeInstanceOf(RequestDto);
-        expect(requestDto).toHaveProperty('clUrl', urlValue);
-        expect(requestDto).toHaveProperty('clMethod', HttpMethods.GET);
+        expect(requestDto).toHaveProperty('url', urlValue);
+        expect(requestDto).toHaveProperty('method', HttpMethods.GET);
     });
 
     it('getWebhookUnsubscribeRequestDto', () => {
         const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), '1');
         expect(requestDto).toBeInstanceOf(RequestDto);
-        expect(requestDto).toHaveProperty('clUrl', 'unknown/url');
-        expect(requestDto).toHaveProperty('clMethod', HttpMethods.DELETE);
+        expect(requestDto).toHaveProperty('url', 'unknown/url');
+        expect(requestDto).toHaveProperty('method', HttpMethods.DELETE);
     });
 
     it('processWebhookSubscribeResponse', () => {

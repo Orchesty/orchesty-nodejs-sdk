@@ -69,12 +69,12 @@ export default abstract class AApplication implements IApplication {
         const settings = applicationInstall.getSettings();
         const formStack = this.getFormStack();
         formStack.getForms().forEach((form) => {
-            form.fields.forEach((field) => {
-                if (form.key in settings && field.key in settings[form.key]) {
-                    if (field.type === FieldType.PASSWORD) {
+            form.getFields().forEach((field) => {
+                if (form.getKey() in settings && field.getKey() in settings[form.getKey()]) {
+                    if (field.getType() === FieldType.PASSWORD) {
                         field.setValue(true);
                     } else {
-                        field.setValue(settings[form.key][field.key]);
+                        field.setValue(settings[form.getKey()][field.getKey()]);
                     }
                 }
             });
@@ -93,13 +93,13 @@ export default abstract class AApplication implements IApplication {
         const preparedSettings: IApplicationSettings = {};
 
         this.getFormStack().getForms().forEach((form) => {
-            form.fields.forEach((field) => {
-                if (form.key in settings && field.key in settings[form.key]) {
-                    const currentFrom = preparedSettings[form.key];
+            form.getFields().forEach((field) => {
+                if (form.getKey() in settings && field.getKey() in settings[form.getKey()]) {
+                    const currentFrom = preparedSettings[form.getKey()];
                     if (currentFrom) {
-                        preparedSettings[form.key][field.key] = settings[form.key][field.key];
+                        preparedSettings[form.getKey()][field.getKey()] = settings[form.getKey()][field.getKey()];
                     } else {
-                        preparedSettings[form.key] = { [field.key]: settings[form.key][field.key] };
+                        preparedSettings[form.getKey()] = { [field.getKey()]: settings[form.getKey()][field.getKey()] };
                     }
                 }
             });

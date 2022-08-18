@@ -8,7 +8,7 @@ export default class FormStack {
         const output: Record<string, IForm> = {};
 
         this.forms.forEach((form) => {
-            output[form.key] = form.toArray();
+            output[form.getKey()] = form.toArray();
         });
 
         return output;
