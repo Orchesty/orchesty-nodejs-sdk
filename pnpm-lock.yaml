@@ -1,8 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@hanaboso/eslint-config': ^0.0.1
-  '@hanaboso/eslint-plugin': ^0.0.1
+  '@hanaboso/eslint-plugin': ^0.0.2
   '@types/express': ^4.17.13
   '@types/express-prometheus-middleware': ^1.2.1
   '@types/jest': ^28.1.7
@@ -76,8 +75,7 @@ dependencies:
   winston: 3.8.1
 
 devDependencies:
-  '@hanaboso/eslint-config': 0.0.1_bi2kohzqnxavgozw3csgny5hju
-  '@hanaboso/eslint-plugin': 0.0.1
+  '@hanaboso/eslint-plugin': 0.0.2_bi2kohzqnxavgozw3csgny5hju
   '@types/jest': 28.1.7
   '@types/node': 18.7.6
   '@types/supertest': 2.0.12
@@ -468,8 +466,8 @@ packages:
       - supports-color
     dev: true
 
-  /@hanaboso/eslint-config/0.0.1_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-/WkH0/09NPA/mxVPbLp+W9g3RT7rSNGyNGInr50JdRrsWJ8NYdzVqbqtP8XB8ctBJAPVA4SpWUf9fgfAC7jdWg==}
+  /@hanaboso/eslint-plugin/0.0.2_bi2kohzqnxavgozw3csgny5hju:
+    resolution: {integrity: sha512-zwpDM9cr+w3iaQwDVlZ6xVNftUMAJqUju+dYyXS/QLbZzlZrHYPoBc23o8C0EvuG9E/2IbHFcrr+5MZ+7KRitw==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.33.1_vsoshirnpb7xw6mr7xomgfas2i
       '@typescript-eslint/parser': 5.33.1_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -484,14 +482,6 @@ packages:
       - jest
       - supports-color
       - typescript
-    dev: true
-
-  /@hanaboso/eslint-plugin/0.0.1:
-    resolution: {integrity: sha512-wTuSGYZUKUynGW7UVoDiHk2FO8uJz+xtU1xQagO8T0nZVrKGF/XBjLVlV6vpxP0JJHpZIAmFznK+skr2NlDEAg==}
-    dependencies:
-      eslint: 8.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /@hapi/boom/9.1.4:

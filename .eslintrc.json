@@ -1,6 +1,5 @@
 {
     "extends": [
-//        "plugin:@hanaboso/recommended"
         "plugin:@hanaboso/orchesty"
     ]
 }
