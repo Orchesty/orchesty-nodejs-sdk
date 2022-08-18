@@ -1,6 +1,6 @@
 export default class OnRepeatException extends Error {
 
-    // interval in seconds
+    // Interval in seconds
     private interval: number;
 
     public constructor(seconds = 60, private maxHops: number = 10, message?: string) {

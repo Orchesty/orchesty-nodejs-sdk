@@ -78,7 +78,7 @@ export class Logger {
         if (context.isForUi) {
             this.udp.send(JSON.stringify(data))
                 .catch(() => {
-                    // unhandled promise rejection caught
+                    // Unhandled promise rejection caught
                 });
         }
     }

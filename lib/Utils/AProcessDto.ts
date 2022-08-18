@@ -1,7 +1,7 @@
 import * as util from 'util';
 import {
     FORCE_TARGET_QUEUE,
-    HttpHeaders,
+    IHttpHeaders,
     LIMITER_KEY,
     REPEAT_HOPS,
     REPEAT_INTERVAL,
@@ -20,7 +20,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
     // Do not dare to touch this !! This serves for simple ObjectPool implementation
     protected clFree: boolean; // eslint-disable-line no-underscore-dangle
 
-    protected clHeaders: HttpHeaders;
+    protected clHeaders: IHttpHeaders;
 
     protected clData: string;
 
@@ -60,11 +60,11 @@ export default abstract class AProcessDto<JsonData = unknown> {
         this.clFree = free;
     }
 
-    public get headers(): HttpHeaders {
+    public get headers(): IHttpHeaders {
         return this.clHeaders;
     }
 
-    public set headers(headers: HttpHeaders) {
+    public set headers(headers: IHttpHeaders) {
         this.clHeaders = headers;
     }
 

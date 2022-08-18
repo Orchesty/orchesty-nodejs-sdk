@@ -7,11 +7,11 @@ import {
     getRepeaterMaxHops,
     getRepeatHops,
     getSequenceId,
-    HttpHeaders,
+    IHttpHeaders,
     NODE_ID,
 } from '../Headers';
 
-const mockedHeaders: HttpHeaders = {
+const mockedHeaders: IHttpHeaders = {
     'node-id': 'nodeId',
     'correlation-id': 'correlationId',
     'process-id': 'processId',

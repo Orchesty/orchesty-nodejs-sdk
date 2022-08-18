@@ -1,5 +1,5 @@
 import AProcessDto from './AProcessDto';
-import { BATCH_CURSOR, HttpHeaders } from './Headers';
+import { BATCH_CURSOR, IHttpHeaders } from './Headers';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
@@ -11,7 +11,7 @@ export default class BatchProcessDto extends AProcessDto {
 
     private clMessages: IBatchMessage[];
 
-    public constructor(commonHeaders: HttpHeaders = {}) {
+    public constructor(commonHeaders: IHttpHeaders = {}) {
         super();
         this.clMessages = [];
         this.clHeaders = commonHeaders;

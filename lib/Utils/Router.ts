@@ -5,7 +5,7 @@ import { appOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import AProcessDto from './AProcessDto';
 import BatchProcessDto from './BatchProcessDto';
-import { HttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
+import { IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
 import ProcessDto from './ProcessDto';
 import ResultCode, { isSuccessResultCode } from './ResultCode';
 
@@ -20,7 +20,7 @@ export function formatError(e: Error): IErrorResponse {
 
 interface IBridgeRequestDto {
     body: string;
-    headers: HttpHeaders;
+    headers: IHttpHeaders;
 }
 
 function logResponseProcess(dto: AProcessDto): void {

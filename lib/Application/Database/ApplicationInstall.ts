@@ -133,7 +133,7 @@ export class ApplicationInstall extends ADocument {
             id: this._id?.toHexString() ?? '',
             user: this.user,
             key: this.key,
-            // settings: this.settings,
+            // Settings: this.settings,
             nonEncryptedSettings: this.nonEncryptedSettings,
             created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
             update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),

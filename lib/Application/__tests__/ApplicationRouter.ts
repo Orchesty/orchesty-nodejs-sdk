@@ -149,7 +149,7 @@ describe('Test ApplicationRouter', () => {
     it('get /applications/authorize/token route', async () => {
         const applicationUrl = '/applications/authorize/token';
         const expectedResult = '{}';
-        const state = encode(`${user}:${name}`); // base64
+        const state = encode(`${user}:${name}`); // Base64
         await supertest(expressApp)
             .get(applicationUrl)
             .query({ state })

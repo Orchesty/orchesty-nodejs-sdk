@@ -90,7 +90,7 @@ export async function dropCollection(collection: string): Promise<void> {
             await redis.dropAll();
         }
     } catch {
-        // ignore
+        // Ignore
     }
 }
 

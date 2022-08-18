@@ -11,17 +11,17 @@ export default class Annotation {
                 .concat(Object.getOwnPropertySymbols(obj).map((s) => s.toString()))
                 .sort()
                 .filter(
-                    (p, i, arr) => typeof inLoopObj[p] === 'function' // only the methods
+                    (p, i, arr) => typeof inLoopObj[p] === 'function' // Only the methods
                         && inLoopObj[p].name.toLowerCase().startsWith('sync') // eslint-disable-line @typescript-eslint/no-unsafe-call, max-len
-                        && p !== 'constructor' // not the constructor
-                        && (i === 0 || p !== arr[i - 1]) // not overriding in this prototype
+                        && p !== 'constructor' // Not the constructor
+                        && (i === 0 || p !== arr[i - 1]) // Not overriding in this prototype
                         && !inLoopProps.includes(p),
-                    // not overridden in a child
+                    // Not overridden in a child
                 );
             props = props.concat(Annotation.formatSyncMethodName(listOfPropertyNames));
-            obj = Object.getPrototypeOf(obj);// walk-up the prototype chain
+            obj = Object.getPrototypeOf(obj);// Walk-up the prototype chain
         }
-        while (obj && Object.getPrototypeOf(obj)); // not the the Object prototype methods (hasOwnProperty, etc...)
+        while (obj && Object.getPrototypeOf(obj)); // Not the Object prototype methods (hasOwnProperty, etc...)
 
         return props;
     }
