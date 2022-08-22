@@ -44,7 +44,8 @@ describe('OAuth2Provider tests', () => {
             await expect(oauth2Provider.refreshAccessToken(dto, {
                 refreshToken: 'pass',
             })).rejects.toThrow(errorMsg);
-        });
+        },
+    );
 
     it('throwException', () => {
         const message = 'testThrow';
