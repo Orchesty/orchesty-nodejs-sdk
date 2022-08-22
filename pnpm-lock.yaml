@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@hanaboso/eslint-plugin': ^0.0.3
+  '@hanaboso/eslint-plugin': ^0.0.4
   '@types/express': ^4.17.13
   '@types/express-prometheus-middleware': ^1.2.1
   '@types/jest': ^28.1.7
@@ -10,12 +10,22 @@ specifiers:
   '@types/node': ^18.7.9
   '@types/node-fetch': ^2.6.2
   '@types/php-serialize': ^3.0.1
+  '@types/readline-sync': ^1.4.4
   '@types/simple-oauth2': ^4.1.1
   '@types/sodium-native': ^2.3.5
   '@types/supertest': ^2.0.12
+  '@typescript-eslint/eslint-plugin': ^5.33.1
+  '@typescript-eslint/parser': ^5.33.1
   async-mutex: ^0.3.2
   autocannon: ^7.9.0
   deepmerge: ^4.2.2
+  eslint: ^8.22.0
+  eslint-config-airbnb-base: ^15.0.0
+  eslint-import-resolver-typescript: ^3.4.2
+  eslint-plugin-import: ^2.26.0
+  eslint-plugin-jest: ^26.8.7
+  eslint-plugin-promise: ^6.0.0
+  eslint-plugin-simple-import-sort: ^7.0.0
   express: ~5.0.0-beta.1
   express-prometheus-middleware: ^1.2.0
   fast-xml-parser: ^4.0.9
@@ -34,6 +44,7 @@ specifiers:
   nodemon: ^2.0.19
   php-serialize: ^4.0.2
   prom-client: ^12.0.0
+  readline-sync: ^1.4.10
   reflect-metadata: ^0.1.13
   simple-oauth2: ^4.3.0
   sodium-native: ^3.4.1
@@ -75,15 +86,26 @@ dependencies:
   winston: 3.8.1
 
 devDependencies:
-  '@hanaboso/eslint-plugin': 0.0.3_bi2kohzqnxavgozw3csgny5hju
+  '@hanaboso/eslint-plugin': 0.0.4_bi2kohzqnxavgozw3csgny5hju
   '@types/jest': 28.1.7
   '@types/node': 18.7.9
+  '@types/readline-sync': 1.4.4
   '@types/supertest': 2.0.12
+  '@typescript-eslint/eslint-plugin': 5.33.1_vsoshirnpb7xw6mr7xomgfas2i
+  '@typescript-eslint/parser': 5.33.1_4rv7y5c6xz3vfxwhbrcxxi73bq
   autocannon: 7.9.0
+  eslint: 8.22.0
+  eslint-config-airbnb-base: 15.0.0_2iahngt3u2tkbdlu6s4gkur3pu
+  eslint-import-resolver-typescript: 3.4.2_2iahngt3u2tkbdlu6s4gkur3pu
+  eslint-plugin-import: 2.26.0_s6f7spxf43rfknbsivdq2mydle
+  eslint-plugin-jest: 26.8.7_6a2ng3hwt6ghrcpeyx2leikxhu
+  eslint-plugin-promise: 6.0.0_eslint@8.22.0
+  eslint-plugin-simple-import-sort: 7.0.0_eslint@8.22.0
   fetch-mock: 9.11.0_node-fetch@2.6.7
   fetch-mock-jest: 1.5.1_node-fetch@2.6.7
   jest: 28.1.3_4nl5pzleoenk2524oftrq4z2si
   nodemon: 2.0.19
+  readline-sync: 1.4.10
   supertest: 6.2.4
   ts-jest: 28.0.8_bi2kohzqnxavgozw3csgny5hju
   ts-node: 10.9.1_x2ciz3xvsjwezrs6sivolisayi
@@ -466,8 +488,8 @@ packages:
       - supports-color
     dev: true
 
-  /@hanaboso/eslint-plugin/0.0.3_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-pxPmAY+nYCnDlYbcfbclkIEb3C9o4ZL9TqKErcJKTYd5Mk2yIn7ltqYr8/3koe3ToTPJtMr2P988zh+HW720ow==}
+  /@hanaboso/eslint-plugin/0.0.4_bi2kohzqnxavgozw3csgny5hju:
+    resolution: {integrity: sha512-tsC/ncEX/DvO93vpyDKS5ZrrmKgXDolXEXKGyerWwko3A7ETQflwfky7UY27KOdxqfKj4Y16dQirUBrAAHc98w==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.33.1_vsoshirnpb7xw6mr7xomgfas2i
       '@typescript-eslint/parser': 5.33.1_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -1031,6 +1053,10 @@ packages:
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
     dev: false
+
+  /@types/readline-sync/1.4.4:
+    resolution: {integrity: sha512-cFjVIoiamX7U6zkO2VPvXyTxbFDdiRo902IarJuPVxBhpDnXhwSaVE86ip+SCuyWBbEioKCkT4C88RNTxBM1Dw==}
+    dev: true
 
   /@types/serve-static/1.15.0:
     resolution: {integrity: sha512-z5xyF6uh8CbjAu9760KDKsH2FcDxZ2tFCsA4HIMWE6IkiYMXfVoa+4f9KX+FN0ZLsaMw1WNG2ETLA6N+/YA+cg==}
@@ -4251,6 +4277,11 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
+    dev: true
+
+  /readline-sync/1.4.10:
+    resolution: {integrity: sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /redis-commands/1.7.0:
