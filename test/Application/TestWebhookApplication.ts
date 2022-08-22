@@ -10,7 +10,7 @@ import WebhookSubscription from '../../lib/Application/Model/Webhook/WebhookSubs
 import { ABasicApplication } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
-import HttpMethods from '../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestWebhookApplication extends ABasicApplication implements IWebhookApplication {

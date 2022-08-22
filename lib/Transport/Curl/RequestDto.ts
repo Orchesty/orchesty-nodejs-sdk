@@ -1,6 +1,6 @@
 import { BodyInit, HeaderInit, Headers } from 'node-fetch';
 import AProcessDto from '../../Utils/AProcessDto';
-import HttpMethods from '../HttpMethods';
+import { HttpMethods } from '../HttpMethods';
 import { IRequestDto } from '../IRequestDto';
 
 export default class RequestDto implements IRequestDto {

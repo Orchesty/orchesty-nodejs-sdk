@@ -4,7 +4,7 @@ import Metrics from '../../../lib/Metrics/Metrics';
 import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import { container } from '../../TestAbstact';
 import { mockCurl } from '../TesterHelpers';

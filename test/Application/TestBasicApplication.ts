@@ -7,7 +7,7 @@ import Form from '../../lib/Application/Model/Form/Form';
 import FormStack from '../../lib/Application/Model/Form/FormStack';
 import { ABasicApplication, PASSWORD, USER } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBasicApplication extends ABasicApplication {

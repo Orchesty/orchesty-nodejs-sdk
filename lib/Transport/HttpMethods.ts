@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-shadow
-enum HttpMethods {
+export enum HttpMethods {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',
@@ -16,5 +15,3 @@ export function parseHttpMethod(method: HttpMethods | string): HttpMethods {
     }
     return method;
 }
-
-export default HttpMethods;

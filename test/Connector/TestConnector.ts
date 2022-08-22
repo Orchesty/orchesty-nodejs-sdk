@@ -2,7 +2,7 @@ import { ApplicationInstall } from '../../lib/Application/Database/ApplicationIn
 import AConnector from '../../lib/Connector/AConnector';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestConnector extends AConnector {

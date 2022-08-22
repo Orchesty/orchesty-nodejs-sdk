@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import HttpMethods from '../../Transport/HttpMethods';
+import { HttpMethods } from '../../Transport/HttpMethods';
 import Annotation from '../../Utils/Annotation';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';

@@ -1,6 +1,6 @@
 import { CommonHeaders } from '../../../Utils/Headers';
 import ProcessDto from '../../../Utils/ProcessDto';
-import HttpMethods from '../../HttpMethods';
+import { HttpMethods } from '../../HttpMethods';
 import RequestDto from '../RequestDto';
 
 describe('RequestDto tests', () => {

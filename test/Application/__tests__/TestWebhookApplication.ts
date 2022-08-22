@@ -3,7 +3,7 @@ import { ApplicationInstall } from '../../../lib/Application/Database/Applicatio
 import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../../lib/Transport/Curl/ResponseDto';
-import HttpMethods from '../../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import TestWebhookApplication from '../TestWebhookApplication';
 

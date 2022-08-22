@@ -4,7 +4,7 @@ import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ProcessDto from '../../../Utils/ProcessDto';
-import HttpMethods from '../../HttpMethods';
+import { HttpMethods } from '../../HttpMethods';
 import CurlSender from '../CurlSender';
 import RequestDto from '../RequestDto';
 

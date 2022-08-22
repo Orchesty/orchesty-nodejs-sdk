@@ -6,7 +6,7 @@ import logger from '../Logger/Logger';
 import CurlSender from '../Transport/Curl/CurlSender';
 import RequestDto from '../Transport/Curl/RequestDto';
 import ResponseDto from '../Transport/Curl/ResponseDto';
-import HttpMethods from '../Transport/HttpMethods';
+import { HttpMethods } from '../Transport/HttpMethods';
 import { getCorrelationId, getNodeId, PREV_CORRELATION_ID, PREV_NODE_ID } from '../Utils/Headers';
 import ProcessDto from '../Utils/ProcessDto';
 

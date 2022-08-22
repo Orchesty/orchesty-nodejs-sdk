@@ -18,7 +18,7 @@ const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONT
 export default abstract class AProcessDto<JsonData = unknown> {
 
     // Do not dare to touch this !! This serves for simple ObjectPool implementation
-    protected free: boolean; // eslint-disable-line no-underscore-dangle
+    protected free: boolean;
 
     protected headers: IHttpHeaders;
 

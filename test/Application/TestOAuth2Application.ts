@@ -9,7 +9,7 @@ import ScopeSeparatorEnum from '../../lib/Authorization/ScopeSeparatorEnum';
 import AOAuth2Application from '../../lib/Authorization/Type/OAuth2/AOAuth2Application';
 import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestOAuth2Application extends AOAuth2Application {

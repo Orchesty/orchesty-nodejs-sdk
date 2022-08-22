@@ -4,7 +4,7 @@ import { ApplicationInstall } from '../../../lib/Application/Database/Applicatio
 import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
 import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../../lib/Transport/HttpMethods';
+import { HttpMethods } from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import TestBasicApplication from '../TestBasicApplication';
 
