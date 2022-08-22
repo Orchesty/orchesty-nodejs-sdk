@@ -28,8 +28,9 @@ export default class ConnectorRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/connector/:name/action/test').get((req, res, next) => {
-            this.loader.get(CONNECTOR_PREFIX, req.params.name);
+        this.app.route('/connector/:name/action/test').get(async (req, res, next) => {
+            // eslint-disable-next-line @typescript-eslint/await-thenable
+            await this.loader.get(CONNECTOR_PREFIX, req.params.name);
             res.json([]);
             next();
         });

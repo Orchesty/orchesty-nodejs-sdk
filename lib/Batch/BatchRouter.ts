@@ -30,9 +30,11 @@ export default class BatchRouter extends ACommonRouter {
             });
 
         this.app.route('/batch/:name/action/test')
-            .get((req, res) => {
-                this.loader.get(BATCH_PREFIX, req.params.name);
+            .get(async (req, res, next) => {
+                // eslint-disable-next-line @typescript-eslint/await-thenable
+                await this.loader.get(BATCH_PREFIX, req.params.name);
                 res.json([]);
+                next();
             });
 
         this.app.route('/batch/list')
