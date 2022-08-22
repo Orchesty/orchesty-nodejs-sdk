@@ -4,97 +4,97 @@ export const USER = 'user';
 export const APPLICATION = 'application';
 
 export default class Webhook extends ADocument {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  private name = '';
 
-  private user = '';
+    private name = '';
 
-  private token = '';
+    private user = '';
 
-  private node = '';
+    private token = '';
 
-  private topology = '';
+    private node = '';
 
-  private application = '';
+    private topology = '';
 
-  private webhookId = '';
+    private application = '';
 
-  private unsubscribeFailed = false;
-  /* eslint-enable @typescript-eslint/naming-convention */
+    private webhookId = '';
 
-  public constructor() {
-    super();
-  }
+    private unsubscribeFailed = false;
 
-  public getName(): string {
-    return this.name;
-  }
+    public constructor() {
+        super();
+    }
 
-  public setName(name: string): Webhook {
-    this.name = name;
-    return this;
-  }
+    public getName(): string {
+        return this.name;
+    }
 
-  public getUser(): string {
-    return this.user;
-  }
+    public setName(name: string): this {
+        this.name = name;
+        return this;
+    }
 
-  public setUser(user: string): Webhook {
-    this.user = user;
-    return this;
-  }
+    public getUser(): string {
+        return this.user;
+    }
 
-  public getToken(): string {
-    return this.token;
-  }
+    public setUser(user: string): this {
+        this.user = user;
+        return this;
+    }
 
-  public setToken(token: string): Webhook {
-    this.token = token;
-    return this;
-  }
+    public getToken(): string {
+        return this.token;
+    }
 
-  public getNode(): string {
-    return this.node;
-  }
+    public setToken(token: string): this {
+        this.token = token;
+        return this;
+    }
 
-  public setNode(node: string): Webhook {
-    this.node = node;
-    return this;
-  }
+    public getNode(): string {
+        return this.node;
+    }
 
-  public getTopology(): string {
-    return this.topology;
-  }
+    public setNode(node: string): this {
+        this.node = node;
+        return this;
+    }
 
-  public setTopology(topology: string): Webhook {
-    this.topology = topology;
-    return this;
-  }
+    public getTopology(): string {
+        return this.topology;
+    }
 
-  public getApplication(): string {
-    return this.application;
-  }
+    public setTopology(topology: string): this {
+        this.topology = topology;
+        return this;
+    }
 
-  public setApplication(application: string): Webhook {
-    this.application = application;
-    return this;
-  }
+    public getApplication(): string {
+        return this.application;
+    }
 
-  public getWebhookId(): string {
-    return this.webhookId;
-  }
+    public setApplication(application: string): this {
+        this.application = application;
+        return this;
+    }
 
-  public setWebhookId(webhookId: string): Webhook {
-    this.webhookId = webhookId;
-    return this;
-  }
+    public getWebhookId(): string {
+        return this.webhookId;
+    }
 
-  public getUnsubscribeFailed(): boolean {
-    return this.unsubscribeFailed;
-  }
+    public setWebhookId(webhookId: string): this {
+        this.webhookId = webhookId;
+        return this;
+    }
 
-  public setUnsubscribeFailed(unsubscribeFailed: boolean): Webhook {
-    this.unsubscribeFailed = unsubscribeFailed;
-    return this;
-  }
+    public getUnsubscribeFailed(): boolean {
+        return this.unsubscribeFailed;
+    }
+
+    public setUnsubscribeFailed(unsubscribeFailed: boolean): this {
+        this.unsubscribeFailed = unsubscribeFailed;
+        return this;
+    }
+
 }

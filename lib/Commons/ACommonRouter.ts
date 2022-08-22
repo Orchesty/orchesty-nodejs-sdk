@@ -1,13 +1,15 @@
 import express from 'express';
 
 export default abstract class ACommonRouter {
-  protected constructor(protected _app: express.Application, protected _name: string) {
-    this.configureRoutes();
-  }
 
-  getName(): string {
-    return this._name;
-  }
+    protected constructor(protected app: express.Application, protected name: string) {
+        this.configureRoutes();
+    }
 
-    abstract configureRoutes(): express.Application;
+    public abstract configureRoutes(): express.Application;
+
+    public getName(): string {
+        return this.name;
+    }
+
 }
