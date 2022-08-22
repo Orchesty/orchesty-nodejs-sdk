@@ -31,54 +31,57 @@ export const LIMITER_KEY = 'limiter-key';
 // Batch headers
 export const BATCH_CURSOR = 'cursor';
 
-export type HttpHeaders = NodeJS.Dict<string | string[]>
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+export interface IHttpHeaders {
+    [key: string]: string[] | string | undefined;
+}
 
 export enum CommonHeaders {
-  CONTENT_TYPE = 'Content-Type',
-  ACCEPT = 'Accept',
-  ACCEPT_ENCODING = 'Accept-Encoding',
-  AUTHORIZATION = 'Authorization',
-  COOKIE = 'Cookie',
+    CONTENT_TYPE = 'Content-Type',
+    ACCEPT = 'Accept',
+    ACCEPT_ENCODING = 'Accept-Encoding',
+    AUTHORIZATION = 'Authorization',
+    COOKIE = 'Cookie',
 }
 
 export const JSON_TYPE = 'application/json';
 
-export function get(key: string, headers: HttpHeaders): string | undefined {
-  if (headers[key]) {
-    return String(headers[key]);
-  }
+export function get(key: string, headers: IHttpHeaders): string | undefined {
+    if (headers[key]) {
+        return String(headers[key]);
+    }
 
-  return undefined;
+    return undefined;
 }
 
-export function getCorrelationId(headers: HttpHeaders): string | undefined {
-  return get(CORRELATION_ID, headers);
+export function getCorrelationId(headers: IHttpHeaders): string | undefined {
+    return get(CORRELATION_ID, headers);
 }
 
-export function getTopologyId(headers: HttpHeaders): string | undefined {
-  return get(TOPOLOGY_ID, headers);
+export function getTopologyId(headers: IHttpHeaders): string | undefined {
+    return get(TOPOLOGY_ID, headers);
 }
 
-export function getNodeId(headers: HttpHeaders): string | undefined {
-  return get(NODE_ID, headers);
+export function getNodeId(headers: IHttpHeaders): string | undefined {
+    return get(NODE_ID, headers);
 }
 
-export function getProcessId(headers: HttpHeaders): string | undefined {
-  return get(PROCESS_ID, headers);
+export function getProcessId(headers: IHttpHeaders): string | undefined {
+    return get(PROCESS_ID, headers);
 }
 
-export function getParentId(headers: HttpHeaders): string | undefined {
-  return get(PARENT_ID, headers);
+export function getParentId(headers: IHttpHeaders): string | undefined {
+    return get(PARENT_ID, headers);
 }
 
-export function getSequenceId(headers: HttpHeaders): number {
-  return parseInt(get(SEQUENCE_ID, headers) || '0', 10);
+export function getSequenceId(headers: IHttpHeaders): number {
+    return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
 }
 
-export function getRepeatHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_HOPS, headers) || '0', 10);
+export function getRepeatHops(headers: IHttpHeaders): number {
+    return parseInt(get(REPEAT_HOPS, headers) ?? '0', 10);
 }
 
-export function getRepeaterMaxHops(headers: HttpHeaders): number {
-  return parseInt(get(REPEAT_MAX_HOPS, headers) || '0', 10);
+export function getRepeaterMaxHops(headers: IHttpHeaders): number {
+    return parseInt(get(REPEAT_MAX_HOPS, headers) ?? '0', 10);
 }

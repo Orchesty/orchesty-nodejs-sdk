@@ -1,67 +1,73 @@
-import { IOAuth2Dto } from './IOAuth2Dto';
-import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
+import { IOAuth2Dto } from './IOAuth2Dto';
 
 export default class OAuth2Dto implements IOAuth2Dto {
-  private readonly _clientId = '';
 
-  private readonly _clientSecret = '';
+    private readonly clientId = '';
 
-  private _redirectUrl = '';
+    private readonly clientSecret = '';
 
-  private _user = '';
+    private redirectUrl = '';
 
-  private _applicationName = '';
+    private user = '';
 
-  constructor(authorization: ApplicationInstall, private _authorizeUrl: string, private _tokenUrl: string) {
-    this._clientId = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_ID] ?? '';
-    this._clientSecret = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_SECRET] ?? '';
-  }
+    private applicationName = '';
 
-  public getApplicationKey(): string {
-    return this._applicationName;
-  }
+    public constructor(
+        authorization: ApplicationInstall,
+        private readonly authorizeUrl: string,
+        private readonly tokenUrl: string,
+    ) {
+        this.clientId = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_ID] ?? '';
+        this.clientSecret = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_SECRET] ?? '';
+    }
 
-  public getAuthorizationUrl(): string {
-    return this._authorizeUrl;
-  }
+    public getApplicationKey(): string {
+        return this.applicationName;
+    }
 
-  public getClientId(): string {
-    return this._clientId;
-  }
+    public getAuthorizationUrl(): string {
+        return this.authorizeUrl;
+    }
 
-  public getClientSecret(): string {
-    return this._clientSecret;
-  }
+    public getClientId(): string {
+        return this.clientId;
+    }
 
-  public getRedirectUrl(): string {
-    return this._redirectUrl;
-  }
+    public getClientSecret(): string {
+        return this.clientSecret;
+    }
 
-  public getTokenUrl(): string {
-    return this._tokenUrl;
-  }
+    public getRedirectUrl(): string {
+        return this.redirectUrl;
+    }
 
-  public getUser(): string {
-    return this._user;
-  }
+    public getTokenUrl(): string {
+        return this.tokenUrl;
+    }
 
-  public isCustomApp(): boolean {
-    return (!!this._user && !!this._applicationName);
-  }
+    public getUser(): string {
+        return this.user;
+    }
 
-  public isRedirectUrl(): boolean {
-    return !!this._redirectUrl;
-  }
+    public isCustomApp(): boolean {
+        return Boolean(this.user) && Boolean(this.applicationName);
+    }
 
-  public setCustomAppDependencies(user: string, applicationName: string): void {
-    this._user = user;
-    this._applicationName = applicationName;
-  }
+    public isRedirectUrl(): boolean {
+        return Boolean(this.redirectUrl);
+    }
 
-  public setRedirectUrl(redirectUrl: string): IOAuth2Dto {
-    this._redirectUrl = redirectUrl;
-    return this;
-  }
+    public setCustomAppDependencies(user: string, applicationName: string): void {
+        this.user = user;
+        this.applicationName = applicationName;
+    }
+
+    public setRedirectUrl(redirectUrl: string): IOAuth2Dto {
+        this.redirectUrl = redirectUrl;
+        return this;
+    }
+
 }

@@ -1,90 +1,94 @@
-import { BATCH_CURSOR, HttpHeaders } from './Headers';
 import AProcessDto from './AProcessDto';
+import { BATCH_CURSOR, IHttpHeaders } from './Headers';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
-  body: string, // Is string to support XML fe.
-  headers: Record<string, string | string[]> | null,
+    body: string; // Is string to support XML fe.
+    headers: Record<string, string[] | string> | null;
 }
 
 export default class BatchProcessDto extends AProcessDto {
-  private _messages: IBatchMessage[];
 
-  constructor(commonHeaders: HttpHeaders = {}) {
-    super();
-    this._messages = [];
-    this._headers = commonHeaders;
-  }
+    private messages: IBatchMessage[];
 
-  public addItem(body: unknown, user?: string): BatchProcessDto {
-    let b = body;
-    if (typeof body !== 'string') {
-      b = JSON.stringify(body);
+    public constructor(commonHeaders: IHttpHeaders = {}) {
+        super();
+        this.messages = [];
+        this.headers = commonHeaders;
     }
 
-    this._messages.push({
-      headers: user ? { user } : null,
-      body: b as string,
-    });
-
-    return this;
-  }
-
-  public setItemList(list: unknown[] | string[]): BatchProcessDto {
-    list.forEach((it) => {
-      this.addItem(it);
-    });
-
-    return this;
-  }
-
-  public addMessage(message: IBatchMessage): BatchProcessDto {
-    this._messages.push(message);
-
-    return this;
-  }
-
-  get messages(): IBatchMessage[] {
-    return this._messages;
-  }
-
-  set messages(messages: IBatchMessage[]) {
-    this._messages = messages;
-  }
-
-  public setBatchCursor(cursor: string, iterateOnly = false): void {
-    this.addHeader(BATCH_CURSOR, cursor);
-    if (iterateOnly) {
-      this._setStatusHeader(
-        ResultCode.BATCH_CURSOR_ONLY,
-        `Message will be used as a iterator with cursor [${cursor}]. No follower will be called.`,
-      );
-    } else {
-      this._setStatusHeader(
-        ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
-        `Message will be used as a iterator with cursor [${cursor}]. Data will be send to follower(s).`,
-      );
+    public getMessages(): IBatchMessage[] {
+        return this.messages;
     }
-  }
 
-  public getBatchCursor(defaultValue = ''): string {
-    return this.getHeader(BATCH_CURSOR, defaultValue) as string;
-  }
+    public setMessages(messages: IBatchMessage[]): this {
+        this.messages = messages;
 
-  public removeBatchCursor(): void {
-    this.removeHeader(BATCH_CURSOR);
-    this._removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
-  }
+        return this;
+    }
 
-  public setBridgeData(data: string) {
-    this._data = data;
-  }
+    public addItem(body: unknown, user?: string): this {
+        let b = body;
+        if (typeof body !== 'string') {
+            b = JSON.stringify(body);
+        }
 
-  public getBridgeData(): unknown {
-    return JSON.stringify(this._messages);
-  }
+        this.messages.push({
+            headers: user ? { user } : null,
+            body: b as string,
+        });
 
-  protected _clearData() {
-    this.messages = [];
-  }
+        return this;
+    }
+
+    public setItemList(list: string[] | unknown[]): this {
+        list.forEach((it) => {
+            this.addItem(it);
+        });
+
+        return this;
+    }
+
+    public addMessage(message: IBatchMessage): this {
+        this.messages.push(message);
+
+        return this;
+    }
+
+    public setBatchCursor(cursor: string, iterateOnly = false): void {
+        this.addHeader(BATCH_CURSOR, cursor);
+        if (iterateOnly) {
+            this.setStatusHeader(
+                ResultCode.BATCH_CURSOR_ONLY,
+                `Message will be used as a iterator with cursor [${cursor}]. No follower will be called.`,
+            );
+        } else {
+            this.setStatusHeader(
+                ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
+                `Message will be used as a iterator with cursor [${cursor}]. Data will be send to follower(s).`,
+            );
+        }
+    }
+
+    public getBatchCursor(defaultValue = ''): string {
+        return this.getHeader(BATCH_CURSOR, defaultValue) as string;
+    }
+
+    public removeBatchCursor(): void {
+        this.removeHeader(BATCH_CURSOR);
+        this.removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
+    }
+
+    public setBridgeData(data: string): void {
+        this.data = data;
+    }
+
+    public getBridgeData(): unknown {
+        return JSON.stringify(this.messages);
+    }
+
+    protected clearData(): void {
+        this.messages = [];
+    }
+
 }

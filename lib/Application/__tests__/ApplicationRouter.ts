@@ -1,307 +1,297 @@
-import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import {
-  closeConnections, dropCollection, expressApp, getTestContainer,
-} from '../../../test/TestAbstact';
-import { ApplicationInstall } from '../Database/ApplicationInstall';
+import supertest from 'supertest';
+import { closeConnections, dropCollection, expressApp, getTestContainer } from '../../../test/TestAbstact';
+import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
+import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
+import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
+import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
 import { AUTHORIZATION_FORM } from '../Base/AApplication';
-import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import assertions from './assertions.json';
-import DIContainer from '../../DIContainer/Container';
 import { IApplication } from '../Base/IApplication';
-import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
-import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
+import { ApplicationInstall } from '../Database/ApplicationInstall';
 import { IField } from '../Model/Form/Field';
+import assertions from './assertions.json';
 
 jest.mock('../../Logger/Logger', () => ({
-  error: () => jest.fn(),
-  debug: () => jest.fn(),
-  log: () => jest.fn(),
-  ctxFromDto: () => jest.fn(),
-  ctxFromReq: () => jest.fn(),
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  Logger: jest.fn().mockImplementation(() => ({})),
+    error: () => jest.fn(),
+    debug: () => jest.fn(),
+    log: () => jest.fn(),
+    ctxFromDto: () => jest.fn(),
+    ctxFromReq: () => jest.fn(),
+    Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
 describe('Test ApplicationRouter', () => {
-  let application: IApplication;
-  let oAuthApplication: IApplication;
-  let provider: OAuth2Provider;
-  let container: DIContainer;
-  let dbClient: MongoDbClient;
-  let appInstall: ApplicationInstall;
-  let name: string;
-  let user: string;
-  let authorizationURL: string;
+    let application: IApplication;
+    let oAuthApplication: IApplication;
+    let provider: OAuth2Provider;
+    let container: DIContainer;
+    let dbClient: MongoDbClient;
+    let appInstall: ApplicationInstall;
+    let name: string;
+    let user: string;
+    let authorizationURL: string;
 
-  beforeAll(async () => {
-    container = await getTestContainer();
-    application = container.getApplication('test');
-    oAuthApplication = container.getApplication('oauth2application');
-    provider = container.get(CoreServices.OAUTH2_PROVIDER);
-    dbClient = container.get(CoreServices.MONGO);
-  });
-
-  /* eslint-enable @typescript-eslint/naming-convention */
-  beforeEach(async () => {
-    await dropCollection(ApplicationInstall.getCollection());
-    const repo = await dbClient.getRepository(ApplicationInstall);
-
-    user = 'user';
-    name = oAuthApplication.getName();
-
-    authorizationURL = 'example.com';
-
-    appInstall = new ApplicationInstall()
-      .setUser(user)
-      .setName(name);
-    appInstall.setSettings({
-      [AUTHORIZATION_FORM]: {
-        [CLIENT_ID]: 'client id 1',
-      },
+    beforeAll(async () => {
+        container = await getTestContainer();
+        application = container.getApplication('test');
+        oAuthApplication = container.getApplication('oauth2application');
+        provider = container.get(CoreServices.OAUTH2_PROVIDER);
+        dbClient = container.get(CoreServices.MONGO);
     });
 
-    await repo.insert(appInstall);
-    Reflect.set(provider, '_createClient', () => ({
-      getToken: () => ({
-        token: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
-        },
-      }),
-      authorizeURL: () => authorizationURL,
-    }));
-  });
+    beforeEach(async () => {
+        await dropCollection(ApplicationInstall.getCollection());
+        const repo = await dbClient.getRepository(ApplicationInstall);
 
-  afterAll(async () => {
-    await closeConnections();
-  });
+        user = 'user';
+        name = oAuthApplication.getName();
 
-  it('get /applications route', async () => {
-    const applicationUrl = '/applications';
-    // eslint-disable-next-line max-len
-    const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","logo":null},{"name":"Test webhook application","authorization_type":"basic","application_type":"webhook","key":"webhookName","description":"Test webhook description","logo":null}]}';
+        authorizationURL = 'example.com';
 
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
+        appInstall = new ApplicationInstall()
+            .setUser(user)
+            .setName(name);
+        appInstall.setSettings({
+            [AUTHORIZATION_FORM]: {
+                [CLIENT_ID]: 'client id 1',
+            },
+        });
 
-  it('get /applications/:name route', async () => {
-    const applicationUrl = `/applications/${application.getName()}`;
-    // eslint-disable-next-line max-len
-    const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null}';
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
+        await repo.insert(appInstall);
+        Reflect.set(provider, 'createClient', () => ({
+            getToken: () => ({
+                token: {
+                    ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
+                },
+            }),
+            authorizeURL: () => authorizationURL,
+        }));
+    });
 
-  it('get /applications/:name/sync/list route', async () => {
-    const applicationUrl = `/applications/${application.getName()}/sync/list`;
-    const expectedResult = '["testSyncMethod","testSyncMethodVoid"]';
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
+    afterAll(async () => {
+        await closeConnections();
+    });
 
-  it('post /applications/:name/sync/:method route', async () => {
-    const method = 'testSyncMethod';
-    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
-    const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
-    await supertest(expressApp)
-      .post(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
+    it('get /applications route', async () => {
+        const applicationUrl = '/applications';
+        const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","logo":null},{"name":"Test webhook application","authorization_type":"basic","application_type":"webhook","key":"webhookName","description":"Test webhook description","logo":null}]}';
 
-  it('post /applications/:name/sync/:method route with void', async () => {
-    const method = 'testSyncMethodVoid';
-    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
-    const expectedResult = '{"status":"ok"}';
-    await supertest(expressApp)
-      .post(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
 
-  it('get /applications/:name/sync/:method route', async () => {
-    const method = 'testSyncMethod';
-    const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
-    const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .expect(StatusCodes.OK, expectedResult);
-  });
-
-  it('throw error on get /applications/:name/users/:user/authorize route cause ', async () => {
-    // Todo : 500 response
-    const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .expect(StatusCodes.INTERNAL_SERVER_ERROR);
-  });
-
-  it('get /applications/:name/users/:user/authorize route', async () => {
-    const applicationUrl = `/applications/${name}/users/${user}/authorize`;
-    const expectedResult = `{"authorizeUrl":"${authorizationURL}&access_type=offline"}`;
-    await supertest(expressApp)
-      .get(applicationUrl)
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      .query({ redirect_url: 'example.com' })
-      .expect(expectedResult);
-  });
-
-  it('get /applications/authorize/token route', async () => {
-    const applicationUrl = '/applications/authorize/token';
-    const expectedResult = '{}';
-    const state = encode(`${user}:${name}`); // base64
-    await supertest(expressApp)
-      .get(applicationUrl)
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      .query({ state })
-      .expect(StatusCodes.OK, expectedResult);
-  });
-
-  it('get /applications/:name/users/:user/authorize/token route', async () => {
-    const redirectUrl = 'example.com';
-    const applicationUrl = `/applications/${name}/users/${user}/authorize/token`;
-    const expectedResult = '{}';
-
-    await supertest(expressApp)
-      .get(applicationUrl)
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      .query({ redirect_url: redirectUrl })
-      .expect(StatusCodes.OK, expectedResult);
-  });
-
-  it('post /applications/:name/users/:user/install route', async () => {
-    const newUser = 'user';
-    const appName = 'test';
-    const applicationUrl = `/applications/${appName}/users/${newUser}/install`;
-    const expectedResult = assertions['post /applications/:name/users/:user/install route'];
-
-    await supertest(expressApp)
-      .post(applicationUrl)
-      .expect((response) => {
-        expect(JSON.parse(response.text)).toEqual(expectedResult);
-        expect(response.statusCode).toEqual(StatusCodes.CREATED);
-      });
-  });
-
-  it('should not allow store /applications/:name/users/:user/install if application already exists', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'user';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-
-    await repo.insert(appInstall);
-    const applicationUrl = `/applications/${appName}/users/${userName}/install`;
-    await supertest(expressApp)
-      .post(applicationUrl)
-      .expect(StatusCodes.INTERNAL_SERVER_ERROR);
-  });
-
-  it('put /applications/:name/users/:user/settings route', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'user';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-    await repo.insert(appInstall);
-    const applicationUrl = `/applications/${appName}/users/${userName}/settings`;
-
-    await supertest(expressApp)
-      .put(applicationUrl)
-      .send({ data: { key: 'name' } })
-      .expect((response) => {
-        expect(JSON.parse(response.text).user).toEqual(userName);
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-      });
-  });
-
-  it('put /applications/:name/users/:user/password route', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'user';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-    await repo.insert(appInstall);
-    const applicationUrl = `/applications/${appName}/users/${userName}/password`;
-    const password = 'pass';
-    await supertest(expressApp)
-      .put(applicationUrl)
-      .send({ password, formKey: [AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
-      .expect((response) => {
-        const jsonResponse = JSON.parse(response.text);
-        if (AUTHORIZATION_FORM in jsonResponse.applicationSettings) {
-          const fieldPassword = (jsonResponse.applicationSettings[AUTHORIZATION_FORM].fields as IField[])
-            .find((field) => field.key);
-          expect(fieldPassword?.value).toBeTruthy();
-        } else {
-          expect(false).toBeTruthy();
-        }
-      });
-  });
-
-  it('put /applications/:name/users/:user/uninstall route', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'user';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-    await repo.insert(appInstall);
-
-    const applicationUrl = `/applications/${appName}/users/${userName}/uninstall`;
-    await supertest(expressApp)
-      .delete(applicationUrl)
-      .expect((response) => {
+    it('get /applications/:name route', async () => {
+        const applicationUrl = `/applications/${application.getName()}`;
         // eslint-disable-next-line max-len
-        // Todo : There's a decorator that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-      });
-  });
+        const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null}';
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
 
-  it('get /applications/:name/users/:user route', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'user';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-    await repo.insert(appInstall);
-    const applicationUrl = `/applications/${appName}/users/${userName}`;
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .send({ name: userName, user: userName }).expect((response) => {
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-        expect(response.body).toHaveProperty('name');
-        expect(response.body.key).toEqual('test');
-        expect(response.body).toHaveProperty('applicationSettings');
-        expect(response.body).toHaveProperty('webhookSettings');
-      });
-  });
+    it('get /applications/:name/sync/list route', async () => {
+        const applicationUrl = `/applications/${application.getName()}/sync/list`;
+        const expectedResult = '["testSyncMethod","testSyncMethodVoid"]';
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
 
-  it('get /applications/users/:user route', async () => {
-    const repo = await dbClient.getRepository(ApplicationInstall);
-    const appName = 'test';
-    const userName = 'abcUsername';
-    appInstall = new ApplicationInstall()
-      .setUser(userName)
-      .setName(appName);
-    await repo.insert(appInstall);
-    const applicationUrl = `/applications/users/${userName}`;
-    await supertest(expressApp)
-      .get(applicationUrl)
-      .send({ name: userName, user: userName }).expect((response) => {
-        expect(response.statusCode).toEqual(StatusCodes.OK);
-        expect(response.body).toHaveProperty('items');
-        expect(response.body.items).toHaveLength(1);
-      });
-  });
+    it('post /applications/:name/sync/:method route', async () => {
+        const method = 'testSyncMethod';
+        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
+        const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('post /applications/:name/sync/:method route with void', async () => {
+        const method = 'testSyncMethodVoid';
+        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
+        const expectedResult = '{"status":"ok"}';
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('get /applications/:name/sync/:method route', async () => {
+        const method = 'testSyncMethod';
+        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
+        const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('throw error on get /applications/:name/users/:user/authorize route cause', async () => {
+        // Todo : 500 response
+        const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+    });
+
+    it('get /applications/:name/users/:user/authorize route', async () => {
+        const applicationUrl = `/applications/${name}/users/${user}/authorize`;
+        const expectedResult = `{"authorizeUrl":"${authorizationURL}&access_type=offline"}`;
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .query({ redirect_url: 'example.com' })
+            .expect(expectedResult);
+    });
+
+    it('get /applications/authorize/token route', async () => {
+        const applicationUrl = '/applications/authorize/token';
+        const expectedResult = '{}';
+        const state = encode(`${user}:${name}`); // Base64
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .query({ state })
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('get /applications/:name/users/:user/authorize/token route', async () => {
+        const redirectUrl = 'example.com';
+        const applicationUrl = `/applications/${name}/users/${user}/authorize/token`;
+        const expectedResult = '{}';
+
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .query({ redirect_url: redirectUrl })
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('post /applications/:name/users/:user/install route', async () => {
+        const newUser = 'user';
+        const appName = 'test';
+        const applicationUrl = `/applications/${appName}/users/${newUser}/install`;
+        const expectedResult = assertions['post /applications/:name/users/:user/install route'];
+
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .expect((response) => {
+                expect(JSON.parse(response.text)).toEqual(expectedResult);
+                expect(response.statusCode).toEqual(StatusCodes.CREATED);
+            });
+    });
+
+    it('should not allow store /applications/:name/users/:user/install if application already exists', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'user';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+
+        await repo.insert(appInstall);
+        const applicationUrl = `/applications/${appName}/users/${userName}/install`;
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+    });
+
+    it('put /applications/:name/users/:user/settings route', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'user';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+        const applicationUrl = `/applications/${appName}/users/${userName}/settings`;
+
+        await supertest(expressApp)
+            .put(applicationUrl)
+            .send({ data: { key: 'name' } })
+            .expect((response) => {
+                expect(JSON.parse(response.text).user).toEqual(userName);
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+            });
+    });
+
+    it('put /applications/:name/users/:user/password route', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'user';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+        const applicationUrl = `/applications/${appName}/users/${userName}/password`;
+        const password = 'pass';
+        await supertest(expressApp)
+            .put(applicationUrl)
+            .send({ password, formKey: [AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
+            .expect((response) => {
+                const jsonResponse = JSON.parse(response.text);
+                if (AUTHORIZATION_FORM in jsonResponse.applicationSettings) {
+                    const fieldPassword = (jsonResponse.applicationSettings[AUTHORIZATION_FORM].fields as IField[])
+                        .find((field) => field.key);
+                    expect(fieldPassword?.value).toBeTruthy();
+                } else {
+                    expect(false).toBeTruthy();
+                }
+            });
+    });
+
+    it('put /applications/:name/users/:user/uninstall route', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'user';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+
+        const applicationUrl = `/applications/${appName}/users/${userName}/uninstall`;
+        await supertest(expressApp)
+            .delete(applicationUrl)
+            .expect((response) => {
+                // Todo : There's a decorator that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+            });
+    });
+
+    it('get /applications/:name/users/:user route', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'user';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+        const applicationUrl = `/applications/${appName}/users/${userName}`;
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .send({ name: userName, user: userName }).expect((response) => {
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+                expect(response.body).toHaveProperty('name');
+                expect(response.body.key).toEqual('test');
+                expect(response.body).toHaveProperty('applicationSettings');
+                expect(response.body).toHaveProperty('webhookSettings');
+            });
+    });
+
+    it('get /applications/users/:user route', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'abcUsername';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+        const applicationUrl = `/applications/users/${userName}`;
+        await supertest(expressApp)
+            .get(applicationUrl)
+            .send({ name: userName, user: userName }).expect((response) => {
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+                expect(response.body).toHaveProperty('items');
+                expect(response.body.items).toHaveLength(1);
+            });
+    });
 });

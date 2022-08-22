@@ -13,105 +13,107 @@ export interface IField {
 }
 
 export default class Field {
-  private _description = '';
 
-  private _readOnly = false;
+    private description = '';
 
-  private _disabled = false;
+    private readOnly = false;
 
-  private _choices: unknown[] = [];
+    private disabled = false;
 
-  public constructor(
-        private _type: FieldType,
-        private _key: string,
-        private _label: string,
-        private _value: unknown = null,
-        private _required: boolean = false,
-  ) {
-  }
+    private choices: unknown[] = [];
 
-  public get type(): FieldType {
-    return this._type;
-  }
+    public constructor(
+        private readonly type: FieldType,
+        private readonly key: string,
+        private label: string,
+        private value: unknown = null,
+        private required: boolean = false,
+    ) {
+    }
 
-  public get key(): string {
-    return this._key;
-  }
+    public getType(): FieldType {
+        return this.type;
+    }
 
-  public get value(): unknown {
-    return this._value;
-  }
+    public getKey(): string {
+        return this.key;
+    }
 
-  public get label(): string {
-    return this._label;
-  }
+    public getValue(): unknown {
+        return this.value;
+    }
 
-  public get description(): string {
-    return this._description;
-  }
+    public getLabel(): string {
+        return this.label;
+    }
 
-  public get choices(): unknown[] {
-    return this._choices;
-  }
+    public getDescription(): string {
+        return this.description;
+    }
 
-  public get isRequired(): boolean {
-    return this._required;
-  }
+    public getChoices(): unknown[] {
+        return this.choices;
+    }
 
-  public get isReadOnly(): boolean {
-    return this._readOnly;
-  }
+    public isRequired(): boolean {
+        return this.required;
+    }
 
-  public get isDisabled(): boolean {
-    return this._disabled;
-  }
+    public isReadOnly(): boolean {
+        return this.readOnly;
+    }
 
-  public get toArray(): IField {
-    return {
-      type: this.type,
-      key: this.key,
-      value: this.value,
-      label: this.label,
-      description: this.description,
-      required: this.isRequired,
-      readOnly: this.isReadOnly,
-      disabled: this.isDisabled,
-      choices: this.choices,
-    };
-  }
+    public isDisabled(): boolean {
+        return this.disabled;
+    }
 
-  public setLabel(label: string): Field {
-    this._label = label;
-    return this;
-  }
+    public toArray(): IField {
+        return {
+            type: this.type,
+            key: this.key,
+            value: this.value,
+            label: this.label,
+            description: this.description,
+            required: this.required,
+            readOnly: this.readOnly,
+            disabled: this.disabled,
+            choices: this.choices,
+        };
+    }
 
-  public setValue(value: unknown): Field {
-    this._value = value;
-    return this;
-  }
+    public setLabel(label: string): this {
+        this.label = label;
+        return this;
+    }
 
-  public setDescription(description: string): Field {
-    this._description = description;
-    return this;
-  }
+    public setValue(value: unknown): this {
+        this.value = value;
+        return this;
+    }
 
-  public setRequired(required: boolean): Field {
-    this._required = required;
-    return this;
-  }
+    public setDescription(description: string): this {
+        this.description = description;
+        return this;
+    }
 
-  public setReadOnly(readOnly: boolean): Field {
-    this._readOnly = readOnly;
-    return this;
-  }
+    public setRequired(required: boolean): this {
+        this.required = required;
+        return this;
+    }
 
-  public setDisabled(disabled: boolean): Field {
-    this._disabled = disabled;
-    return this;
-  }
+    public setReadOnly(readOnly: boolean): this {
+        this.readOnly = readOnly;
+        return this;
+    }
 
-  public setChoices(choices: unknown[]): Field {
-    this._choices = choices;
-    return this;
-  }
+    public setDisabled(disabled: boolean): this {
+        this.disabled = disabled;
+        return this;
+    }
+
+    public setChoices(choices: unknown[]): this {
+        this.choices = choices;
+        return this;
+    }
+
 }

@@ -7,9 +7,9 @@ enum ApplicationTypeEnum {
 export default ApplicationTypeEnum;
 
 export function isWebhook(type: string): boolean {
-  return type === ApplicationTypeEnum.WEBHOOK;
+    return type === ApplicationTypeEnum.WEBHOOK;
 }
 
 export function isCron(type: string): boolean {
-  return type === ApplicationTypeEnum.CRON;
+    return type === ApplicationTypeEnum.CRON;
 }
