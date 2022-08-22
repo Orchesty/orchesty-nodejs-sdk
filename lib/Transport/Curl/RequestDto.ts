@@ -1,76 +1,92 @@
 import { BodyInit, HeaderInit, Headers } from 'node-fetch';
-import { IRequestDto } from '../IRequestDto';
-import HttpMethods from '../HttpMethods';
 import AProcessDto from '../../Utils/AProcessDto';
+import { HttpMethods } from '../HttpMethods';
+import { IRequestDto } from '../IRequestDto';
 
 export default class RequestDto implements IRequestDto {
-  private _timeout: number;
 
-  constructor(
-    private _url: string,
-    private _method: HttpMethods,
-    private _debugInfo: AProcessDto,
-    private _body?: BodyInit,
-    private _headers: HeaderInit = new Headers(),
-  ) {
-    this._timeout = 30000; // 30sec as a default timeout
-  }
+    private timeout: number;
 
-  get body(): BodyInit | undefined {
-    return this._body;
-  }
+    public constructor(
+        private url: string,
+        private method: HttpMethods,
+        private debugInfo: AProcessDto,
+        private body?: BodyInit,
+        private headers: HeaderInit = new Headers(),
+    ) {
+        this.timeout = 30000; // 30sec as a default timeout
+    }
 
-  set body(body: BodyInit | undefined) {
-    this._body = body;
-  }
+    public getBody(): BodyInit | undefined {
+        return this.body;
+    }
 
-  public setJsonBody(body: unknown): void {
-    this._body = JSON.stringify(body);
-  }
+    public setBody(body: BodyInit | undefined): this {
+        this.body = body;
 
-  get headers(): HeaderInit {
-    return this._headers;
-  }
+        return this;
+    }
 
-  set headers(headers: HeaderInit) {
-    this._headers = headers;
-  }
+    public getHeaders(): HeaderInit {
+        return this.headers;
+    }
 
-  public addHeaders(headers: HeaderInit): RequestDto {
-    this._headers = { ...this._headers, ...headers };
+    public setHeaders(headers: HeaderInit): this {
+        this.headers = headers;
 
-    return this;
-  }
+        return this;
+    }
 
-  get method(): HttpMethods {
-    return this._method;
-  }
+    public getMethod(): HttpMethods {
+        return this.method;
+    }
 
-  set method(method: HttpMethods) {
-    this._method = method;
-  }
+    public setMethod(method: HttpMethods): this {
+        this.method = method;
 
-  get url(): string {
-    return this._url;
-  }
+        return this;
+    }
 
-  set url(url: string) {
-    this._url = url;
-  }
+    public getUrl(): string {
+        return this.url;
+    }
 
-  set timeout(ms: number) {
-    this._timeout = ms;
-  }
+    public setUrl(url: string): this {
+        this.url = url;
 
-  get timeout(): number {
-    return this._timeout;
-  }
+        return this;
+    }
 
-  get debugInfo(): AProcessDto {
-    return this._debugInfo;
-  }
+    public setTimeout(ms: number): this {
+        this.timeout = ms;
 
-  set debugInfo(dto: AProcessDto) {
-    this._debugInfo = dto;
-  }
+        return this;
+    }
+
+    public getTimeout(): number {
+        return this.timeout;
+    }
+
+    public getDebugInfo(): AProcessDto {
+        return this.debugInfo;
+    }
+
+    public setDebugInfo(dto: AProcessDto): this {
+        this.debugInfo = dto;
+
+        return this;
+    }
+
+    public addHeaders(headers: HeaderInit): this {
+        this.headers = { ...this.headers, ...headers };
+
+        return this;
+    }
+
+    public setJsonBody(body: unknown): this {
+        this.body = JSON.stringify(body);
+
+        return this;
+    }
+
 }

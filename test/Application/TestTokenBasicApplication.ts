@@ -1,38 +1,48 @@
 import { BodyInit } from 'node-fetch';
-import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import HttpMethods from '../../lib/Transport/HttpMethods';
-import { ABasicApplication, TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
-import Form from '../../lib/Application/Model/Form/Form';
-import FieldType from '../../lib/Application/Model/Form/FieldType';
+import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
-import ProcessDto from '../../lib/Utils/ProcessDto';
-import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import FieldType from '../../lib/Application/Model/Form/FieldType';
+import Form from '../../lib/Application/Model/Form/Form';
 import FormStack from '../../lib/Application/Model/Form/FormStack';
+import { ABasicApplication, TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
+import RequestDto from '../../lib/Transport/Curl/RequestDto';
+import { HttpMethods } from '../../lib/Transport/HttpMethods';
+import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestTokenBasicApplication extends ABasicApplication {
-  public getDescription = (): string => 'Test description';
 
-  public getName = (): string => 'test';
+    public getDescription(): string {
+        return 'Test description';
+    }
 
-  public getPublicName = (): string => 'Test application';
+    public getName(): string {
+        return 'test';
+    }
 
-  public getFormStack = (): FormStack => {
-    const label = 'testToken';
-    const fieldToken = new Field(FieldType.TEXT, TOKEN, label);
+    public getPublicName(): string {
+        return 'Test application';
+    }
 
-    const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
-    form.addField(fieldToken);
+    public getFormStack(): FormStack {
+        const label = 'testToken';
+        const fieldToken = new Field(FieldType.TEXT, TOKEN, label);
 
-    const formStack = new FormStack();
-    return formStack.addForm(form);
-  };
+        const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
+        form.addField(fieldToken);
 
-  public getRequestDto = (
-    dto: ProcessDto,
-    applicationInstall: ApplicationInstall,
-    method: HttpMethods,
-    url?: string,
-    data?: BodyInit,
-  ): RequestDto => new RequestDto(url ?? '', method, dto, data);
+        const formStack = new FormStack();
+        return formStack.addForm(form);
+    }
+
+    public getRequestDto(
+        dto: ProcessDto,
+        applicationInstall: ApplicationInstall,
+        method: HttpMethods,
+        url?: string,
+        data?: BodyInit,
+    ): RequestDto {
+        return new RequestDto(url ?? '', method, dto, data);
+    }
+
 }

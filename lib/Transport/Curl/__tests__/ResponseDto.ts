@@ -5,26 +5,26 @@ let responseDto: ResponseDto;
 const jsonBody = { param1: 1, param2: 2 };
 
 describe('test for ResponseDto', () => {
-  beforeEach(() => {
-    responseDto = new ResponseDto(JSON.stringify(jsonBody), 999, new Headers(), 'testReason');
-  });
-
-  it('getBody', () => {
-    expect(responseDto.body).toEqual(JSON.stringify(jsonBody));
-  });
-
-  it('getJsonBody', () => {
-    expect(responseDto.jsonBody).toEqual({
-      param1: 1,
-      param2: 2,
+    beforeEach(() => {
+        responseDto = new ResponseDto(JSON.stringify(jsonBody), 999, new Headers(), 'testReason');
     });
-  });
 
-  it('getReason', () => {
-    expect(responseDto.reason).toEqual('testReason');
-  });
+    it('getBody', () => {
+        expect(responseDto.getBody()).toEqual(JSON.stringify(jsonBody));
+    });
 
-  it('getResponseCode', () => {
-    expect(responseDto.responseCode).toEqual(999);
-  });
+    it('getJsonBody', () => {
+        expect(responseDto.getJsonBody()).toEqual({
+            param1: 1,
+            param2: 2,
+        });
+    });
+
+    it('getReason', () => {
+        expect(responseDto.getReason()).toEqual('testReason');
+    });
+
+    it('getResponseCode', () => {
+        expect(responseDto.getResponseCode()).toEqual(999);
+    });
 });

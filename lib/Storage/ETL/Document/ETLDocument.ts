@@ -1,70 +1,70 @@
 import { index } from 'mongodb-typescript';
-import ADocument from '../../Mongodb/ADocument';
 import DateTimeUtils from '../../../Utils/DateTimeUtils';
+import ADocument from '../../Mongodb/ADocument';
 
 export default class ETLDocument extends ADocument {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  @index()
-  private user = '';
 
-  @index()
-  private application = '';
+    @index()
+    private user = '';
 
-  @index()
-  private processId = '';
+    @index()
+    private application = '';
 
-  @index(undefined, { expireAfterSeconds: 86400 })
-  private readonly created: Date;
+    @index()
+    private processId = '';
 
-  private data = '';
-  /* eslint-enable @typescript-eslint/naming-convention */
+    @index(undefined, { expireAfterSeconds: 86400 })
+    private readonly created: Date;
 
-  public constructor() {
-    super();
-    this.created = DateTimeUtils.utcDate;
-  }
+    private data = '';
 
-  public getUser(): string {
-    return this.user;
-  }
+    public constructor() {
+        super();
+        this.created = DateTimeUtils.getUtcDate();
+    }
 
-  public setUser(user: string): ETLDocument {
-    this.user = user;
+    public getUser(): string {
+        return this.user;
+    }
 
-    return this;
-  }
+    public setUser(user: string): this {
+        this.user = user;
 
-  public getApplication(): string {
-    return this.application;
-  }
+        return this;
+    }
 
-  public setApplication(application: string): ETLDocument {
-    this.application = application;
+    public getApplication(): string {
+        return this.application;
+    }
 
-    return this;
-  }
+    public setApplication(application: string): this {
+        this.application = application;
 
-  public getProcessId(): string {
-    return this.processId;
-  }
+        return this;
+    }
 
-  public setProcessId(processId: string): ETLDocument {
-    this.processId = processId;
+    public getProcessId(): string {
+        return this.processId;
+    }
 
-    return this;
-  }
+    public setProcessId(processId: string): this {
+        this.processId = processId;
 
-  public getCreated(): Date {
-    return this.created;
-  }
+        return this;
+    }
 
-  public getData(): unknown {
-    return JSON.parse(this.data);
-  }
+    public getCreated(): Date {
+        return this.created;
+    }
 
-  public setData(jsonData: unknown): ETLDocument {
-    this.data = JSON.stringify(jsonData);
+    public getData(): unknown {
+        return JSON.parse(this.data);
+    }
 
-    return this;
-  }
+    public setData(jsonData: unknown): this {
+        this.data = JSON.stringify(jsonData);
+
+        return this;
+    }
+
 }

@@ -1,22 +1,26 @@
 import Form, { IForm } from './Form';
 
 export default class FormStack {
-  private _forms: Form[] = [];
 
-  public toArray(): Record<string, IForm> {
-    const output: Record<string, IForm> = {};
+    private readonly forms: Form[] = [];
 
-    this._forms.forEach((form) => { output[form.key] = form.toArray(); });
+    public toArray(): Record<string, IForm> {
+        const output: Record<string, IForm> = {};
 
-    return output;
-  }
+        this.forms.forEach((form) => {
+            output[form.getKey()] = form.toArray();
+        });
 
-  public getForms(): Form[] {
-    return this._forms;
-  }
+        return output;
+    }
 
-  public addForm(form: Form): FormStack {
-    this._forms.push(form);
-    return this;
-  }
+    public getForms(): Form[] {
+        return this.forms;
+    }
+
+    public addForm(form: Form): this {
+        this.forms.push(form);
+        return this;
+    }
+
 }
