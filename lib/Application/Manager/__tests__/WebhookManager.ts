@@ -23,6 +23,7 @@ jest.mock('../../../Logger/Logger', () => ({
     log: () => jest.fn(),
     ctxFromDto: () => jest.fn(),
     ctxFromReq: () => jest.fn(),
+    createCtx: jest.fn().mockImplementation(() => ({})),
     Logger: jest.fn().mockImplementation(() => ({})),
 }));
 
