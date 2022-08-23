@@ -26,9 +26,9 @@ export default abstract class ANode implements INode {
         return this;
     }
 
-    protected getApplication(): IApplication {
+    protected getApplication<T extends IApplication>(): T {
         if (this.application) {
-            return this.application;
+            return this.application as T;
         }
 
         throw new Error('Application has not been set.');
