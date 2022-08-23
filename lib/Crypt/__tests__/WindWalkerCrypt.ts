@@ -1,4 +1,4 @@
-import { crypto_secretbox_MACBYTES, crypto_secretbox_NONCEBYTES } from 'sodium-native';
+import sodium from 'sodium-native';
 import WindWalkerCrypt from '../Impl/WindWalkerCrypt';
 
 const expected = { user: 'data' };
@@ -6,8 +6,8 @@ const crypt = new WindWalkerCrypt('123scycycxvxvdvse5678IDLNJNCSKJfefefefeffJKkj
 
 describe('Crypt tests', () => {
     it('Constants', () => {
-        expect(crypto_secretbox_NONCEBYTES).toEqual(24);
-        expect(crypto_secretbox_MACBYTES).toEqual(16);
+        expect(sodium.crypto_secretbox_NONCEBYTES).toEqual(24);
+        expect(sodium.crypto_secretbox_MACBYTES).toEqual(16);
     });
 
     it('Encrypt/Decrypt', () => {

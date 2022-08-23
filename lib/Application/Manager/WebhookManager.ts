@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import crypto from 'crypto';
 import { pipesOptions } from '../../Config/Config';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import ApplicationLoader from '../ApplicationLoader';
@@ -78,7 +78,7 @@ export default class WebhookManager {
                     }
 
                     const topology = data.topology ?? subs.getTopology();
-                    const token = randomBytes(LENGTH)
+                    const token = crypto.randomBytes(LENGTH)
                         .toString('hex');
                     const request = app.getWebhookSubscribeRequestDto(
                         appInstall,

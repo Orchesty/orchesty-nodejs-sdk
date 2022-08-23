@@ -1,15 +1,8 @@
 import { Buffer } from 'buffer';
-import { createHmac, pbkdf2Sync, pseudoRandomBytes } from 'crypto';
+import crypto from 'crypto';
 import NodeCache from 'node-cache';
 import { serialize, unserialize } from 'php-serialize';
-import {
-    crypto_secretbox_easy,
-    crypto_secretbox_KEYBYTES,
-    crypto_secretbox_MACBYTES,
-    crypto_secretbox_open_easy,
-    randombytes_buf,
-    sodium_memzero,
-} from 'sodium-native';
+import sodium from 'sodium-native';
 import ACryptImpl from '../ACryptImpl';
 
 const PBKDF2_SALT_BYTE_SIZE = 32;
@@ -41,7 +34,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
         const iv = this.getIVKey();
         const salt = this.getPbkdf2Salt();
         const encrypted = WindWalkerCrypt.doEncrypt(Buffer.from(serialize(data)), key, iv);
-        const hmac = createHmac(SHA256, this.secureHMACKey)
+        const hmac = crypto.createHmac(SHA256, this.secureHMACKey)
             .update(Buffer.concat([salt, iv, encrypted]))
             .digest();
 
@@ -51,10 +44,10 @@ export default class WindWalkerCrypt extends ACryptImpl {
             iv.toString(BASE64),
             encrypted.toString(BASE64),
         ];
-        sodium_memzero(encrypted);
-        sodium_memzero(hmac);
-        sodium_memzero(key);
-        sodium_memzero(iv);
+        sodium.sodium_memzero(encrypted);
+        sodium.sodium_memzero(hmac);
+        sodium.sodium_memzero(key);
+        sodium.sodium_memzero(iv);
 
         return `${this.getPrefix()}${res.join(':')}`;
     }
@@ -78,7 +71,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
         encrypted = Buffer.from(encrypted, BASE64);
 
         this.derivativeSecureKeys(this.getKey(), pbkdf2Salt);
-        const calculatedHmac = createHmac(SHA256, this.secureHMACKey)
+        const calculatedHmac = crypto.createHmac(SHA256, this.secureHMACKey)
             .update(Buffer.concat([pbkdf2Salt, ivFromData, encrypted]))
             .digest();
 
@@ -88,9 +81,9 @@ export default class WindWalkerCrypt extends ACryptImpl {
 
         const key = this.getKey();
         const decrypted = WindWalkerCrypt.doDecrypt(encrypted, key, ivFromData);
-        sodium_memzero(hmac);
-        sodium_memzero(pbkdf2Salt);
-        sodium_memzero(calculatedHmac);
+        sodium.sodium_memzero(hmac);
+        sodium.sodium_memzero(pbkdf2Salt);
+        sodium.sodium_memzero(calculatedHmac);
 
         return unserialize(decrypted);
     }
@@ -117,26 +110,26 @@ export default class WindWalkerCrypt extends ACryptImpl {
     }
 
     private static doEncrypt(message: Buffer, key: Buffer, iv: Buffer): Buffer {
-        const encrypted: Buffer = Buffer.alloc(message.length + crypto_secretbox_MACBYTES);
-        crypto_secretbox_easy(encrypted, message, iv, key);
-        sodium_memzero(message);
+        const encrypted: Buffer = Buffer.alloc(message.length + sodium.crypto_secretbox_MACBYTES);
+        sodium.crypto_secretbox_easy(encrypted, message, iv, key);
+        sodium.sodium_memzero(message);
 
         return encrypted;
     }
 
     private static doDecrypt(message: Buffer, key: Buffer, iv: Buffer): Buffer {
-        const decrypted: Buffer = Buffer.alloc(message.length - crypto_secretbox_MACBYTES);
-        crypto_secretbox_open_easy(decrypted, message, iv, key);
-        sodium_memzero(message);
-        sodium_memzero(iv);
-        sodium_memzero(key);
+        const decrypted: Buffer = Buffer.alloc(message.length - sodium.crypto_secretbox_MACBYTES);
+        sodium.crypto_secretbox_open_easy(decrypted, message, iv, key);
+        sodium.sodium_memzero(message);
+        sodium.sodium_memzero(iv);
+        sodium.sodium_memzero(key);
 
         return decrypted;
     }
 
     private getPbkdf2Salt(): Buffer {
         if (this.pbkdf2Salt === undefined || this.pbkdf2Salt.length < 1) {
-            this.pbkdf2Salt = pseudoRandomBytes(PBKDF2_SALT_BYTE_SIZE);
+            this.pbkdf2Salt = crypto.pseudoRandomBytes(PBKDF2_SALT_BYTE_SIZE);
         }
 
         return this.pbkdf2Salt;
@@ -145,14 +138,14 @@ export default class WindWalkerCrypt extends ACryptImpl {
     private getIVKey(): Buffer {
         if (this.iv === undefined || this.iv.length < 0) {
             this.iv = Buffer.alloc(24);
-            randombytes_buf(this.iv);
+            sodium.randombytes_buf(this.iv);
         }
 
         return this.iv;
     }
 
     private getKey(): Buffer {
-        return Buffer.from(WindWalkerCrypt.repeatToLength(this.secretKey, crypto_secretbox_KEYBYTES));
+        return Buffer.from(WindWalkerCrypt.repeatToLength(this.secretKey, sodium.crypto_secretbox_KEYBYTES));
     }
 
     private derivativeSecureKeys(key: Buffer, pbkdf2Salt?: Buffer): void {
@@ -164,7 +157,7 @@ export default class WindWalkerCrypt extends ACryptImpl {
         }
 
         if (!this.cache.has(`pbkdf2_${key}_${pbkdf2SaltBuff}`)) {
-            const pbkdf2 = pbkdf2Sync(key, pbkdf2SaltBuff, 12000, PBKDF2_HASH_BYTE_SIZE, 'sha256');
+            const pbkdf2 = crypto.pbkdf2Sync(key, pbkdf2SaltBuff, 12000, PBKDF2_HASH_BYTE_SIZE, 'sha256');
             this.cache.set(`pbkdf2_${key}_${pbkdf2SaltBuff}`, pbkdf2);
         }
 
