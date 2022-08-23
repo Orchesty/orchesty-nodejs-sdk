@@ -26,11 +26,7 @@ export class ApplicationRouter extends ACommonRouter {
         });
 
         this.app.route('/applications/:name/sync/:method')
-            .get(async (req, res, next) => {
-                res.json(await this.manager.runSynchronousAction(req.params.name, req.params.method, req));
-                next();
-            })
-            .post(async (req, res, next) => {
+            .all(async (req, res, next) => {
                 res.json(await this.manager.runSynchronousAction(req.params.name, req.params.method, req));
                 next();
             });

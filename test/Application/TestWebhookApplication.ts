@@ -15,6 +15,8 @@ import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestWebhookApplication extends ABasicApplication implements IWebhookApplication {
 
+    protected isInstallable = false;
+
     public getDescription(): string {
         return 'Test webhook description';
     }

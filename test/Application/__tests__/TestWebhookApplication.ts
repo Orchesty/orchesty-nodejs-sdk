@@ -33,6 +33,7 @@ describe('Tests for webhook application', () => {
             forms: [
                 {
                     description: '',
+                    readOnly: false,
                     fields: [
                         {
                             choices: [],

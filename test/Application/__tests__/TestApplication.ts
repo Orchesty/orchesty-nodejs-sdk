@@ -39,6 +39,7 @@ describe('Test application', () => {
             application_type: ApplicationTypeEnum.CRON, // eslint-disable-line
             authorization_type: AuthorizationTypeEnum.BASIC, // eslint-disable-line
             description: 'Test description',
+            isInstallable: true,
             key: 'test',
             name: 'Test application',
             logo: null,
@@ -51,6 +52,7 @@ describe('Test application', () => {
             forms: [
                 {
                     description: '',
+                    readOnly: false,
                     fields: [
                         {
                             choices: [],
@@ -80,6 +82,7 @@ describe('Test application', () => {
                 },
                 {
                     description: '',
+                    readOnly: false,
                     fields: [
                         {
                             choices: [],
@@ -154,6 +157,7 @@ describe('Test application', () => {
         expect(res).toEqual({
             authorization_form: { // eslint-disable-line
                 description: '',
+                readOnly: false,
                 fields: [
                     {
                         choices: [],
@@ -183,6 +187,7 @@ describe('Test application', () => {
             },
             testForm: {
                 description: '',
+                readOnly: false,
                 fields: [
                     {
                         choices: [],

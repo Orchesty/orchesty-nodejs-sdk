@@ -4,6 +4,8 @@ export default class Form {
 
     private description = '';
 
+    private readOnly = false;
+
     private readonly fields: Field[] = [];
 
     public constructor(private readonly key: string, private publicName: string) {
@@ -42,6 +44,15 @@ export default class Form {
         return this;
     }
 
+    public setReadOnly(readOnly: boolean): this {
+        this.readOnly = readOnly;
+        return this;
+    }
+
+    public isReadOnly(): boolean {
+        return this.readOnly;
+    }
+
     public toArray(): IForm {
         const fields: IField[] = [];
         this.fields.forEach((element) => {
@@ -52,6 +63,7 @@ export default class Form {
             key: this.key,
             publicName: this.publicName,
             description: this.description,
+            readOnly: this.readOnly,
             fields,
         };
     }
@@ -62,5 +74,6 @@ export interface IForm {
     key: string;
     publicName: string;
     description: string;
+    readOnly: boolean;
     fields: IField[];
 }

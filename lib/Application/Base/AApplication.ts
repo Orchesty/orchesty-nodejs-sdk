@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import * as fs from 'fs';
 import { contentType } from 'mime-types';
 import { BodyInit } from 'node-fetch';
@@ -21,11 +22,14 @@ export interface IApplicationArray {
     application_type: ApplicationTypeEnum;
     key: string;
     description: string;
+    isInstallable: boolean;
 }
 
 export default abstract class AApplication implements IApplication {
 
     protected logoFilename = 'logo.svg';
+
+    protected isInstallable = true;
 
     public abstract getAuthorizationType(): AuthorizationTypeEnum;
 
@@ -133,7 +137,14 @@ export default abstract class AApplication implements IApplication {
             key: this.getName(),
             description: this.getDescription(),
             logo: this.getLogo(),
+            isInstallable: this.isInstallable,
         };
+    }
+
+    public syncAfterInstallCallback(req: Request): void {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user, name } = JSON.parse(req.body);
+        // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
     // eslint-disable-next-line

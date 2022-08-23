@@ -77,7 +77,7 @@ describe('Test ApplicationRouter', () => {
 
     it('get /applications route', async () => {
         const applicationUrl = '/applications';
-        const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","logo":null},{"name":"Test webhook application","authorization_type":"basic","application_type":"webhook","key":"webhookName","description":"Test webhook description","logo":null}]}';
+        const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null,"isInstallable":true},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","logo":null,"isInstallable":true},{"name":"Test webhook application","authorization_type":"basic","application_type":"webhook","key":"webhookName","description":"Test webhook description","logo":null,"isInstallable":false}]}';
 
         await supertest(expressApp)
             .get(applicationUrl)
@@ -87,7 +87,7 @@ describe('Test ApplicationRouter', () => {
     it('get /applications/:name route', async () => {
         const applicationUrl = `/applications/${application.getName()}`;
         // eslint-disable-next-line max-len
-        const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null}';
+        const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","logo":null,"isInstallable":true}';
         await supertest(expressApp)
             .get(applicationUrl)
             .expect(StatusCodes.OK, expectedResult);
@@ -95,7 +95,7 @@ describe('Test ApplicationRouter', () => {
 
     it('get /applications/:name/sync/list route', async () => {
         const applicationUrl = `/applications/${application.getName()}/sync/list`;
-        const expectedResult = '["testSyncMethod","testSyncMethodVoid"]';
+        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterInstallCallback"]';
         await supertest(expressApp)
             .get(applicationUrl)
             .expect(StatusCodes.OK, expectedResult);

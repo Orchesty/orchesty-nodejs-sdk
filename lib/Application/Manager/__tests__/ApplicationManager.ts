@@ -100,6 +100,7 @@ describe('ApplicationManager tests', () => {
                     application_type: 'cron',
                     authorization_type: 'basic',
                     description: 'Test description',
+                    isInstallable: true,
                     key: 'test',
                     logo: null,
                     name: 'Test application',
@@ -108,6 +109,7 @@ describe('ApplicationManager tests', () => {
                     application_type: 'cron',
                     authorization_type: 'oauth2',
                     description: 'Test OAuth2 application',
+                    isInstallable: true,
                     key: 'oauth2application',
                     logo: null,
                     name: 'Test OAuth2 Application',
@@ -116,6 +118,7 @@ describe('ApplicationManager tests', () => {
                     application_type: 'webhook',
                     authorization_type: 'basic',
                     description: 'Test webhook description',
+                    isInstallable: false,
                     key: 'webhookName',
                     logo: null,
                     name: 'Test webhook application',
@@ -130,7 +133,7 @@ describe('ApplicationManager tests', () => {
 
     it('getSynchronousActions', () => {
         expect(appManager.getSynchronousActions('test'))
-            .toEqual(['testSyncMethod', 'testSyncMethodVoid']);
+            .toEqual(['testSyncMethod', 'testSyncMethodVoid', 'afterInstallCallback']);
     });
 
     it('runSynchronousAction', async () => {

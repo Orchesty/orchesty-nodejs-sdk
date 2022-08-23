@@ -3,6 +3,7 @@
         "applicationSettings": {
             "authorization_form": {
                 "description": "",
+                "readOnly": false,
                 "fields": [
                     {
                         "choices": [],
@@ -32,6 +33,7 @@
             },
             "testForm": {
                 "description": "",
+                "readOnly": false,
                 "fields": [
                     {
                         "choices": [],
@@ -64,6 +66,7 @@
         "authorization_type": "basic",
         "authorized": false,
         "description": "Test description",
+        "isInstallable": true,
         "key": "test",
         "logo": null,
         "name": "Test application"
