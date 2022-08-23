@@ -1,9 +1,14 @@
-/* eslint-disable import/prefer-default-export */
-export function checkParams(object: Record<string, unknown>, params: unknown): boolean {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function checkParams<T extends {} = Record<string, unknown>>(object: T, params: unknown): boolean {
     if (Array.isArray(params)) {
         for (const param of params) {
             if (Array.isArray(param) || typeof param === 'object') {
-                checkParams(object[0] as Record<string, unknown>, param); // Values was object or an array of objects
+                if (Array.isArray(object) || 0 in object) {
+                    checkParams((
+                        object as Record<number, Record<string, unknown>>
+                        | Record<string, Record<string, unknown>>[]
+                    )[0], param); // Values was object or an array of objects
+                }
             } else {
                 /* eslint-disable no-lonely-if */
                 if (!Object.hasOwn(object, param)) {
@@ -18,7 +23,7 @@ export function checkParams(object: Record<string, unknown>, params: unknown): b
             if (!Object.hasOwn(object, key)) {
                 throw Error(`Missing required param [${key}]`);
             }
-            checkParams(object[key] as Record<string, unknown>, paramsObj[key]); // Nested object check
+            checkParams((object as Record<string, Record<string, unknown>>)[key], paramsObj[key]); // Nested object check
         }
     }
 
