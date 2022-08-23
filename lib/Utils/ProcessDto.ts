@@ -1,15 +1,11 @@
 import AProcessDto from './AProcessDto';
 
-export default class ProcessDto<JsonData = unknown> extends AProcessDto {
+export default class ProcessDto<Data = unknown> extends AProcessDto<Data> {
 
     public setData(data: string): this {
         this.data = data;
 
         return this;
-    }
-
-    public getJsonData(): JsonData {
-        return JSON.parse(this.data || '{}');
     }
 
     public setJsonData(body: unknown): this {
