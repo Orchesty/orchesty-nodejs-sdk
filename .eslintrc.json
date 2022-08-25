@@ -1,5 +1,8 @@
 {
     "extends": [
         "plugin:@hanaboso/orchesty"
-    ]
+    ],
+    "rules": {
+        "no-param-reassign": "off"
+    }
 }

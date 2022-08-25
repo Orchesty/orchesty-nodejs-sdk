@@ -1,3 +1,4 @@
+import { ArbitraryObject, traverse } from 'object-traversal';
 import { ICrypt, NAME } from './ICrypt';
 
 export const PREFIX_LENGTH = 4;
@@ -19,6 +20,20 @@ export default class CryptManager {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any
     public encrypt(data: any, prefix?: string): string {
+        if (typeof data === 'object') {
+            traverse(data, ({ parent, key, value }) => {
+                if (parent && key) {
+                    this.fixUnsupportedDataTypes(parent, key, value);
+
+                    if (Array.isArray(value)) {
+                        value.forEach((arrayVal, i) => {
+                            this.fixUnsupportedDataTypes(value, i, arrayVal);
+                        });
+                    }
+                }
+            });
+        }
+
         return this.getImplementation(prefix).encrypt(data);
     }
 
@@ -52,6 +67,16 @@ export default class CryptManager {
         }
 
         throw Error('Unknown crypt service prefix.');
+    }
+
+    private fixUnsupportedDataTypes(parent: ArbitraryObject, key: number | string, value: unknown): void {
+        if (value === undefined) {
+            parent[key] = '';
+        }
+
+        if (value instanceof Date) {
+            parent[key] = value.toString();
+        }
     }
 
 }

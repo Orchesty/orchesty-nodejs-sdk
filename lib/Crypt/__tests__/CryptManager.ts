@@ -111,4 +111,31 @@ describe('CryptManager tests', () => {
         expect(decryptedObj).toEqual(obj);
         expect(decrypted).toEqual(str);
     });
+
+    it('Encrypt/Decrypt data from OAuth services', () => {
+        const data
+          = {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              authorization_form: {
+                  client_id: 'ac1a0325-4a9b-41c1-8f9e-4993e3d5784e',
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
+                  client_secret: '8bv8Q~D7xqaSX1VSRQnt9F9kPYSIfAvGlPtTWcMo',
+                  frontend_redirect_url: '',
+                  token: {
+                      accessToken: 'abcd=}}{{{][;¨¨–><',
+                      tokenType: 'bearer',
+                      nullableValue: null,
+                      refresh_token: undefined,
+                      expires: new Date(0),
+                      others: [
+                          undefined,
+                      ],
+                  },
+              },
+          };
+
+        const encrypted = man.encrypt(data);
+        const decrypted = man.decrypt(encrypted);
+        expect(decrypted).toEqual(data);
+    });
 });
