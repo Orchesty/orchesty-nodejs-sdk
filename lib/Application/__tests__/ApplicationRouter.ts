@@ -95,7 +95,7 @@ describe('Test ApplicationRouter', () => {
 
     it('get /applications/:name/sync/list route', async () => {
         const applicationUrl = `/applications/${application.getName()}/sync/list`;
-        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterInstallCallback"]';
+        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterInstallCallback","afterUninstallCallback"]';
         await supertest(expressApp)
             .get(applicationUrl)
             .expect(StatusCodes.OK, expectedResult);

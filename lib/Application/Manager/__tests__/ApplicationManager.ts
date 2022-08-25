@@ -133,7 +133,7 @@ describe('ApplicationManager tests', () => {
 
     it('getSynchronousActions', () => {
         expect(appManager.getSynchronousActions('test'))
-            .toEqual(['testSyncMethod', 'testSyncMethodVoid', 'afterInstallCallback']);
+            .toEqual(['testSyncMethod', 'testSyncMethodVoid', 'afterInstallCallback', 'afterUninstallCallback']);
     });
 
     it('runSynchronousAction', async () => {
