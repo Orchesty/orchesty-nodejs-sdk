@@ -37,6 +37,21 @@ function logResponseProcess(dto: AProcessDto): void {
     }
 }
 
+export function createApiErrorResponse(req: Request, res: Response, e?: unknown): void {
+    res.status(500);
+    let message = 'Error occurred: unknown reason';
+
+    const detail = (e as { message?: string })?.message;
+    if (detail) {
+        res.status(400);
+        message = `Error occurred: ${detail}`;
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    logger.error(`Request process failed. Message: [${message}]`, {});
+    res.send(JSON.stringify({ status: 'Error', message }));
+}
+
 export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error): void {
     const dto = _dto;
     res.status(500);

@@ -1,7 +1,7 @@
 import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
 import CommonLoader from '../Commons/CommonLoader';
-import { createBatchProcessDto, createSuccessResponse } from '../Utils/Router';
+import { createApiErrorResponse, createBatchProcessDto, createSuccessResponse } from '../Utils/Router';
 import { IBatchNode } from './IBatchNode';
 
 export const BATCH_PREFIX = 'hbpf.batch';
@@ -31,15 +31,24 @@ export default class BatchRouter extends ACommonRouter {
 
         this.app.route('/batch/:name/action/test')
             .get(async (req, res, next) => {
+                try {
                 // eslint-disable-next-line @typescript-eslint/await-thenable
-                await this.loader.get(BATCH_PREFIX, req.params.name);
-                res.json([]);
-                next();
+                    await this.loader.get(BATCH_PREFIX, req.params.name);
+                    res.json([]);
+                    next();
+                } catch (e) {
+                    createApiErrorResponse(req, res, e);
+                }
             });
 
         this.app.route('/batch/list')
-            .get((req, res) => {
-                res.json(this.loader.getList(BATCH_PREFIX));
+            .get((req, res, next) => {
+                try {
+                    res.json(this.loader.getList(BATCH_PREFIX));
+                    next();
+                } catch (e) {
+                    createApiErrorResponse(req, res, e);
+                }
             });
 
         return this.app;

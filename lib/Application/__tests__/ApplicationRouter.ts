@@ -129,11 +129,10 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('throw error on get /applications/:name/users/:user/authorize route cause', async () => {
-        // Todo : 500 response
         const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
         await supertest(expressApp)
             .get(applicationUrl)
-            .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+            .expect(StatusCodes.BAD_REQUEST);
     });
 
     it('get /applications/:name/users/:user/authorize route', async () => {
@@ -192,7 +191,7 @@ describe('Test ApplicationRouter', () => {
         const applicationUrl = `/applications/${appName}/users/${userName}/install`;
         await supertest(expressApp)
             .post(applicationUrl)
-            .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+            .expect(StatusCodes.BAD_REQUEST);
     });
 
     it('put /applications/:name/users/:user/settings route', async () => {

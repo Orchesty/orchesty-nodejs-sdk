@@ -2,7 +2,7 @@ import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
 import CommonLoader from '../Commons/CommonLoader';
 import { ICommonNode } from '../Commons/ICommonNode';
-import { createProcessDto, createSuccessResponse } from '../Utils/Router';
+import { createApiErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
 
 export const CONNECTOR_PREFIX = 'hbpf.connector';
 
@@ -29,15 +29,23 @@ export default class ConnectorRouter extends ACommonRouter {
         });
 
         this.app.route('/connector/:name/action/test').get(async (req, res, next) => {
-            // eslint-disable-next-line @typescript-eslint/await-thenable
-            await this.loader.get(CONNECTOR_PREFIX, req.params.name);
-            res.json([]);
-            next();
+            try {
+                // eslint-disable-next-line @typescript-eslint/await-thenable
+                await this.loader.get(CONNECTOR_PREFIX, req.params.name);
+                res.json([]);
+                next();
+            } catch (e) {
+                createApiErrorResponse(req, res, e);
+            }
         });
 
         this.app.route('/connector/list').get((req, res, next) => {
-            res.json(this.loader.getList(CONNECTOR_PREFIX));
-            next();
+            try {
+                res.json(this.loader.getList(CONNECTOR_PREFIX));
+                next();
+            } catch (e) {
+                createApiErrorResponse(req, res, e);
+            }
         });
 
         return this.app;
