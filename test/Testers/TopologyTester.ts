@@ -8,6 +8,7 @@ import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import {
+    BATCH_CURSOR,
     FORCE_TARGET_QUEUE,
     REPEAT_HOPS,
     REPEAT_MAX_HOPS,
@@ -78,6 +79,7 @@ export default class TopologyTester {
                 ...out.getHeaders(),
                 ...message.headers ?? {},
             });
+            dto.removeHeader(BATCH_CURSOR);
 
             nextDto.push(dto);
         });
