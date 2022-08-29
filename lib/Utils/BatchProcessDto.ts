@@ -41,12 +41,12 @@ export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
         return this as unknown as BatchProcessDto<Item>;
     }
 
-    public setItemList<Item = unknown>(list: Item[]): BatchProcessDto<Item> {
+    public setItemList<Item = unknown>(list: Item[]): BatchProcessDto<Item[]> {
         list.forEach((it) => {
             this.addItem(it);
         });
 
-        return this as unknown as BatchProcessDto<Item>;
+        return this as unknown as BatchProcessDto<Item[]>;
     }
 
     public addMessage(message: IBatchMessage): this {
