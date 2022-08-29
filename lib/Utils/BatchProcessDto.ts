@@ -27,7 +27,7 @@ export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
         return this;
     }
 
-    public addItem<Item = unknown>(body: Item, user?: string): this {
+    public addItem<Item = unknown>(body: Item, user?: string): BatchProcessDto<Item> {
         let b: unknown = body;
         if (typeof body !== 'string') {
             b = JSON.stringify(body);
@@ -38,15 +38,15 @@ export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
             body: b as string,
         });
 
-        return this;
+        return this as unknown as BatchProcessDto<Item>;
     }
 
-    public setItemList<Item = unknown>(list: Item[]): this {
+    public setItemList<Item = unknown>(list: Item[]): BatchProcessDto<Item> {
         list.forEach((it) => {
             this.addItem(it);
         });
 
-        return this;
+        return this as unknown as BatchProcessDto<Item>;
     }
 
     public addMessage(message: IBatchMessage): this {

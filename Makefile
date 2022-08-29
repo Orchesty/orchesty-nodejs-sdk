@@ -52,7 +52,7 @@ unit:
 fasttest: lint unit
 
 localtest:
-	pnpm run lint-ci
+	pnpm run lint
 	pnpm run test
 
 test: docker-up-force install fasttest docker-down-clean

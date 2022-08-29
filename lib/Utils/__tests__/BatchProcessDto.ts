@@ -27,4 +27,28 @@ describe('Tests ProcessDto utils', () => {
 
         expect(dto.getHeaders()).toEqual({});
     });
+
+    it('addMessage adds message correctly', () => {
+        const dto = new BatchProcessDto();
+        const message = { body: '', headers: { key: 'value' } };
+        dto.addMessage(message);
+
+        expect(dto.getMessages()).toEqual([message]);
+    });
+
+    it('setMessages adds message correctly', () => {
+        const dto = new BatchProcessDto();
+        const message = { body: '', headers: { key: 'value' } };
+        dto.setMessages([message]);
+
+        expect(dto.getMessages()).toEqual([message]);
+    });
+
+    it('setItemList adds message correctly', () => {
+        const dto = new BatchProcessDto();
+        const message = { foo: 'bar' };
+        dto.setItemList<{ foo: string }>([message]);
+
+        expect(dto.getMessages()).toEqual([{ body: '{"foo":"bar"}', headers: null }]);
+    });
 });
