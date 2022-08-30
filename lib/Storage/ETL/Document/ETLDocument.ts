@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { index } from 'mongodb-typescript';
 import DateTimeUtils from '../../../Utils/DateTimeUtils';
 import ADocument from '../../Mongodb/ADocument';

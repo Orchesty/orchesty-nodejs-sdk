@@ -68,7 +68,7 @@ export default class ApplicationManager {
 
         return {
             ...res,
-            [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
+            [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
         };
     }
 
@@ -87,7 +87,7 @@ export default class ApplicationManager {
 
         return {
             ...res,
-            [APPLICATION_SETTINGS]: (app as unknown as AApplication).getApplicationForms(appInstall),
+            [APPLICATION_SETTINGS]: await (app as unknown as AApplication).getApplicationForms(appInstall),
         };
     }
 
@@ -131,7 +131,7 @@ export default class ApplicationManager {
         return {
             ...app.toArray(),
             [AUTHORIZED]: app.isAuthorized(appInstall),
-            [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
+            [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
         };
     }
 
@@ -146,7 +146,7 @@ export default class ApplicationManager {
         return {
             ...app.toArray(),
             [AUTHORIZED]: app.isAuthorized(appInstall),
-            [APPLICATION_SETTINGS]: app.getApplicationForms(appInstall),
+            [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
             webhookSettings: isWebhook(app.getApplicationType())
                 ? await this.webhookManager.getWebhooks(app, user)
                 : [],

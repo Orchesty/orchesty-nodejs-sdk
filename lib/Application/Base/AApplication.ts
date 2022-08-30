@@ -69,7 +69,7 @@ export default abstract class AApplication implements IApplication {
         return null;
     }
 
-    public getApplicationForms(applicationInstall: ApplicationInstall): Record<string, IForm> {
+    public async getApplicationForms(applicationInstall: ApplicationInstall): Promise<Record<string, IForm>> {
         const settings = applicationInstall.getSettings();
         const formStack = this.getFormStack();
         formStack.getForms().forEach((form) => {
@@ -84,7 +84,7 @@ export default abstract class AApplication implements IApplication {
             });
         });
 
-        this.customFormReplace(formStack, applicationInstall);
+        await this.customFormReplace(formStack, applicationInstall);
 
         return formStack.toArray();
     }
@@ -154,7 +154,7 @@ export default abstract class AApplication implements IApplication {
     }
 
     // eslint-disable-next-line
-    protected customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void {
+    protected customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void | Promise<void> {
     }
 
 }

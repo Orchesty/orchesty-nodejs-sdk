@@ -41,8 +41,8 @@ export default abstract class AOAuth2Application extends AApplication implements
         return Boolean(applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[TOKEN]?.[ACCESS_TOKEN]);
     }
 
-    public getApplicationForms(applicationInstall: ApplicationInstall): Record<string, IForm> {
-        const forms = super.getApplicationForms(applicationInstall);
+    public async getApplicationForms(applicationInstall: ApplicationInstall): Promise<Record<string, IForm>> {
+        const forms = await super.getApplicationForms(applicationInstall);
 
         const redirectField = new Field(
             FieldType.TEXT,

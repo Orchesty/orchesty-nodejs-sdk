@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { id, objectId } from 'mongodb-typescript';
 
 export interface IDocument {

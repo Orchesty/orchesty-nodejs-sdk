@@ -67,12 +67,12 @@ describe('Test AOAuth2Application', () => {
         expect(isAuthorized).toBeFalsy();
     });
 
-    it('should get application form data', () => {
+    it('should get application form data', async () => {
         const keysToBeReturned = ['client_id', 'client_secret', 'redirect_url'];
         const appInstall = new ApplicationInstall()
             .setUser('user')
             .setName(oAuthApplication.getName());
-        const data = oAuthApplication.getApplicationForms(appInstall);
+        const data = await oAuthApplication.getApplicationForms(appInstall);
 
         keysToBeReturned.forEach((item) => {
             expect(data[AUTHORIZATION_FORM].fields.find((field) => field.key === item)).toBeDefined();

@@ -148,12 +148,12 @@ describe('Test application', () => {
         expect(requestDtoWithoutUrl).toHaveProperty('url', '');
     });
 
-    it('getApplicationForm', () => {
+    it('getApplicationForm', async () => {
         const app = new TestBasicApplication();
         const appInstall = new ApplicationInstall();
         const sett = { form: { person: user, [PASSWORD]: pass } };
         appInstall.addSettings(sett);
-        const res = app.getApplicationForms(appInstall);
+        const res = await app.getApplicationForms(appInstall);
         expect(res).toEqual({
             authorization_form: { // eslint-disable-line
                 description: '',
