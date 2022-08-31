@@ -7,7 +7,7 @@ import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
 import MongoDbClient from '../../Mongodb/Client';
-import ETLManager from '../ETLManager';
+import DataStorageManager from '../DataStorageManager';
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -40,16 +40,16 @@ describe('Test ETL Manager', () => {
         const app = 'app';
         const process = '123';
 
-        const etl = new ETLManager(dbClient);
-        await etl.storeData(user, app, process, [{ foo: 'bar' }, { john: 'doe' }]);
+        const dataStorageManager = new DataStorageManager(dbClient);
+        await dataStorageManager.store(user, app, process, [{ foo: 'bar' }, { john: 'doe' }]);
 
-        const data = await etl.getData(user, app, process);
+        const data = await dataStorageManager.load(user, app, process);
         assert.deepEqual(data[0].getData(), { foo: 'bar' });
         assert.deepEqual(data[1].getData(), { john: 'doe' });
 
-        await etl.removeData(user, app, process);
+        await dataStorageManager.remove(user, app, process);
 
-        const data2 = await etl.getData(user, app, process);
+        const data2 = await dataStorageManager.load(user, app, process);
         assert.deepEqual(data2, []);
     });
 });

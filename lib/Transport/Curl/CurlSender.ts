@@ -86,7 +86,8 @@ export default class CurlSender {
             level,
             `${message}
        Code: ${res.status},
-       Message: ${body ?? 'Empty response'},
+       Body: ${body ?? 'Empty response'},
+       Headers: ${JSON.stringify(res.headers.raw())},
        Reason: ${res.statusText}`,
             logger.createCtx(dto.getDebugInfo()),
         );

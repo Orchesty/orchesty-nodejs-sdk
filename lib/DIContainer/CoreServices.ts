@@ -5,7 +5,7 @@ enum CoreServices {
     CACHE = 'hbpf.core.cache',
     CRYPT_MANAGER = 'hbpf.core.crypt_manager',
     CURL = 'hbpf.core.curl_sender',
-    ETL_MANAGER = 'hbpf.core.etl_manager',
+    DATA_STORAGE_MANAGER = 'hbpf.core.data_storage_manager',
     LOADER = 'hbpf.core.common_loader',
     METRICS = 'hbpf.core.metrics',
     MONGO = 'hbpf.core.mongo',
