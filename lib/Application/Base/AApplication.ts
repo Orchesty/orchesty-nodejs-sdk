@@ -96,7 +96,10 @@ export default abstract class AApplication implements IApplication {
     ): Promise<ApplicationInstall> {
         const preparedSettings: IApplicationSettings = {};
 
-        this.getFormStack().getForms().forEach((form) => {
+        const formStack = this.getFormStack();
+        await this.customFormReplace(formStack, applicationInstall);
+
+        formStack.getForms().forEach((form) => {
             form.getFields().forEach((field) => {
                 if (form.getKey() in settings && field.getKey() in settings[form.getKey()]) {
                     const currentFrom = preparedSettings[form.getKey()];
