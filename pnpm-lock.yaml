@@ -5,7 +5,7 @@ specifiers:
   '@types/express': ^4.17.13
   '@types/express-prometheus-middleware': ^1.2.1
   '@types/jest': ^28.1.8
-  '@types/luxon': ^3.0.0
+  '@types/luxon': ^3.0.1
   '@types/mime-types': ^2.1.1
   '@types/node': ^18.7.14
   '@types/node-fetch': ^2.6.2
@@ -28,7 +28,7 @@ specifiers:
   luxon: ^3.0.3
   metrics-sender: ^0.0.10
   mime-types: ^2.1.35
-  mongodb: ^4.9.0
+  mongodb: ^4.9.1
   mongodb-typescript: ^3.0.0
   node-cache: ^5.1.2
   node-fetch: ^2.6.7
@@ -50,7 +50,7 @@ specifiers:
 dependencies:
   '@types/express': 4.17.13
   '@types/express-prometheus-middleware': 1.2.1
-  '@types/luxon': 3.0.0
+  '@types/luxon': 3.0.1
   '@types/mime-types': 2.1.1
   '@types/node-fetch': 2.6.2
   '@types/php-serialize': 3.0.1
@@ -65,8 +65,8 @@ dependencies:
   luxon: 3.0.3
   metrics-sender: 0.0.10
   mime-types: 2.1.35
-  mongodb: 4.9.0
-  mongodb-typescript: 3.0.0_yncesdxeq3z7gecntdjonxvkly
+  mongodb: 4.9.1
+  mongodb-typescript: 3.0.0_klas57w6wbzhtiu62oaot5t3du
   node-cache: 5.1.2
   node-fetch: 2.6.7
   node-redis-connection-pool: 3.1.0
@@ -703,7 +703,7 @@ packages:
     resolution: {integrity: sha512-/l/VWsdt/aBXgjshLWOFyFt3IVdYypu5y2Wn2rOO1un6nkqIn8SLXzgIMYXFyYsRWDyF5EthmKJMIdJvk08grg==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
-      '@sinclair/typebox': 0.24.32
+      '@sinclair/typebox': 0.24.34
     dev: true
 
   /@jest/source-map/28.1.2:
@@ -862,8 +862,8 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: false
 
-  /@sinclair/typebox/0.24.32:
-    resolution: {integrity: sha512-NWNTW284AOFhxgYofPef5IqDq6Y7ghZkZAkWJcUBp1r9ljfrFOKBDsiQJnLNp9tLcaSXFK9OgsS72W4RXe0jvw==}
+  /@sinclair/typebox/0.24.34:
+    resolution: {integrity: sha512-x3ejWKw7rpy30Bvm6U0AQMOHdjqe2E3YJrBHlTxH0KFsp77bBa+MH324nJxtXZFpnTy/JW2h5HPYVm0vG2WPnw==}
     dev: true
 
   /@sinonjs/commons/1.8.3:
@@ -1000,8 +1000,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/luxon/3.0.0:
-    resolution: {integrity: sha512-Lx+EZoJxUKw4dp8uei9XiUVNlgkYmax5+ovqt6Xf3LzJOnWhlfJw/jLBmqfGVwOP/pDr4HT8bI1WtxK0IChMLw==}
+  /@types/luxon/3.0.1:
+    resolution: {integrity: sha512-/LAvk1cMOJt0ghzMFrZEvByUhsiEfeeT2IF53Le+Ki3A538yEL9pRZ7a6MuCxdrYK+YNqNIDmrKU/r2nnw04zQ==}
     dev: false
 
   /@types/mime-types/2.1.1:
@@ -1530,7 +1530,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001387
-      electron-to-chromium: 1.4.237
+      electron-to-chromium: 1.4.239
       node-releases: 2.0.6
       update-browserslist-db: 1.0.5_browserslist@4.21.3
     dev: true
@@ -1946,8 +1946,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium/1.4.237:
-    resolution: {integrity: sha512-vxVyGJcsgArNOVUJcXm+7iY3PJAfmSapEszQD1HbyPLl0qoCmNQ1o/EX3RI7Et5/88In9oLxX3SGF8J3orkUgA==}
+  /electron-to-chromium/1.4.239:
+    resolution: {integrity: sha512-XbhfzxPIFzMjJm17T7yUGZEyYh5XuUjrA/FQ7JUy2bEd4qQ7MvFTaKpZ6zXZog1cfVttESo2Lx0ctnf7eQOaAQ==}
     dev: true
 
   /emittery/0.10.2:
@@ -3793,19 +3793,19 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb-typescript/3.0.0_yncesdxeq3z7gecntdjonxvkly:
+  /mongodb-typescript/3.0.0_klas57w6wbzhtiu62oaot5t3du:
     resolution: {integrity: sha512-SBhe8ttj33q1Ccn14UdtTFQVOPYvpMqLxJtB7AXCc4SRTe8AA6KWjdqDPLDJWw/B5E4LpLpqmjwoNsgoKL1PlQ==}
     peerDependencies:
       mongodb: ^4.8.0
       reflect-metadata: ^0.1.13
     dependencies:
       class-transformer: 0.5.1
-      mongodb: 4.9.0
+      mongodb: 4.9.1
       reflect-metadata: 0.1.13
     dev: false
 
-  /mongodb/4.9.0:
-    resolution: {integrity: sha512-tJJEFJz7OQTQPZeVHZJIeSOjMRqc5eSyXTt86vSQENEErpkiG7279tM/GT5AVZ7TgXNh9HQxoa2ZkbrANz5GQw==}
+  /mongodb/4.9.1:
+    resolution: {integrity: sha512-ZhgI/qBf84fD7sI4waZBoLBNJYPQN5IOC++SBCiPiyhzpNKOxN/fi0tBHvH2dEC42HXtNEbFB0zmNz4+oVtorQ==}
     engines: {node: '>=12.9.0'}
     dependencies:
       bson: 4.7.0

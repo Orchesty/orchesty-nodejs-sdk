@@ -6,10 +6,10 @@ import ADocument from '../../Mongodb/ADocument';
 export default class DataStorageDocument extends ADocument {
 
     @index()
-    private user = '';
+    private user?: string = '';
 
     @index()
-    private application = '';
+    private application?: string = '';
 
     @index()
     private processId = '';
@@ -24,21 +24,21 @@ export default class DataStorageDocument extends ADocument {
         this.created = DateTimeUtils.getUtcDate();
     }
 
-    public getUser(): string {
+    public getUser(): string | undefined {
         return this.user;
     }
 
-    public setUser(user: string): this {
+    public setUser(user?: string): this {
         this.user = user;
 
         return this;
     }
 
-    public getApplication(): string {
+    public getApplication(): string | undefined {
         return this.application;
     }
 
-    public setApplication(application: string): this {
+    public setApplication(application?: string): this {
         this.application = application;
 
         return this;

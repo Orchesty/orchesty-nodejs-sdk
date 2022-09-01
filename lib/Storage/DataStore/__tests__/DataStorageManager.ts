@@ -38,18 +38,18 @@ describe('Test ETL Manager', () => {
     it('should etl works', async () => {
         const user = 'user';
         const app = 'app';
-        const process = '123';
+        const id = '123';
 
         const dataStorageManager = new DataStorageManager(dbClient);
-        await dataStorageManager.store(user, app, process, [{ foo: 'bar' }, { john: 'doe' }]);
+        await dataStorageManager.store(id, [{ foo: 'bar' }, { john: 'doe' }], app, user);
 
-        const data = await dataStorageManager.load(user, app, process);
+        const data = await dataStorageManager.load(id, app, user);
         assert.deepEqual(data[0].getData(), { foo: 'bar' });
         assert.deepEqual(data[1].getData(), { john: 'doe' });
 
-        await dataStorageManager.remove(user, app, process);
+        await dataStorageManager.remove(id, app, user);
 
-        const data2 = await dataStorageManager.load(user, app, process);
+        const data2 = await dataStorageManager.load(id, app, user);
         assert.deepEqual(data2, []);
     });
 });
