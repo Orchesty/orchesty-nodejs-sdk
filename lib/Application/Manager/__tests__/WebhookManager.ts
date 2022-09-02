@@ -67,7 +67,7 @@ describe('Tests for webhookManager', () => {
         jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => 'mockedToken');
         mockedFetch.get(
             'https://sp.orchesty.com/webhook/topologies/testWebhook/nodes/testNode/token/mockedToken',
-            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers()),
+            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers(), Buffer.from('')),
         );
         // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         await expect(webhookManager.subscribeWebhooks(
@@ -80,7 +80,7 @@ describe('Tests for webhookManager', () => {
     it('should unsubscribe webhooks', async () => {
         mockedFetch.delete(
             '/unknown/url',
-            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers()),
+            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers(), Buffer.from('')),
         );
 
         // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression

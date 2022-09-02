@@ -7,6 +7,7 @@ export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
         private readonly body: string,
         private readonly code: number,
         private readonly headers: Headers,
+        private readonly buffer: Buffer,
         private readonly reason?: string,
     ) {
     }
@@ -21,6 +22,10 @@ export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
 
     public getJsonBody(): JsonBody {
         return JSON.parse(this.body);
+    }
+
+    public getBuffer(): Buffer {
+        return this.buffer;
     }
 
     public getReason(): string | undefined {

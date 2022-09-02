@@ -87,6 +87,7 @@ describe('Tests for webhook application', () => {
             JSON.stringify({ id: '1' }),
             200,
             new Headers(),
+            Buffer.from(''),
         ), new ApplicationInstall());
         expect(processResponse).toBe('1');
     });
@@ -96,6 +97,7 @@ describe('Tests for webhook application', () => {
             JSON.stringify({ id: '1' }),
             200,
             new Headers(),
+            Buffer.from(''),
         ));
         expect(processResponse).toBeTruthy();
     });

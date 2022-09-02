@@ -141,6 +141,7 @@ export function mockCurl(
                     newBody,
                     curl.code || 200,
                     new Headers(curl.headers ?? new Headers()),
+                    Buffer.from(''),
                 );
             },
         );

@@ -59,14 +59,14 @@ describe('Test AConnector', () => {
 
     it('shouldnt set dto stop process on dto', () => {
         const dto = new ProcessDto();
-        const response = new ResponseDto('body', 200, new Headers({}));
+        const response = new ResponseDto('body', 200, new Headers({}), Buffer.from(''));
         testConnector.evaluateStatusCode(response, dto, 'error');
         expect(dto.getHeaders()).toEqual({});
     });
 
     it('should set dto stop process on dto', () => {
         const dto = new ProcessDto();
-        const response = new ResponseDto('body', 205, new Headers({}));
+        const response = new ResponseDto('body', 205, new Headers({}), Buffer.from(''));
         testConnector.evaluateStatusCode(response, dto, 'error');
         expect(dto.getHeaders()).toEqual({ 'result-code': '1006', 'result-message': 'error' });
     });

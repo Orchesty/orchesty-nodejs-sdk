@@ -41,7 +41,7 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
                 expect(request.getHeaders()).toStrictEqual(new Headers(defaultHeaders));
             }
 
-            return new ResponseDto('{}', StatusCodes.OK, new Headers(new Headers()));
+            return new ResponseDto('{}', StatusCodes.OK, new Headers(new Headers()), Buffer.from(''));
         },
     );
 }
