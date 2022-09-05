@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import OnRepeatException from '../Exception/OnRepeatException';
+import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
 import NodeRepository from '../Storage/Mongodb/Document/NodeRepository';
 import { getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
@@ -30,6 +31,16 @@ export default function errorHandler(nodeRepository: NodeRepository) {
       MaxHops: ${err.getMaxHops()}`,
                 dto,
             );
+
+            createSuccessResponse(res, dto);
+            res.on('finish', () => {
+                dto.setFree(true);
+            });
+            next();
+            return;
+        }
+        if (err instanceof OnStopAndFailException) {
+            logger.debug('Stop and fail based on result code', dto);
 
             createSuccessResponse(res, dto);
             res.on('finish', () => {
