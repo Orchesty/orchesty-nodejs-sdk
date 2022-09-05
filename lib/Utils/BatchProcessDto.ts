@@ -7,7 +7,7 @@ export interface IBatchMessage {
     headers: Record<string, string[] | string> | null;
 }
 
-export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
+export default class BatchProcessDto<Data = unknown, Item = unknown> extends AProcessDto<Data> {
 
     private messages: IBatchMessage[];
 
@@ -27,7 +27,7 @@ export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
         return this;
     }
 
-    public addItem<Item = unknown>(body: Item, user?: string): BatchProcessDto<Item> {
+    public addItem(body: Item, user?: string): BatchProcessDto<Item> {
         let b: unknown = body;
         if (typeof body !== 'string') {
             b = JSON.stringify(body);
@@ -41,7 +41,7 @@ export default class BatchProcessDto<Data = unknown> extends AProcessDto<Data> {
         return this as unknown as BatchProcessDto<Item>;
     }
 
-    public setItemList<Item = unknown>(list: Item[]): BatchProcessDto<Item[]> {
+    public setItemList(list: Item[]): BatchProcessDto<Item[]> {
         list.forEach((it) => {
             this.addItem(it);
         });
