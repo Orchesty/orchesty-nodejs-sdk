@@ -22,12 +22,15 @@ export interface IApplicationArray {
     application_type: ApplicationTypeEnum;
     key: string;
     description: string;
+    info: string;
     isInstallable: boolean;
 }
 
 export default abstract class AApplication implements IApplication {
 
     protected logoFilename = 'logo.svg';
+
+    protected infoFilename = 'info.html';
 
     protected isInstallable = true;
 
@@ -67,6 +70,14 @@ export default abstract class AApplication implements IApplication {
         } catch {
         }
         return null;
+    }
+
+    public getInfo(): string {
+        if (fs.existsSync(this.infoFilename)) {
+            return fs.readFileSync(this.infoFilename).toString();
+        }
+
+        return '';
     }
 
     public async getApplicationForms(applicationInstall: ApplicationInstall): Promise<Record<string, IForm>> {
@@ -139,6 +150,7 @@ export default abstract class AApplication implements IApplication {
             application_type: this.getApplicationType(),
             key: this.getName(),
             description: this.getDescription(),
+            info: this.getInfo(),
             logo: this.getLogo(),
             isInstallable: this.isInstallable,
         };
