@@ -26,7 +26,7 @@
     "@types/php-serialize": "^3.0.1",
     "@types/simple-oauth2": "^4.1.1",
     "@types/sodium-native": "^2.3.5",
-    "async-mutex": "^0.3.2",
+    "async-mutex": "^0.4.0",
     "deepmerge": "^4.2.2",
     "express": "~5.0.0-beta.1",
     "express-prometheus-middleware": "^1.2.0",
