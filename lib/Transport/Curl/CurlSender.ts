@@ -6,9 +6,9 @@ import Severity from '../../Logger/Severity';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import { APPLICATION, CORRELATION_ID, NODE_ID, USER } from '../../Utils/Headers';
 import ResultCode from '../../Utils/ResultCode';
-import { ResultCodeRange } from './HttpCodes';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
+import { ResultCodeRange } from './ResultCodeRange';
 
 export default class CurlSender {
 

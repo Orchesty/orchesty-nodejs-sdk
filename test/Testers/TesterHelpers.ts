@@ -9,7 +9,7 @@ import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
 import SpyInstance = jest.SpyInstance;
-import { ResultCodeRange } from '../../lib/Transport/Curl/HttpCodes';
+import { ResultCodeRange } from '../../lib/Transport/Curl/ResultCodeRange';
 
 export interface ICurlMock {
     body: Record<string, unknown> | string;
