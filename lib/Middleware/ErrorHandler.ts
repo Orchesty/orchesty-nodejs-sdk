@@ -41,8 +41,9 @@ export default function errorHandler(nodeRepository: NodeRepository) {
             return;
         }
         if (err instanceof OnStopAndFailException) {
-            logger.debug('Stop and fail based on result code', dto);
-            dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'Stop and fail based on result code');
+            const message = 'Stop and fail based on result code';
+            logger.debug(message, dto);
+            dto.setStopProcess(ResultCode.STOP_AND_FAILED, message);
 
             createSuccessResponse(res, dto);
             res.on('finish', () => {
