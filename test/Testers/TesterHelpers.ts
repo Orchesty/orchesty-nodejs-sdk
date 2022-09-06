@@ -9,6 +9,7 @@ import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
 import SpyInstance = jest.SpyInstance;
+import { ResultCodeRange } from '../../lib/Transport/Curl/ResultCodeRange';
 
 export interface ICurlMock {
     body: Record<string, unknown> | string;
@@ -92,7 +93,7 @@ export function mockCurl(
         const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
         spy = spy.mockImplementationOnce(
             // eslint-disable-next-line @typescript-eslint/require-await,@typescript-eslint/no-explicit-any
-            async (r: RequestDto, aC?: number[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
+            async (r: RequestDto, aC?: ResultCodeRange[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
                 const request = r;
                 const [method, url] = curl.http.split(' ', 2);
                 try {

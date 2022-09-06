@@ -39,6 +39,7 @@ describe('Test application', () => {
             application_type: ApplicationTypeEnum.CRON, // eslint-disable-line
             authorization_type: AuthorizationTypeEnum.BASIC, // eslint-disable-line
             description: 'Test description',
+            info: '',
             isInstallable: true,
             key: 'test',
             name: 'Test application',
