@@ -5,6 +5,7 @@ import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
 import NodeRepository from '../Storage/Mongodb/Document/NodeRepository';
 import { getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
+import ResultCode from '../Utils/ResultCode';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
 
 export default function errorHandler(nodeRepository: NodeRepository) {
@@ -41,6 +42,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
         }
         if (err instanceof OnStopAndFailException) {
             logger.debug('Stop and fail based on result code', dto);
+            dto.setStopProcess(ResultCode.STOP_AND_FAILED, 'Stop and fail based on result code');
 
             createSuccessResponse(res, dto);
             res.on('finish', () => {

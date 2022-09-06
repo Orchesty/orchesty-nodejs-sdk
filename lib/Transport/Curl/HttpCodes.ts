@@ -1,6 +1,6 @@
 import ResultCode from '../../Utils/ResultCode';
 
-export function makeSuccessCodeObject(from: number, to: number): ICodeObject {
+export function createSuccessRange(from: number, to: number): IRangeObject {
     return {
         from,
         to,
@@ -8,7 +8,7 @@ export function makeSuccessCodeObject(from: number, to: number): ICodeObject {
     };
 }
 
-export function makeStopAndFailCodeObject(from: number, to: number): ICodeObject {
+export function createFailRange(from: number, to: number): IRangeObject {
     return {
         from,
         to,
@@ -16,7 +16,7 @@ export function makeStopAndFailCodeObject(from: number, to: number): ICodeObject
     };
 }
 
-export function makeRepeatCodeObject(from: number, to: number): ICodeObject {
+export function createRepeatRange(from: number, to: number): IRangeObject {
     return {
         from,
         to,
@@ -24,10 +24,10 @@ export function makeRepeatCodeObject(from: number, to: number): ICodeObject {
     };
 }
 
-export interface ICodeObject {
+export interface IRangeObject {
     from: number;
     to: number;
     action: ResultCode;
 }
 
-export type AllowedCode = ICodeObject | number;
+export type ResultCodeRange = IRangeObject | number;

@@ -6,7 +6,7 @@ import Severity from '../../Logger/Severity';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import { APPLICATION, CORRELATION_ID, NODE_ID, USER } from '../../Utils/Headers';
 import ResultCode from '../../Utils/ResultCode';
-import { AllowedCode } from './HttpCodes';
+import { ResultCodeRange } from './HttpCodes';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
 
@@ -17,7 +17,7 @@ export default class CurlSender {
 
     public async send<JsonBody = unknown>(
         dto: RequestDto,
-        allowedCodes?: AllowedCode[],
+        codeRange?: ResultCodeRange[],
         sec = 60,
         hops = 10,
         // eslint-disable-next-line @typescript-eslint/require-await
@@ -45,7 +45,7 @@ export default class CurlSender {
                 CurlSender.log(dto, response, Severity.DEBUG, body);
             }
 
-            for (const code of allowedCodes ?? []) {
+            for (const code of codeRange ?? []) {
                 if (typeof code === 'number') {
                     if (code === response.status) {
                         return this.returnResponseDto(body, response, buffer);
