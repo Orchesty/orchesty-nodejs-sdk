@@ -45,9 +45,9 @@ describe('Tests ProcessDto utils', () => {
     });
 
     it('setItemList adds message correctly', () => {
-        const dto = new BatchProcessDto();
+        const dto = new BatchProcessDto<unknown, { foo: string }>();
         const message = { foo: 'bar' };
-        dto.setItemList<{ foo: string }>([message]);
+        dto.setItemList([message]);
 
         expect(dto.getMessages()).toEqual([{ body: '{"foo":"bar"}', headers: null }]);
     });
