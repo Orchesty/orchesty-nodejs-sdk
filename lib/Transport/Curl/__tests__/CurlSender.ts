@@ -50,7 +50,7 @@ describe('tests for curlSender', () => {
     it('should test send - 400', async () => {
         const url = 'http://testUrl.com/status';
         mockedFetch.get(url, 400);
-        const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
+        const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), [400]);
         expect(response.getResponseCode()).toBe(400);
     });
 
