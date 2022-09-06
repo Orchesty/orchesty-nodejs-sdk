@@ -66,6 +66,7 @@
         "authorization_type": "basic",
         "authorized": false,
         "description": "Test description",
+        "info": "",
         "isInstallable": true,
         "key": "test",
         "logo": null,
