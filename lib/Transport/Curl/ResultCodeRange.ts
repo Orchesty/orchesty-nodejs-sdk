@@ -1,25 +1,25 @@
 import ResultCode from '../../Utils/ResultCode';
 
-export function createSuccessRange(from: number, to: number): IRangeObject {
+export function createSuccessRange(from: number, to?: number): IRangeObject {
     return {
         from,
-        to,
+        to: to ?? from,
         action: ResultCode.SUCCESS,
     };
 }
 
-export function createFailRange(from: number, to: number): IRangeObject {
+export function createFailRange(from: number, to?: number): IRangeObject {
     return {
         from,
-        to,
+        to: to ?? from,
         action: ResultCode.STOP_AND_FAILED,
     };
 }
 
-export function createRepeatRange(from: number, to: number): IRangeObject {
+export function createRepeatRange(from: number, to?: number): IRangeObject {
     return {
         from,
-        to,
+        to: to ?? from,
         action: ResultCode.REPEAT,
     };
 }

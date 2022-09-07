@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@hanaboso/eslint-plugin': ^1.0.1
+  '@hanaboso/eslint-plugin': ^1.0.2
   '@types/express': ^4.17.13
   '@types/express-prometheus-middleware': ^1.2.1
   '@types/jest': ^28.1.8
@@ -80,7 +80,7 @@ dependencies:
   winston: 3.8.1
 
 devDependencies:
-  '@hanaboso/eslint-plugin': 1.0.1_bi2kohzqnxavgozw3csgny5hju
+  '@hanaboso/eslint-plugin': 1.0.2_bi2kohzqnxavgozw3csgny5hju
   '@types/jest': 28.1.8
   '@types/node': 18.7.15
   '@types/readline-sync': 1.4.4
@@ -474,8 +474,8 @@ packages:
       - supports-color
     dev: true
 
-  /@hanaboso/eslint-plugin/1.0.1_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-hYMmvCp/x+jUf73UADWaz7FHk5sXBxd09T5PKvJrgO/Rt1MUb/cM3VnwTofUIIYgLJWhxgtXU1Qfy7SG0zQjrQ==}
+  /@hanaboso/eslint-plugin/1.0.2_bi2kohzqnxavgozw3csgny5hju:
+    resolution: {integrity: sha512-PEN2jMNt/XnC9na7BoO1i2DSwhYnOO2os1JNhvpEbqLhcLQhLpPPFvNm32MQc8MKhP+S90Y/hNiOXk1pIQi0OA==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.36.2_rw7bv7ssb2wxb3elg2iopq7ihq
       '@typescript-eslint/parser': 5.36.2_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -703,7 +703,7 @@ packages:
     resolution: {integrity: sha512-/l/VWsdt/aBXgjshLWOFyFt3IVdYypu5y2Wn2rOO1un6nkqIn8SLXzgIMYXFyYsRWDyF5EthmKJMIdJvk08grg==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
-      '@sinclair/typebox': 0.24.35
+      '@sinclair/typebox': 0.24.38
     dev: true
 
   /@jest/source-map/28.1.2:
@@ -862,8 +862,8 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: false
 
-  /@sinclair/typebox/0.24.35:
-    resolution: {integrity: sha512-iN6ehuDndiTiDz2F+Orv/+oHJR+PrGv+38oghCddpsW4YEZl5qyLsWxSwYUWrKEOfjpGtXDFW6scJtjpzSLeSw==}
+  /@sinclair/typebox/0.24.38:
+    resolution: {integrity: sha512-IbYB6vdhLFmzGEyXXEdFAJKyq7S4/RsivkgxNzs/LzwYuUJHmeNQ0cHkjG/Yqm6VgUzzZDLMZAf0XgeeaZAocA==}
     dev: true
 
   /@sinonjs/commons/1.8.3:
@@ -1530,7 +1530,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001390
-      electron-to-chromium: 1.4.242
+      electron-to-chromium: 1.4.243
       node-releases: 2.0.6
       update-browserslist-db: 1.0.7_browserslist@4.21.3
     dev: true
@@ -1946,8 +1946,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium/1.4.242:
-    resolution: {integrity: sha512-nPdgMWtjjWGCtreW/2adkrB2jyHjClo9PtVhR6rW+oxa4E4Wom642Tn+5LslHP3XPL5MCpkn5/UEY60EXylNeQ==}
+  /electron-to-chromium/1.4.243:
+    resolution: {integrity: sha512-BgLD2gBX43OSXwlT01oYRRD5NIB4n3okTRxkzEAC6G0SZG4TTlyrWMjbOo0fajCwqwpRtMHXQNMjtRN6qpNtfw==}
     dev: true
 
   /emittery/0.10.2:
