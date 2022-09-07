@@ -28,9 +28,9 @@ export interface IApplicationArray {
 
 export default abstract class AApplication implements IApplication {
 
-    protected logoFilename = 'logo.svg';
+    protected logoFilename = ''; // Unless we update from commonJs to at least es2020, it has to be defined in child
 
-    protected infoFilename = 'info.html';
+    protected infoFilename = '';
 
     protected isInstallable = true;
 
@@ -60,7 +60,7 @@ export default abstract class AApplication implements IApplication {
 
     public getLogo(): string | null {
         try {
-            if (fs.existsSync(this.logoFilename)) {
+            if (this.logoFilename && fs.existsSync(this.logoFilename)) {
                 const bitmap = fs.readFileSync(this.logoFilename);
                 const mimeType = contentType(path.extname(this.logoFilename));
 
@@ -73,7 +73,7 @@ export default abstract class AApplication implements IApplication {
     }
 
     public getInfo(): string {
-        if (fs.existsSync(this.infoFilename)) {
+        if (this.infoFilename && fs.existsSync(this.infoFilename)) {
             return fs.readFileSync(this.infoFilename).toString();
         }
 
