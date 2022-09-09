@@ -45,36 +45,19 @@ export default class CurlSender {
                 CurlSender.log(dto, response, Severity.DEBUG, body);
             }
 
-            for (const code of codeRange ?? []) {
-                if (typeof code === 'number') {
-                    if (code === response.status) {
-                        return this.returnResponseDto(body, response, buffer);
-                    }
-                } else {
-                    const codeObject = code;
-                    if (response.status >= codeObject.from && response.status <= codeObject.to) {
-                        // eslint-disable-next-line max-depth
-                        switch (codeObject.action) {
-                            case ResultCode.SUCCESS:
-                                return this.returnResponseDto(body, response, buffer);
-                            case ResultCode.STOP_AND_FAILED:
-                                // eslint-disable-next-line no-await-in-loop
-                                throw new OnStopAndFailException(await logMessageCallback(response, body));
-                            case ResultCode.REPEAT:
-                                // eslint-disable-next-line no-await-in-loop
-                                throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
-                            default:
-                                throw new Error(`Unsupported action [${codeObject.action}]`);
-                        }
-                    }
-                }
+            if (codeRange) {
+                return await this.handleByResultCode(
+                    response,
+                    body,
+                    buffer,
+                    codeRange,
+                    logMessageCallback,
+                    sec,
+                    hops,
+                );
             }
 
-            if (response.status < 300) {
-                return this.returnResponseDto(body, response, buffer);
-            }
-
-            throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
+            return this.returnResponseDto(body, response, buffer);
         } catch (e) {
             await this.sendMetrics(dto, startTime);
             if (e instanceof Error) {
@@ -89,6 +72,51 @@ export default class CurlSender {
 
             throw e;
         }
+    }
+
+    public returnResponseDto<JsonBody>(body: string, response: Response, buffer: Buffer): ResponseDto<JsonBody> {
+        return new ResponseDto(body, response.status, response.headers, buffer, response.statusText);
+    }
+
+    public async handleByResultCode<JsonBody = unknown>(
+        response: Response,
+        body: string,
+        buffer: Buffer,
+        codeRange: ResultCodeRange[],
+        logMessageCallback: (res: Response, body: string) => Promise<string>,
+        sec?: number,
+        hops?: number,
+    ): Promise<ResponseDto<JsonBody>> {
+        for (const code of codeRange ?? []) {
+            if (typeof code === 'number') {
+                if (code === response.status) {
+                    return this.returnResponseDto(body, response, buffer);
+                }
+            } else {
+                const codeObject = code;
+                if (response.status >= codeObject.from && response.status <= codeObject.to) {
+                    // eslint-disable-next-line max-depth
+                    switch (codeObject.action) {
+                        case ResultCode.SUCCESS:
+                            return this.returnResponseDto(body, response, buffer);
+                        case ResultCode.STOP_AND_FAILED:
+                            // eslint-disable-next-line no-await-in-loop
+                            throw new OnStopAndFailException(await logMessageCallback(response, body));
+                        case ResultCode.REPEAT:
+                            // eslint-disable-next-line no-await-in-loop
+                            throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
+                        default:
+                            throw new Error(`Unsupported action [${codeObject.action}]`);
+                    }
+                }
+            }
+        }
+
+        if (response.status < 300) {
+            return this.returnResponseDto(body, response, buffer);
+        }
+
+        throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
     }
 
     private static createInitFromDto(dto: RequestDto): RequestInit {
@@ -120,10 +148,6 @@ export default class CurlSender {
        Reason: ${res.statusText}`,
             logger.createCtx(dto.getDebugInfo()),
         );
-    }
-
-    private returnResponseDto<JsonBody>(body: string, response: Response, buffer: Buffer): ResponseDto<JsonBody> {
-        return new ResponseDto(body, response.status, response.headers, buffer, response.statusText);
     }
 
     private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {

@@ -4,7 +4,6 @@ import path from 'path';
 import { unescape } from 'querystring';
 import { INode } from '../../lib/Commons/INode';
 import AConnector from '../../lib/Connector/AConnector';
-import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import CurlSender from '../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
@@ -93,7 +92,7 @@ export function mockCurl(
         const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
         spy = spy.mockImplementationOnce(
             // eslint-disable-next-line @typescript-eslint/require-await,@typescript-eslint/no-explicit-any
-            async (r: RequestDto, aC?: ResultCodeRange[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
+            async (r: RequestDto, cR?: ResultCodeRange[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
                 const request = r;
                 const [method, url] = curl.http.split(' ', 2);
                 try {
@@ -128,14 +127,16 @@ export function mockCurl(
                     newBody = JSON.stringify(curl.body ?? {});
                 }
 
-                if (aC && !aC.includes(curl.code || 200)) {
-                    if (!mC) {
-                        // eslint-disable-next-line no-param-reassign
-                        mC = (res: Response, body: string) => body;
-                    }
-
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                    throw new OnRepeatException(s ?? 60, h ?? 10, mC(new Response(newBody), newBody));
+                if (cR) {
+                    return sender.handleByResultCode(
+                        new Response(newBody, { status: curl.code }),
+                        newBody,
+                        Buffer.from(newBody),
+                        cR,
+                        mC,
+                        s,
+                        h,
+                    );
                 }
 
                 return new ResponseDto(

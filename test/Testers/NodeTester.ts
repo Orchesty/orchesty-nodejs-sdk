@@ -138,7 +138,7 @@ export default class NodeTester {
             spy?.mockRestore();
             if (expectedError && !thrownErr) {
                 // eslint-disable-next-line no-unsafe-finally
-                throw new Error(`Error [${expectedError}] expected but non thrown.`);
+                throw new Error(`Error [${typeof expectedError}] expected but non thrown.`);
             }
         }
     }
