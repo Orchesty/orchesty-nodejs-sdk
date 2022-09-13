@@ -51,7 +51,7 @@ export default class ApplicationManager {
 
             return resp ?? { status: 'ok' };
         }
-        throw new Error(`Method [${syncMethod}] has not found in application [${key}].`);
+        throw new Error(`Method [${syncMethod}] has not been found in application [${key}].`);
     }
 
     public async saveApplicationSettings(
@@ -181,7 +181,7 @@ export default class ApplicationManager {
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
         const appInstall = await this.repository.findOne({ key: name, user });
         if (appInstall === null) {
-            throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not found!`);
+            throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }
 
         return appInstall;

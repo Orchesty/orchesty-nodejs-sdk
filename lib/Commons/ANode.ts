@@ -53,7 +53,7 @@ export default abstract class ANode implements INode {
 
         if (!appInstall) {
             throw new Error(
-                `ApplicationInstall with user [${user}] and name [${this.getApplication().getName()}] has not found!`,
+                `ApplicationInstall with user [${user}] and name [${this.getApplication().getName()}] has not been found!`,
             );
         }
 
