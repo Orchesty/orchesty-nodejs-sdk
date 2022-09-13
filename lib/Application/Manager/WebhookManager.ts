@@ -144,7 +144,7 @@ export default class WebhookManager {
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.appRepository.findByNameAndUser(name, user);
+        const appInstall = await this.appRepository.findByNameAndUser(name, user, null);
         if (appInstall === null) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }

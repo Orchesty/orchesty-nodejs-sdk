@@ -95,7 +95,11 @@ export default abstract class AApplication implements IApplication {
             });
         });
 
-        await this.customFormReplace(formStack, applicationInstall);
+        try {
+            await this.customFormReplace(formStack, applicationInstall);
+        } catch (e) {
+            //
+        }
 
         return formStack.toArray();
     }
@@ -108,7 +112,11 @@ export default abstract class AApplication implements IApplication {
         const preparedSettings: IApplicationSettings = {};
 
         const formStack = this.getFormStack();
-        await this.customFormReplace(formStack, applicationInstall);
+        try {
+            await this.customFormReplace(formStack, applicationInstall);
+        } catch (e) {
+            //
+        }
 
         formStack.getForms().forEach((form) => {
             form.getFields().forEach((field) => {

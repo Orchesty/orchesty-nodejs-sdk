@@ -41,10 +41,16 @@ export function createApiErrorResponse(req: Request, res: Response, e?: unknown)
     res.status(500);
     let message = 'Error occurred: unknown reason';
 
-    const detail = (e as { message?: string })?.message;
+    let stack = (e as { message?: string; stack?: string })?.stack;
+    if (appOptions.debug) {
+        stack = stack ? JSON.stringify(stack.replace(/\r?\n|\r/g, '')) : undefined;
+        stack = `, Stack: ${stack}`;
+    }
+
+    const detail = (e as { message?: string; stack?: string })?.message;
     if (detail) {
         res.status(400);
-        message = `Error occurred: ${detail}`;
+        message = `Error occurred: ${detail}${stack}`;
     }
 
     res.setHeader('Content-Type', 'application/json');
