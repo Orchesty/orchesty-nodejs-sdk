@@ -151,6 +151,7 @@ export default class ApplicationManager {
         return {
             ...app.toArray(),
             [AUTHORIZED]: app.isAuthorized(appInstall),
+            enabled: appInstall.isEnabled(),
             [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
             webhookSettings: isWebhook(app.getApplicationType())
                 ? await this.webhookManager.getWebhooks(app, user)
@@ -178,7 +179,7 @@ export default class ApplicationManager {
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.repository.findByNameAndUser(name, user);
+        const appInstall = await this.repository.findOne({ key: name, user });
         if (appInstall === null) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not found!`);
         }
