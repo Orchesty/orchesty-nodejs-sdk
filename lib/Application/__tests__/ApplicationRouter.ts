@@ -52,6 +52,7 @@ describe('Test ApplicationRouter', () => {
         authorizationURL = 'example.com';
 
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(user)
             .setName(name);
         appInstall.setSettings({
@@ -95,7 +96,8 @@ describe('Test ApplicationRouter', () => {
 
     it('get /applications/:name/sync/list route', async () => {
         const applicationUrl = `/applications/${application.getName()}/sync/list`;
-        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterInstallCallback","afterUninstallCallback"]';
+        // eslint-disable-next-line max-len
+        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
         await supertest(expressApp)
             .get(applicationUrl)
             .expect(StatusCodes.OK, expectedResult);
@@ -184,6 +186,7 @@ describe('Test ApplicationRouter', () => {
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(userName)
             .setName(appName);
 
@@ -199,6 +202,7 @@ describe('Test ApplicationRouter', () => {
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(userName)
             .setName(appName);
         await repo.insert(appInstall);
@@ -218,6 +222,7 @@ describe('Test ApplicationRouter', () => {
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(userName)
             .setName(appName);
         await repo.insert(appInstall);
@@ -243,6 +248,7 @@ describe('Test ApplicationRouter', () => {
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(userName)
             .setName(appName);
         await repo.insert(appInstall);
@@ -261,6 +267,7 @@ describe('Test ApplicationRouter', () => {
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
+            .setEnabled(true)
             .setUser(userName)
             .setName(appName);
         await repo.insert(appInstall);

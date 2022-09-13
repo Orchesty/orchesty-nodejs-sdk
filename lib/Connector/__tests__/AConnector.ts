@@ -4,6 +4,7 @@ import TestConnector from '../../../test/Connector/TestConnector';
 import { getTestContainer } from '../../../test/TestAbstact';
 import { IApplication } from '../../Application/Base/IApplication';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
+import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import Metrics from '../../Metrics/Metrics';
@@ -25,12 +26,14 @@ describe('Test AConnector', () => {
     let mongoDbClient: MongoDbClient;
     let curlSender: CurlSender;
     let testConnector: TestConnector;
+    let repo: ApplicationInstallRepository<ApplicationInstall>;
 
     beforeAll(async () => {
         container = await getTestContainer();
         mongoDbClient = container.get(CoreServices.MONGO);
         curlSender = container.get(CoreServices.CURL);
         testConnector = new TestConnector();
+        repo = await mongoDbClient.getApplicationRepository();
     });
 
     afterAll(async () => {
@@ -72,15 +75,18 @@ describe('Test AConnector', () => {
     });
 
     it('should return applicationInstall', async () => {
-        const repo = await mongoDbClient.getRepository(ApplicationInstall);
         const app = new ApplicationInstall();
         const user = 'testUser';
-        app.setUser(user)
+        app
+            .setEnabled(true)
+            .setUser(user)
             .setName('test');
         await repo.insert(app);
+
         const application = new TestBasicApplication();
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
+
         const dto = new ProcessDto();
         dto.setHeaders({ user });
         const res = await testConnector.getApplicationInstallFromHeaders(dto);
@@ -88,15 +94,17 @@ describe('Test AConnector', () => {
     });
 
     it('should throw error', async () => {
-        const repo = await mongoDbClient.getRepository(ApplicationInstall);
         const app = new ApplicationInstall();
         const user = 'testUser';
-        app.setUser(user)
+        app
+            .setUser(user)
             .setName('test');
         await repo.insert(app);
+
         const application = new TestBasicApplication();
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
+
         const dto = new ProcessDto();
         dto.setHeaders({});
         try {

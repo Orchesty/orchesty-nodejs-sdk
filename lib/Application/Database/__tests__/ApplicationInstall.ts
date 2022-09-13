@@ -26,7 +26,7 @@ describe('ApplicationInstall tests', () => {
     });
 
     it('get deleted', () => {
-        expect(appInstall.getDeleted()).toEqual(false);
+        expect(appInstall.isDeleted()).toEqual(false);
     });
 
     it('get user', () => {
@@ -41,11 +41,16 @@ describe('ApplicationInstall tests', () => {
         expect(appInstall.getName()).toEqual('');
     });
 
+    it('is enabled', () => {
+        expect(appInstall.isEnabled()).toEqual(false);
+    });
+
     it('get toArray', () => {
         const expected = {
             created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(appInstall.getCreated()), DATE_TIME),
             expires: null,
             id: '',
+            enabled: false,
             key: '',
             nonEncryptedSettings: {},
             update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(appInstall.getUpdated()), DATE_TIME),

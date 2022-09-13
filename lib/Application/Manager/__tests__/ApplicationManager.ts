@@ -64,7 +64,9 @@ describe('ApplicationManager tests', () => {
     beforeEach(async () => {
         appManager = container.get(CoreServices.APP_MANAGER);
         appInstall = new ApplicationInstall();
-        appInstall.setUser('user')
+        appInstall
+            .setEnabled(true)
+            .setUser('user')
             .setName('test')
             .setSettings({ key: 'value' });
 
@@ -73,6 +75,7 @@ describe('ApplicationManager tests', () => {
 
         appInstallOAuth = new ApplicationInstall();
         appInstallOAuth
+            .setEnabled(true)
             .setUser('user')
             .setName('oauth2application')
             .setSettings({
@@ -136,7 +139,14 @@ describe('ApplicationManager tests', () => {
 
     it('getSynchronousActions', () => {
         expect(appManager.getSynchronousActions('test'))
-            .toEqual(['testSyncMethod', 'testSyncMethodVoid', 'afterInstallCallback', 'afterUninstallCallback']);
+            .toEqual([
+                'testSyncMethod',
+                'testSyncMethodVoid',
+                'afterDisableCallback',
+                'afterEnableCallback',
+                'afterInstallCallback',
+                'afterUninstallCallback',
+            ]);
     });
 
     it('runSynchronousAction', async () => {

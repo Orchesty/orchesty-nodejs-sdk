@@ -168,6 +168,18 @@ export default abstract class AApplication implements IApplication {
         // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
+    public syncAfterEnableCallback(req: Request): void {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user, name } = JSON.parse(req.body);
+        // You can find AppInstall by user & name. E.g.: If you want to call topology
+    }
+
+    public syncAfterDisableCallback(req: Request): void {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user, name } = JSON.parse(req.body);
+        // You can find AppInstall by user & name. E.g.: If you want to call topology
+    }
+
     // eslint-disable-next-line
     protected customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void | Promise<void> {
     }

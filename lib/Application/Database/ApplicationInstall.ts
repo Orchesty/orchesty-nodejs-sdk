@@ -2,7 +2,7 @@ import deepmerge from 'deepmerge';
 import { DateTime } from 'luxon';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ignore, index } from 'mongodb-typescript';
-import ADocument from '../../Storage/Mongodb/ADocument';
+import ADeletableDocument from '../../Storage/Mongodb/Document/ADeletableDocument';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -11,9 +11,7 @@ export interface IApplicationSettings {
     [key: string]: any;
 }
 
-export class ApplicationInstall extends ADocument {
-
-    private deleted = false;
+export class ApplicationInstall extends ADeletableDocument {
 
     @index()
     private user = '';
@@ -21,15 +19,17 @@ export class ApplicationInstall extends ADocument {
     @index()
     private key = '';
 
-    private readonly created: Date;
-
-    private updated: Date;
-
     @index()
     private expires?: Date;
 
     @ignore
     private settings: IApplicationSettings = {};
+
+    private enabled = false;
+
+    private readonly created: Date;
+
+    private updated: Date;
 
     private encryptedSettings = '';
 
@@ -66,15 +66,6 @@ export class ApplicationInstall extends ADocument {
         return this;
     }
 
-    public setDeleted(deleted = true): this {
-        this.deleted = deleted;
-        return this;
-    }
-
-    public getDeleted(): boolean {
-        return this.deleted;
-    }
-
     public getUser(): string {
         return this.user;
     }
@@ -102,6 +93,16 @@ export class ApplicationInstall extends ADocument {
         this.key = name;
 
         return this;
+    }
+
+    public setEnabled(enabled: boolean): this {
+        this.enabled = enabled;
+
+        return this;
+    }
+
+    public isEnabled(): boolean {
+        return this.enabled;
     }
 
     public setSettings(settings: IApplicationSettings): this {
@@ -134,7 +135,7 @@ export class ApplicationInstall extends ADocument {
             id: this._id?.toHexString() ?? '',
             user: this.user,
             key: this.key,
-            // Settings: this.settings,
+            enabled: this.enabled,
             nonEncryptedSettings: this.nonEncryptedSettings,
             created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
             update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),

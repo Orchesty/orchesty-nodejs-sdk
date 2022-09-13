@@ -120,7 +120,6 @@ export default class ApplicationManager {
     ): Promise<Record<string, IField[] | boolean | unknown>> {
         let appInstall: ApplicationInstall | null = await this.repository.findByNameAndUser(name, user);
         if (appInstall) {
-            // Todo : need to be changed to custom error that doesn't return 500
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] already exists !`);
         }
         appInstall = new ApplicationInstall()
@@ -133,6 +132,12 @@ export default class ApplicationManager {
             [AUTHORIZED]: app.isAuthorized(appInstall),
             [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
         };
+    }
+
+    public async changeStateOfApplication(name: string, user: string, enabled: boolean): Promise<void> {
+        const appInstall = await this.loadApplicationInstall(name, user);
+        appInstall.setEnabled(enabled);
+        await this.repository.update(appInstall);
     }
 
     public async uninstallApplication(name: string, user: string): Promise<void> {

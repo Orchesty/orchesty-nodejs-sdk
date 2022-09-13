@@ -160,6 +160,19 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
+        this.app.route('/applications/:name/users/:user/changeState').put(async (req, res, next) => {
+            try {
+                const { name, user } = req.params;
+                const { enabled } = JSON.parse(req.body);
+                await this.manager.changeStateOfApplication(name, user, enabled);
+                res.status(StatusCodes.OK);
+                res.json({});
+                next();
+            } catch (e) {
+                createApiErrorResponse(req, res, e);
+            }
+        });
+
         this.app.route('/applications/:name/users/:user').get(async (req, res, next) => {
             try {
                 const { name, user } = req.params;

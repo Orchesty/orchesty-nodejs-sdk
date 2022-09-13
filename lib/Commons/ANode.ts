@@ -42,13 +42,13 @@ export default abstract class ANode implements INode {
         throw new Error('MongoDbClient has not been set.');
     }
 
-    protected async getApplicationInstall(user?: string): Promise<ApplicationInstall> {
+    protected async getApplicationInstall(user?: string, enabled = true): Promise<ApplicationInstall> {
         const repo = await this.getDbClient().getApplicationRepository();
         let appInstall: ApplicationInstall | null;
         if (user) {
-            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user);
+            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled);
         } else {
-            appInstall = await repo.findOneByName(this.getApplication().getName());
+            appInstall = await repo.findOneByName(this.getApplication().getName(), enabled);
         }
 
         if (!appInstall) {
@@ -60,12 +60,12 @@ export default abstract class ANode implements INode {
         return appInstall;
     }
 
-    protected async getApplicationInstallFromProcess(dto: AProcessDto): Promise<ApplicationInstall> {
+    protected async getApplicationInstallFromProcess(dto: AProcessDto, enabled = true): Promise<ApplicationInstall> {
         const user = dto.getUser();
         if (!user) {
             throw Error('User not defined');
         }
-        return this.getApplicationInstall(user);
+        return this.getApplicationInstall(user, enabled);
     }
 
 }

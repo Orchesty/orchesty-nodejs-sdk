@@ -45,6 +45,7 @@ describe('tests for WebhookRouter', () => {
             name = webhookApplication.getName();
 
             appInstall = new ApplicationInstall()
+                .setEnabled(true)
                 .setUser(user)
                 .setName(name);
             appInstall.setSettings({

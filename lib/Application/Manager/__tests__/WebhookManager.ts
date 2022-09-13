@@ -35,7 +35,9 @@ describe('Tests for webhookManager', () => {
 
     beforeEach(async () => {
         appInstall = new ApplicationInstall();
-        appInstall.setUser('user')
+        appInstall
+            .setEnabled(true)
+            .setUser('user')
             .setName('webhookName')
             .setSettings({
                 key: 'value',
