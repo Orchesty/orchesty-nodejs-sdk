@@ -129,9 +129,31 @@ export default abstract class AProcessDto<JsonData = unknown> {
         this.removeRelatedHeaders([ResultCode.REPEAT]);
     }
 
+    public getLimiterKey(key: string, time: number, amount: number): string {
+        return util.format('%s;%s;%s', AProcessDto.decorateLimitKey(key), time, amount);
+    }
+
     public setLimiter(key: string, time: number, amount: number): void {
-        const lk = util.format('%s;%s;%s', AProcessDto.decorateLimitKey(key), time, amount);
-        this.addHeader(LIMITER_KEY, lk);
+        this.addHeader(LIMITER_KEY, this.getLimiterKey(key, time, amount));
+    }
+
+    public getLimiterKeyWithGroup(
+        key: string,
+        time: number,
+        amount: number,
+        groupKey: string,
+        groupTime: number,
+        groupAmount: number,
+    ): string {
+        return util.format(
+            '%s;%s;%s;%s;%s;%s',
+            AProcessDto.decorateLimitKey(key),
+            time,
+            amount,
+            AProcessDto.decorateLimitKey(groupKey),
+            groupTime,
+            groupAmount,
+        );
     }
 
     public setLimiterWithGroup(
@@ -142,16 +164,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
         groupTime: number,
         groupAmount: number,
     ): void {
-        const lk = util.format(
-            '%s;%s;%s;%s;%s;%s',
-            AProcessDto.decorateLimitKey(key),
-            time,
-            amount,
-            AProcessDto.decorateLimitKey(groupKey),
-            groupTime,
-            groupAmount,
-        );
-        this.addHeader(LIMITER_KEY, lk);
+        this.addHeader(LIMITER_KEY, this.getLimiterKeyWithGroup(key, time, amount, groupKey, groupTime, groupAmount));
     }
 
     public removeLimiter(): void {
