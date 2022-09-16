@@ -44,7 +44,7 @@ describe('Test ApplicationRouter', () => {
 
     beforeEach(async () => {
         await dropCollection(ApplicationInstall.getCollection());
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
 
         user = 'user';
         name = oAuthApplication.getName();
@@ -182,7 +182,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('should not allow store /applications/:name/users/:user/install if application already exists', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
@@ -198,7 +198,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('put /applications/:name/users/:user/settings route', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
@@ -218,7 +218,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('put /applications/:name/users/:user/password route', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
@@ -244,7 +244,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('put /applications/:name/users/:user/uninstall route', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
@@ -263,7 +263,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('get /applications/:name/users/:user route', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'user';
         appInstall = new ApplicationInstall()
@@ -284,7 +284,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('get /applications/users/:user route', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         const appName = 'test';
         const userName = 'abcUsername';
         appInstall = new ApplicationInstall()

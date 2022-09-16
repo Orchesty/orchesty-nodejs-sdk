@@ -70,7 +70,7 @@ describe('ApplicationManager tests', () => {
             .setName('test')
             .setSettings({ key: 'value' });
 
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         await repo.insert(appInstall);
 
         appInstallOAuth = new ApplicationInstall();
@@ -87,7 +87,7 @@ describe('ApplicationManager tests', () => {
     });
 
     afterEach(async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         await repo.remove(appInstall);
         await repo.remove(appInstallOAuth);
     });

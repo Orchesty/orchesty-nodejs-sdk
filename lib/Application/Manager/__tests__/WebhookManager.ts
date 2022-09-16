@@ -47,7 +47,7 @@ describe('Tests for webhookManager', () => {
                     [TOKEN]: 'token',
                 },
             });
-        const repo = await dbClient.getRepository(ApplicationInstall);
+        const repo = await dbClient.getApplicationRepository();
         await repo.insert(appInstall);
         webhookManager = container.get(CoreServices.WEBHOOK_MANAGER);
     });

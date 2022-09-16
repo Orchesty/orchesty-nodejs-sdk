@@ -40,7 +40,7 @@ describe('tests for WebhookRouter', () => {
     beforeEach(async () => {
         try {
             await db.dropCollection(ApplicationInstall.getCollection());
-            const repo = await dbClient.getRepository(ApplicationInstall);
+            const repo = await dbClient.getApplicationRepository();
             user = 'user';
             name = webhookApplication.getName();
 

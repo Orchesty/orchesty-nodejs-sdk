@@ -12,7 +12,7 @@ async function prepare(): Promise<void> {
     const db = container.get<MongoDbClient>(CoreServices.MONGO);
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    db.getRepository(ApplicationInstall).then(async (repository) => {
+    db.getApplicationRepository().then(async (repository) => {
         const appInstall = await repository.findOne({ key: name, user });
         if (appInstall) {
             await repository.remove(appInstall);
