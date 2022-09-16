@@ -36,6 +36,28 @@ describe('Validations', () => {
         }).toThrow('Missing required param [k2]');
     });
 
+    it('object with array as nested array', () => {
+        const data = { k1: [{ k2: '' }, { k2: '' }] };
+        expect(checkParams(data, { k1: [['k2']] }))
+            .toBeTruthy();
+        const data2 = { k1: [{ k2: '' }, { k3: '' }] };
+        expect(() => {
+            checkParams(data2, { k1: [['k2']] });
+        }).toThrow('Missing required param [k2]');
+    });
+
+    it('object as array', () => {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const data = { k1: { 0: { k2: '' }, 1: { k2: '' } } };
+        expect(checkParams(data, { k1: [['k2']] }))
+            .toBeTruthy();
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const data2 = { k1: { 0: { k2: '' }, 1: { k3: '' } } };
+        expect(() => {
+            checkParams(data2, { k1: [['k2']] });
+        }).toThrow('Missing required param [k2]');
+    });
+
     it('mixed', () => {
         const data = { k1: [{ k2: '' }], kk: { kkk: 1 } };
         expect(checkParams(data, { k1: [{ k2: '' }], kk: ['kkk'] })).toBeTruthy();
