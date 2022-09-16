@@ -88,4 +88,10 @@ describe('Validations', () => {
             checkParams(data, { k1: 1 }, true);
         }).toThrow('Missing required param [k1]');
     });
+
+    it('strict - nested', () => {
+        const data = { items: [{ code: null }] };
+        expect(() => checkParams(data, { items: [{ code: true }] }, true))
+            .toThrow('Missing required param [code]');
+    });
 });

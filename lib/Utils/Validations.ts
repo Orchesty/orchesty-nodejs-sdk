@@ -26,11 +26,11 @@ export function checkParams<T extends {} = Record<string, unknown>>(
         for (const param of params) {
             if (Array.isArray(param) || typeof param === 'object') {
                 if (Array.isArray(object)) {
-                    object.forEach((it) => checkParams(it, param));
+                    object.forEach((it) => checkParams(it, param, strict));
                 } else if (0 in object) {
                     let key = 0;
                     while (key in object) {
-                        checkParams((object as Record<number, object>)[key], param);
+                        checkParams((object as Record<number, object>)[key], param, strict);
                         key++;
                     }
                 }
@@ -43,7 +43,7 @@ export function checkParams<T extends {} = Record<string, unknown>>(
         const keys = Object.keys(paramsObj);
         for (const key of keys) {
             checkParam(object, key, strict);
-            checkParams((object as Record<string, Record<string, unknown>>)[key], paramsObj[key]); // Nested object check
+            checkParams((object as Record<string, Record<string, unknown>>)[key], paramsObj[key], strict); // Nested object check
         }
     }
 
