@@ -1,9 +1,18 @@
+export class ValidationError extends Error {
+
+    public constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, ValidationError.prototype);
+    }
+
+}
+
 // eslint-disable-next-line
 function checkParam(object: { [key: string]: unknown }, param: string, strict: boolean): void {
     if (!Object.hasOwn(object, param)) {
-        throw Error(`Missing required param [${param}]`);
+        throw new ValidationError(`Missing required param [${param}]`);
     } else if (strict && (object[param] === null || object[param] === undefined || object[param] === '')) {
-        throw Error(`Missing required param [${param}]`);
+        throw new ValidationError(`Missing required param [${param}]`);
     }
 }
 
@@ -16,11 +25,14 @@ export function checkParams<T extends {} = Record<string, unknown>>(
     if (Array.isArray(params)) {
         for (const param of params) {
             if (Array.isArray(param) || typeof param === 'object') {
-                if (Array.isArray(object) || 0 in object) {
-                    checkParams((
-                        object as Record<number, Record<string, unknown>>
-                        | Record<string, Record<string, unknown>>[]
-                    )[0], param); // Values was object or an array of objects
+                if (Array.isArray(object)) {
+                    object.forEach((it) => checkParams(it, param));
+                } else if (0 in object) {
+                    let key = 0;
+                    while (key in object) {
+                        checkParams((object as Record<number, object>)[key], param);
+                        key++;
+                    }
                 }
             } else {
                 checkParam(object, param, strict);
