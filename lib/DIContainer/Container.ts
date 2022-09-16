@@ -54,7 +54,7 @@ export default class DIContainer {
         this.set(`${CONNECTOR_PREFIX}.${service.getName()}`, service);
     }
 
-    public getConnector(name: string): ICommonNode {
+    public getConnector<T extends ICommonNode>(name: string): T {
         return this.get(`${CONNECTOR_PREFIX}.${name}`);
     }
 
@@ -62,7 +62,7 @@ export default class DIContainer {
         this.set(`${CUSTOM_NODE_PREFIX}.${service.getName()}`, service);
     }
 
-    public getCustomNode(name: string): ICommonNode {
+    public getCustomNode<T extends ICommonNode>(name: string): T {
         return this.get(`${CUSTOM_NODE_PREFIX}.${name}`);
     }
 
@@ -78,7 +78,7 @@ export default class DIContainer {
         this.set(`${BATCH_PREFIX}.${service.getName()}`, service);
     }
 
-    public getBatch(name: string): IBatchNode {
+    public getBatch<T extends IBatchNode>(name: string): T {
         return this.get(`${BATCH_PREFIX}.${name}`);
     }
 
