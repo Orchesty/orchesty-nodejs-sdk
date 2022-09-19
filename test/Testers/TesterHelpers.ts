@@ -92,7 +92,14 @@ export function mockCurl(
         const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
         spy = spy.mockImplementationOnce(
             // eslint-disable-next-line @typescript-eslint/require-await,@typescript-eslint/no-explicit-any
-            async (r: RequestDto, cR?: ResultCodeRange[], s?: number, h?: number, mC?: any): Promise<ResponseDto> => {
+            async (
+                r: RequestDto,
+                cR?: ResultCodeRange[],
+                s = 60,
+                h = 10,
+                // eslint-disable-next-line @typescript-eslint/require-await
+                mC = async (res: Response, body: string) => `status: ${res.status}, body: ${body}`,
+            ): Promise<ResponseDto> => {
                 const request = r;
                 const [method, url] = curl.http.split(' ', 2);
                 try {
