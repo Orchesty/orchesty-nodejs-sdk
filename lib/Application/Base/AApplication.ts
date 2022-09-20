@@ -4,6 +4,7 @@ import { contentType } from 'mime-types';
 import { BodyInit } from 'node-fetch';
 import path from 'path';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
+import logger from '../../Logger/Logger';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import AProcessDto from '../../Utils/AProcessDto';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
@@ -98,7 +99,9 @@ export default abstract class AApplication implements IApplication {
         try {
             await this.customFormReplace(formStack, applicationInstall);
         } catch (e) {
-            //
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            logger.error(e?.message ?? 'Unknown error', { data: JSON.stringify(e) });
         }
 
         return formStack.toArray();
@@ -115,7 +118,9 @@ export default abstract class AApplication implements IApplication {
         try {
             await this.customFormReplace(formStack, applicationInstall);
         } catch (e) {
-            //
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            logger.error(e?.message ?? 'Unknown error', { data: JSON.stringify(e) });
         }
 
         formStack.getForms().forEach((form) => {

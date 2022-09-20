@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "3.1.21",
+  "version": "3.1.22",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -35,7 +35,7 @@
     "luxon": "^3.0.3",
     "metrics-sender": "0.0.10",
     "mime-types": "^2.1.35",
-    "mongodb": "^4.9.1",
+    "mongodb": "^4.10.0",
     "mongodb-typescript": "^3.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
