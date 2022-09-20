@@ -1,4 +1,4 @@
-import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
+import CoreFormsEnum from '../../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import { PASSWORD, TOKEN, USER } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
 import TestBasicApplication from '../TestBasicApplication';
@@ -15,7 +15,7 @@ describe('Application authorize tests', () => {
     it('isAuthorized', async () => {
         const basicApp = new TestBasicApplication();
         const appInstall = new ApplicationInstall();
-        const settings = { [AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' } };
+        const settings = { [CoreFormsEnum.AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' } };
         await basicApp.saveApplicationForms(appInstall, settings);
         expect(basicApp.isAuthorized(appInstall)).toEqual(true);
     });
@@ -23,14 +23,14 @@ describe('Application authorize tests', () => {
     it('isNotAuthorized', () => {
         const basicApp = new TestBasicApplication();
         const appInstall = new ApplicationInstall();
-        appInstall.addSettings({ [AUTHORIZATION_FORM]: [] });
+        appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: [] });
         expect(basicApp.isAuthorized(appInstall)).toEqual(false);
     });
 
     it('setApplicationToken', async () => {
         const basicApp = new TestTokenBasicApplication();
         const appInstall = new ApplicationInstall();
-        const settings = { [AUTHORIZATION_FORM]: { [TOKEN]: 'token' } };
+        const settings = { [CoreFormsEnum.AUTHORIZATION_FORM]: { [TOKEN]: 'token' } };
         await basicApp.saveApplicationForms(appInstall, settings);
         expect(basicApp.isAuthorized(appInstall)).toEqual(true);
     });
@@ -39,7 +39,7 @@ describe('Application authorize tests', () => {
         const basicApp = new TestBasicApplication();
         const appInstall = new ApplicationInstall();
         const sett = {
-            [AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' },
+            [CoreFormsEnum.AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' },
         };
         const sett1 = {
             testForm: { host: 'Jakub', database: 'pass' },

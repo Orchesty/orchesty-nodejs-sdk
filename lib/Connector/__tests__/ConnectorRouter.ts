@@ -59,7 +59,7 @@ describe('Test ConnectorRouter', () => {
         const connectorUrl = '/connector/list';
         await supertest(expressApp)
             .get(connectorUrl)
-            .expect(StatusCodes.OK, '["test"]');
+            .expect(StatusCodes.OK, '[{"name":"test"}]');
     });
 
     it('test configureRoutes', () => {

@@ -2,10 +2,12 @@ import { Request } from 'express';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Annotation from '../../Utils/Annotation';
+import { getLimiterKey } from '../../Utils/Headers';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
-import AApplication, { IApplicationArray } from '../Base/AApplication';
+import AApplication, { IApplicationArray, TIME, USE_LIMIT, VALUE } from '../Base/AApplication';
 import { isWebhook } from '../Base/ApplicationTypeEnum';
+import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
 import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
@@ -176,6 +178,22 @@ export default class ApplicationManager {
                 };
             }),
         };
+    }
+
+    public async userApplicationsLimit(user: string, applications: string[]): Promise<string[]> {
+        const appInstalls = await this.repository.findMany({ user, key: { $in: applications } });
+        return appInstalls.map((appInstall) => {
+            const limiterForm = appInstall.getSettings()?.[CoreFormsEnum.LIMITER_FORM];
+
+            const useLimit = limiterForm?.[USE_LIMIT] ?? undefined;
+            const time = limiterForm?.[TIME] ?? undefined;
+            const value = limiterForm?.[VALUE] ?? undefined;
+
+            if (!useLimit || !time || !value) {
+                return '';
+            }
+            return getLimiterKey(`${appInstall.getUser()}|${appInstall.getName()}`, time, value);
+        }).filter((limit) => limit);
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {

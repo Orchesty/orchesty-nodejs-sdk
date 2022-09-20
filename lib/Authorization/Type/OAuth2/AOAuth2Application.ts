@@ -1,4 +1,5 @@
-import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import AApplication from '../../../Application/Base/AApplication';
+import CoreFormsEnum from '../../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import Field from '../../../Application/Model/Form/Field';
 import FieldType from '../../../Application/Model/Form/FieldType';
@@ -38,7 +39,7 @@ export default abstract class AOAuth2Application extends AApplication implements
     public isAuthorized(
         applicationInstall: ApplicationInstall,
     ): boolean {
-        return Boolean(applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[TOKEN]?.[ACCESS_TOKEN]);
+        return Boolean(applicationInstall.getSettings()?.[CoreFormsEnum.AUTHORIZATION_FORM]?.[TOKEN]?.[ACCESS_TOKEN]);
     }
 
     public async getApplicationForms(applicationInstall: ApplicationInstall): Promise<Record<string, IForm>> {
@@ -53,8 +54,8 @@ export default abstract class AOAuth2Application extends AApplication implements
             .setReadOnly(true)
             .toArray();
 
-        if (forms[AUTHORIZATION_FORM]) {
-            forms[AUTHORIZATION_FORM].fields.push(redirectField);
+        if (forms[CoreFormsEnum.AUTHORIZATION_FORM]) {
+            forms[CoreFormsEnum.AUTHORIZATION_FORM].fields.push(redirectField);
         }
 
         return forms;
@@ -63,7 +64,7 @@ export default abstract class AOAuth2Application extends AApplication implements
     public getFrontendRedirectUrl(
         applicationInstall: ApplicationInstall,
     ): string {
-        return applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[FRONTEND_REDIRECT_URL];
+        return applicationInstall.getSettings()?.[CoreFormsEnum.AUTHORIZATION_FORM]?.[FRONTEND_REDIRECT_URL];
     }
 
     public async refreshAuthorization(applicationInstall: ApplicationInstall): Promise<ApplicationInstall> {
@@ -76,7 +77,7 @@ export default abstract class AOAuth2Application extends AApplication implements
         applicationInstall.setExpires(token[EXPIRES] ?? undefined);
 
         const settings = applicationInstall.getSettings();
-        settings[AUTHORIZATION_FORM][TOKEN] = token;
+        settings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN] = token;
         applicationInstall.setSettings(settings);
 
         return applicationInstall;
@@ -103,19 +104,19 @@ export default abstract class AOAuth2Application extends AApplication implements
         }
 
         const settings = applicationInstall.getSettings();
-        settings[AUTHORIZATION_FORM][TOKEN] = tokenFromProvider;
+        settings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN] = tokenFromProvider;
         applicationInstall.setSettings(settings);
     }
 
     public setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): void {
         const settings = applicationInstall.getSettings();
-        settings[AUTHORIZATION_FORM][FRONTEND_REDIRECT_URL] = redirectUrl;
+        settings[CoreFormsEnum.AUTHORIZATION_FORM][FRONTEND_REDIRECT_URL] = redirectUrl;
         applicationInstall.setSettings(settings);
     }
 
     public getAccessToken(applicationInstall: ApplicationInstall): string {
-        if (applicationInstall.getSettings()[AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN]) {
-            return applicationInstall.getSettings()[AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN];
+        if (applicationInstall.getSettings()[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN]) {
+            return applicationInstall.getSettings()[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN][ACCESS_TOKEN];
         }
         throw new Error('There is no access token');
     }
@@ -133,7 +134,7 @@ export default abstract class AOAuth2Application extends AApplication implements
     public getTokens(
         applicationInstall: ApplicationInstall,
     ): IToken {
-        return applicationInstall.getSettings()?.[AUTHORIZATION_FORM]?.[TOKEN];
+        return applicationInstall.getSettings()?.[CoreFormsEnum.AUTHORIZATION_FORM]?.[TOKEN];
     }
 
     protected getScopesSeparator(): string {

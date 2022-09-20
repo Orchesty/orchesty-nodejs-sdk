@@ -1,5 +1,5 @@
 import { BodyInit } from 'node-fetch';
-import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
@@ -42,7 +42,7 @@ export default class TestBasicApplication extends ABasicApplication {
         const fieldText = new Field(FieldType.TEXT, USER, label);
         const field = new Field(FieldType.PASSWORD, PASSWORD, label);
 
-        const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
+        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, 'testPublicName');
         form.addField(field);
         form.addField(fieldText);
 

@@ -7,7 +7,7 @@ import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
-import { AUTHORIZATION_FORM } from '../Base/AApplication';
+import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 
@@ -49,7 +49,7 @@ describe('tests for WebhookRouter', () => {
                 .setUser(user)
                 .setName(name);
             appInstall.setSettings({
-                [AUTHORIZATION_FORM]: {
+                [CoreFormsEnum.AUTHORIZATION_FORM]: {
                     [CLIENT_ID]: 'client id 1',
                 },
             });

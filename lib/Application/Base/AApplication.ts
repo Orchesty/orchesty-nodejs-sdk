@@ -8,13 +8,17 @@ import logger from '../../Logger/Logger';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import AProcessDto from '../../Utils/AProcessDto';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
+import Field from '../Model/Form/Field';
 import FieldType from '../Model/Form/FieldType';
-import { IForm } from '../Model/Form/Form';
+import Form, { IForm } from '../Model/Form/Form';
 import FormStack from '../Model/Form/FormStack';
 import ApplicationTypeEnum from './ApplicationTypeEnum';
+import CoreFormsEnum from './CoreFormsEnum';
 import { IApplication } from './IApplication';
 
-export const AUTHORIZATION_FORM = 'authorization_form';
+export const USE_LIMIT = 'useLimit';
+export const VALUE = 'value';
+export const TIME = 'time';
 
 export interface IApplicationArray {
     name: string;
@@ -98,6 +102,7 @@ export default abstract class AApplication implements IApplication {
 
         try {
             await this.customFormReplace(formStack, applicationInstall);
+            await this.autoInjectLimitForm(formStack, applicationInstall);
         } catch (e) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
@@ -117,6 +122,7 @@ export default abstract class AApplication implements IApplication {
         const formStack = this.getFormStack();
         try {
             await this.customFormReplace(formStack, applicationInstall);
+            await this.autoInjectLimitForm(formStack, applicationInstall);
         } catch (e) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
@@ -195,6 +201,39 @@ export default abstract class AApplication implements IApplication {
 
     // eslint-disable-next-line
     protected customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void | Promise<void> {
+    }
+
+    protected autoInjectLimitForm(forms: FormStack, applicationInstall: ApplicationInstall): Promise<void> | void {
+        let limiterForm = forms.getForms().find((it) => it.getKey() === CoreFormsEnum.LIMITER_FORM);
+
+        if (!limiterForm) {
+            limiterForm = new Form(CoreFormsEnum.LIMITER_FORM, 'Limiter form');
+            forms.addForm(limiterForm);
+        }
+
+        const useLimit = applicationInstall.getSettings()[CoreFormsEnum.LIMITER_FORM]?.useLimit ?? false;
+        limiterForm.addField(new Field(
+            FieldType.CHECKBOX,
+            USE_LIMIT,
+            'Use limit',
+            useLimit,
+        ));
+
+        const value = applicationInstall.getSettings()[CoreFormsEnum.LIMITER_FORM]?.value ?? undefined;
+        limiterForm.addField(new Field(
+            FieldType.NUMBER,
+            VALUE,
+            'Limit per time',
+            value,
+        ));
+
+        const time = applicationInstall.getSettings()[CoreFormsEnum.LIMITER_FORM]?.time ?? undefined;
+        limiterForm.addField(new Field(
+            FieldType.NUMBER,
+            TIME,
+            'Time in seconds',
+            time,
+        ));
     }
 
 }

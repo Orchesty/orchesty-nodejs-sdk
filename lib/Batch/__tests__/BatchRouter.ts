@@ -37,7 +37,7 @@ describe('Tests for BatchRouter', () => {
         await supertest(expressApp)
             .post(batchUrl)
             .expect(StatusCodes.OK, JSON.stringify({
-                body: JSON.stringify([{ headers: null, body: JSON.stringify({ dataTest: 'testValue' }) }]),
+                body: JSON.stringify([{ headers: {}, body: JSON.stringify({ dataTest: 'testValue' }) }]),
                 headers: {
                     cursor: 'testCursor',
                     'result-message': 'Message will be used as a iterator with cursor [testCursor]. Data will be send to follower(s).',
@@ -56,7 +56,7 @@ describe('Tests for BatchRouter', () => {
     it('get /batch/list route', async () => {
         await supertest(expressApp)
             .get('/batch/list')
-            .expect(StatusCodes.OK, '["testbatch"]');
+            .expect(StatusCodes.OK, '[{"name":"testbatch"}]');
     });
 
     it('test configureRoutes', () => {

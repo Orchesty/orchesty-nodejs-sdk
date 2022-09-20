@@ -7,7 +7,7 @@ import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ResponseDto from '../../../Transport/Curl/ResponseDto';
-import { AUTHORIZATION_FORM } from '../../Base/AApplication';
+import CoreFormsEnum from '../../Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
 import WebhookManager from '../WebhookManager';
 
@@ -41,7 +41,7 @@ describe('Tests for webhookManager', () => {
             .setName('webhookName')
             .setSettings({
                 key: 'value',
-                [AUTHORIZATION_FORM]: {
+                [CoreFormsEnum.AUTHORIZATION_FORM]: {
                     [USER]: 'user',
                     [PASSWORD]: 'password',
                     [TOKEN]: 'token',
