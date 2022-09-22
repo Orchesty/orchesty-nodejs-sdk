@@ -1,6 +1,6 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "3.1.22",
+  "version": "3.1.23",
   "description": "",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -49,7 +49,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@hanaboso/eslint-plugin": "^1.0.3",
+    "@hanaboso/eslint-plugin": "^1.0.4",
     "@types/jest": "^29.0.3",
     "@types/node": "^18.7.18",
     "@types/readline-sync": "^1.4.4",
