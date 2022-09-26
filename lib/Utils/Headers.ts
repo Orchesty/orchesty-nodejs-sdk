@@ -15,6 +15,7 @@ export const APPLICATION = 'application';
 export const USER = 'user';
 export const WORKER_FOLLOWERS = 'worker-followers';
 export const FORCE_TARGET_QUEUE = 'force-target-queue';
+export const APPLICATIONS = 'applications';
 
 // Result headers
 export const RESULT_CODE = 'result-code';
