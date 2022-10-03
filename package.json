@@ -1,7 +1,8 @@
 {
   "name": "@orchesty/nodejs-sdk",
-  "version": "3.1.23",
   "description": "",
+  "version": "3.1.23",
+  "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "main": "dist/lib/index.js",
@@ -16,7 +17,6 @@
   },
   "keywords": [],
   "author": "info@hanaboso.com",
-  "license": "GPL-3.0-or-later",
   "dependencies": {
     "@types/express": "^4.17.14",
     "@types/express-prometheus-middleware": "^1.2.1",
