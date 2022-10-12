@@ -78,6 +78,10 @@ export function getSequenceId(headers: IHttpHeaders): number {
     return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
 }
 
+export function getUserId(headers: IHttpHeaders): string {
+    return get(USER, headers) ?? '0';
+}
+
 export function getRepeatHops(headers: IHttpHeaders): number {
     return parseInt(get(REPEAT_HOPS, headers) ?? '0', 10);
 }

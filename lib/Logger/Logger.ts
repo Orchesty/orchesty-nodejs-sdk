@@ -13,6 +13,7 @@ export interface ILogContext {
     topology_id?: string;
     topology_name?: string;
     node_id?: string;
+    user_id?: string;
     node_name?: string;
     correlation_id?: string;
     process_id?: string;
@@ -32,6 +33,7 @@ interface ILoggerFormat {
     severity: string;
     message: string;
     node_id?: string;
+    user_id?: string;
     node_name?: string;
     topology_id?: string;
     topology_name?: string;
@@ -109,6 +111,7 @@ export class Logger {
             process_id: headers.getProcessId(dto.getHeaders()),
             parent_id: headers.getParentId(dto.getHeaders()),
             sequence_id: headers.getSequenceId(dto.getHeaders()),
+            user_id: headers.getUserId(dto.getHeaders()),
         };
 
         if (err) {
@@ -130,6 +133,7 @@ export class Logger {
             process_id: headers.getProcessId(req.headers),
             parent_id: headers.getParentId(req.headers),
             sequence_id: headers.getSequenceId(req.headers),
+            user_id: headers.getUserId(req.headers),
         };
 
         if (err) {
@@ -159,6 +163,10 @@ export class Logger {
 
             if (context.correlation_id) {
                 line.correlation_id = context.correlation_id;
+            }
+
+            if (context.user_id) {
+                line.user_id = context.user_id;
             }
 
             if (context.node_id) {

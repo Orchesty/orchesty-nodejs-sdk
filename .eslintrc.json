@@ -3,6 +3,7 @@
         "plugin:@hanaboso/orchesty"
     ],
     "rules": {
-        "no-param-reassign": "off"
+        "no-param-reassign": "off",
+        "@typescript-eslint/no-misused-promises": "off"
     }
 }
