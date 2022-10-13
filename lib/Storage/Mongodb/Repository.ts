@@ -50,10 +50,17 @@ export default class Repository<T> extends BaseRepo<T> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async findMany(query: Filter<any>): Promise<T[]> {
+    public async findMany(query: Filter<any>, skip: number | null = null, limit: number | null = null): Promise<T[]> {
         this.decorateQuery(query);
-        const entities = await super.find(query)
-            .toArray();
+        let find = super.find(query);
+        if (skip !== null) {
+            find = find.skip(skip);
+        }
+        if (limit !== null) {
+            find = find.limit(limit);
+        }
+        const entities = await find.toArray();
+
         entities.forEach((entity) => {
             this.decrypt(entity);
         });

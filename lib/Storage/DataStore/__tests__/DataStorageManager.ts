@@ -42,10 +42,17 @@ describe('Test ETL Manager', () => {
 
         const dataStorageManager = new DataStorageManager(dbClient);
         await dataStorageManager.store(id, [{ foo: 'bar' }, { john: 'doe' }], app, user);
+        await dataStorageManager.store(id, [{ foo: 'bar1' }, { john: 'doe1' }], app, user);
 
-        const data = await dataStorageManager.load(id, app, user);
+        let data = await dataStorageManager.load(id, app, user);
         assert.deepEqual(data[0].getData(), { foo: 'bar' });
         assert.deepEqual(data[1].getData(), { john: 'doe' });
+        assert.deepEqual(data[2].getData(), { foo: 'bar1' });
+        assert.deepEqual(data[3].getData(), { john: 'doe1' });
+
+        data = await dataStorageManager.load(id, app, user, 2, 2);
+        assert.deepEqual(data[0].getData(), { foo: 'bar1' });
+        assert.deepEqual(data[1].getData(), { john: 'doe1' });
 
         await dataStorageManager.remove(id, app, user);
 
