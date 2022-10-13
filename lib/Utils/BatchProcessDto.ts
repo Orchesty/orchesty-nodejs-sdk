@@ -1,5 +1,5 @@
 import AProcessDto from './AProcessDto';
-import { BATCH_CURSOR, IHttpHeaders, LIMITER_KEY, USER } from './Headers';
+import { BATCH_CURSOR, IHttpHeaders, LIMITER_KEY, parseLimitKey } from './Headers';
 import ResultCode from './ResultCode';
 
 export interface IBatchMessage {
@@ -33,17 +33,16 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
             b = JSON.stringify(body);
         }
 
-        let headers = null;
-        if (user) {
-            headers = { [USER]: user };
-        }
-
+        const limits = parseLimitKey(this.headers?.[LIMITER_KEY] as string);
         if (limit) {
-            headers = { [LIMITER_KEY]: limit, ...headers };
+            limits[limit.split(';')[0]] = limit;
         }
 
         this.messages.push({
-            headers,
+            headers: {
+                ...limit ? { [LIMITER_KEY]: Object.values(limits).join(';') } : null,
+                ...user ? { user } : null,
+            },
             body: b as string,
         });
 

@@ -10,7 +10,7 @@ import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import CurlSender from '../../../Transport/Curl/CurlSender';
 import ApplicationLoader from '../../ApplicationLoader';
-import { AUTHORIZATION_FORM } from '../../Base/AApplication';
+import CoreFormsEnum from '../../Base/CoreFormsEnum';
 import { ApplicationInstall, IApplicationSettings } from '../../Database/ApplicationInstall';
 import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
 import Webhook from '../../Database/Webhook';
@@ -80,7 +80,7 @@ describe('ApplicationManager tests', () => {
             .setName('oauth2application')
             .setSettings({
                 key: 'value',
-                [AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' },
+                [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' },
             });
 
         await repo.insert(appInstallOAuth);
@@ -175,7 +175,9 @@ describe('ApplicationManager tests', () => {
 
         expect(dbInstall).toHaveProperty('id');
         expect(dbInstall).toHaveProperty('applicationSettings');
-        expect(AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
+        expect(
+            CoreFormsEnum.AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings),
+        ).toBeTruthy();
         expect('testForm' in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
     });
 
@@ -184,15 +186,19 @@ describe('ApplicationManager tests', () => {
         const dbInstall = await appManager.saveApplicationPassword(
             'test',
             'user',
-            AUTHORIZATION_FORM,
+            CoreFormsEnum.AUTHORIZATION_FORM,
             PASSWORD,
             'passs',
         );
         expect(dbInstall.key).toEqual('test');
         expect(dbInstall.user).toEqual('user');
-        expect(AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings)).toBeTruthy();
+        expect(
+            CoreFormsEnum.AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings),
+        ).toBeTruthy();
+        const fieldPassword = (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fieldPassword = ((dbInstall as any).applicationSettings[AUTHORIZATION_FORM].fields as IField[])
+            (dbInstall as any).applicationSettings[CoreFormsEnum.AUTHORIZATION_FORM].fields as IField[]
+        )
             .find((field) => field.key);
         expect(fieldPassword).toBeTruthy();
     });

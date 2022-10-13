@@ -1,4 +1,4 @@
-import CommonLoader from '../Commons/CommonLoader';
+import CommonLoader, { ICommonObject } from '../Commons/CommonLoader';
 import { APPLICATION_PREFIX } from './ApplicationRouter';
 import { IApplicationArray } from './Base/AApplication';
 import { IApplication } from './Base/IApplication';
@@ -6,28 +6,17 @@ import { IApplication } from './Base/IApplication';
 export default class ApplicationLoader extends CommonLoader {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getList(prefix: string): string[] {
+    public getList(prefix: string): ICommonObject[] {
         throw new Error('Unsupported action!');
     }
 
     public getListApplications(): IApplicationArray[] {
-        let list: IApplicationArray[] = [];
+        const list: IApplicationArray[] = [];
         this.container.getAllByPrefix(APPLICATION_PREFIX)
             .forEach((obj: IApplication) => {
                 list.push(obj.toArray());
             });
-        list = list.sort(this.compare.bind(this));
-        return list;
-    }
-
-    private compare(a: IApplicationArray, b: IApplicationArray): number {
-        if (a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1;
-        }
-        if (a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1;
-        }
-        return 0;
+        return list.sort(this.compare.bind(this));
     }
 
 }

@@ -1,4 +1,4 @@
-import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import CoreFormsEnum from '../../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import { IOAuth2Dto } from './IOAuth2Dto';
@@ -20,8 +20,8 @@ export default class OAuth2Dto implements IOAuth2Dto {
         private readonly authorizeUrl: string,
         private readonly tokenUrl: string,
     ) {
-        this.clientId = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_ID] ?? '';
-        this.clientSecret = authorization.getSettings()?.[AUTHORIZATION_FORM]?.[CLIENT_SECRET] ?? '';
+        this.clientId = authorization.getSettings()?.[CoreFormsEnum.AUTHORIZATION_FORM]?.[CLIENT_ID] ?? '';
+        this.clientSecret = authorization.getSettings()?.[CoreFormsEnum.AUTHORIZATION_FORM]?.[CLIENT_SECRET] ?? '';
     }
 
     public getApplicationKey(): string {

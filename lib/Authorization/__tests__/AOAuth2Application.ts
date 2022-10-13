@@ -1,6 +1,6 @@
 import TestOAuth2Application from '../../../test/Application/TestOAuth2Application';
 import { getTestContainer } from '../../../test/TestAbstact';
-import { AUTHORIZATION_FORM } from '../../Application/Base/AApplication';
+import CoreFormsEnum from '../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
@@ -42,7 +42,7 @@ describe('Test AOAuth2Application', () => {
             .setUser('user')
             .setName(oAuthApplication.getName());
         const settings = {
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [TOKEN]: {
                     [ACCESS_TOKEN]: 'token',
                 },
@@ -58,7 +58,7 @@ describe('Test AOAuth2Application', () => {
             .setUser('user')
             .setName(oAuthApplication.getName());
         const settings = {
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [TOKEN]: '',
             },
         };
@@ -75,7 +75,7 @@ describe('Test AOAuth2Application', () => {
         const data = await oAuthApplication.getApplicationForms(appInstall);
 
         keysToBeReturned.forEach((item) => {
-            expect(data[AUTHORIZATION_FORM].fields.find((field) => field.key === item)).toBeDefined();
+            expect(data[CoreFormsEnum.AUTHORIZATION_FORM].fields.find((field) => field.key === item)).toBeDefined();
         });
     });
 
@@ -98,7 +98,7 @@ describe('Test AOAuth2Application', () => {
             .setUser('user')
             .setName(oAuthApplication.getName());
         const settings = {
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_ID]: '12',
                 [TOKEN]: 'token',
             },
@@ -107,8 +107,12 @@ describe('Test AOAuth2Application', () => {
 
         const data = await oAuthApplication.refreshAuthorization(appInstall);
         const returnedSettings = data.getSettings();
-        expect(returnedSettings[AUTHORIZATION_FORM][CLIENT_ID]).toEqual(settings[AUTHORIZATION_FORM][CLIENT_ID]);
-        expect(returnedSettings[AUTHORIZATION_FORM][TOKEN]).toEqual(settings[AUTHORIZATION_FORM][TOKEN]);
+        expect(
+            returnedSettings[CoreFormsEnum.AUTHORIZATION_FORM][CLIENT_ID],
+        ).toEqual(settings[CoreFormsEnum.AUTHORIZATION_FORM][CLIENT_ID]);
+        expect(
+            returnedSettings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN],
+        ).toEqual(settings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN]);
     });
 
     it('should get access token', () => {
@@ -117,7 +121,7 @@ describe('Test AOAuth2Application', () => {
             .setName(oAuthApplication.getName());
         const accessToken = 'token';
         const settings = {
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [TOKEN]: {
                     [ACCESS_TOKEN]: accessToken,
                 },
@@ -130,7 +134,7 @@ describe('Test AOAuth2Application', () => {
 
     it('should set application settings', async () => {
         const appInstall = new ApplicationInstall();
-        appInstall.addSettings({ [AUTHORIZATION_FORM]: [] });
+        appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: [] });
         appInstall.addSettings({ form: [] });
         const sett = { user: 'Jakub', password: 'pass', token: 'token' };
         expect(await oAuthApplication.saveApplicationForms(appInstall, sett)).toBeInstanceOf(ApplicationInstall);
@@ -139,7 +143,7 @@ describe('Test AOAuth2Application', () => {
     it('should get token', () => {
         const appInstall = new ApplicationInstall();
         const token = 'token';
-        appInstall.addSettings({ [AUTHORIZATION_FORM]: { [TOKEN]: token } });
+        appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: { [TOKEN]: token } });
         appInstall.addSettings({ form: [] });
         const tokenFromService = oAuthApplication.getTokens(appInstall);
         expect(token).toEqual(tokenFromService);
@@ -147,7 +151,7 @@ describe('Test AOAuth2Application', () => {
 
     it('should throw error when try to get access token and access token is not found', () => {
         const appInstall = new ApplicationInstall();
-        appInstall.addSettings({ [AUTHORIZATION_FORM]: { [TOKEN]: {} } });
+        appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: { [TOKEN]: {} } });
         try {
             oAuthApplication.getAccessToken(appInstall);
         } catch (e) {
