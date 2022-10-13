@@ -2,10 +2,10 @@ import { Request } from 'express';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Annotation from '../../Utils/Annotation';
-import { getLimiterKey } from '../../Utils/Headers';
+import { getLimiterKey, getLimiterKeyWithGroup } from '../../Utils/Headers';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
-import AApplication, { IApplicationArray, TIME, USE_LIMIT, VALUE } from '../Base/AApplication';
+import AApplication, { GROUP_TIME, GROUP_VALUE, IApplicationArray, TIME, USE_LIMIT, VALUE } from '../Base/AApplication';
 import { isWebhook } from '../Base/ApplicationTypeEnum';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
@@ -192,7 +192,24 @@ export default class ApplicationManager {
             if (!useLimit || !time || !value) {
                 return '';
             }
-            return getLimiterKey(`${appInstall.getUser()}|${appInstall.getName()}`, time, value);
+
+            const groupTime = limiterForm?.[GROUP_TIME] ?? undefined;
+            const groupValue = limiterForm?.[GROUP_VALUE] ?? undefined;
+
+            const key = `${appInstall.getUser()}|${appInstall.getName()}`;
+
+            if (groupTime && groupValue) {
+                return getLimiterKeyWithGroup(
+                    key,
+                    time,
+                    value,
+                    `|${appInstall.getName()}`,
+                    groupTime,
+                    groupValue,
+                );
+            }
+
+            return getLimiterKey(key, time, value);
         }).filter((limit) => limit);
     }
 

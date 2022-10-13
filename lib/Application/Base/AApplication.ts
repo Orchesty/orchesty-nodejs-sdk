@@ -20,6 +20,9 @@ export const USE_LIMIT = 'useLimit';
 export const VALUE = 'value';
 export const TIME = 'time';
 
+export const GROUP_VALUE = 'groupValue';
+export const GROUP_TIME = 'groupTime';
+
 export interface IApplicationArray {
     name: string;
     logo: string | null;
