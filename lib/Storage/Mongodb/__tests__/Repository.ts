@@ -19,9 +19,12 @@ let dbClient: MongoDbClient;
 
 class ClassWithoutDeleted extends ADocument {
 
-    public user = 'withoutDeleted';
-
     public edited = false;
+
+    public constructor(public user = 'withoutDeleted') {
+        super();
+        this.user = user;
+    }
 
 }
 
@@ -159,6 +162,23 @@ describe('Tests for repository', () => {
 
         const entities = await repo.findMany({ _id: appKey });
         expect(entities[0]).toBeInstanceOf(ClassWithoutDeleted);
+
+        await repo.removeMany({});
+    });
+
+    it('repository - findMany with pagination', async () => {
+        const appInstall1 = new ClassWithoutDeleted();
+        const appInstall2 = new ClassWithoutDeleted('withoutDeleted2');
+
+        const repo = await dbClient.getRepository(ClassWithoutDeleted);
+        await repo.insert(appInstall1);
+        await repo.insert(appInstall2);
+
+        const entities = await repo.findMany({}, 1, 1);
+        expect(entities[0]).toBeInstanceOf(ClassWithoutDeleted);
+        expect(entities[0].user).toBe('withoutDeleted2');
+
+        await repo.removeMany({});
     });
 
     it('repository - findManyById', async () => {
