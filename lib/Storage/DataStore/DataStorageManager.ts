@@ -6,9 +6,15 @@ export default class DataStorageManager {
     public constructor(private readonly db: MongoDbClient) {
     }
 
-    public async load(id: string, application?: string, user?: string): Promise<DataStorageDocument[]> {
+    public async load(
+        id: string,
+        application?: string,
+        user?: string,
+        skip: number | null = null,
+        limit: number | null = null,
+    ): Promise<DataStorageDocument[]> {
         return (await this.db.getRepository(DataStorageDocument))
-            .findMany({ user, application, processId: id });
+            .findMany({ user, application, processId: id }, skip, limit);
     }
 
     public async store(id: string, data: unknown[], application?: string, user?: string): Promise<void> {
