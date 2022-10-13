@@ -1,3 +1,7 @@
+import { Schema } from 'joi';
+import AProcessDto from './AProcessDto';
+import ResultCode from './ResultCode';
+
 export class ValidationError extends Error {
 
     public constructor(message: string) {
@@ -48,4 +52,24 @@ export function checkParams<T extends {} = Record<string, unknown>>(
     }
 
     return true;
+}
+
+export function validate(schema: Schema) {
+    return function(
+        target: Object, // eslint-disable-line
+        propertyKey: string,
+        descriptor: PropertyDescriptor,
+    ): void {
+        const originalMethod = descriptor.value;
+        descriptor.value = function(dto: AProcessDto, ...args: unknown[]) {
+            const valid = schema.validate(dto.getJsonData());
+            if (valid.error) {
+                dto.setStopProcess(ResultCode.STOP_AND_FAILED, valid.error.message);
+
+                return dto;
+            }
+
+            return originalMethod.call(this, dto, ...args);
+        };
+    };
 }
