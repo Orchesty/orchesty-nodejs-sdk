@@ -72,7 +72,7 @@ describe('Test CustomNodeRouter', () => {
         const customNodeUrl = '/custom-node/list';
         await supertest(expressApp)
             .get(customNodeUrl)
-            .expect(StatusCodes.OK, '["test-mapper","testOnRepeatExceptionCustom","testcustom"]');
+            .expect(StatusCodes.OK, '[{"name":"test-mapper"},{"name":"testcustom"},{"name":"testOnRepeatExceptionCustom"}]');
     });
 
     it('get /custom-node/:name/process/test route', async () => {
