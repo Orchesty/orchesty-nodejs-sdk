@@ -1,4 +1,6 @@
 // Framework headers
+import util from 'util';
+
 export const PREV_CORRELATION_ID = 'previous-correlation-id';
 export const CORRELATION_ID = 'correlation-id';
 export const PROCESS_ID = 'process-id';
@@ -13,6 +15,7 @@ export const APPLICATION = 'application';
 export const USER = 'user';
 export const WORKER_FOLLOWERS = 'worker-followers';
 export const FORCE_TARGET_QUEUE = 'force-target-queue';
+export const APPLICATIONS = 'applications';
 
 // Result headers
 export const RESULT_CODE = 'result-code';
@@ -88,4 +91,48 @@ export function getRepeatHops(headers: IHttpHeaders): number {
 
 export function getRepeaterMaxHops(headers: IHttpHeaders): number {
     return parseInt(get(REPEAT_MAX_HOPS, headers) ?? '0', 10);
+}
+
+export function decorateLimitKey(key: string): string {
+    let newKey = key;
+    if (!key.includes('|')) {
+        newKey = util.format('%s|', key);
+    }
+
+    return newKey;
+}
+
+export function parseLimitKey(limitKey?: string): Record<string, string> {
+    if (!limitKey) {
+        return {};
+    }
+    const split = limitKey.split(';');
+    const parsedLimits: Record<string, string> = {};
+    for (let i = 0; i < split.length; i += 3) {
+        parsedLimits[split[i]] = `${split[i]};${split[i + 1]};${split[i + 2]}`;
+    }
+    return parsedLimits;
+}
+
+export function getLimiterKey(key: string, time: number, amount: number): string {
+    return util.format('%s;%s;%s', decorateLimitKey(key), time, amount);
+}
+
+export function getLimiterKeyWithGroup(
+    key: string,
+    time: number,
+    amount: number,
+    groupKey: string,
+    groupTime: number,
+    groupAmount: number,
+): string {
+    return util.format(
+        '%s;%s;%s;%s;%s;%s',
+        decorateLimitKey(key),
+        time,
+        amount,
+        decorateLimitKey(groupKey),
+        groupTime,
+        groupAmount,
+    );
 }

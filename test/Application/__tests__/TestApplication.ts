@@ -1,5 +1,5 @@
-import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
 import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEnum';
+import CoreFormsEnum from '../../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
 import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
@@ -127,11 +127,11 @@ describe('Test application', () => {
         const app = new TestBasicApplication();
         let appInstall = new ApplicationInstall();
         const expected = {
-            [AUTHORIZATION_FORM]: { [PASSWORD]: pass, user },
+            [CoreFormsEnum.AUTHORIZATION_FORM]: { [PASSWORD]: pass, user },
         };
         appInstall = await app.saveApplicationForms(
             appInstall,
-            { [AUTHORIZATION_FORM]: { user, [PASSWORD]: pass, token } },
+            { [CoreFormsEnum.AUTHORIZATION_FORM]: { user, [PASSWORD]: pass, token } },
         );
         expect(appInstall.getSettings()).toEqual(expected);
     });
@@ -163,9 +163,9 @@ describe('Test application', () => {
         appInstall.addSettings(sett);
         const res = await app.getApplicationForms(appInstall);
         expect(res).toEqual({
-            authorization_form: { // eslint-disable-line
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            authorization_form: {
                 description: '',
-                readOnly: false,
                 fields: [
                     {
                         choices: [],
@@ -192,10 +192,52 @@ describe('Test application', () => {
                 ],
                 key: 'authorization_form',
                 publicName: 'testPublicName',
+                readOnly: false,
+            },
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            limiter_form: {
+                description: '',
+                fields: [
+                    {
+                        choices: [],
+                        description: '',
+                        disabled: false,
+                        key: 'useLimit',
+                        label: 'Use limit',
+                        readOnly: false,
+                        required: false,
+                        type: 'checkbox',
+                        value: false,
+                    },
+                    {
+                        choices: [],
+                        description: '',
+                        disabled: false,
+                        key: 'value',
+                        label: 'Limit per time',
+                        readOnly: false,
+                        required: false,
+                        type: 'number',
+                        value: null,
+                    },
+                    {
+                        choices: [],
+                        description: '',
+                        disabled: false,
+                        key: 'time',
+                        label: 'Time in seconds',
+                        readOnly: false,
+                        required: false,
+                        type: 'number',
+                        value: null,
+                    },
+                ],
+                key: 'limiter_form',
+                publicName: 'Limiter form',
+                readOnly: false,
             },
             testForm: {
                 description: '',
-                readOnly: false,
                 fields: [
                     {
                         choices: [],
@@ -222,6 +264,7 @@ describe('Test application', () => {
                 ],
                 key: 'testForm',
                 publicName: 'testPublicName',
+                readOnly: false,
             },
         });
     });

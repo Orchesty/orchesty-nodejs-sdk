@@ -1,4 +1,5 @@
-import AApplication, { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import AApplication from '../../../Application/Base/AApplication';
+import CoreFormsEnum from '../../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import AuthorizationTypeEnum from '../../AuthorizationTypeEnum';
 import { IBasicApplication } from './IBasicApplication';
@@ -14,7 +15,7 @@ export abstract class ABasicApplication extends AApplication implements IBasicAp
     }
 
     public isAuthorized(applicationInstall: ApplicationInstall): boolean {
-        const appInstall = applicationInstall.getSettings()[AUTHORIZATION_FORM];
+        const appInstall = applicationInstall.getSettings()[CoreFormsEnum.AUTHORIZATION_FORM];
         return Boolean(appInstall?.[USER]) && Boolean(appInstall?.[PASSWORD]) || Boolean(appInstall?.[TOKEN]);
     }
 

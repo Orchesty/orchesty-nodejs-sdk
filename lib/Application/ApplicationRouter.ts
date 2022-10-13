@@ -23,6 +23,18 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
+        this.app.route('/applications/limits').post(async (req, res, next) => {
+            try {
+                const { user, applications } = JSON.parse(req.body);
+                const response = await this.manager.userApplicationsLimit(user, applications);
+                res.status(StatusCodes.OK);
+                res.json(response);
+                next();
+            } catch (e) {
+                createApiErrorResponse(req, res, e);
+            }
+        });
+
         this.app.route('/applications/:name').get((req, res, next) => {
             try {
                 res.json(this.manager.getApplication(req.params.name).toArray());

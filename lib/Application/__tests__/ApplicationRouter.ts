@@ -8,7 +8,7 @@ import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { encode } from '../../Utils/Base64';
-import { AUTHORIZATION_FORM } from '../Base/AApplication';
+import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
 import { ApplicationInstall } from '../Database/ApplicationInstall';
 import { IField } from '../Model/Form/Field';
@@ -56,7 +56,7 @@ describe('Test ApplicationRouter', () => {
             .setUser(user)
             .setName(name);
         appInstall.setSettings({
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_ID]: 'client id 1',
             },
         });
@@ -83,6 +83,45 @@ describe('Test ApplicationRouter', () => {
         await supertest(expressApp)
             .get(applicationUrl)
             .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('post /applications/limits - empty array', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'abcUsername';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName);
+        await repo.insert(appInstall);
+        const applicationUrl = '/applications/limits';
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .send({ user: userName, applications: [appName] }).expect((response) => {
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+                expect(response.body).toEqual([]);
+            });
+    });
+
+    it('post /applications/limits', async () => {
+        const repo = await dbClient.getRepository(ApplicationInstall);
+        const appName = 'test';
+        const userName = 'abcUsername';
+        appInstall = new ApplicationInstall()
+            .setUser(userName)
+            .setName(appName)
+            .setSettings({ [CoreFormsEnum.LIMITER_FORM]: {
+                useLimit: true,
+                value: 3,
+                time: 60,
+            } });
+        await repo.insert(appInstall);
+        const applicationUrl = '/applications/limits';
+        await supertest(expressApp)
+            .post(applicationUrl)
+            .send({ user: userName, applications: [appName] }).expect((response) => {
+                expect(response.statusCode).toEqual(StatusCodes.OK);
+                expect(response.body).toEqual(['abcUsername|test;60;3']);
+            });
     });
 
     it('get /applications/:name route', async () => {
@@ -230,12 +269,13 @@ describe('Test ApplicationRouter', () => {
         const password = 'pass';
         await supertest(expressApp)
             .put(applicationUrl)
-            .send({ password, formKey: [AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
+            .send({ password, formKey: [CoreFormsEnum.AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
             .expect((response) => {
                 const jsonResponse = JSON.parse(response.text);
-                if (AUTHORIZATION_FORM in jsonResponse.applicationSettings) {
-                    const fieldPassword = (jsonResponse.applicationSettings[AUTHORIZATION_FORM].fields as IField[])
-                        .find((field) => field.key);
+                if (CoreFormsEnum.AUTHORIZATION_FORM in jsonResponse.applicationSettings) {
+                    const fieldPassword = (
+                        jsonResponse.applicationSettings[CoreFormsEnum.AUTHORIZATION_FORM].fields as IField[]
+                    ).find((field) => field.key);
                     expect(fieldPassword?.value).toBeTruthy();
                 } else {
                     expect(false).toBeTruthy();

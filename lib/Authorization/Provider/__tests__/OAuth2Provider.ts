@@ -1,4 +1,4 @@
-import { AUTHORIZATION_FORM } from '../../../Application/Base/AApplication';
+import CoreFormsEnum from '../../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
 import AOAuthProvider from '../AOAuthProvider';
@@ -23,7 +23,7 @@ describe('OAuth2Provider tests', () => {
 
     it('authorize', () => {
         appInstall.addSettings({
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_SECRET]: '**469040-****-4e03-861e-e19da38*****',
                 [CLIENT_ID]: '**469040-****-4e03-861e-e19da38*****',
             },

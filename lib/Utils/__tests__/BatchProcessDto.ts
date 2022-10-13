@@ -63,6 +63,6 @@ describe('Tests ProcessDto utils', () => {
         const message = { foo: 'bar' };
         dto.setItemList([message]);
 
-        expect(dto.getMessages()).toEqual([{ body: '{"foo":"bar"}', headers: null }]);
+        expect(dto.getMessages()).toEqual([{ body: '{"foo":"bar"}', headers: {} }]);
     });
 });
