@@ -10,14 +10,39 @@ export default class CommonLoader {
         return this.container.get(`${prefix}.${name}`);
     }
 
-    public getList(prefix: string): string[] {
-        let list: string[] = [];
-        this.container.getAllByPrefix(prefix).forEach((obj: IName) => {
-            list.push(obj.getName());
+    public getList(prefix: string): ICommonObject[] {
+        const list: ICommonObject[] = [];
+        this.container.getAllByPrefix(prefix).forEach((obj: INameAndApplication) => {
+            let app: string | undefined;
+            try {
+                app = obj.getApplication();
+            } catch (e) {
+                app = undefined;
+            }
+
+            list.push({ name: obj.getName(), app });
         });
 
-        list = list.sort();
-        return list;
+        return list.sort(this.compare.bind(this));
     }
 
+    protected compare(a: ICommonObject, b: ICommonObject): number {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+            return -1;
+        }
+        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+            return 1;
+        }
+        return 0;
+    }
+
+}
+
+export interface ICommonObject {
+    name: string;
+    app?: string;
+}
+
+export interface INameAndApplication extends IName {
+    getApplication(): string;
 }

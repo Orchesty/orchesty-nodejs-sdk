@@ -1,6 +1,7 @@
-import * as util from 'util';
 import {
     FORCE_TARGET_QUEUE,
+    getLimiterKey,
+    getLimiterKeyWithGroup,
     IHttpHeaders,
     LIMITER_KEY,
     REPEAT_HOPS,
@@ -129,31 +130,8 @@ export default abstract class AProcessDto<JsonData = unknown> {
         this.removeRelatedHeaders([ResultCode.REPEAT]);
     }
 
-    public getLimiterKey(key: string, time: number, amount: number): string {
-        return util.format('%s;%s;%s', AProcessDto.decorateLimitKey(key), time, amount);
-    }
-
     public setLimiter(key: string, time: number, amount: number): void {
-        this.addHeader(LIMITER_KEY, this.getLimiterKey(key, time, amount));
-    }
-
-    public getLimiterKeyWithGroup(
-        key: string,
-        time: number,
-        amount: number,
-        groupKey: string,
-        groupTime: number,
-        groupAmount: number,
-    ): string {
-        return util.format(
-            '%s;%s;%s;%s;%s;%s',
-            AProcessDto.decorateLimitKey(key),
-            time,
-            amount,
-            AProcessDto.decorateLimitKey(groupKey),
-            groupTime,
-            groupAmount,
-        );
+        this.addHeader(LIMITER_KEY, getLimiterKey(key, time, amount));
     }
 
     public setLimiterWithGroup(
@@ -164,7 +142,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
         groupTime: number,
         groupAmount: number,
     ): void {
-        this.addHeader(LIMITER_KEY, this.getLimiterKeyWithGroup(key, time, amount, groupKey, groupTime, groupAmount));
+        this.addHeader(LIMITER_KEY, getLimiterKeyWithGroup(key, time, amount, groupKey, groupTime, groupAmount));
     }
 
     public removeLimiter(): void {
@@ -195,15 +173,6 @@ export default abstract class AProcessDto<JsonData = unknown> {
 
     public getBridgeData(): unknown {
         return this.data;
-    }
-
-    protected static decorateLimitKey(key: string): string {
-        let newKey = key;
-        if (!key.includes('|')) {
-            newKey = util.format('%s|', key);
-        }
-
-        return newKey;
     }
 
     protected static validateStatus(code: number): void {

@@ -1,76 +1,117 @@
 {
     "post /applications/:name/users/:user/install route": {
-        "applicationSettings": {
-            "authorization_form": {
-                "description": "",
-                "readOnly": false,
-                "fields": [
-                    {
-                        "choices": [],
-                        "description": "",
-                        "disabled": false,
-                        "key": "password",
-                        "label": "testLabel",
-                        "readOnly": false,
-                        "required": false,
-                        "type": "password",
-                        "value": null
-                    },
-                    {
-                        "choices": [],
-                        "description": "",
-                        "disabled": false,
-                        "key": "user",
-                        "label": "testLabel",
-                        "readOnly": false,
-                        "required": false,
-                        "type": "text",
-                        "value": null
-                    }
-                ],
-                "key": "authorization_form",
-                "publicName": "testPublicName"
+      "applicationSettings": {
+        "authorization_form": {
+          "description": "",
+          "fields": [
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "password",
+              "label": "testLabel",
+              "readOnly": false,
+              "required": false,
+              "type": "password",
+              "value": null
             },
-            "testForm": {
-                "description": "",
-                "readOnly": false,
-                "fields": [
-                    {
-                        "choices": [],
-                        "description": "",
-                        "disabled": false,
-                        "key": "database",
-                        "label": "testLabel",
-                        "readOnly": false,
-                        "required": false,
-                        "type": "text",
-                        "value": null
-                    },
-                    {
-                        "choices": [],
-                        "description": "",
-                        "disabled": false,
-                        "key": "host",
-                        "label": "testLabel",
-                        "readOnly": false,
-                        "required": false,
-                        "type": "text",
-                        "value": null
-                    }
-                ],
-                "key": "testForm",
-                "publicName": "testPublicName"
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "user",
+              "label": "testLabel",
+              "readOnly": false,
+              "required": false,
+              "type": "text",
+              "value": null
             }
+          ],
+          "key": "authorization_form",
+          "publicName": "testPublicName",
+          "readOnly": false
         },
-        "application_type": "cron",
-        "authorization_type": "basic",
-        "authorized": false,
-        "description": "Test description",
-        "info": "",
-        "isInstallable": true,
-        "key": "test",
-        "logo": null,
-        "name": "Test application"
+        "limiter_form": {
+          "description": "",
+          "fields": [
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "useLimit",
+              "label": "Use limit",
+              "readOnly": false,
+              "required": false,
+              "type": "checkbox",
+              "value": false
+            },
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "value",
+              "label": "Limit per time",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "value": null
+            },
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "time",
+              "label": "Time in seconds",
+              "readOnly": false,
+              "required": false,
+              "type": "number",
+              "value": null
+            }
+          ],
+          "key": "limiter_form",
+          "publicName": "Limiter form",
+          "readOnly": false
+        },
+        "testForm": {
+          "description": "",
+          "fields": [
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "database",
+              "label": "testLabel",
+              "readOnly": false,
+              "required": false,
+              "type": "text",
+              "value": null
+            },
+            {
+              "choices": [],
+              "description": "",
+              "disabled": false,
+              "key": "host",
+              "label": "testLabel",
+              "readOnly": false,
+              "required": false,
+              "type": "text",
+              "value": null
+            }
+          ],
+          "key": "testForm",
+          "publicName": "testPublicName",
+          "readOnly": false
+        }
+      },
+      "application_type": "cron",
+      "authorization_type": "basic",
+      "authorized": false,
+      "description": "Test description",
+      "info": "",
+      "isInstallable": true,
+      "key": "test",
+      "logo": null,
+      "name": "Test application"
     },
     "put /applications/:name/users/:user/settings route": {
         "applicationSettings": [

@@ -1,4 +1,4 @@
-import { AUTHORIZATION_FORM } from '../../../lib/Application/Base/AApplication';
+import CoreFormsEnum from '../../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import { OAuth2Provider } from '../../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID, CLIENT_SECRET } from '../../../lib/Authorization/Type/OAuth2/IOAuth2Application';
@@ -19,7 +19,7 @@ describe('Test OAuth2 application', () => {
         appInstall.setUser('testUser');
         appInstall.setName('testKey');
         appInstall.addSettings({
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_SECRET]: 'testSecret',
                 [CLIENT_ID]: 'testClientId',
             },

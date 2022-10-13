@@ -1,5 +1,5 @@
 import { BodyInit } from 'node-fetch';
-import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
@@ -45,7 +45,7 @@ export default class TestOAuth2Application extends AOAuth2Application {
         const fieldClientId = new Field(FieldType.TEXT, CLIENT_ID, label);
         const fieldClientSecret = new Field(FieldType.PASSWORD, CLIENT_SECRET, label);
 
-        const form = new Form(AUTHORIZATION_FORM, 'testPublicName');
+        const form = new Form(CoreFormsEnum.AUTHORIZATION_FORM, 'testPublicName');
         form.addField(fieldClientId);
         form.addField(fieldClientSecret);
 
