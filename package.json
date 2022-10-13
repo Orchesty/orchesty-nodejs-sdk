@@ -52,7 +52,6 @@
   "devDependencies": {
     "@hanaboso/eslint-plugin": "^1.0.4",
     "@types/jest": "^29.1.2",
-    "@types/joi": "^17.2.3",
     "@types/node": "^18.8.5",
     "@types/readline-sync": "^1.4.4",
     "@types/supertest": "^2.0.12",

@@ -1,5 +1,5 @@
 import { question } from 'readline-sync';
-import { AUTHORIZATION_FORM } from '../../lib/Application/Base/AApplication';
+import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import ApplicationManager from '../../lib/Application/Manager/ApplicationManager';
 import { OAuth2Provider } from '../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
@@ -20,7 +20,7 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
         .setName(name)
         .setUser(user)
         .setSettings({
-            [AUTHORIZATION_FORM]: {
+            [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_ID]: clientId,
                 [CLIENT_SECRET]: clientSecret,
             },
