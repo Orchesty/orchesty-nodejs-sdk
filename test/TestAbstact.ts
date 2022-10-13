@@ -15,6 +15,7 @@ import TestWebhookApplication from './Application/TestWebhookApplication';
 import TestBatch from './Batch/TestBatch';
 import TestConnector from './Connector/TestConnector';
 import TestCustomNode from './CustomNode/TestCustomNode';
+import TestMapperNode from './CustomNode/TestMapperNode';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
 
 jest.mock('node-fetch', () => fetchMock.sandbox());
@@ -44,6 +45,7 @@ export async function getTestContainer(): Promise<DIContainer> {
     container.setBatch(batch);
     container.setCustomNode(custom);
     container.setCustomNode(onRepeatExceptionCustom);
+    container.setCustomNode(new TestMapperNode());
 
     return container;
 }

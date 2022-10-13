@@ -1,6 +1,26 @@
+import TestMapperNode, { IInput, NAME } from '../../../test/CustomNode/TestMapperNode';
+import { getTestContainer } from '../../../test/TestAbstact';
+import DIContainer from '../../DIContainer/Container';
+import CoreServices from '../../DIContainer/CoreServices';
+import Metrics from '../../Metrics/Metrics';
+import MongoDbClient from '../../Storage/Mongodb/Client';
+import { RESULT_CODE, RESULT_MESSAGE } from '../Headers';
+import ProcessDto from '../ProcessDto';
+import ResultCode from '../ResultCode';
 import { checkParams } from '../Validations';
 
+let container: DIContainer;
+
 describe('Validations', () => {
+    beforeAll(async () => {
+        container = await getTestContainer();
+    });
+
+    afterAll(async () => {
+        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+        await container.get<Metrics>(CoreServices.METRICS).close();
+    });
+
     it('array', () => {
         const data = { k1: 1, k2: '' };
         expect(checkParams(data, ['k1', 'k2'])).toBeTruthy();
@@ -93,5 +113,27 @@ describe('Validations', () => {
         const data = { items: [{ code: null }] };
         expect(() => checkParams(data, { items: [{ code: true }] }, true))
             .toThrow('Missing required param [code]');
+    });
+
+    describe('descriptor', () => {
+        it('valid', () => {
+            const conn = container.getCustomNode<TestMapperNode>(NAME);
+            const dto = new ProcessDto<IInput>();
+            dto.setData('{"input":"losos"}');
+
+            const result = conn.processAction(dto);
+            expect(!Object.keys(result.getHeaders()).length).toBeTruthy();
+            expect(result.getJsonData().output).toBe('losos');
+        });
+
+        it('invalid', () => {
+            const conn = container.getCustomNode<TestMapperNode>(NAME);
+            const dto = new ProcessDto<IInput>();
+            dto.setData('{"losos":"losos"}');
+
+            const result = conn.processAction(dto);
+            expect(result.getHeader(RESULT_CODE)).toBe(ResultCode.STOP_AND_FAILED.toString());
+            expect(result.getHeader(RESULT_MESSAGE)).toBe('"input" is required');
+        });
     });
 });
