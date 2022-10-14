@@ -2,6 +2,7 @@ import { BodyInit } from 'node-fetch';
 import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum';
 import { IWebhookApplication } from '../../lib/Application/Base/IWebhookApplication';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
+import Webhook from '../../lib/Application/Database/Webhook';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import Form from '../../lib/Application/Model/Form/Form';
@@ -74,7 +75,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         applicationInstall: ApplicationInstall,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        id: string,
+        webhook: Webhook,
     ): RequestDto {
         return new RequestDto('unknown/url', HttpMethods.DELETE, new ProcessDto());
     }
