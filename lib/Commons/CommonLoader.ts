@@ -1,3 +1,4 @@
+import { IApplication } from '../Application/Base/IApplication';
 import DIContainer from '../DIContainer/Container';
 import { IName } from './IName';
 
@@ -15,7 +16,7 @@ export default class CommonLoader {
         this.container.getAllByPrefix(prefix).forEach((obj: INameAndApplication) => {
             let app: string | undefined;
             try {
-                app = obj.getApplication();
+                app = obj.getApplication().getName();
             } catch (e) {
                 app = undefined;
             }
@@ -44,5 +45,5 @@ export interface ICommonObject {
 }
 
 export interface INameAndApplication extends IName {
-    getApplication(): string;
+    getApplication(): IApplication;
 }
