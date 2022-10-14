@@ -1,5 +1,6 @@
 import { Headers } from 'node-fetch';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import Webhook from '../../../lib/Application/Database/Webhook';
 import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import ResponseDto from '../../../lib/Transport/Curl/ResponseDto';
@@ -83,7 +84,7 @@ describe('Tests for webhook application', () => {
     });
 
     it('getWebhookUnsubscribeRequestDto', () => {
-        const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), '1');
+        const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), new Webhook());
         expect(requestDto).toBeInstanceOf(RequestDto);
         expect(requestDto).toHaveProperty('url', 'unknown/url');
         expect(requestDto).toHaveProperty('method', HttpMethods.DELETE);

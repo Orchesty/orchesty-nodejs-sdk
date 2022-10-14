@@ -123,7 +123,7 @@ export default class WebhookManager {
                     return;
                 }
 
-                const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook.getWebhookId());
+                const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook);
                 const resp = app.processWebhookUnsubscribeResponse(await this.curl.send(request));
                 if (resp) {
                     await this.webhookRepository.remove(webhook);
