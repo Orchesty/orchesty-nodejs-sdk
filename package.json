@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@hanaboso/eslint-plugin": "^1.0.4",
     "@types/jest": "^29.1.2",
-    "@types/node": "^18.8.5",
+    "@types/node": "^18.11.0",
     "@types/readline-sync": "^1.4.4",
     "@types/supertest": "^2.0.12",
     "autocannon": "^7.10.0",
