@@ -1,14 +1,20 @@
+import crypto from 'crypto';
 import { Filter, FindCursor, MongoClient, ObjectId, ReplaceOptions } from 'mongodb';
 import { dehydrate, Repository as BaseRepo } from 'mongodb-typescript';
 import { ClassType, RepositoryOptions } from 'mongodb-typescript/lib/repository';
+import NodeCache from 'node-cache';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import CryptManager from '../../Crypt/CryptManager';
 import filters from './Filters';
 import { IQueryFilter } from './Filters/AQueryFilter';
 
+const STD_TTL = 60;
+
 export default class Repository<T> extends BaseRepo<T> {
 
     private readonly filters: Record<string, IQueryFilter>;
+
+    private readonly cache: NodeCache;
 
     public constructor(
         Type: ClassType<T>,
@@ -19,10 +25,15 @@ export default class Repository<T> extends BaseRepo<T> {
     ) {
         super(Type, mongo, collection, options);
         this.filters = filters;
+        this.cache = new NodeCache({ stdTTL: STD_TTL, checkperiod: 1 });
     }
 
     public getName(): string {
         return this.Type.name;
+    }
+
+    public clearCache(): void {
+        this.cache.flushAll();
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -51,6 +62,11 @@ export default class Repository<T> extends BaseRepo<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async findMany(query: Filter<any>, skip: number | null = null, limit: number | null = null): Promise<T[]> {
+        const cacheRecord = this.findInCache(query);
+        if (cacheRecord) {
+            return cacheRecord as T[];
+        }
+
         this.decorateQuery(query);
         let find = super.find(query);
         if (skip !== null) {
@@ -64,6 +80,9 @@ export default class Repository<T> extends BaseRepo<T> {
         entities.forEach((entity) => {
             this.decrypt(entity);
         });
+
+        this.cache.set(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`, entities);
+
         return entities;
     }
 
@@ -75,26 +94,48 @@ export default class Repository<T> extends BaseRepo<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async findOne(query?: Filter<any>): Promise<T | null> {
+        const cacheRecord = this.findInCache(query ?? {});
+        if (cacheRecord) {
+            return cacheRecord as T;
+        }
+
         this.decorateQuery(query);
         const entity = await super.findOne(query);
         if (entity) {
             this.decrypt(entity);
         }
+
+        this.cache.set(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`, entity);
         return entity;
     }
 
     public async findById(id: ObjectId): Promise<T | null> {
         const query = { _id: id };
+
+        const cacheRecord = this.findInCache(query ?? {});
+        if (cacheRecord) {
+            return cacheRecord as T;
+        }
+
         this.decorateQuery(query);
         const entity = await super.findOne(query);
         if (entity) {
             this.decrypt(entity);
         }
+
+        this.cache.set(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`, entity);
+
         return entity;
     }
 
     public async findManyById(ids: ObjectId[]): Promise<T[]> {
         const query = { _id: { $in: ids } };
+
+        const cacheRecord = this.findInCache(query ?? {});
+        if (cacheRecord) {
+            return cacheRecord as T[];
+        }
+
         this.decorateQuery(query);
         const entities = await super.find(query)
             .toArray();
@@ -103,6 +144,9 @@ export default class Repository<T> extends BaseRepo<T> {
                 this.decrypt(entity);
             });
         }
+
+        this.cache.set(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`, entities);
+
         return entities;
     }
 
@@ -161,6 +205,18 @@ export default class Repository<T> extends BaseRepo<T> {
             .forEach((item) => {
                 item[1].decorate(this.Type, query);
             });
+    }
+
+    private findInCache(query?: Filter<unknown>): unknown {
+        if (this.cache.has(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`)) {
+            return this.cache.get(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`);
+        }
+
+        return null;
+    }
+
+    private md5(query: string): string {
+        return crypto.createHash('md5').update(JSON.stringify(query)).digest('hex');
     }
 
 }
