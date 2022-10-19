@@ -31,6 +31,7 @@ function mockCurl(curl: CurlSender, url: string, headers?: HeadersInit): SpyInst
             const defaultHeaders = {
                 'previous-correlation-id': '',
                 'previous-node-id': '',
+                'orchesty-api-key': '',
             };
 
             if (headers) {

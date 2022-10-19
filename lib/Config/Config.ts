@@ -25,7 +25,9 @@ export const cryptOptions = {
     secret: process.env.CRYPT_SECRET ?? '',
 };
 
-export const pipesOptions = {
+export const orchestyOptions = {
     backend: process.env.BACKEND_URL ?? process.env.BACKEND_DSN ?? '',
     startingPoint: process.env.STARTING_POINT_DSN ?? '',
+    orchestyApiKey: process.env.ORCHESTY_API_KEY ?? '',
+    systemUser: 'orchesty',
 };

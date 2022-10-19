@@ -1,13 +1,13 @@
 import { StatusCodes } from 'http-status-codes';
 import { Headers, HeadersInit } from 'node-fetch';
-import { pipesOptions } from '../Config/Config';
+import { orchestyOptions } from '../Config/Config';
 import OnRepeatException from '../Exception/OnRepeatException';
 import logger from '../Logger/Logger';
 import CurlSender from '../Transport/Curl/CurlSender';
 import RequestDto from '../Transport/Curl/RequestDto';
 import ResponseDto from '../Transport/Curl/ResponseDto';
 import { HttpMethods } from '../Transport/HttpMethods';
-import { getCorrelationId, getNodeId, PREV_CORRELATION_ID, PREV_NODE_ID } from '../Utils/Headers';
+import { getCorrelationId, getNodeId, ORCHESTY_API_KEY, PREV_CORRELATION_ID, PREV_NODE_ID } from '../Utils/Headers';
 import ProcessDto from '../Utils/ProcessDto';
 
 export default class TopologyRunner {
@@ -16,7 +16,7 @@ export default class TopologyRunner {
     }
 
     public static getWebhookUrl(topology: string, node: string, token: string): string {
-        return `${pipesOptions.startingPoint}/topologies/${topology}/nodes/${node}/token/${token}/run`;
+        return `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}/token/${token}/run`;
     }
 
     public async runByName(
@@ -28,7 +28,7 @@ export default class TopologyRunner {
         _headers?: HeadersInit,
     ): Promise<ResponseDto> {
         const user = _user !== undefined ? `/user/${_user}` : '';
-        const url = `${pipesOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run-by-name`;
+        const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run-by-name`;
 
         return this.run(url, data, processDto, _headers);
     }
@@ -42,7 +42,7 @@ export default class TopologyRunner {
         _headers?: HeadersInit,
     ): Promise<ResponseDto> {
         const user = _user !== undefined ? `/user/${_user}` : '';
-        const url = `${pipesOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run`;
+        const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run`;
 
         return this.run(url, data, processDto, _headers);
     }
@@ -64,6 +64,7 @@ export default class TopologyRunner {
                     ...headers ?? {},
                     [PREV_CORRELATION_ID]: getCorrelationId(processDto.getHeaders()) ?? '',
                     [PREV_NODE_ID]: getNodeId(processDto.getHeaders()) ?? '',
+                    [ORCHESTY_API_KEY]: orchestyOptions.orchestyApiKey,
                 }),
             );
             const resp = await this.curlSender.send(requestDto);

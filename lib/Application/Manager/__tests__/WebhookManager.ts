@@ -61,7 +61,7 @@ describe('Tests for webhookManager', () => {
         const webhooks = await webhookManager.getWebhooks(app, appInstall.getUser());
         expect(webhooks).toHaveLength(1);
         expect(webhooks).toStrictEqual([{
-            default: true, enabled: false, name: 'testWebhook', topology: 'testWebhook',
+            default: true, enabled: true, name: 'testWebhook', topology: 'testWebhook',
         }]);
     });
 

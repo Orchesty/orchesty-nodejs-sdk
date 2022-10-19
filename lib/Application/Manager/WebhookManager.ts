@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { pipesOptions } from '../../Config/Config';
+import { orchestyOptions } from '../../Config/Config';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
@@ -83,7 +83,7 @@ export default class WebhookManager {
                     const request = app.getWebhookSubscribeRequestDto(
                         appInstall,
                         subs,
-                        `${pipesOptions.startingPoint}/webhook/topologies/${topology}/nodes/${subs.getNode()}/token/${token}`,
+                        `${orchestyOptions.startingPoint}/webhook/topologies/${topology}/nodes/${subs.getNode()}/token/${token}`,
                     );
 
                     const webhookId = app.processWebhookSubscribeResponse(

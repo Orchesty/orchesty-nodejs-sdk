@@ -13,7 +13,7 @@ import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import BatchRouter from './Batch/BatchRouter';
 import ACommonRouter from './Commons/ACommonRouter';
 import CommonLoader from './Commons/CommonLoader';
-import { appOptions, cryptOptions, metricsOptions, pipesOptions, storageOptions } from './Config/Config';
+import { appOptions, cryptOptions, metricsOptions, orchestyOptions, storageOptions } from './Config/Config';
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
@@ -57,7 +57,7 @@ export async function initiateContainer(): Promise<void> {
     const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager, container);
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
-    const oauth2Provider = new OAuth2Provider(pipesOptions.backend);
+    const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
     const metricsLoader = new MetricsSenderLoader(
         metricsOptions.metricsService,
         new Influx(),
