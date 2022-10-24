@@ -4,6 +4,7 @@
     ],
     "rules": {
         "no-param-reassign": "off",
-        "@typescript-eslint/no-misused-promises": "off"
+        "@typescript-eslint/no-misused-promises": "off",
+        "jest/max-expects": ["error", { "max": 20 }]
     }
 }

@@ -31,6 +31,10 @@ export default class Redis {
         return this.client.sendCommand('mget', [keys]);
     }
 
+    public async getList(key: string): Promise<string[]> {
+        return this.client.sendCommand('LRANGE', [key, 0, -1]);
+    }
+
     public async dropAll(): Promise<void> {
         return this.client.sendCommand('flushall');
     }
@@ -47,6 +51,46 @@ export default class Redis {
 
     public async getSet(key: string, value: string): Promise<string> {
         return this.client.sendCommand('getset', [key, value]);
+    }
+
+    public async incrBy(key: string, value: number, expiresInSeconds?: number): Promise<number> {
+        const response = this.client.sendCommand('incrby', [key, value]);
+
+        if (expiresInSeconds) {
+            await this.setExpire(key, expiresInSeconds);
+        }
+        return response;
+    }
+
+    public async decrBy(key: string, value: number, expiresInSeconds?: number): Promise<number> {
+        const response = this.client.sendCommand('decrby', [key, value]);
+
+        if (expiresInSeconds) {
+            await this.setExpire(key, expiresInSeconds);
+        }
+        return response;
+    }
+
+    public async pushToList(
+        key: string,
+        value: string,
+        expiresInSeconds?: number,
+    ): Promise<boolean> {
+        const args = [key, value];
+        const response = await this.client.sendCommand('RPUSH', args);
+        if (expiresInSeconds) {
+            await this.setExpire(key, expiresInSeconds);
+        }
+        return response;
+    }
+
+    public async getFirstElementAndMoveToEnd(listKey: string): Promise<string> {
+        return this.client.sendCommand('LMOVE', [
+            listKey,
+            listKey,
+            'LEFT',
+            'RIGHT',
+        ]);
     }
 
     // Can be merged with getSet after Redis 7.0 release -> SET currently does not allow NX GET combination
