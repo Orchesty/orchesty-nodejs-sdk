@@ -1,6 +1,6 @@
 {
   "name": "pipes-nodejs-sdk",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -32,8 +32,8 @@
     "luxon": "^2.4.0",
     "metrics-sender": "^0.0.10",
     "mime-types": "^2.1.35",
-    "mongodb": "^4.6.0",
-    "mongodb-typescript": "github:hanaboso/mongodb-typescript#mongodb-update",
+    "mongodb": "^4.7.0",
+    "mongodb-typescript": "^3.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
     "node-redis-connection-pool": "^3.1.0",
