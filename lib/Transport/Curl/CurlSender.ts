@@ -35,7 +35,8 @@ export default class CurlSender {
       );
       const response = await fetch(dto.url, req);
       await this._sendMetrics(dto, startTime);
-      const body = await response.text();
+      const buffer = await response.buffer();
+      const body = buffer.toString();
       if (!response.ok) {
         CurlSender._log(dto, response, Severity.ERROR, body);
       } else {
@@ -46,7 +47,7 @@ export default class CurlSender {
         throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
       }
 
-      return new ResponseDto(body, response.status, response.headers, response.statusText);
+      return new ResponseDto(body, response.status, response.headers, buffer, response.statusText);
     } catch (e) {
       await this._sendMetrics(dto, startTime);
       if (e instanceof Error) {

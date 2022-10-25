@@ -3,10 +3,11 @@ import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto implements IResponseDto {
   constructor(
-    private readonly _body: string,
-    private readonly _code: number,
-    private readonly _headers: Headers,
-    private readonly _reason?: string,
+        private readonly _body: string,
+        private readonly _code: number,
+        private readonly _headers: Headers,
+        private readonly _buffer?: Buffer,
+        private readonly _reason?: string,
   ) {
   }
 
@@ -28,5 +29,9 @@ export default class ResponseDto implements IResponseDto {
 
   get responseCode(): number {
     return this._code;
+  }
+
+  get buffer(): Buffer | undefined {
+    return this._buffer;
   }
 }
