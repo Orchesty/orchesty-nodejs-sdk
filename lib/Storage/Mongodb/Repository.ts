@@ -110,22 +110,7 @@ export default class Repository<T> extends BaseRepo<T> {
     }
 
     public async findById(id: ObjectId): Promise<T | null> {
-        const query = { _id: id };
-
-        const cacheRecord = this.findInCache(query ?? {});
-        if (cacheRecord) {
-            return cacheRecord as T;
-        }
-
-        this.decorateQuery(query);
-        const entity = await super.findOne(query);
-        if (entity) {
-            this.decrypt(entity);
-        }
-
-        this.cache.set(`mongo_query_${this.getName()}_${this.md5(JSON.stringify(query))}`, entity);
-
-        return entity;
+        return this.findOne({ _id: id });
     }
 
     public async findManyById(ids: ObjectId[]): Promise<T[]> {

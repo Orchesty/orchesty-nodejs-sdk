@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
+import { MongoTopologyClosedError, ObjectId } from 'mongodb';
 import OnRepeatException from '../Exception/OnRepeatException';
 import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
@@ -14,6 +14,12 @@ export default function errorHandler(nodeRepository: NodeRepository) {
             next(err);
             return;
         }
+
+        if (err instanceof MongoTopologyClosedError) {
+            // force kill app due to invalid Mongo connection
+            process.exit(0);
+        }
+
         const dto = await createProcessDto(req);
 
         if (err instanceof OnRepeatException) {
@@ -40,6 +46,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
             next();
             return;
         }
+
         if (err instanceof OnStopAndFailException) {
             logger.debug(err.message, dto);
             dto.setStopProcess(ResultCode.STOP_AND_FAILED, err.message);
