@@ -14,13 +14,13 @@ export default function errorHandler(nodeRepository: NodeRepository) {
             next(err);
             return;
         }
+        const dto = await createProcessDto(req);
 
         if (err instanceof MongoTopologyClosedError) {
+            logger.error(err.message, dto, false, err);
             // force kill app due to invalid Mongo connection
             process.exit(0);
         }
-
-        const dto = await createProcessDto(req);
 
         if (err instanceof OnRepeatException) {
             const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) ?? '') });
@@ -48,7 +48,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
         }
 
         if (err instanceof OnStopAndFailException) {
-            logger.debug(err.message, dto);
+            logger.error(err.message, dto, false, err);
             dto.setStopProcess(ResultCode.STOP_AND_FAILED, err.message);
 
             createSuccessResponse(res, dto);

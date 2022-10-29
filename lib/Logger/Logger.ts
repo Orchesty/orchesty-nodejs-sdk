@@ -69,8 +69,8 @@ export class Logger {
         this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
     }
 
-    public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
-        this.log(Severity.ERROR, message, this.createCtx(context, isForUi));
+    public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false, err?: Error): void {
+        this.log(Severity.ERROR, message, this.createCtx(context, isForUi, err));
     }
 
     public log(severity: Severity, message: string, context: ILogContext): void {
