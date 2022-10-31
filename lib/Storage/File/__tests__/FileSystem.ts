@@ -3,11 +3,11 @@ import DataStorageDocument from '../../DataStore/Document/DataStorageDocument';
 import FileSystem from '../FileSystem';
 
 // Mock Logger module
-// jest.mock('../../../Logger/Logger', () => ({
-//     error: () => jest.fn(),
-//     info: () => jest.fn(),
-//     Logger: jest.fn().mockImplementation(() => ({})),
-// }));
+jest.mock('../../../Logger/Logger', () => ({
+    error: () => jest.fn(),
+    info: () => jest.fn(),
+    Logger: jest.fn().mockImplementation(() => ({})),
+}));
 
 describe('Tests for FileSystem', () => {
     let fileSystem: FileSystem;
