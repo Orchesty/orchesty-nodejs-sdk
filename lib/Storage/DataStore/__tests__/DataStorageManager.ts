@@ -6,6 +6,7 @@ import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
+import FileSystem from '../../File/FileSystem';
 import MongoDbClient from '../../Mongodb/Client';
 import DataStorageManager from '../DataStorageManager';
 
@@ -40,7 +41,8 @@ describe('Test ETL Manager', () => {
         const app = 'app';
         const id = '123';
 
-        const dataStorageManager = new DataStorageManager(dbClient);
+        const dataStorageManager = new DataStorageManager(new FileSystem());
+        await dataStorageManager.remove(id);
         await dataStorageManager.store(id, [{ foo: 'bar' }, { john: 'doe' }], app, user);
         await dataStorageManager.store(id, [{ foo: 'bar1' }, { john: 'doe1' }], app, user);
 

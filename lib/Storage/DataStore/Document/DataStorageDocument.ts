@@ -1,27 +1,27 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { index } from 'mongodb-typescript';
 import DateTimeUtils from '../../../Utils/DateTimeUtils';
-import ADocument from '../../Mongodb/ADocument';
 
-export default class DataStorageDocument extends ADocument {
+export default class DataStorageDocument<T = unknown> {
 
-    @index()
     private user?: string = '';
 
-    @index()
     private application?: string = '';
 
-    @index()
-    private processId = '';
+    private created: Date;
 
-    @index(undefined, { expireAfterSeconds: 86400 })
-    private readonly created: Date;
-
-    private data = '';
+    private data?: T;
 
     public constructor() {
-        super();
         this.created = DateTimeUtils.getUtcDate();
+    }
+
+    public static fromJson<T>(data: IDataStorageDocument<T>): DataStorageDocument<T> {
+        const document = new DataStorageDocument<T>();
+        document.setUser(data.user);
+        document.setApplication(data.application);
+        document.setCreated(data.created);
+        document.setData(data.data);
+
+        return document;
     }
 
     public getUser(): string | undefined {
@@ -44,28 +44,31 @@ export default class DataStorageDocument extends ADocument {
         return this;
     }
 
-    public getProcessId(): string {
-        return this.processId;
-    }
-
-    public setProcessId(processId: string): this {
-        this.processId = processId;
-
-        return this;
-    }
-
     public getCreated(): Date {
         return this.created;
     }
 
-    public getData(): unknown {
-        return JSON.parse(this.data);
+    public getData(): T | undefined {
+        return this.data;
     }
 
-    public setData(jsonData: unknown): this {
-        this.data = JSON.stringify(jsonData);
+    public setData(data?: T): this {
+        this.data = data;
 
         return this;
     }
 
+    private setCreated(date: Date): this {
+        this.created = date;
+
+        return this;
+    }
+
+}
+
+export interface IDataStorageDocument<T> {
+    user?: string;
+    application?: string;
+    created: Date;
+    data?: T;
 }
