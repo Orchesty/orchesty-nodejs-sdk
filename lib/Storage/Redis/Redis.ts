@@ -54,7 +54,7 @@ export default class Redis {
     }
 
     public async incrBy(key: string, value: number, expiresInSeconds?: number): Promise<number> {
-        const response = this.client.sendCommand('incrby', [key, value]);
+        const response = await this.client.sendCommand('incrby', [key, value]);
 
         if (expiresInSeconds) {
             await this.setExpire(key, expiresInSeconds);
@@ -63,7 +63,7 @@ export default class Redis {
     }
 
     public async decrBy(key: string, value: number, expiresInSeconds?: number): Promise<number> {
-        const response = this.client.sendCommand('decrby', [key, value]);
+        const response = await this.client.sendCommand('decrby', [key, value]);
 
         if (expiresInSeconds) {
             await this.setExpire(key, expiresInSeconds);
