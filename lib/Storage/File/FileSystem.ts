@@ -16,7 +16,8 @@ export default class FileSystem {
         }
 
         if (this.lockedFiles.includes(file)) {
-            setTimeout(async () => this.write<T>(file, data, actualTry + 1), this.millisecondsDelayOnFail);
+            await this.sleep();
+            return this.write<T>(file, data, actualTry + 1);
         }
 
         this.lock(file);
@@ -60,7 +61,8 @@ export default class FileSystem {
             }
 
             if (this.lockedFiles.includes(file)) {
-                setTimeout(async () => this.read<T>(file, actualTry + 1), this.millisecondsDelayOnFail);
+                await this.sleep();
+                return await this.read<T>(file, actualTry + 1);
             }
 
             const data = JSON.parse(await readFile(dataPath, 'utf-8')) as IDataStorageDocument<T>[];
@@ -68,7 +70,8 @@ export default class FileSystem {
         } catch (error) {
             if (error instanceof Error) {
                 logger.error(`Read file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, { error });
-                setTimeout(async () => this.read<T>(file, actualTry + 1), this.millisecondsDelayOnFail);
+                await this.sleep();
+                return this.read<T>(file, actualTry + 1);
             }
             throw error;
         }
@@ -89,7 +92,8 @@ export default class FileSystem {
         } catch (error) {
             if (error instanceof Error) {
                 logger.error(`Delete file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, { error });
-                setTimeout(async () => this.read(file, actualTry + 1), this.millisecondsDelayOnFail);
+                await this.sleep();
+                return this.delete(file, actualTry + 1);
             }
             throw error;
         }
@@ -111,6 +115,12 @@ export default class FileSystem {
 
     private unlock(file: string): void {
         this.lockedFiles = this.lockedFiles.filter((item) => item !== file);
+    }
+
+    private async sleep(): Promise<void> {
+        await new Promise((resolve) => {
+            setTimeout(() => resolve('resolved'), this.millisecondsDelayOnFail);
+        });
     }
 
 }
