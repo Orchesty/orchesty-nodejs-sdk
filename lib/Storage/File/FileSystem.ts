@@ -117,8 +117,8 @@ export default class FileSystem {
         this.lockedFiles = this.lockedFiles.filter((item) => item !== file);
     }
 
-    private async sleep(): Promise<void> {
-        await new Promise((resolve) => {
+    private async sleep(): Promise<unknown> {
+        return new Promise((resolve) => {
             setTimeout(() => resolve('resolved'), this.millisecondsDelayOnFail);
         });
     }
