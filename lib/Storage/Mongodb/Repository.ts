@@ -39,6 +39,7 @@ export default class Repository<T> extends BaseRepo<T> {
     // eslint-disable-next-line @typescript-eslint/require-await
     public async insert(entity: T): Promise<void> {
         this.encrypt(entity);
+        this.clearCache();
         return super.insert(entity);
     }
 
@@ -46,17 +47,20 @@ export default class Repository<T> extends BaseRepo<T> {
     public async insertMany(entities: T[]): Promise<void> {
         const plain = entities.map((entity) => dehydrate<T>(entity));
         await this.collection.insertMany(plain);
+        this.clearCache();
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
     public async update(entity: T, options?: ReplaceOptions): Promise<void> {
         this.encrypt(entity);
+        this.clearCache();
         return super.update(entity, options);
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
     public async upsert(entity: T): Promise<void> {
         this.encrypt(entity);
+        this.clearCache();
         return super.save(entity);
     }
 
@@ -143,11 +147,13 @@ export default class Repository<T> extends BaseRepo<T> {
         } else {
             await super.remove(entity);
         }
+        this.clearCache();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async removeMany(query: Filter<any>): Promise<void> {
         await this.collection.deleteMany(query);
+        this.clearCache();
     }
 
     public enableFilter(name: string): void {
