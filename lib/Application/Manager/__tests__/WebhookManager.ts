@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { Headers } from 'node-fetch';
 import TestWebhookApplication from '../../../../test/Application/TestWebhookApplication';
-import { getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
+import { dropCollection, getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
 import { PASSWORD, TOKEN, USER } from '../../../Authorization/Type/Basic/ABasicApplication';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
@@ -9,6 +9,7 @@ import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ResponseDto from '../../../Transport/Curl/ResponseDto';
 import CoreFormsEnum from '../../Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
+import Webhook from '../../Database/Webhook';
 import WebhookManager from '../WebhookManager';
 
 let container: DIContainer;
@@ -57,6 +58,9 @@ describe('Tests for webhookManager', () => {
     });
 
     it('should get all webhooks', async () => {
+        await dropCollection(Webhook.getCollection());
+        const repo = await dbClient.getRepository(Webhook);
+        await repo.insert(new Webhook().setName('testWebhook').setUser('user').setApplication('webhookName').setTopology('testWebhook'));
         const app = container.getApplication('webhookName') as TestWebhookApplication;
         const webhooks = await webhookManager.getWebhooks(app, appInstall.getUser());
         expect(webhooks).toHaveLength(1);
