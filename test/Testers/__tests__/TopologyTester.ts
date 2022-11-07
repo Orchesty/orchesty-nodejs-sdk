@@ -10,6 +10,9 @@ import TopologyTester from '../TopologyTester';
 jest.mock('../../../lib/Logger/Logger', () => ({
     error: () => jest.fn(),
     debug: () => jest.fn(),
+    log: () => jest.fn(),
+    ctxFromDto: () => jest.fn(),
+    createCtx: () => jest.fn(),
     Logger: jest.fn().mockImplementation(() => ({})),
 }));
 

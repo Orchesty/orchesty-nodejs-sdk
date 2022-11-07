@@ -1,4 +1,3 @@
-import { BodyInit } from 'node-fetch';
 import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Field from '../../lib/Application/Model/Form/Field';
@@ -35,7 +34,7 @@ export default class TestOAuth2Application extends AOAuth2Application {
         applicationInstall: ApplicationInstall,
         method: HttpMethods,
         url?: string,
-        data?: BodyInit,
+        data?: unknown,
     ): RequestDto {
         return new RequestDto(url ?? '', HttpMethods.GET, dto, data);
     }

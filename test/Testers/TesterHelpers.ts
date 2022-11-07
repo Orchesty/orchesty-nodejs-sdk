@@ -1,14 +1,10 @@
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { Buffer } from 'buffer';
 import fs from 'fs';
-import { Headers, Response } from 'node-fetch';
 import path from 'path';
-import { unescape } from 'querystring';
 import { INode } from '../../lib/Commons/INode';
 import AConnector from '../../lib/Connector/AConnector';
-import CurlSender from '../../lib/Transport/Curl/CurlSender';
-import RequestDto from '../../lib/Transport/Curl/RequestDto';
-import ResponseDto from '../../lib/Transport/Curl/ResponseDto';
-import SpyInstance = jest.SpyInstance;
-import { ResultCodeRange } from '../../lib/Transport/Curl/ResultCodeRange';
 
 export interface ICurlMock {
     body: Record<string, unknown> | string;
@@ -76,102 +72,61 @@ export function walkRecursive(body: any, keys: string[], value: string): any {
 
 export function mockCurl(
     file: string,
-    sender: CurlSender,
     _prefix = '',
     _index = 0,
-): SpyInstance | undefined {
+): MockAdapter {
     const prefix = _prefix !== '' ? `${_prefix}-` : '';
     const index = _index !== 0 ? `${_index}-` : '';
     const fileName = path.parse(file).name;
     const fileDir = path.parse(file).dir;
-    let spy = jest.spyOn(sender, 'send');
+
+    const mockAdapter = new MockAdapter(axios, { onNoMatch: 'throwException' });
     let mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock.json`;
     let call = 0;
-
     do {
         const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
-        spy = spy.mockImplementationOnce(
-            // eslint-disable-next-line @typescript-eslint/require-await,@typescript-eslint/no-explicit-any
-            async (
-                r: RequestDto,
-                cR?: ResultCodeRange[],
-                s = 60,
-                h = 10,
-                // eslint-disable-next-line @typescript-eslint/require-await
-                mC = async (res: Response, body: string) => `status: ${res.status}, body: ${body}`,
-            ): Promise<ResponseDto> => {
-                const request = r;
-                const [method, url] = curl.http.split(' ', 2);
-                try {
-                    expect(request.getMethod()).toBe(method);
-                } catch (e) {
-                    throw new Error(
-                        `HTTP Method for [${index}${_prefix}] should be [${method}], [${request.getMethod()}] received.`, // eslint-disable-line max-len
-                    );
-                }
+        const [method, url] = curl.http.split(' ', 2);
+        let requestHandler;
+        switch (method.toLowerCase()) {
+            case 'get':
+                requestHandler = mockAdapter.onGet(new RegExp(url));
+                break;
+            case 'post':
+                requestHandler = mockAdapter.onPost(new RegExp(url));
+                break;
+            case 'put':
+                requestHandler = mockAdapter.onPut(new RegExp(url));
+                break;
+            case 'patch':
+                requestHandler = mockAdapter.onPatch(new RegExp(url));
+                break;
+            case 'delete':
+                requestHandler = mockAdapter.onDelete(new RegExp(url));
+                break;
+            default:
+                requestHandler = mockAdapter.onAny(new RegExp(url));
+                break;
+        }
 
-                let expectedUrl = request.getUrl();
-                try {
-                    if (curl.httpReplacement?.query) {
-                        const replacedUrl = new URL(expectedUrl);
-                        Object.keys(curl.httpReplacement?.query).forEach((key) => {
-                            replacedUrl.searchParams.set(
-                                key,
-                                curl.httpReplacement?.query ? curl.httpReplacement.query[key].toString() : '',
-                            );
-                        });
-                        expectedUrl = unescape(replacedUrl.toString());
-                    }
-                    expect(expectedUrl).toBe(url);
-                } catch (e) {
-                    throw new Error(`URL for [${index}${_prefix}] should be [${url}], [${expectedUrl}] received.`);
-                }
+        requestHandler.replyOnce(curl.code, Buffer.from(JSON.stringify(curl.body)), curl.headers);
 
-                let newBody = '';
-                if (typeof curl.body === 'string') {
-                    newBody = curl.body;
-                } else {
-                    newBody = JSON.stringify(curl.body ?? {});
-                }
-
-                if (cR) {
-                    return sender.handleByResultCode(
-                        new Response(newBody, { status: curl.code }),
-                        newBody,
-                        Buffer.from(newBody),
-                        cR,
-                        mC,
-                        s,
-                        h,
-                    );
-                }
-
-                return new ResponseDto(
-                    newBody,
-                    curl.code || 200,
-                    new Headers(curl.headers ?? new Headers()),
-                    Buffer.from(''),
-                );
-            },
-        );
         call += 1;
         mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock${call}.json`;
     } while (fs.existsSync(mockFile));
 
-    return spy;
+    return mockAdapter;
 }
 
 export function mockNodeCurl(
     node: AConnector | INode,
     file: string,
-    sender: CurlSender,
     _prefix = '',
     _index = 0,
     _forceMock = false,
     _exclude: string[] = [],
-): SpyInstance | undefined {
+): MockAdapter | undefined {
     if (_forceMock && !_exclude.includes(_prefix)) {
-        return mockCurl(file, sender, _prefix, _index);
+        return mockCurl(file, _prefix, _index);
     }
 
     if (
@@ -179,7 +134,7 @@ export function mockNodeCurl(
         && Reflect.get(node, 'sender') !== undefined
         && !_exclude.includes(_prefix)
     ) {
-        return mockCurl(file, sender, _prefix, _index);
+        return mockCurl(file, _prefix, _index);
     }
 
     return undefined;

@@ -1,7 +1,4 @@
 import { Application } from 'express';
-import { FetchMockStatic } from 'fetch-mock';
-import fetchMock from 'fetch-mock-jest';
-import mf from 'node-fetch';
 import { container as c, expressApp as e, initiateContainer, listen as l } from '../lib';
 import CommonLoader from '../lib/Commons/CommonLoader';
 import DIContainer from '../lib/DIContainer/Container';
@@ -17,8 +14,6 @@ import TestConnector from './Connector/TestConnector';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestMapperNode from './CustomNode/TestMapperNode';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
-
-jest.mock('node-fetch', () => fetchMock.sandbox());
 
 export const expressApp = e;
 export const container = c;
@@ -105,5 +100,3 @@ export async function closeConnections(): Promise<void> {
         await redis.dropAll();
     }
 }
-
-export const mockedFetch: FetchMockStatic = mf as unknown as FetchMockStatic;

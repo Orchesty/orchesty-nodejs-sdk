@@ -1,4 +1,3 @@
-import { Headers } from 'node-fetch';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import Webhook from '../../../lib/Application/Database/Webhook';
 import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
@@ -94,7 +93,7 @@ describe('Tests for webhook application', () => {
         const processResponse = app.processWebhookSubscribeResponse(new ResponseDto(
             JSON.stringify({ id: '1' }),
             200,
-            new Headers(),
+            {},
             Buffer.from(''),
         ), new ApplicationInstall());
         expect(processResponse).toBe('1');
@@ -104,7 +103,7 @@ describe('Tests for webhook application', () => {
         const processResponse = app.processWebhookUnsubscribeResponse(new ResponseDto(
             JSON.stringify({ id: '1' }),
             200,
-            new Headers(),
+            {},
             Buffer.from(''),
         ));
         expect(processResponse).toBeTruthy();
