@@ -1,18 +1,17 @@
-import { Headers } from 'node-fetch';
 import { IResponseDto } from '../IResponseDto';
 
-export default class ResponseDto<JsonBody = unknown> implements IResponseDto {
+export default class ResponseDto<JsonBody = unknown> implements IResponseDto<JsonBody> {
 
     public constructor(
         private readonly body: string,
         private readonly code: number,
-        private readonly headers: Headers,
+        private readonly headers: Record<string, unknown>,
         private readonly buffer: Buffer,
         private readonly reason?: string,
     ) {
     }
 
-    public getHeaders(): Headers {
+    public getHeaders(): Record<string, unknown> {
         return this.headers;
     }
 

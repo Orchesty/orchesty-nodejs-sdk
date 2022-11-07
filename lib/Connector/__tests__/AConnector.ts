@@ -1,4 +1,3 @@
-import { Headers } from 'node-fetch';
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
 import TestConnector from '../../../test/Connector/TestConnector';
 import { getTestContainer } from '../../../test/TestAbstact';
@@ -62,14 +61,14 @@ describe('Test AConnector', () => {
 
     it('shouldnt set dto stop process on dto', () => {
         const dto = new ProcessDto();
-        const response = new ResponseDto('body', 200, new Headers({}), Buffer.from(''));
+        const response = new ResponseDto('body', 200, {}, Buffer.from(''));
         testConnector.evaluateStatusCode(response, dto, 'error');
         expect(dto.getHeaders()).toEqual({});
     });
 
     it('should set dto stop process on dto', () => {
         const dto = new ProcessDto();
-        const response = new ResponseDto('body', 205, new Headers({}), Buffer.from(''));
+        const response = new ResponseDto('body', 205, {}, Buffer.from(''));
         testConnector.evaluateStatusCode(response, dto, 'error');
         expect(dto.getHeaders()).toEqual({ 'result-code': '1006', 'result-message': 'error' });
     });

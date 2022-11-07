@@ -3,7 +3,6 @@ import { XMLParser } from 'fast-xml-parser';
 import * as fs from 'fs';
 import { INode } from '../../lib/Commons/INode';
 import DIContainer from '../../lib/DIContainer/Container';
-import CoreServices from '../../lib/DIContainer/CoreServices';
 import OnRepeatException from '../../lib/Exception/OnRepeatException';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
@@ -269,10 +268,9 @@ export default class TopologyTester {
         prefix: string,
         index = 0,
     ): Promise<AProcessDto> {
-        const spy = mockNodeCurl(
+        const mockAdapter = mockNodeCurl(
             worker,
             this.file,
-            this.container.get(CoreServices.CURL),
             `${prefix}${node.id}`,
             index,
             this.forceMock,
@@ -284,7 +282,7 @@ export default class TopologyTester {
         }
 
         const out = await worker.processAction(toProcess);
-        spy?.mockRestore();
+        mockAdapter?.restore();
 
         return out;
     }

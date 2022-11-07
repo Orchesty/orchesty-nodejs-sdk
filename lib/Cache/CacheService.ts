@@ -1,4 +1,4 @@
-import logger from 'winston';
+import logger from '../Logger/Logger';
 import Redis from '../Storage/Redis/Redis';
 import CurlSender from '../Transport/Curl/CurlSender';
 import RequestDto from '../Transport/Curl/RequestDto';
@@ -42,8 +42,12 @@ export default class CacheService {
 
             return dataCallback.dataToStore;
         } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error in CacheService.';
-            logger.error(msg);
+            const msg = 'Unknown error in CacheService.';
+            if (e instanceof Error) {
+                logger.error(e.message, {}, false, e);
+            } else {
+                logger.error(msg, {});
+            }
 
             throw new Error(`Unexpected error: ${msg}`);
         }
@@ -97,8 +101,12 @@ export default class CacheService {
 
             return dataCallback.dataToStore;
         } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error in CacheService.';
-            logger.error(msg);
+            const msg = 'Unknown error in CacheService.';
+            if (e instanceof Error) {
+                logger.error(e.message, {}, false, e);
+            } else {
+                logger.error(msg, {});
+            }
 
             throw new Error(`Unexpected error: ${msg}`);
         }

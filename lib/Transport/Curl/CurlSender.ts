@@ -1,4 +1,4 @@
-import fetch, { FetchError, RequestInit, Response } from 'node-fetch';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import OnRepeatException from '../../Exception/OnRepeatException';
 import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
@@ -21,7 +21,7 @@ export default class CurlSender {
         sec = 60,
         hops = 10,
         // eslint-disable-next-line @typescript-eslint/require-await
-        logMessageCallback = async (res: Response, body: string) => `status: ${res.status}, body: ${body}`,
+        logMessageCallback = async (res: AxiosResponse, body: string) => `status: ${res.status}, body: ${body}`,
     ): Promise<ResponseDto<JsonBody>> {
         const startTime = Metrics.getCurrentMetrics();
         try {
@@ -35,14 +35,14 @@ export default class CurlSender {
        Body: ${dto.getBody()}`,
                 logger.createCtx(dto.getDebugInfo()),
             );
-            const response = await fetch(dto.getUrl(), req);
+            const response = await axios(dto.getUrl(), req);
             await this.sendMetrics(dto, startTime);
-            const buffer = await response.buffer();
+            const buffer = await response.data;
             const body = buffer.toString();
-            if (!response.ok) {
-                CurlSender.log(dto, response, Severity.ERROR, body);
-            } else {
+            if (response.status >= 200 && response.status <= 299) {
                 CurlSender.log(dto, response, Severity.DEBUG, body);
+            } else {
+                CurlSender.log(dto, response, Severity.ERROR, body);
             }
 
             if (codeRange) {
@@ -64,7 +64,7 @@ export default class CurlSender {
                 logger.error(e.message, dto.getDebugInfo());
             }
 
-            if (e instanceof FetchError) {
+            if (e instanceof AxiosError) {
                 if (e.message.includes('network timeout')) {
                     throw new OnRepeatException(sec, hops, e.message);
                 }
@@ -74,16 +74,16 @@ export default class CurlSender {
         }
     }
 
-    public returnResponseDto<JsonBody>(body: string, response: Response, buffer: Buffer): ResponseDto<JsonBody> {
+    public returnResponseDto<JsonBody>(body: string, response: AxiosResponse, buffer: Buffer): ResponseDto<JsonBody> {
         return new ResponseDto(body, response.status, response.headers, buffer, response.statusText);
     }
 
     public async handleByResultCode<JsonBody = unknown>(
-        response: Response,
+        response: AxiosResponse,
         body: string,
         buffer: Buffer,
         codeRange: ResultCodeRange[],
-        logMessageCallback: (res: Response, body: string) => Promise<string>,
+        logMessageCallback: (res: AxiosResponse, body: string) => Promise<string>,
         sec?: number,
         hops?: number,
     ): Promise<ResponseDto<JsonBody>> {
@@ -119,21 +119,23 @@ export default class CurlSender {
         throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
     }
 
-    private static createInitFromDto(dto: RequestDto): RequestInit {
-        const req: RequestInit = {
+    private static createInitFromDto(dto: RequestDto): AxiosRequestConfig {
+        const req: AxiosRequestConfig = {
             method: dto.getMethod(),
             headers: dto.getHeaders(),
             timeout: dto.getTimeout(),
+            responseType: 'arraybuffer',
+            validateStatus: () => true,
         };
 
         if (dto.getBody() !== undefined) {
-            req.body = dto.getBody();
+            req.data = dto.getBody();
         }
 
         return req;
     }
 
-    private static log(dto: RequestDto, res: Response, level: Severity, body?: string): void {
+    private static log<T = unknown>(dto: RequestDto, res: AxiosResponse<T>, level: Severity, body?: string): void {
         let message = 'Request success.';
         if (res.status > 300) {
             message = 'Request failed.';
@@ -144,7 +146,7 @@ export default class CurlSender {
             `${message}
        Code: ${res.status},
        Body: ${body ?? 'Empty response'},
-       Headers: ${JSON.stringify(res.headers.raw())},
+       Headers: ${JSON.stringify(res.headers)},
        Reason: ${res.statusText}`,
             logger.createCtx(dto.getDebugInfo()),
         );

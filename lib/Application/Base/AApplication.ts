@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import * as fs from 'fs';
 import { contentType } from 'mime-types';
-import { BodyInit } from 'node-fetch';
 import path from 'path';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import logger from '../../Logger/Logger';
@@ -59,7 +58,7 @@ export default abstract class AApplication implements IApplication {
         applicationInstall: ApplicationInstall,
         method: string,
         url?: string,
-        data?: BodyInit | unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+        data?: unknown,
     ): Promise<RequestDto> | RequestDto;
 
     public getApplicationType(): ApplicationTypeEnum {

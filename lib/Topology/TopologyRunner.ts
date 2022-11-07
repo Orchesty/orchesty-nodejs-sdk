@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes';
-import { Headers, HeadersInit } from 'node-fetch';
 import { orchestyOptions } from '../Config/Config';
 import OnRepeatException from '../Exception/OnRepeatException';
 import logger from '../Logger/Logger';
@@ -25,7 +24,7 @@ export default class TopologyRunner {
         node: string,
         processDto: ProcessDto,
         _user?: string,
-        _headers?: HeadersInit,
+        _headers?: Record<string, string>,
     ): Promise<ResponseDto> {
         const user = _user !== undefined ? `/user/${_user}` : '';
         const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run-by-name`;
@@ -39,7 +38,7 @@ export default class TopologyRunner {
         node: string,
         processDto: ProcessDto,
         _user?: string,
-        _headers?: HeadersInit,
+        _headers?: Record<string, string>,
     ): Promise<ResponseDto> {
         const user = _user !== undefined ? `/user/${_user}` : '';
         const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run`;
@@ -51,7 +50,7 @@ export default class TopologyRunner {
         url: string,
         data: Record<string, unknown>,
         processDto: ProcessDto,
-        headers?: HeadersInit,
+        headers?: Record<string, string>,
     ): Promise<ResponseDto> {
         let errMessage = `Call of starting-point with url [${url}] has been failed. Reason [__reason__]`;
         try {
@@ -60,12 +59,12 @@ export default class TopologyRunner {
                 HttpMethods.POST,
                 processDto,
                 JSON.stringify(data),
-                new Headers({
+                {
                     ...headers ?? {},
                     [PREV_CORRELATION_ID]: getCorrelationId(processDto.getHeaders()) ?? '',
                     [PREV_NODE_ID]: getNodeId(processDto.getHeaders()) ?? '',
                     [ORCHESTY_API_KEY]: orchestyOptions.orchestyApiKey,
-                }),
+                },
             );
             const resp = await this.curlSender.send(requestDto);
             if (resp.getResponseCode() !== StatusCodes.OK) {
