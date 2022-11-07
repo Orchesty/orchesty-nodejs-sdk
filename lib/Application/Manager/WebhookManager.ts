@@ -78,8 +78,7 @@ export default class WebhookManager {
                     }
 
                     const topology = data.topology ?? subs.getTopology();
-                    const token = crypto.randomBytes(LENGTH)
-                        .toString('hex');
+                    const token = crypto.randomBytes(LENGTH).toString('hex');
                     const request = app.getWebhookSubscribeRequestDto(
                         appInstall,
                         subs,

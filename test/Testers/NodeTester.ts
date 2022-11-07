@@ -6,7 +6,6 @@ import { INode } from '../../lib/Commons/INode';
 import { CONNECTOR_PREFIX } from '../../lib/Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../../lib/CustomNode/CustomNodeRouter';
 import DIContainer from '../../lib/DIContainer/Container';
-import CoreServices from '../../lib/DIContainer/CoreServices';
 import AProcessDto from '../../lib/Utils/AProcessDto';
 import BatchProcessDto from '../../lib/Utils/BatchProcessDto';
 import { RESULT_CODE, RESULT_MESSAGE } from '../../lib/Utils/Headers';
@@ -76,10 +75,9 @@ export default class NodeTester {
         const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output${index}.json`)
             .toString()) as IDtoData;
 
-        const spy = mockNodeCurl(
+        const mockAdapter = mockNodeCurl(
             node,
             this.file,
-            this.container.get(CoreServices.CURL),
             _prefix,
             _index,
             this.forceMock,
@@ -135,7 +133,7 @@ export default class NodeTester {
                 thrownErr = e;
             }
         } finally {
-            spy?.mockRestore();
+            mockAdapter?.restore();
             if (expectedError && !thrownErr) {
                 // eslint-disable-next-line no-unsafe-finally
                 throw new Error(`Error [${typeof expectedError}] expected but non thrown.`);
