@@ -233,7 +233,7 @@ describe('Test application', () => {
                     },
                 ],
                 key: 'limiter_form',
-                publicName: 'Limiter form',
+                publicName: 'Limiter',
                 readOnly: false,
             },
             testForm: {

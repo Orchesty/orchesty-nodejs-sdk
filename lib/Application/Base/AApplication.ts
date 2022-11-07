@@ -13,7 +13,7 @@ import FieldType from '../Model/Form/FieldType';
 import Form, { IForm } from '../Model/Form/Form';
 import FormStack from '../Model/Form/FormStack';
 import ApplicationTypeEnum from './ApplicationTypeEnum';
-import CoreFormsEnum from './CoreFormsEnum';
+import CoreFormsEnum, { getFormName } from './CoreFormsEnum';
 import { IApplication } from './IApplication';
 
 export const USE_LIMIT = 'useLimit';
@@ -210,7 +210,7 @@ export default abstract class AApplication implements IApplication {
         let limiterForm = forms.getForms().find((it) => it.getKey() === CoreFormsEnum.LIMITER_FORM);
 
         if (!limiterForm) {
-            limiterForm = new Form(CoreFormsEnum.LIMITER_FORM, 'Limiter form');
+            limiterForm = new Form(CoreFormsEnum.LIMITER_FORM, getFormName(CoreFormsEnum.LIMITER_FORM));
             forms.addForm(limiterForm);
         }
 
