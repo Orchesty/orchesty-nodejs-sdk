@@ -1,12 +1,11 @@
-import crypto from 'crypto';
-import { Headers } from 'node-fetch';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import TestWebhookApplication from '../../../../test/Application/TestWebhookApplication';
-import { dropCollection, getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
+import { dropCollection, getTestContainer } from '../../../../test/TestAbstact';
 import { PASSWORD, TOKEN, USER } from '../../../Authorization/Type/Basic/ABasicApplication';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
-import ResponseDto from '../../../Transport/Curl/ResponseDto';
 import CoreFormsEnum from '../../Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
 import Webhook from '../../Database/Webhook';
@@ -16,6 +15,7 @@ let container: DIContainer;
 let webhookManager: WebhookManager;
 let appInstall: ApplicationInstall;
 let dbClient: MongoDbClient;
+let mockAdapter: MockAdapter;
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -30,6 +30,7 @@ jest.mock('../../../Logger/Logger', () => ({
 
 describe('Tests for webhookManager', () => {
     beforeAll(async () => {
+        mockAdapter = new MockAdapter(axios);
         container = await getTestContainer();
         dbClient = container.get(CoreServices.MONGO);
     });
@@ -70,12 +71,9 @@ describe('Tests for webhookManager', () => {
     });
 
     it('should subscribe webhooks', async () => {
-        jest.spyOn(crypto, 'randomBytes').mockImplementationOnce(() => 'mockedToken');
-        mockedFetch.get(
-            'https://sp.orchesty.com/webhook/topologies/testWebhook/nodes/testNode/token/mockedToken',
-            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers(), Buffer.from('')),
-        );
-        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+        mockAdapter.onGet(
+            /https:\/\/sp.orchesty.com\/webhook\/topologies\/testWebhook\/nodes\/testNode\/token\/.*/,
+        ).replyOnce(200, Buffer.from(JSON.stringify({ id: '1' })));
         await expect(webhookManager.subscribeWebhooks(
             appInstall.getName(),
             appInstall.getUser(),
@@ -84,16 +82,14 @@ describe('Tests for webhookManager', () => {
     });
 
     it('should unsubscribe webhooks', async () => {
-        mockedFetch.delete(
-            '/unknown/url',
-            new ResponseDto(JSON.stringify({ id: '1' }), 200, new Headers(), Buffer.from('')),
-        );
+        mockAdapter.onDelete('/unknown/url')
+            .reply(200, Buffer.from(JSON.stringify({ id: '1' })));
 
-        // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         await expect(webhookManager.unsubscribeWebhooks(
             appInstall.getName(),
             appInstall.getUser(),
             { name: 'testName', topology: 'testWebhook' },
         )).resolves.not.toThrow();
+        mockAdapter.restore();
     });
 });

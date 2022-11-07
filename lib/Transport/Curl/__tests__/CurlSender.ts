@@ -1,4 +1,6 @@
-import { getTestContainer, mockedFetch } from '../../../../test/TestAbstact';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { getTestContainer } from '../../../../test/TestAbstact';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import Metrics from '../../../Metrics/Metrics';
@@ -10,6 +12,7 @@ import RequestDto from '../RequestDto';
 
 let container: DIContainer;
 let curlSender: CurlSender;
+let mockAdapter: MockAdapter;
 
 // Mock Logger module
 jest.mock('../../../Logger/Logger', () => ({
@@ -23,13 +26,9 @@ jest.mock('../../../Logger/Logger', () => ({
 
 describe('tests for curlSender', () => {
     beforeAll(async () => {
+        mockAdapter = new MockAdapter(axios);
         container = await getTestContainer();
         curlSender = container.get(CoreServices.CURL);
-    });
-
-    afterEach(() => {
-        mockedFetch.reset();
-        mockedFetch.restore();
     });
 
     afterAll(async () => {
@@ -39,24 +38,21 @@ describe('tests for curlSender', () => {
 
     it('should test send', async () => {
         const url = 'http://testUrl.com/status';
-        mockedFetch.get(
-            url,
-            JSON.stringify({ id: '1' }),
-        );
+        mockAdapter.onGet(url).replyOnce(200, JSON.stringify({ id: '1' }));
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
         expect((response.getJsonBody() as { id: string }).id).toBe('1');
     });
 
     it('should test send - 400', async () => {
         const url = 'http://testUrl.com/status';
-        mockedFetch.get(url, 400);
+        mockAdapter.onGet(url).replyOnce(400, '');
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), [400]);
         expect(response.getResponseCode()).toBe(400);
     });
 
     it('should test send - 400 and only 200 is allowed', async () => {
         const url = 'http://testUrl.com/status';
-        mockedFetch.get(url, 400);
+        mockAdapter.onGet(url).replyOnce(400);
         try {
             await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), [200]);
         } catch (e) {
@@ -66,7 +62,7 @@ describe('tests for curlSender', () => {
 
     it('should test send - body', async () => {
         const url = 'http://testUrl.com/status';
-        mockedFetch.post(url, 200);
+        mockAdapter.onPost(url).replyOnce(200);
         try {
             await curlSender.send(
                 new RequestDto(url, HttpMethods.POST, new ProcessDto(), JSON.stringify({ message: 'ok' })),

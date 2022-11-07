@@ -1,4 +1,3 @@
-import { BodyInit, HeaderInit, Headers } from 'node-fetch';
 import AProcessDto from '../../Utils/AProcessDto';
 import { HttpMethods } from '../HttpMethods';
 import { IRequestDto } from '../IRequestDto';
@@ -11,27 +10,27 @@ export default class RequestDto implements IRequestDto {
         private url: string,
         private method: HttpMethods,
         private debugInfo: AProcessDto,
-        private body?: BodyInit,
-        private headers: HeaderInit = new Headers(),
+        private body?: unknown,
+        private headers: Record<string, string> = {},
     ) {
         this.timeout = 30000; // 30sec as a default timeout
     }
 
-    public getBody(): BodyInit | undefined {
+    public getBody(): unknown {
         return this.body;
     }
 
-    public setBody(body: BodyInit | undefined): this {
+    public setBody(body: unknown): this {
         this.body = body;
 
         return this;
     }
 
-    public getHeaders(): HeaderInit {
+    public getHeaders(): Record<string, string> {
         return this.headers;
     }
 
-    public setHeaders(headers: HeaderInit): this {
+    public setHeaders(headers: Record<string, string>): this {
         this.headers = headers;
 
         return this;
@@ -77,7 +76,7 @@ export default class RequestDto implements IRequestDto {
         return this;
     }
 
-    public addHeaders(headers: HeaderInit): this {
+    public addHeaders(headers: Record<string, string>): this {
         this.headers = { ...this.headers, ...headers };
 
         return this;

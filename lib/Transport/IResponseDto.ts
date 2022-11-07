@@ -1,6 +1,6 @@
-export interface IResponseDto {
+export interface IResponseDto<T = unknown> {
     getBody(): string;
-    getJsonBody(): unknown;
+    getJsonBody(): T;
     getResponseCode(): number;
     getReason(): string | undefined;
 }

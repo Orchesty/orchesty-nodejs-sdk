@@ -1,4 +1,3 @@
-import { BodyInit } from 'node-fetch';
 import AuthorizationTypeEnum from '../../Authorization/AuthorizationTypeEnum';
 import { IName } from '../../Commons/IName';
 import RequestDto from '../../Transport/Curl/RequestDto';
@@ -16,7 +15,7 @@ export interface IApplication extends IName {
         applicationInstall: ApplicationInstall,
         method: HttpMethods,
         url?: string,
-        data?: BodyInit | unknown, // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+        data?: unknown,
     ): Promise<RequestDto> | RequestDto;
 
     getAuthorizationType(): AuthorizationTypeEnum;

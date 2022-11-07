@@ -1,4 +1,3 @@
-import { BodyInit } from 'node-fetch';
 import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum';
 import { IWebhookApplication } from '../../lib/Application/Base/IWebhookApplication';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
@@ -39,7 +38,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
         applicationInstall: ApplicationInstall,
         method: HttpMethods,
         url?: string,
-        data?: BodyInit,
+        data?: unknown,
     ): RequestDto {
         return new RequestDto(url ?? '', method, dto, data);
     }
