@@ -9,16 +9,6 @@ import ProcessDto from '../../../lib/Utils/ProcessDto';
 import { container } from '../../TestAbstact';
 import { mockCurl } from '../TesterHelpers';
 
-// Mock Logger module
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    createCtx: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test topologyHelper', () => {
     let sender: CurlSender;
 

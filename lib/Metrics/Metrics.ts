@@ -1,8 +1,9 @@
-import { ITagsMap } from 'metrics-sender/dist/lib/metrics/Metrics';
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
-import MetricsSenderLoader from './MetricsSenderLoader';
+import Mongo from './Impl/Mongo';
+
+export type ITagsMap = Record<string, string>;
 
 export interface IStartMetrics {
     timestamp: number;
@@ -23,7 +24,7 @@ export interface IMetricsFields {
 
 export default class Metrics {
 
-    public constructor(private readonly loader: MetricsSenderLoader) {
+    public constructor(private readonly sender: Mongo) {
     }
 
     public static getCurrentMetrics(): IStartMetrics {
@@ -44,7 +45,7 @@ export default class Metrics {
     }
 
     public async close(): Promise<void> {
-        await this.loader.getSender().close();
+        await this.sender.close();
     }
 
     public async sendProcessMetrics(
@@ -72,7 +73,7 @@ export default class Metrics {
         };
 
         try {
-            return await this.loader.getSender().send(metricsOptions.processMeasurement, fields, tags);
+            return await this.sender.send(metricsOptions.processMeasurement, fields, tags);
         } catch (e) {
             if (typeof e === 'string') {
                 logger.error(e, {});
@@ -110,7 +111,7 @@ export default class Metrics {
         };
 
         try {
-            return await this.loader.getSender().send(metricsOptions.curlMeasurement, fields, tags);
+            return await this.sender.send(metricsOptions.curlMeasurement, fields, tags);
         } catch (e) {
             if (typeof e === 'string') {
                 logger.error(e, {});

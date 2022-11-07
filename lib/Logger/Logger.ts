@@ -1,13 +1,11 @@
+import axios from 'axios';
 import { Request } from 'express';
-import { Sender } from 'metrics-sender/dist/lib/udp/Sender';
 import * as os from 'os';
-import { loggerOptions } from '../Config/Config';
+import pino from 'pino';
+import { loggerOptions, orchestyOptions } from '../Config/Config';
 import AProcessDto from '../Utils/AProcessDto';
-import { parseInfluxDsn } from '../Utils/DsnParser';
 import * as headers from '../Utils/Headers';
 import ResultCode from '../Utils/ResultCode';
-import Severity from './Severity';
-import winstonLogger from './Winston';
 
 export interface ILogContext {
     topology_id?: string;
@@ -50,44 +48,34 @@ interface ILoggerFormat {
 
 export class Logger {
 
-    private readonly udp: Sender;
-
-    public constructor() {
-        const parsed = parseInfluxDsn(loggerOptions.dsn);
-        this.udp = new Sender(parsed.server, parsed.port);
-    }
+    private readonly logger = pino();
 
     public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
-        this.log(Severity.DEBUG, message, this.createCtx(context, isForUi));
+        const data = this.format('debug', message, context);
+        this.logger.debug(data, message);
+        this.send(data, isForUi);
     }
 
     public info(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
-        this.log(Severity.INFO, message, this.createCtx(context, isForUi));
+        const data = this.format('info', message, context);
+        this.logger.debug(data, message);
+        this.send(data, isForUi);
     }
 
     public warn(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
-        this.log(Severity.WARNING, message, this.createCtx(context, isForUi));
+        const data = this.format('warn', message, context);
+        this.logger.debug(data, message);
+        this.send(data, isForUi);
     }
 
     public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false, err?: Error): void {
-        this.log(Severity.ERROR, message, this.createCtx(context, isForUi, err));
-    }
-
-    public log(severity: Severity, message: string, context: ILogContext): void {
-        const data = this.format(severity, message, context);
-
-        winstonLogger.log(severity, '', data);
-        if (context.isForUi) {
-            this.udp.send(JSON.stringify(data))
-                .catch(() => {
-                    // Unhandled promise rejection caught
-                });
-        }
+        const data = this.format('error', message, context, err);
+        this.logger.debug(data, message);
+        this.send(data, isForUi);
     }
 
     public createCtx(
         payload: AProcessDto | ILogContext | Request,
-        isForUi?: boolean,
         err?: Error,
     ): ILogContext {
         if (payload) {
@@ -95,7 +83,7 @@ export class Logger {
                 return this.ctxFromReq(payload as Request, err);
             }
             if (payload instanceof AProcessDto) {
-                return this.ctxFromDto(payload, isForUi, err);
+                return this.ctxFromDto(payload, err);
             }
             return payload as ILogContext;
         }
@@ -103,7 +91,7 @@ export class Logger {
         return {};
     }
 
-    public ctxFromDto(dto: AProcessDto, isForUi?: boolean, err?: Error): ILogContext {
+    public ctxFromDto(dto: AProcessDto, err?: Error): ILogContext {
         const ctx: ILogContext = {
             node_id: headers.getNodeId(dto.getHeaders()),
             correlation_id: headers.getCorrelationId(dto.getHeaders()),
@@ -116,10 +104,6 @@ export class Logger {
 
         if (err) {
             ctx.error = err;
-        }
-
-        if (isForUi) {
-            ctx.isForUi = isForUi;
         }
 
         return ctx;
@@ -143,58 +127,76 @@ export class Logger {
         return ctx;
     }
 
-    private format(severity: Severity, message: string, context?: ILogContext): ILoggerFormat {
+    private send(data: unknown, isForUi = false): void {
+        if (isForUi) {
+            axios.post(
+                loggerOptions.logsApi,
+                JSON.stringify(data),
+                { headers: { 'orchesty-api-key': orchestyOptions.orchestyApiKey } },
+            ).catch((e) => {
+                // Unhandled promise rejection caught
+                this.logger.error(e);
+            });
+        }
+    }
+
+    private format(
+        level: pino.Level,
+        message: string,
+        payload: AProcessDto | ILogContext | Request,
+        err?: Error,
+    ): ILoggerFormat {
         const line: ILoggerFormat = {
             timestamp: Date.now(),
             hostname: os.hostname(),
             type: 'sdk',
-            severity: `${severity}`.toUpperCase(),
+            severity: `${level}`.toUpperCase(),
             message: message?.replace(/\s\s+/g, ' '),
         };
 
-        if (context) {
-            if (context.topology_id) {
-                line.topology_id = context.topology_id;
-            }
+        const context = this.createCtx(payload, err);
 
-            if (context.topology_name) {
-                line.topology_name = context.topology_name;
-            }
+        if (context.topology_id) {
+            line.topology_id = context.topology_id;
+        }
 
-            if (context.correlation_id) {
-                line.correlation_id = context.correlation_id;
-            }
+        if (context.topology_name) {
+            line.topology_name = context.topology_name;
+        }
 
-            if (context.user_id) {
-                line.user_id = context.user_id;
-            }
+        if (context.correlation_id) {
+            line.correlation_id = context.correlation_id;
+        }
 
-            if (context.node_id) {
-                line.node_id = context.node_id;
-            }
+        if (context.user_id) {
+            line.user_id = context.user_id;
+        }
 
-            if (context.node_name) {
-                line.node_name = context.node_name;
-            }
+        if (context.node_id) {
+            line.node_id = context.node_id;
+        }
 
-            if (context.result_code && context.result_code >= 0) {
-                line.result_code = context.result_code;
-            }
+        if (context.node_name) {
+            line.node_name = context.node_name;
+        }
 
-            if (context.result_message) {
-                line.result_message = context.result_message;
-            }
+        if (context.result_code && context.result_code >= 0) {
+            line.result_code = context.result_code;
+        }
 
-            if (context.error) {
-                line.stacktrace = {
-                    message: context.error.message.replace(/\s\s+/g, ' '),
-                    trace: context.error.stack,
-                };
-            }
+        if (context.result_message) {
+            line.result_message = context.result_message;
+        }
 
-            if (context.data) {
-                line.data = context.data;
-            }
+        if (context.error) {
+            line.stacktrace = {
+                message: context.error.message.replace(/\s\s+/g, ' '),
+                trace: context.error.stack,
+            };
+        }
+
+        if (context.data) {
+            line.data = context.data;
         }
 
         return line;

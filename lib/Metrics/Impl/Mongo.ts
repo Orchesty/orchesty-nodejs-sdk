@@ -1,10 +1,8 @@
-import { ITagsMap } from 'metrics-sender/dist/lib/metrics/Metrics';
 import logger from '../../Logger/Logger';
 import MongoDbClient from '../../Storage/Mongodb/Client';
-import { IMetricsSender } from '../IMetricsSender';
-import { IMetricsFields } from '../Metrics';
+import { IMetricsFields, ITagsMap } from '../Metrics';
 
-export default class Mongo implements IMetricsSender {
+export default class Mongo {
 
     public constructor(private readonly client: MongoDbClient) {
     }

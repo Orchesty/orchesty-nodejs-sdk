@@ -6,13 +6,6 @@ import MongoDbClient from '../../Client';
 import Node from '../Node';
 import NodeRepository from '../NodeRepository';
 
-// Mock Logger module
-jest.mock('../../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 let container: DIContainer;
 let nodeRepository: NodeRepository;
 let node: Node;

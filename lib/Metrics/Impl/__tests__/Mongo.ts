@@ -5,13 +5,6 @@ import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import Mongo from '../Mongo';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('tests Metrics Mongodb Sender', () => {
     let container: DIContainer;
     let mongoDBClient: MongoDbClient;

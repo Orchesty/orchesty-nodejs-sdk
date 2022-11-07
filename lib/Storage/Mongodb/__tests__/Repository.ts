@@ -8,13 +8,6 @@ import ADocument from '../ADocument';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 let dbClient: MongoDbClient;
 
 class ClassWithoutDeleted extends ADocument {

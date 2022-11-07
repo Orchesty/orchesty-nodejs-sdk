@@ -8,16 +8,6 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import BatchRouter from '../BatchRouter';
 import { IBatchNode } from '../IBatchNode';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    info: () => jest.fn(),
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Tests for BatchRouter', () => {
     let container: DIContainer;
     let batch: IBatchNode;
