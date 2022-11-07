@@ -26,24 +26,11 @@ export default class CurlSender {
         const startTime = Metrics.getCurrentMetrics();
         try {
             const req = CurlSender.createInitFromDto(dto);
-            logger.log(
-                Severity.DEBUG,
-                `Request send.
-       Method: ${dto.getMethod()},
-       Url: ${dto.getUrl()},
-       Headers: ${JSON.stringify(dto.getHeaders())},
-       Body: ${dto.getBody()}`,
-                logger.createCtx(dto.getDebugInfo()),
-            );
             const response = await axios(dto.getUrl(), req);
             await this.sendMetrics(dto, startTime);
             const buffer = await response.data;
-            const body = buffer.toString();
-            if (response.status >= 200 && response.status <= 299) {
-                CurlSender.log(dto, response, Severity.DEBUG, body);
-            } else {
-                CurlSender.log(dto, response, Severity.ERROR, body);
-            }
+            const body = buffer?.toString() ?? '';
+            CurlSender.log(dto, req, response, body);
 
             if (codeRange) {
                 return await this.handleByResultCode(
@@ -135,20 +122,33 @@ export default class CurlSender {
         return req;
     }
 
-    private static log<T = unknown>(dto: RequestDto, res: AxiosResponse<T>, level: Severity, body?: string): void {
+    private static log<T = unknown>(
+        requestDto: RequestDto,
+        request: AxiosRequestConfig,
+        response: AxiosResponse<T>,
+        body: string,
+        level = Severity.DEBUG,
+    ): void {
+        let severity = level;
         let message = 'Request success.';
-        if (res.status > 300) {
+        if (response.status > 300) {
             message = 'Request failed.';
+            severity = Severity.ERROR;
         }
 
         logger.log(
-            level,
+            severity,
             `${message}
-       Code: ${res.status},
+       Method: ${request.method},
+       Url: ${request.url},
+       Headers: ${JSON.stringify(request.headers)},
+       Body: ${JSON.stringify(request.data)}
+       Response: 
+       Code: ${response.status},
        Body: ${body ?? 'Empty response'},
-       Headers: ${JSON.stringify(res.headers)},
-       Reason: ${res.statusText}`,
-            logger.createCtx(dto.getDebugInfo()),
+       Headers: ${JSON.stringify(response.headers)},
+       Reason: ${response.statusText}`,
+            logger.createCtx(requestDto.getDebugInfo()),
         );
     }
 
