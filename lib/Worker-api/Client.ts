@@ -19,9 +19,7 @@ export default class Client {
             validateStatus: () => true,
         };
 
-        return axios(url, req).catch((e) => {
-            throw e;
-        });
+        return axios(url, req);
     }
 
 }
