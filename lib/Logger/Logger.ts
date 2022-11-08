@@ -1,11 +1,12 @@
-import axios from 'axios';
 import { Request } from 'express';
 import * as os from 'os';
 import pino from 'pino';
-import { loggerOptions, orchestyOptions } from '../Config/Config';
+import { loggerOptions } from '../Config/Config';
+import { HttpMethods } from '../Transport/HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
 import * as headers from '../Utils/Headers';
 import ResultCode from '../Utils/ResultCode';
+import Client from '../Worker-api/Client';
 
 export interface ILogContext {
     topology_id?: string;
@@ -49,6 +50,8 @@ interface ILoggerFormat {
 export class Logger {
 
     private readonly logger = pino();
+
+    private readonly workerApi = new Client();
 
     public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('debug', message, context);
@@ -129,12 +132,7 @@ export class Logger {
 
     private send(data: unknown, isForUi = false): void {
         if (isForUi) {
-            axios.post(
-                loggerOptions.logsApi,
-                JSON.stringify(data),
-                { headers: { 'orchesty-api-key': orchestyOptions.orchestyApiKey } },
-            ).catch((e) => {
-                // Unhandled promise rejection caught
+            this.workerApi.send(loggerOptions.logsApi, HttpMethods.POST, data).catch((e) => {
                 this.logger.error(e);
             });
         }
