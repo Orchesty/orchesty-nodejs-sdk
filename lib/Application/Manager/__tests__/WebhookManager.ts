@@ -17,17 +17,6 @@ let appInstall: ApplicationInstall;
 let dbClient: MongoDbClient;
 let mockAdapter: MockAdapter;
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    createCtx: jest.fn().mockImplementation(() => ({})),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Tests for webhookManager', () => {
     beforeAll(async () => {
         mockAdapter = new MockAdapter(axios);

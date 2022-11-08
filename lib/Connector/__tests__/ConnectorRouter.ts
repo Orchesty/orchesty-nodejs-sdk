@@ -8,18 +8,6 @@ import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import ConnectorRouter from '../ConnectorRouter';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    info: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    createCtx: jest.fn().mockImplementation(() => ({})),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(() => ({
     send: () => ({ getResponseCode: () => StatusCodes.OK, getBody: () => ({ response: 'mockedResponse' }) }),
 })));

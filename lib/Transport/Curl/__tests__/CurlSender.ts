@@ -14,16 +14,6 @@ let container: DIContainer;
 let curlSender: CurlSender;
 let mockAdapter: MockAdapter;
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    createCtx: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('tests for curlSender', () => {
     beforeAll(async () => {
         mockAdapter = new MockAdapter(axios);

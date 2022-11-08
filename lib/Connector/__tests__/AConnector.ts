@@ -12,14 +12,6 @@ import CurlSender from '../../Transport/Curl/CurlSender';
 import ResponseDto from '../../Transport/Curl/ResponseDto';
 import ProcessDto from '../../Utils/ProcessDto';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test AConnector', () => {
     let container: DIContainer;
     let mongoDbClient: MongoDbClient;

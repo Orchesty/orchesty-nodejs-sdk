@@ -10,13 +10,6 @@ import FileSystem from '../../File/FileSystem';
 import MongoDbClient from '../../Mongodb/Client';
 import DataStorageManager from '../DataStorageManager';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    info: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test ETL Manager', () => {
     let dbClient: MongoDbClient;
     let container: DIContainer;

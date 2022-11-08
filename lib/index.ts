@@ -21,10 +21,8 @@ import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import DIContainer from './DIContainer/Container';
 import CoreServices from './DIContainer/CoreServices';
 import logger from './Logger/Logger';
-import Influx from './Metrics/Impl/Influx';
 import Mongo from './Metrics/Impl/Mongo';
 import Metrics from './Metrics/Metrics';
-import MetricsSenderLoader from './Metrics/MetricsSenderLoader';
 import bodyParser from './Middleware/BodyParseHandler';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
@@ -58,12 +56,7 @@ export async function initiateContainer(): Promise<void> {
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
     const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
-    const metricsLoader = new MetricsSenderLoader(
-        metricsOptions.metricsService,
-        new Influx(),
-        new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager, container)),
-    );
-    const metrics = new Metrics(metricsLoader);
+    const metrics = new Metrics(new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager, container)));
     const curlSender = new CurlSender(metrics);
     const topologyRunner = new TopologyRunner(curlSender);
 

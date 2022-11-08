@@ -7,13 +7,6 @@ import { HttpMethods } from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import TestWebhookApplication from '../TestWebhookApplication';
 
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 let app: TestWebhookApplication;
 
 describe('Tests for webhook application', () => {

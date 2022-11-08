@@ -4,13 +4,6 @@ import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import Metrics, { ITimesMetrics } from '../Metrics';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 const mockITimesMetrics: ITimesMetrics = {
     requestDuration: Number(990719925474099),
     userTime: 5,

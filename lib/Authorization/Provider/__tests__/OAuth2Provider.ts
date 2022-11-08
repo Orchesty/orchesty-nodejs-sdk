@@ -5,13 +5,6 @@ import AOAuthProvider from '../AOAuthProvider';
 import OAuth2Dto from '../Dto/OAuth2Dto';
 import { OAuth2Provider } from '../OAuth2/OAuth2Provider';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('OAuth2Provider tests', () => {
     const authUrl = 'https://identity.idoklad.cz/server/connect/authorize';
     const user = 'user';

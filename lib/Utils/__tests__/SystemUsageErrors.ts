@@ -1,12 +1,5 @@
 import { getCpuTimes, getCpuUsage } from '../SystemUsage';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 // Mock fs module
 jest.mock('fs', () => ({
     readFileSync: jest.fn().mockReturnValue(undefined),

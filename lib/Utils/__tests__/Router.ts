@@ -3,16 +3,6 @@ import { NODE_ID } from '../Headers';
 import ProcessDto from '../ProcessDto';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Router';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    info: () => jest.fn(),
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 // Mock Request/Response of Express
 function mockedRequest(): { body: string } {
     return {

@@ -9,12 +9,6 @@ import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
 import { checkParams } from '../Validations';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 let container: DIContainer;
 
 describe('Validations', () => {
