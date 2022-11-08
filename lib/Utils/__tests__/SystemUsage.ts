@@ -1,12 +1,5 @@
 import { getCpuTimes, getCpuUsage, getCurrentTimestamp } from '../SystemUsage';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test system usages', () => {
     it('getCpuTimes', () => {
         const cpuTimes = getCpuTimes();

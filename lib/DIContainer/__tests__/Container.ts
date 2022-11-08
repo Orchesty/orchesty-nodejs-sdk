@@ -11,14 +11,6 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import DIContainer from '../Container';
 import CoreServices from '../CoreServices';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn()
-        .mockImplementation(() => ({})),
-}));
-
 describe('Test DIContainer', () => {
     let container: DIContainer;
     let testConnector: ICommonNode;

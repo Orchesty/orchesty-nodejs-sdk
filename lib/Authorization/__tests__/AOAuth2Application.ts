@@ -9,14 +9,6 @@ import { ACCESS_TOKEN, OAuth2Provider } from '../Provider/OAuth2/OAuth2Provider'
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn()
-        .mockImplementation(() => ({})),
-}));
-
 describe('Test AOAuth2Application', () => {
     jest.createMockFromModule('simple-oauth2');
     let container: DIContainer;

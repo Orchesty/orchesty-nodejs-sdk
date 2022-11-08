@@ -1,13 +1,5 @@
 import Redis from '../Redis';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 const TESTKEY = 'testKey';
 const TESTKEY1 = 'testKey1';
 const TESTKEY2 = 'testKey2';

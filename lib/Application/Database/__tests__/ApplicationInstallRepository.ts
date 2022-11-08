@@ -13,14 +13,6 @@ let repo: ApplicationInstallRepository<ApplicationInstall>;
 const USER = 'user';
 const NAME = 'name';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn()
-        .mockImplementation(() => ({})),
-}));
-
 describe('ApplicationInstallRepository tests', () => {
     beforeAll(async () => {
         container = await getTestContainer();

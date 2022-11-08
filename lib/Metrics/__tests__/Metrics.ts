@@ -5,13 +5,6 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import { ICpuTimes } from '../../Utils/SystemUsage';
 import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 const mockCpuTimes: ICpuTimes = {
     cpuUserCodeTime: 1,
     cpuKernelCodeTime: 1,

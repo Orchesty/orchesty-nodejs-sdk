@@ -6,16 +6,6 @@ import ProcessDto from '../../../lib/Utils/ProcessDto';
 import { getTestContainer } from '../../TestAbstact';
 import TopologyTester from '../TopologyTester';
 
-// Mock Logger module
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    createCtx: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test topologyTester', () => {
     let container: DIContainer;
 

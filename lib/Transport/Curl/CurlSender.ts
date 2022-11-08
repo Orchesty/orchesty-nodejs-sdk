@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import OnRepeatException from '../../Exception/OnRepeatException';
 import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
-import Severity from '../../Logger/Severity';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import { APPLICATION, CORRELATION_ID, NODE_ID, USER } from '../../Utils/Headers';
 import ResultCode from '../../Utils/ResultCode';
@@ -127,19 +126,8 @@ export default class CurlSender {
         request: AxiosRequestConfig,
         response: AxiosResponse<T>,
         body: string,
-        level = Severity.DEBUG,
     ): void {
-        let severity = level;
-        let message = 'Request success.';
-        if (response.status > 300) {
-            message = 'Request failed.';
-            severity = Severity.ERROR;
-        }
-
-        logger.log(
-            severity,
-            `${message}
-       Method: ${request.method},
+        const message = `Method: ${request.method},
        Url: ${request.url},
        Headers: ${JSON.stringify(request.headers)},
        Body: ${JSON.stringify(request.data)}
@@ -147,9 +135,13 @@ export default class CurlSender {
        Code: ${response.status},
        Body: ${body ?? 'Empty response'},
        Headers: ${JSON.stringify(response.headers)},
-       Reason: ${response.statusText}`,
-            logger.createCtx(requestDto.getDebugInfo()),
-        );
+       Reason: ${response.statusText}`;
+
+        if (response.status > 300) {
+            logger.error(`Request failed. ${message}`, logger.createCtx(requestDto.getDebugInfo()));
+        } else {
+            logger.debug(`Request success. ${message}`, logger.createCtx(requestDto.getDebugInfo()));
+        }
     }
 
     private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {

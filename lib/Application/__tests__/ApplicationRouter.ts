@@ -14,15 +14,6 @@ import { ApplicationInstall } from '../Database/ApplicationInstall';
 import { IField } from '../Model/Form/Field';
 import assertions from './assertions.json';
 
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test ApplicationRouter', () => {
     let application: IApplication;
     let oAuthApplication: IApplication;

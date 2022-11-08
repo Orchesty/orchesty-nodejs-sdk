@@ -26,14 +26,6 @@ let curl: CurlSender;
 let appInstall: ApplicationInstall;
 let appInstallOAuth: ApplicationInstall;
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn()
-        .mockImplementation(() => ({})),
-}));
-
 jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
 
 describe('ApplicationManager tests', () => {

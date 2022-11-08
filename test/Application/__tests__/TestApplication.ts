@@ -8,13 +8,6 @@ import { HttpMethods } from '../../../lib/Transport/HttpMethods';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import TestBasicApplication from '../TestBasicApplication';
 
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test application', () => {
     const user = 'Jakub';
     const pass = 'passs';
