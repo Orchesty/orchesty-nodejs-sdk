@@ -73,7 +73,7 @@ export default class WebhookManager {
         await Promise.all(
             app.getWebhookSubscriptions()
                 .map(async (subs) => {
-                    if (!subs.getTopology() || data.topology !== subs.getName()) {
+                    if (!subs.getTopology() && data.name !== subs.getName()) {
                         return;
                     }
 
