@@ -5,13 +5,6 @@ import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import { getTestContainer } from '../../TestAbstact';
 import NodeTester from '../NodeTester';
 
-// Mock Logger module
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test NodeTester', () => {
     let container: DIContainer;
     beforeAll(async () => {

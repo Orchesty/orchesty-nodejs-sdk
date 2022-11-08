@@ -1,14 +1,11 @@
-import { MONGO } from '../Metrics/MetricsSenderLoader';
-
 export const loggerOptions = {
-    dsn: process.env.UDP_LOGGER_DSN ?? '',
+    logsApi: process.env.LOGS_API ?? '',
 };
 
 export const metricsOptions = {
     dsn: process.env.METRICS_DSN ?? '',
     curlMeasurement: process.env.CURL_METRICS_MEASUREMENT ?? 'connectors',
     processMeasurement: process.env.PROCESS_METRICS_MEASUREMENT ?? 'monolith',
-    metricsService: process.env.METRICS_SERVICE ?? MONGO,
 };
 
 export const storageOptions = {

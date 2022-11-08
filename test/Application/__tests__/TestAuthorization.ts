@@ -4,13 +4,6 @@ import { PASSWORD, TOKEN, USER } from '../../../lib/Authorization/Type/Basic/ABa
 import TestBasicApplication from '../TestBasicApplication';
 import TestTokenBasicApplication from '../TestTokenBasicApplication';
 
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Application authorize tests', () => {
     it('isAuthorized', async () => {
         const basicApp = new TestBasicApplication();

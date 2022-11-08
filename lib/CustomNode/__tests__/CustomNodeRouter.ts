@@ -12,17 +12,6 @@ import NodeRepository from '../../Storage/Mongodb/Document/NodeRepository';
 import { REPEAT_INTERVAL, REPEAT_MAX_HOPS } from '../../Utils/Headers';
 import CustomNodeRouter from '../CustomNodeRouter';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    info: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    ctxFromReq: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 const config = {
     sdk: {
         host: 'testHost',

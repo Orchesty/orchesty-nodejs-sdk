@@ -9,13 +9,6 @@ import Metrics from '../../../Metrics/Metrics';
 import MongoDbClient from '../Client';
 import Repository from '../Repository';
 
-// Mock Logger module
-jest.mock('../../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    info: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 describe('Test MongoDb Storage', () => {
     let cryptManager: CryptManager;
     let dbClient: MongoDbClient;

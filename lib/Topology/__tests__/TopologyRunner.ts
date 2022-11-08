@@ -9,16 +9,6 @@ import MongoDbClient from '../../Storage/Mongodb/Client';
 import ProcessDto from '../../Utils/ProcessDto';
 import TopologyRunner from '../TopologyRunner';
 
-// Mock Logger module
-jest.mock('../../Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    log: () => jest.fn(),
-    ctxFromDto: () => jest.fn(),
-    createCtx: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 function mockCurl(url: string, headers?: Record<string, string>): MockAdapter {
     return new MockAdapter(axios, { onNoMatch: 'throwException' })
         .onPost(url).replyOnce(200, Buffer.from(''), headers);
