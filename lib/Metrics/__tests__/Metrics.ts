@@ -22,6 +22,12 @@ const mockITimesMetrics: ITimesMetrics = {
     kernelTime: 5,
 };
 
+jest.mock('../../../lib/Logger/Logger', () => ({
+    error: () => jest.fn(),
+    debug: () => jest.fn(),
+    Logger: jest.fn().mockImplementation(() => ({})),
+}));
+
 let metrics: Metrics;
 let container: DIContainer;
 
@@ -32,7 +38,6 @@ describe('Test metrics', () => {
     });
 
     afterAll(async () => {
-        await metrics.close();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
@@ -70,7 +75,7 @@ describe('Test metrics', () => {
             'randomUser',
             'randomAppKey',
         );
-        expect(curlMetrics).toBeDefined();
+        expect(curlMetrics).toBeTruthy();
     });
 
     it('sendProcessMetrics', async () => {
@@ -80,6 +85,6 @@ describe('Test metrics', () => {
             'randomNodeId',
             'randomCorrelationId',
         );
-        expect(processMetric).toBeDefined();
+        expect(processMetric).toBeTruthy();
     });
 });

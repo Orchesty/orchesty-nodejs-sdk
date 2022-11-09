@@ -3,6 +3,7 @@ export const loggerOptions = {
 };
 
 export const metricsOptions = {
+    host: process.env.METRICS_HOST ?? '',
     dsn: process.env.METRICS_DSN ?? '',
     curlMeasurement: process.env.CURL_METRICS_MEASUREMENT ?? 'connectors',
     processMeasurement: process.env.PROCESS_METRICS_MEASUREMENT ?? 'monolith',

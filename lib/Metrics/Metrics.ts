@@ -1,7 +1,8 @@
 import { metricsOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
+import { HttpMethods } from '../Transport/HttpMethods';
 import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
-import Mongo from './Impl/Mongo';
+import Client from '../Worker-api/Client';
 
 export type ITagsMap = Record<string, string>;
 
@@ -24,8 +25,7 @@ export interface IMetricsFields {
 
 export default class Metrics {
 
-    public constructor(private readonly sender: Mongo) {
-    }
+    private readonly workerApi = new Client();
 
     public static getCurrentMetrics(): IStartMetrics {
         return {
@@ -42,10 +42,6 @@ export default class Metrics {
             userTime: endMetrics.cpu.cpuUserCodeTime - startMetrics.cpu.cpuUserCodeTime,
             kernelTime: endMetrics.cpu.cpuKernelCodeTime - startMetrics.cpu.cpuKernelCodeTime,
         };
-    }
-
-    public async close(): Promise<void> {
-        await this.sender.close();
     }
 
     public async sendProcessMetrics(
@@ -73,10 +69,16 @@ export default class Metrics {
         };
 
         try {
-            return await this.sender.send(metricsOptions.processMeasurement, fields, tags);
+            const response = await this.workerApi.send(
+                `${metricsOptions.host}/${metricsOptions.processMeasurement}`,
+                HttpMethods.POST,
+                { fields, tags },
+            );
+
+            return response.status < 300;
         } catch (e) {
-            if (typeof e === 'string') {
-                logger.error(e, {});
+            if (e instanceof Error) {
+                logger.error(e.message, {});
             }
             return false;
         }
@@ -111,10 +113,16 @@ export default class Metrics {
         };
 
         try {
-            return await this.sender.send(metricsOptions.curlMeasurement, fields, tags);
+            const response = await this.workerApi.send(
+                `${metricsOptions.host}/${metricsOptions.curlMeasurement}`,
+                HttpMethods.POST,
+                { fields, tags },
+            );
+
+            return response.status < 300;
         } catch (e) {
-            if (typeof e === 'string') {
-                logger.error(e, {});
+            if (e instanceof Error) {
+                logger.error(e.message, {});
             }
             return false;
         }
