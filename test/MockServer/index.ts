@@ -16,7 +16,7 @@ export function createLoggerMockedServer(mocks: IMockServer[] = []): MockAdapter
     });
 
     if (!mocks.length) {
-        mockAdapter.onPost(`${orchestyOptions.workerApi}/logs`).reply(200);
+        mockAdapter.onPost(`${orchestyOptions.workerApi}/logger/logs`).reply(200);
     }
 
     return mockAdapter;
@@ -28,8 +28,8 @@ export function createMetricsMockedServer(mocks: IMockServer[] = []): MockAdapte
     });
 
     if (!mocks.length) {
-        mockAdapter.onPost(`${orchestyOptions.workerApi}/${metricsOptions.processMeasurement}`).reply(200);
-        mockAdapter.onPost(`${orchestyOptions.workerApi}/${metricsOptions.curlMeasurement}`).reply(200);
+        mockAdapter.onPost(`${orchestyOptions.workerApi}/metrics/${metricsOptions.processMeasurement}`).reply(200);
+        mockAdapter.onPost(`${orchestyOptions.workerApi}/metrics/${metricsOptions.curlMeasurement}`).reply(200);
     }
 
     return mockAdapter;
