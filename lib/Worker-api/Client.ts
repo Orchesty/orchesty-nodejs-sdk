@@ -22,7 +22,7 @@ export default class Client {
             validateStatus: () => true,
         };
 
-        return axios(`${this.workerApiHost}/${path.startsWith('/') ? path.substring(1) : path}`, req);
+        return axios(`${this.workerApiHost}${path}`, req);
     }
 
 }

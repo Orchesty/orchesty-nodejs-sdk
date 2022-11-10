@@ -132,7 +132,7 @@ export class Logger {
 
     private send(data: unknown, isForUi = false): void {
         if (isForUi) {
-            this.workerApi.send('/logs', HttpMethods.POST, data).catch((e) => {
+            this.workerApi.send('/logger/logs', HttpMethods.POST, data).catch((e) => {
                 this.logger.error(e);
             });
         }

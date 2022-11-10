@@ -70,7 +70,7 @@ export default class Metrics {
 
         try {
             const response = await this.workerApi.send(
-                metricsOptions.processMeasurement,
+                `/metrics/${metricsOptions.processMeasurement}`,
                 HttpMethods.POST,
                 { fields, tags },
             );
@@ -114,7 +114,7 @@ export default class Metrics {
 
         try {
             const response = await this.workerApi.send(
-                metricsOptions.curlMeasurement,
+                `/metrics/${metricsOptions.curlMeasurement}`,
                 HttpMethods.POST,
                 { fields, tags },
             );
