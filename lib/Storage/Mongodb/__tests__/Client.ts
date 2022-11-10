@@ -5,7 +5,6 @@ import CryptManager from '../../../Crypt/CryptManager';
 import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
-import Metrics from '../../../Metrics/Metrics';
 import MongoDbClient from '../Client';
 import Repository from '../Repository';
 
@@ -23,7 +22,6 @@ describe('Test MongoDb Storage', () => {
     afterAll(async () => {
         await dbClient.down();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('repository', async () => {

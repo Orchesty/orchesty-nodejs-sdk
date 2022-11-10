@@ -5,7 +5,6 @@ import { expressApp, getTestContainer } from '../../../test/TestAbstact';
 import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
@@ -53,7 +52,6 @@ describe('tests for WebhookRouter', () => {
     afterAll(async () => {
         await dbClient.down();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('post /webhook/applications/:name/users/:user/subscribe', async () => {

@@ -3,7 +3,6 @@ import { container as c, expressApp as e, initiateContainer, listen as l } from 
 import CommonLoader from '../lib/Commons/CommonLoader';
 import DIContainer from '../lib/DIContainer/Container';
 import CoreServices from '../lib/DIContainer/CoreServices';
-import Metrics from '../lib/Metrics/Metrics';
 import MongoDbClient from '../lib/Storage/Mongodb/Client';
 import Redis from '../lib/Storage/Redis/Redis';
 import TestBasicApplication from './Application/TestBasicApplication';
@@ -94,7 +93,6 @@ export async function dropCollection(collection: string): Promise<void> {
 export async function closeConnections(): Promise<void> {
     const dm = c.get<MongoDbClient>(CoreServices.MONGO);
     await dm.down();
-    await container.get<Metrics>(CoreServices.METRICS).close();
     if (c.has(CoreServices.REDIS)) {
         const redis = c.get<Redis>(CoreServices.REDIS);
         await redis.dropAll();

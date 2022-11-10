@@ -5,7 +5,6 @@ import CryptManager from '../../../Crypt/CryptManager';
 import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
-import Metrics from '../../../Metrics/Metrics';
 import FileSystem from '../../File/FileSystem';
 import MongoDbClient from '../../Mongodb/Client';
 import DataStorageManager from '../DataStorageManager';
@@ -26,7 +25,6 @@ describe('Test ETL Manager', () => {
     afterAll(async () => {
         await dbClient.down();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('should etl works', async () => {

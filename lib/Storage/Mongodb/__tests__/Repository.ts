@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import { getTestContainer } from '../../../../test/TestAbstact';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
-import Metrics from '../../../Metrics/Metrics';
 import ADocument from '../ADocument';
 import MongoDbClient from '../Client';
 import Deleted from '../Filters/Impl/Deleted';
@@ -51,7 +50,6 @@ describe('Tests for repository', () => {
 
     afterAll(async () => {
         await dbClient.down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('ClassWithDeleted', async () => {

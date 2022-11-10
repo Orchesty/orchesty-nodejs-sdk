@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import BatchRouter from '../BatchRouter';
 import { IBatchNode } from '../IBatchNode';
@@ -19,7 +18,6 @@ describe('Tests for BatchRouter', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('get /batch/:name/action', async () => {
