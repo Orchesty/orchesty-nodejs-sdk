@@ -2,7 +2,6 @@ import TestMapperNode, { IInput, NAME } from '../../../test/CustomNode/TestMappe
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import { RESULT_CODE, RESULT_MESSAGE } from '../Headers';
 import ProcessDto from '../ProcessDto';
@@ -18,7 +17,6 @@ describe('Validations', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('array', () => {

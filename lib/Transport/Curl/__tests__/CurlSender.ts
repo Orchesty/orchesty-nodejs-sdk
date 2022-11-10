@@ -3,7 +3,6 @@ import MockAdapter from 'axios-mock-adapter';
 import { getTestContainer } from '../../../../test/TestAbstact';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
-import Metrics from '../../../Metrics/Metrics';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ProcessDto from '../../../Utils/ProcessDto';
 import { HttpMethods } from '../../HttpMethods';
@@ -23,7 +22,6 @@ describe('tests for curlSender', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('should test send', async () => {

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import * as os from 'os';
 import pino from 'pino';
-import { loggerOptions } from '../Config/Config';
+import { orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
 import * as headers from '../Utils/Headers';
@@ -51,7 +51,7 @@ export class Logger {
 
     private readonly logger = pino();
 
-    private readonly workerApi = new Client();
+    private readonly workerApi = new Client(orchestyOptions.workerApi);
 
     public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('debug', message, context);
@@ -132,7 +132,7 @@ export class Logger {
 
     private send(data: unknown, isForUi = false): void {
         if (isForUi) {
-            this.workerApi.send(loggerOptions.logsApi, HttpMethods.POST, data).catch((e) => {
+            this.workerApi.send('/logger/logs', HttpMethods.POST, data).catch((e) => {
                 this.logger.error(e);
             });
         }

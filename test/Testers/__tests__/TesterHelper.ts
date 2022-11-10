@@ -1,6 +1,5 @@
 import { initiateContainer } from '../../../lib';
 import CoreServices from '../../../lib/DIContainer/CoreServices';
-import Metrics from '../../../lib/Metrics/Metrics';
 import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
@@ -19,7 +18,6 @@ describe('Test topologyHelper', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('mockCurl - replacements', async () => {

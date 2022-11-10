@@ -6,7 +6,6 @@ import { ApplicationInstall } from '../../Application/Database/ApplicationInstal
 import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import ResponseDto from '../../Transport/Curl/ResponseDto';
@@ -29,7 +28,6 @@ describe('Test AConnector', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('should set database of connector', () => {

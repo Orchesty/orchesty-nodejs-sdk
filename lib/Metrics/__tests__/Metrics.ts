@@ -32,7 +32,6 @@ describe('Test metrics', () => {
     });
 
     afterAll(async () => {
-        await metrics.close();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
@@ -70,7 +69,7 @@ describe('Test metrics', () => {
             'randomUser',
             'randomAppKey',
         );
-        expect(curlMetrics).toBeDefined();
+        expect(curlMetrics).toBeTruthy();
     });
 
     it('sendProcessMetrics', async () => {
@@ -80,6 +79,6 @@ describe('Test metrics', () => {
             'randomNodeId',
             'randomCorrelationId',
         );
-        expect(processMetric).toBeDefined();
+        expect(processMetric).toBeTruthy();
     });
 });

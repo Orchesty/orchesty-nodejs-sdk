@@ -6,7 +6,6 @@ import { IBatchNode } from '../../Batch/IBatchNode';
 import { ICommonNode } from '../../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import DIContainer from '../Container';
 import CoreServices from '../CoreServices';
@@ -28,7 +27,6 @@ describe('Test DIContainer', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('test set/has service', () => {
