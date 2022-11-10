@@ -4,8 +4,11 @@ import { HttpMethods } from '../Transport/HttpMethods';
 
 export default class Client {
 
+    public constructor(private readonly workerApiHost: string) {
+    }
+
     public async send(
-        url: string,
+        path: string,
         method: HttpMethods,
         data?: unknown,
         headers?: Record<string, string>,
@@ -19,7 +22,7 @@ export default class Client {
             validateStatus: () => true,
         };
 
-        return axios(url, req);
+        return axios(`${this.workerApiHost}/${path.startsWith('/') ? path.substring(1) : path}`, req);
     }
 
 }

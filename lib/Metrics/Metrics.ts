@@ -1,4 +1,4 @@
-import { metricsOptions } from '../Config/Config';
+import { metricsOptions, orchestyOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import { HttpMethods } from '../Transport/HttpMethods';
 import { getCpuTimes, getCurrentTimestamp, ICpuTimes } from '../Utils/SystemUsage';
@@ -25,7 +25,7 @@ export interface IMetricsFields {
 
 export default class Metrics {
 
-    private readonly workerApi = new Client();
+    private readonly workerApi = new Client(orchestyOptions.workerApi);
 
     public static getCurrentMetrics(): IStartMetrics {
         return {
@@ -70,7 +70,7 @@ export default class Metrics {
 
         try {
             const response = await this.workerApi.send(
-                `${metricsOptions.host}/${metricsOptions.processMeasurement}`,
+                metricsOptions.processMeasurement,
                 HttpMethods.POST,
                 { fields, tags },
             );
@@ -114,7 +114,7 @@ export default class Metrics {
 
         try {
             const response = await this.workerApi.send(
-                `${metricsOptions.host}/${metricsOptions.curlMeasurement}`,
+                metricsOptions.curlMeasurement,
                 HttpMethods.POST,
                 { fields, tags },
             );

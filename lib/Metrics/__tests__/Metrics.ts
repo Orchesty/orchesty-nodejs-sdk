@@ -22,12 +22,6 @@ const mockITimesMetrics: ITimesMetrics = {
     kernelTime: 5,
 };
 
-jest.mock('../../../lib/Logger/Logger', () => ({
-    error: () => jest.fn(),
-    debug: () => jest.fn(),
-    Logger: jest.fn().mockImplementation(() => ({})),
-}));
-
 let metrics: Metrics;
 let container: DIContainer;
 
