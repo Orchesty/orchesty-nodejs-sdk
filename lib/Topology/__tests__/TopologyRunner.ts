@@ -4,7 +4,6 @@ import { StatusCodes } from 'http-status-codes';
 import { container } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
 import { initiateContainer } from '../../index';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import ProcessDto from '../../Utils/ProcessDto';
 import TopologyRunner from '../TopologyRunner';
@@ -27,7 +26,6 @@ describe('TopologyRunner tests', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('get webhook url', () => {

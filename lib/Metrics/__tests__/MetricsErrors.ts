@@ -20,7 +20,6 @@ describe('Test metrics', () => {
     });
 
     afterAll(async () => {
-        await metrics.close();
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 

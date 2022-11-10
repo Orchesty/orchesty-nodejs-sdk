@@ -13,7 +13,7 @@ import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import BatchRouter from './Batch/BatchRouter';
 import ACommonRouter from './Commons/ACommonRouter';
 import CommonLoader from './Commons/CommonLoader';
-import { appOptions, cryptOptions, metricsOptions, orchestyOptions, storageOptions } from './Config/Config';
+import { appOptions, cryptOptions, orchestyOptions, storageOptions } from './Config/Config';
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
@@ -21,7 +21,6 @@ import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import DIContainer from './DIContainer/Container';
 import CoreServices from './DIContainer/CoreServices';
 import logger from './Logger/Logger';
-import Mongo from './Metrics/Impl/Mongo';
 import Metrics from './Metrics/Metrics';
 import bodyParser from './Middleware/BodyParseHandler';
 import errorHandler from './Middleware/ErrorHandler';
@@ -56,7 +55,7 @@ export async function initiateContainer(): Promise<void> {
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
     const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
-    const metrics = new Metrics(new Mongo(new MongoDbClient(metricsOptions.dsn, cryptManager, container)));
+    const metrics = new Metrics();
     const curlSender = new CurlSender(metrics);
     const topologyRunner = new TopologyRunner(curlSender);
 

@@ -4,7 +4,6 @@ import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbst
 import { ICommonNode } from '../../Commons/ICommonNode';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import Metrics from '../../Metrics/Metrics';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import ConnectorRouter from '../ConnectorRouter';
 
@@ -23,7 +22,6 @@ describe('Test ConnectorRouter', () => {
 
     afterAll(async () => {
         await container.get<MongoDbClient>(CoreServices.MONGO).down();
-        await container.get<Metrics>(CoreServices.METRICS).close();
     });
 
     it('get /connector/:name/action/test route', async () => {
