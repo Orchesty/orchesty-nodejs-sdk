@@ -4,19 +4,34 @@ import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import { APPLICATION, CORRELATION_ID, NODE_ID, USER } from '../../Utils/Headers';
-import ResultCode from '../../Utils/ResultCode';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
-import { ResultCodeRange } from './ResultCodeRange';
+import { defaultRanges, inRange, IResultRanges, StatusRange } from './ResultCodeRange';
 
 export default class CurlSender {
 
     public constructor(private readonly metrics: Metrics) {
     }
 
+    /**
+     * Default range:
+     *
+     *     {
+     *         success: '<300',
+     *         stopAndFail: ['300-408', '409-500'],
+     *         repeat: [408, '>=500'],
+     *     }
+     *
+     * When a single range is sent, it's parsed as success states
+     * '200-300' - left inclusive
+     * [200, 201] - specific codes
+     * '>=400' - allowed prefixes '>=', '<=', '>', '<'
+     * 200 - single number
+     * [200, '>=400'] - mix of different types in array
+     */
     public async send<JsonBody = unknown>(
         dto: RequestDto,
-        codeRange?: ResultCodeRange[],
+        codeRanges: IResultRanges | StatusRange | null = defaultRanges,
         sec = 60,
         hops = 10,
         // eslint-disable-next-line @typescript-eslint/require-await
@@ -31,12 +46,12 @@ export default class CurlSender {
             const body = buffer?.toString() ?? '';
             CurlSender.log(dto, req, response, body);
 
-            if (codeRange) {
+            if (codeRanges) {
                 return await this.handleByResultCode(
                     response,
                     body,
                     buffer,
-                    codeRange,
+                    codeRanges,
                     logMessageCallback,
                     sec,
                     hops,
@@ -68,34 +83,25 @@ export default class CurlSender {
         response: AxiosResponse,
         body: string,
         buffer: Buffer,
-        codeRange: ResultCodeRange[],
+        codeRanges: IResultRanges | StatusRange,
         logMessageCallback: (res: AxiosResponse, body: string) => Promise<string>,
         sec?: number,
         hops?: number,
     ): Promise<ResponseDto<JsonBody>> {
-        for (const code of codeRange ?? []) {
-            if (typeof code === 'number') {
-                if (code === response.status) {
-                    return this.returnResponseDto(body, response, buffer);
-                }
-            } else {
-                const codeObject = code;
-                if (response.status >= codeObject.from && response.status <= codeObject.to) {
-                    // eslint-disable-next-line max-depth
-                    switch (codeObject.action) {
-                        case ResultCode.SUCCESS:
-                            return this.returnResponseDto(body, response, buffer);
-                        case ResultCode.STOP_AND_FAILED:
-                            // eslint-disable-next-line no-await-in-loop
-                            throw new OnStopAndFailException(await logMessageCallback(response, body));
-                        case ResultCode.REPEAT:
-                            // eslint-disable-next-line no-await-in-loop
-                            throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
-                        default:
-                            throw new Error(`Unsupported action [${codeObject.action}]`);
-                    }
-                }
+        const { status } = response;
+        if (!Array.isArray(codeRanges) && typeof codeRanges === 'object') {
+            const ranges = codeRanges;
+            if (ranges.success && inRange(status, ranges.success)) {
+                return this.returnResponseDto(body, response, buffer);
             }
+            if (ranges.stopAndFail && inRange(status, ranges.stopAndFail)) {
+                throw new OnStopAndFailException(await logMessageCallback(response, body));
+            }
+            if (ranges.repeat && inRange(status, ranges.repeat)) {
+                throw new OnRepeatException(sec, hops, await logMessageCallback(response, body));
+            }
+        } else if (inRange(status, codeRanges)) {
+            return this.returnResponseDto(body, response, buffer);
         }
 
         if (response.status < 300) {
