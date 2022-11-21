@@ -60,21 +60,21 @@ export default class WebhookManager {
         return ret;
     }
 
-    public async subscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<void> {
+    public async subscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
         const appInstall = await this.loadApplicationInstall(name, user);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
-            return;
+            return [];
         }
 
-        await Promise.all(
+        return Promise.all(
             app.getWebhookSubscriptions()
                 .map(async (subs) => {
                     if (!subs.getTopology() && data.name !== subs.getName()) {
-                        return;
+                        return undefined;
                     }
 
                     const topology = data.topology ?? subs.getTopology();
@@ -101,25 +101,27 @@ export default class WebhookManager {
                         .setToken(token);
 
                     await this.webhookRepository.upsert(webhook);
+
+                    return webhook;
                 }),
         );
     }
 
-    public async unsubscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<void> {
+    public async unsubscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
         const appInstall = await this.loadApplicationInstall(name, user);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
-            return;
+            return [];
         }
 
         const webhooks = await this.getAllWebhooks(name, user);
-        await Promise.all(
+        return Promise.all(
             webhooks.map(async (webhook) => {
                 if (data.topology !== webhook.getTopology()) {
-                    return;
+                    return undefined;
                 }
 
                 const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook);
@@ -130,6 +132,8 @@ export default class WebhookManager {
                     webhook.setUnsubscribeFailed(true);
                     await this.webhookRepository.update(webhook);
                 }
+
+                return webhook;
             }),
         );
     }
