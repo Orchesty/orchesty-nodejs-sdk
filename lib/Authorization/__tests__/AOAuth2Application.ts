@@ -5,7 +5,7 @@ import { ApplicationInstall } from '../../Application/Database/ApplicationInstal
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
-import { ACCESS_TOKEN, OAuth2Provider } from '../Provider/OAuth2/OAuth2Provider';
+import { ACCESS_TOKEN, OAuth2Provider, REFRESH_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
@@ -100,7 +100,7 @@ describe('Test AOAuth2Application', () => {
         const settings = {
             [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_ID]: '12',
-                [TOKEN]: 'token',
+                [TOKEN]: { [REFRESH_TOKEN]: '123' },
             },
         };
         appInstall.setSettings(settings);

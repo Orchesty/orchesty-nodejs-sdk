@@ -41,9 +41,7 @@ describe('OAuth2Provider tests', () => {
             const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
             const errorMsg = 'Message [Refresh token not found! Refresh is not possible.] code [205]';
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            await expect(oauth2Provider.refreshAccessToken(dto, {
-                refreshToken: 'pass',
-            })).rejects.toThrow(errorMsg);
+            await expect(oauth2Provider.refreshAccessToken(dto, {})).rejects.toThrow(errorMsg);
         },
     );
 

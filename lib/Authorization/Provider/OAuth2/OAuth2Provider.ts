@@ -73,7 +73,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
     }
 
     public async refreshAccessToken(dto: OAuth2Dto, token: IToken, customConfig = {}): Promise<IToken> {
-        if (Object.hasOwn(token, REFRESH_TOKEN)) {
+        if (!Object.hasOwn(token, REFRESH_TOKEN)) {
             OAuth2Provider.throwException('Refresh token not found! Refresh is not possible.', 205);
         }
         const client = this.createClient(dto, customConfig);
@@ -91,9 +91,7 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
             throw new Error(`Token is not received or is not valid. Reason: [${accessToken?.token?.error}]`);
         }
 
-        const {
-            access_token, token_type, refresh_token, expires_at, ...others
-        } = accessToken.token;
+        const { access_token, token_type, refresh_token, expires_at, ...others } = accessToken.token;
 
         return {
             [ACCESS_TOKEN]: access_token,
