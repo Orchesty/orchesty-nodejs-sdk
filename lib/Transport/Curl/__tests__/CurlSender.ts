@@ -31,10 +31,70 @@ describe('tests for curlSender', () => {
         expect((response.getJsonBody() as { id: string }).id).toBe('1');
     });
 
-    it('should test send - 400', async () => {
+    it('should test send - 400 number', async () => {
         const url = 'http://testUrl.com/status';
         mockAdapter.onGet(url).replyOnce(400, '');
-        const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), [400]);
+        const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), 400);
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: 400 },
+        );
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj range', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: '400-401' },
+        );
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj ltgt', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: '>=400' },
+        );
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj gteq', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: '<=401' },
+        );
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj lt', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: '<401' },
+        );
+        expect(response.getResponseCode()).toBe(400);
+    });
+
+    it('should test send - 400 obj gt', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onGet(url).replyOnce(400, '');
+        const response = await curlSender.send(
+            new RequestDto(url, HttpMethods.GET, new ProcessDto()),
+            { success: '>399' },
+        );
         expect(response.getResponseCode()).toBe(400);
     });
 
