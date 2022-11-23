@@ -8,7 +8,6 @@ import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import CurlSender from '../../Transport/Curl/CurlSender';
-import ResponseDto from '../../Transport/Curl/ResponseDto';
 import ProcessDto from '../../Utils/ProcessDto';
 
 describe('Test AConnector', () => {
@@ -47,20 +46,6 @@ describe('Test AConnector', () => {
         testConnector.setSender(curlSender);
         const testConnectorCurlSender = Reflect.get(testConnector, 'sender');
         expect(testConnectorCurlSender).toEqual(curlSender);
-    });
-
-    it('shouldnt set dto stop process on dto', () => {
-        const dto = new ProcessDto();
-        const response = new ResponseDto('body', 200, {}, Buffer.from(''));
-        testConnector.evaluateStatusCode(response, dto, 'error');
-        expect(dto.getHeaders()).toEqual({});
-    });
-
-    it('should set dto stop process on dto', () => {
-        const dto = new ProcessDto();
-        const response = new ResponseDto('body', 205, {}, Buffer.from(''));
-        testConnector.evaluateStatusCode(response, dto, 'error');
-        expect(dto.getHeaders()).toEqual({ 'result-code': '1006', 'result-message': 'error' });
     });
 
     it('should return applicationInstall', async () => {
