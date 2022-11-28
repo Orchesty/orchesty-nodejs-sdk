@@ -77,6 +77,10 @@ export default abstract class AOAuth2Application extends AApplication implements
         applicationInstall.setExpires(token[EXPIRES] ?? undefined);
 
         const settings = applicationInstall.getSettings();
+        if (!settings[CoreFormsEnum.AUTHORIZATION_FORM]) {
+            settings[CoreFormsEnum.AUTHORIZATION_FORM] = {};
+        }
+
         settings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN] = token;
         applicationInstall.setSettings(settings);
 
@@ -104,12 +108,19 @@ export default abstract class AOAuth2Application extends AApplication implements
         }
 
         const settings = applicationInstall.getSettings();
+        if (!settings[CoreFormsEnum.AUTHORIZATION_FORM]) {
+            settings[CoreFormsEnum.AUTHORIZATION_FORM] = {};
+        }
+
         settings[CoreFormsEnum.AUTHORIZATION_FORM][TOKEN] = tokenFromProvider;
         applicationInstall.setSettings(settings);
     }
 
     public setFrontendRedirectUrl(applicationInstall: ApplicationInstall, redirectUrl: string): void {
         const settings = applicationInstall.getSettings();
+        if (!settings[CoreFormsEnum.AUTHORIZATION_FORM]) {
+            settings[CoreFormsEnum.AUTHORIZATION_FORM] = {};
+        }
         settings[CoreFormsEnum.AUTHORIZATION_FORM][FRONTEND_REDIRECT_URL] = redirectUrl;
         applicationInstall.setSettings(settings);
     }
