@@ -6,9 +6,9 @@ import ResultCode from '../Utils/ResultCode';
 
 export default abstract class ACommonConnector extends ANode {
 
-    protected okStatuses = [200, 201];
-
     private sender?: CurlSender;
+
+    protected okStatuses = [200, 201];
 
     public setSender(sender: CurlSender): this {
         this.sender = sender;

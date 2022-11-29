@@ -14,13 +14,13 @@ export interface IApplicationSettings {
 export class ApplicationInstall extends ADeletableDocument {
 
     @index()
+    private expires?: Date;
+
+    @index()
     private user = '';
 
     @index()
     private key = '';
-
-    @index()
-    private expires?: Date;
 
     @ignore
     private settings: IApplicationSettings = {};

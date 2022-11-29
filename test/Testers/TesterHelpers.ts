@@ -11,22 +11,22 @@ import SpyInstance = jest.SpyInstance;
 import { ResultCodeRange } from '../../lib/Transport/Curl/ResultCodeRange';
 
 export interface ICurlMock {
-    body: Record<string, unknown> | string;
-    code: number;
-    http: string;
-    headers: Record<string, string>;
     httpReplacement?: {
         query?: Record<string, string>;
         path?: Record<string, string>;
     };
+    body: Record<string, unknown> | string;
+    code: number;
+    http: string;
+    headers: Record<string, string>;
 }
 
 export interface IDtoData {
-    headers: Record<string, string>;
-    data: Record<string, unknown>;
     replacement?: {
         data?: Record<string, string>;
     };
+    headers: Record<string, string>;
+    data: Record<string, unknown>;
 }
 
 export interface ILightNode {

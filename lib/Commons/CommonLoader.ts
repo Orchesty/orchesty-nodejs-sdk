@@ -40,8 +40,8 @@ export default class CommonLoader {
 }
 
 export interface ICommonObject {
-    name: string;
     app?: string;
+    name: string;
 }
 
 export interface INameAndApplication extends IName {
