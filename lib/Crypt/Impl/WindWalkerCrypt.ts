@@ -13,13 +13,13 @@ const BASE64 = 'base64';
 
 export default class WindWalkerCrypt extends ACryptImpl {
 
-    private readonly cache;
-
-    private secureHMACKey = '';
-
     private pbkdf2Salt?: Buffer;
 
     private iv?: Buffer;
+
+    private readonly cache;
+
+    private secureHMACKey = '';
 
     public constructor(private readonly secretKey: string, prefix = '002_') {
         super(prefix);

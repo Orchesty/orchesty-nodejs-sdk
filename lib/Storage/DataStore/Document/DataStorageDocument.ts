@@ -4,11 +4,11 @@ export default class DataStorageDocument<T = unknown> {
 
     private user?: string = '';
 
+    private data?: T;
+
     private application?: string = '';
 
     private created: Date;
-
-    private data?: T;
 
     public constructor() {
         this.created = DateTimeUtils.getUtcDate();
@@ -69,6 +69,6 @@ export default class DataStorageDocument<T = unknown> {
 export interface IDataStorageDocument<T> {
     user?: string;
     application?: string;
-    created: Date;
     data?: T;
+    created: Date;
 }

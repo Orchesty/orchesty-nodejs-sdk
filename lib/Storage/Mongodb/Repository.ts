@@ -8,7 +8,7 @@ import CryptManager from '../../Crypt/CryptManager';
 import filters from './Filters';
 import { IQueryFilter } from './Filters/AQueryFilter';
 
-const STD_TTL = 60;
+const STD_TTL = 1;
 
 export default class Repository<T> extends BaseRepo<T> {
 

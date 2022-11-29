@@ -7,7 +7,7 @@ export default class ApplicationInstallRepository<ApplicationInstall> extends Re
         user: string,
         enabled: boolean | null = true,
     ): Promise<ApplicationInstall | null> {
-        let q: { key: string; user: string; enabled?: boolean } = { key: name, user };
+        let q: { enabled?: boolean; key: string; user: string } = { key: name, user };
         if (enabled !== null) {
             q = { ...q, enabled };
         }
@@ -16,7 +16,7 @@ export default class ApplicationInstallRepository<ApplicationInstall> extends Re
     }
 
     public async findOneByUser(user: string, enabled: boolean | null = true): Promise<ApplicationInstall | null> {
-        let q: { user: string; enabled?: boolean } = { user };
+        let q: { enabled?: boolean; user: string } = { user };
         if (enabled !== null) {
             q = { ...q, enabled };
         }
@@ -25,7 +25,7 @@ export default class ApplicationInstallRepository<ApplicationInstall> extends Re
     }
 
     public async findOneByName(name: string, enabled: boolean | null = true): Promise<ApplicationInstall | null> {
-        let q: { key: string; enabled?: boolean } = { key: name };
+        let q: { enabled?: boolean; key: string } = { key: name };
         if (enabled !== null) {
             q = { ...q, enabled };
         }
@@ -37,7 +37,7 @@ export default class ApplicationInstallRepository<ApplicationInstall> extends Re
         user: string,
         enabled: boolean | null = true,
     ): Promise<ApplicationInstall[] | null> {
-        let q: { user: string; enabled?: boolean } = { user };
+        let q: { enabled?: boolean; user: string } = { user };
         if (enabled !== null) {
             q = { ...q, enabled };
         }
@@ -49,7 +49,7 @@ export default class ApplicationInstallRepository<ApplicationInstall> extends Re
         name: string,
         enabled: boolean | null = true,
     ): Promise<ApplicationInstall[] | null> {
-        let q: { key: string;enabled?: boolean } = { key: name };
+        let q: { enabled?: boolean; key: string } = { key: name };
         if (enabled !== null) {
             q = { ...q, enabled };
         }

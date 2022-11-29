@@ -26,11 +26,6 @@ export interface ILogContext {
 }
 
 interface ILoggerFormat {
-    timestamp: number;
-    hostname: string;
-    type: string;
-    severity: string;
-    message: string;
     node_id?: string;
     user_id?: string;
     node_name?: string;
@@ -40,11 +35,16 @@ interface ILoggerFormat {
     result_code?: ResultCode;
     result_message?: string;
     stacktrace?: {
-        message: string;
         trace?: string;
+        message: string;
     };
     data?: string;
     isForUi?: boolean;
+    timestamp: number;
+    hostname: string;
+    type: string;
+    severity: string;
+    message: string;
 }
 
 export class Logger {

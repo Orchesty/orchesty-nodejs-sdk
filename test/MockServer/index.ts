@@ -3,9 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { metricsOptions, orchestyOptions } from '../../lib/Config/Config';
 
 export interface IMockServer {
+    resCode?: number;
     url: string;
     resBody: string;
-    resCode?: number;
 }
 
 export const mockAdapter = new MockAdapter(axios);
