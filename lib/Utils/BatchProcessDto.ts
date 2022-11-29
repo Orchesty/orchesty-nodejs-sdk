@@ -63,7 +63,7 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
         return this;
     }
 
-    public setBatchCursor(cursor: string, iterateOnly = false): void {
+    public setBatchCursor(cursor: string, iterateOnly = false): this {
         this.addHeader(BATCH_CURSOR, cursor);
         if (iterateOnly) {
             this.setStatusHeader(
@@ -76,27 +76,35 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
                 `Message will be used as a iterator with cursor [${cursor}]. Data will be send to follower(s).`,
             );
         }
+
+        return this;
     }
 
     public getBatchCursor(defaultValue = ''): string {
         return this.getHeader(BATCH_CURSOR, defaultValue) as string;
     }
 
-    public removeBatchCursor(): void {
+    public removeBatchCursor(): this {
         this.removeHeader(BATCH_CURSOR);
         this.removeRelatedHeaders([ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS]);
+
+        return this;
     }
 
-    public setBridgeData(data: string): void {
+    public setBridgeData(data: string): this {
         this.data = data;
+
+        return this;
     }
 
     public getBridgeData(): unknown {
         return JSON.stringify(this.messages);
     }
 
-    protected clearData(): void {
+    protected clearData(): this {
         this.messages = [];
+
+        return this;
     }
 
 }

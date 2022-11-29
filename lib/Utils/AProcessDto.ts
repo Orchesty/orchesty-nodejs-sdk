@@ -75,17 +75,23 @@ export default abstract class AProcessDto<JsonData = unknown> {
         return this;
     }
 
-    public addHeader(key: string, value: string): void {
+    public addHeader(key: string, value: string): this {
         this.headers[key] = value;
+
+        return this;
     }
 
-    public removeHeader(key: string): void {
+    public removeHeader(key: string): this {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete this.headers[key];
+
+        return this;
     }
 
-    public removeHeaders(): void {
+    public removeHeaders(): this {
         this.headers = {};
+
+        return this;
     }
 
     public getHeader(key: string, defaultValue?: string): string | undefined {
@@ -94,21 +100,27 @@ export default abstract class AProcessDto<JsonData = unknown> {
         return value ? String(value) : defaultValue;
     }
 
-    public setSuccessProcess(message = 'Message has been processed successfully.'): void {
+    public setSuccessProcess(message = 'Message has been processed successfully.'): this {
         this.setStatusHeader(ResultCode.SUCCESS, message);
+
+        return this;
     }
 
-    public setStopProcess(status: ResultCode, reason: string): void {
+    public setStopProcess(status: ResultCode, reason: string): this {
         AProcessDto.validateStatus(status);
 
         this.setStatusHeader(status, reason);
+
+        return this;
     }
 
-    public setLimitExceeded(reason: string): void {
+    public setLimitExceeded(reason: string): this {
         this.setStatusHeader(ResultCode.LIMIT_EXCEEDED, reason);
+
+        return this;
     }
 
-    public setRepeater(interval: number, maxHops: number, reason: string): void {
+    public setRepeater(interval: number, maxHops: number, reason: string): this {
         if (interval < 1) {
             throw new Error('Value interval is obligatory and can not be lower than 0');
         }
@@ -120,18 +132,24 @@ export default abstract class AProcessDto<JsonData = unknown> {
 
         this.addHeader(REPEAT_INTERVAL, interval.toString());
         this.addHeader(REPEAT_MAX_HOPS, maxHops.toString());
+
+        return this;
     }
 
-    public removeRepeater(): void {
+    public removeRepeater(): this {
         this.removeHeader(REPEAT_INTERVAL);
         this.removeHeader(REPEAT_MAX_HOPS);
         this.removeHeader(REPEAT_HOPS);
         this.removeHeader(REPEAT_QUEUE);
         this.removeRelatedHeaders([ResultCode.REPEAT]);
+
+        return this;
     }
 
-    public setLimiter(key: string, time: number, amount: number): void {
+    public setLimiter(key: string, time: number, amount: number): this {
         this.addHeader(LIMITER_KEY, getLimiterKey(key, time, amount));
+
+        return this;
     }
 
     public setLimiterWithGroup(
@@ -141,15 +159,19 @@ export default abstract class AProcessDto<JsonData = unknown> {
         groupKey: string,
         groupTime: number,
         groupAmount: number,
-    ): void {
+    ): this {
         this.addHeader(LIMITER_KEY, getLimiterKeyWithGroup(key, time, amount, groupKey, groupTime, groupAmount));
+
+        return this;
     }
 
-    public removeLimiter(): void {
+    public removeLimiter(): this {
         this.removeHeader(LIMITER_KEY);
+
+        return this;
     }
 
-    public setForceFollowers(...followers: string[]): void {
+    public setForceFollowers(...followers: string[]): this {
         const workerFollowers: { name: string; id: string }[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
         const filtered = workerFollowers.filter((item) => followers.includes(item.name));
         const targetQueues = filtered.map((item) => item.id).join(',');
@@ -164,11 +186,15 @@ export default abstract class AProcessDto<JsonData = unknown> {
             ResultCode.FORWARD_TO_TARGET_QUEUE,
             `Message will be force re-routed to [${targetQueues}] follower(s).`,
         );
+
+        return this;
     }
 
-    public removeForceFollowers(): void {
+    public removeForceFollowers(): this {
         this.removeHeader(FORCE_TARGET_QUEUE);
         this.removeRelatedHeaders([ResultCode.FORWARD_TO_TARGET_QUEUE]);
+
+        return this;
     }
 
     public getBridgeData(): unknown {
@@ -181,22 +207,28 @@ export default abstract class AProcessDto<JsonData = unknown> {
         }
     }
 
-    protected clearData(): void {
+    protected clearData(): this {
         this.data = '';
+
+        return this;
     }
 
-    protected setStatusHeader(value: ResultCode, message?: string): void {
+    protected setStatusHeader(value: ResultCode, message?: string): this {
         if (message) {
             this.addHeader(RESULT_MESSAGE, message.replace(/\r?\n|\r/g, ''));
         }
         this.addHeader(RESULT_CODE, value.toString());
+
+        return this;
     }
 
-    protected removeRelatedHeaders(headerCodes: number[]): void {
+    protected removeRelatedHeaders(headerCodes: number[]): this {
         if (headerCodes.includes(Number(this.getHeader(RESULT_CODE, '0')))) {
             this.removeHeader(RESULT_MESSAGE);
             this.removeHeader(RESULT_CODE);
         }
+
+        return this;
     }
 
 }

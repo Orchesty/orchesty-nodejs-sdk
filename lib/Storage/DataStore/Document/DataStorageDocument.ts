@@ -4,9 +4,9 @@ export default class DataStorageDocument<T = unknown> {
 
     private user?: string = '';
 
-    private data?: T;
-
     private application?: string = '';
+
+    private data?: T;
 
     private created: Date;
 

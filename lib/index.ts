@@ -1,5 +1,5 @@
 import express from 'express';
-import promMiddleware from 'express-prometheus-middleware';
+import express_prom_bundle from 'express-prom-bundle';
 import ApplicationLoader from './Application/ApplicationLoader';
 import { ApplicationRouter } from './Application/ApplicationRouter';
 import { ApplicationInstall } from './Application/Database/ApplicationInstall';
@@ -37,12 +37,12 @@ const expressApp: express.Application = express();
 
 expressApp.use(metricsHandler);
 expressApp.use(bodyParser);
-expressApp.use(promMiddleware({
+expressApp.use(express_prom_bundle({
     metricsPath: '/metrics',
-    collectDefaultMetrics: true,
-    requestDurationBuckets: [0.1, 0.5, 1, 1.5],
-    requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-    responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+    buckets: [0.1, 0.5, 1, 1.5, 512, 1024, 5120, 10240, 51200, 102400],
+    promClient: {
+        collectDefaultMetrics: {
+        } },
 }));
 
 export async function initiateContainer(): Promise<void> {
