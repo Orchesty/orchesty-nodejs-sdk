@@ -1,5 +1,4 @@
 import logger from '../../Logger/Logger';
-import Application from '../../Utils/Application';
 import { IOAuthProvider } from './IOAuthProvider';
 
 export default abstract class AOAuthProvider implements IOAuthProvider {
@@ -14,9 +13,8 @@ export default abstract class AOAuthProvider implements IOAuthProvider {
 
     public getRedirectUri(): string {
         const backendUrl = this.backend.replace(/\/+$/g, '');
-        const generatedUrl = Application.generateUrl().replace(/^\/+/g, '');
 
-        return `${backendUrl}/${generatedUrl}`;
+        return `${backendUrl}/api/applications/authorize/token`;
     }
 
 }
