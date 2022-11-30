@@ -5,7 +5,7 @@ import { ApplicationInstall } from '../../Application/Database/ApplicationInstal
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
-import { ACCESS_TOKEN, OAuth2Provider, REFRESH_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
+import { ACCESS_TOKEN, EXPIRES, OAuth2Provider, REFRESH_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
 
@@ -76,11 +76,11 @@ describe('Test AOAuth2Application', () => {
         Reflect.set(provider, 'createClient', () => ({
             createToken: () => ({
                 token: {
-                    ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
+                    ok: true, access_token: 'some_token', token_type: '', refresh_token: '123', expires_at: '',
                 },
                 refresh: () => ({
                     token: {
-                        ok: true, access_token: 'some_token', token_type: '', refresh_token: '', expires_at: '',
+                        ok: true, access_token: 'some_token', token_type: '', refresh_token: '123', expires_at: '',
                     },
                 }),
             }),
@@ -92,7 +92,7 @@ describe('Test AOAuth2Application', () => {
         const settings = {
             [CoreFormsEnum.AUTHORIZATION_FORM]: {
                 [CLIENT_ID]: '12',
-                [TOKEN]: { [REFRESH_TOKEN]: '123' },
+                [TOKEN]: { [REFRESH_TOKEN]: '123', [ACCESS_TOKEN]: 'some_token', [EXPIRES]: '', others: { ok: true }, tokenType: '' },
             },
         };
         appInstall.setSettings(settings);

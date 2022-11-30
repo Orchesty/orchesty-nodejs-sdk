@@ -72,7 +72,6 @@ describe('ApplicationManager tests', () => {
             .setName('oauth2application')
             .setSettings({
                 key: 'value',
-                [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' },
             });
 
         await repo.insert(appInstallOAuth);
@@ -227,6 +226,9 @@ describe('ApplicationManager tests', () => {
         const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
         const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
 
+        appInstallOAuth.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } });
+        await appRepo.update(appInstallOAuth);
+
         const mockedLoader = new ApplicationLoader(mockedContainer);
         const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
         const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
@@ -235,8 +237,7 @@ describe('ApplicationManager tests', () => {
             'user',
             { testToken: 'tokenTest' },
         );
-        expect(frontendUrl)
-            .toEqual('url');
+        expect(frontendUrl).toEqual('url');
     });
 
     it('should throw an exception when have application not found when save application settings', async () => {
