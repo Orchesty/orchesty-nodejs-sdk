@@ -1,6 +1,6 @@
 import { Schema } from 'joi';
+import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import AProcessDto from './AProcessDto';
-import ResultCode from './ResultCode';
 
 export class ValidationError extends Error {
 
@@ -54,7 +54,7 @@ export function checkParams<T extends {} = Record<string, unknown>>(
     return true;
 }
 
-export function validate(schema: Schema) {
+export function validate(schema: Schema, strict = false) {
     return function(
         target: Object, // eslint-disable-line
         propertyKey: string,
@@ -62,11 +62,9 @@ export function validate(schema: Schema) {
     ): void {
         const originalMethod = descriptor.value;
         descriptor.value = function(dto: AProcessDto, ...args: unknown[]) {
-            const valid = schema.validate(dto.getJsonData());
+            const valid = schema.validate(dto.getJsonData(), { allowUnknown: !strict });
             if (valid.error) {
-                dto.setStopProcess(ResultCode.STOP_AND_FAILED, valid.error.message);
-
-                return dto;
+                throw new OnStopAndFailException(valid.error.message);
             }
 
             return originalMethod.call(this, dto, ...args);
