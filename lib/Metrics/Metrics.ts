@@ -86,6 +86,7 @@ export default class Metrics {
 
     public async sendCurlMetrics(
         timeData: ITimesMetrics,
+        responseCode: number | null = null,
         nodeId?: string,
         correlationId?: string,
         user?: string,
@@ -110,6 +111,8 @@ export default class Metrics {
             user_id: user ?? '',
             application_id: appKey ?? '',
             sent_request_total_duration: timeData.requestDuration,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            response_code: responseCode ?? null,
         };
 
         try {

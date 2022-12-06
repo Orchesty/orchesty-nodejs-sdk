@@ -64,6 +64,7 @@ describe('Test metrics', () => {
     it('sendCurlMetrics', async () => {
         const curlMetrics = await metrics.sendCurlMetrics(
             mockITimesMetrics,
+            200,
             'randomNodeId',
             'randomCorrelationId',
             'randomUser',
