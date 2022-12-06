@@ -90,6 +90,7 @@ export default class Metrics {
         correlationId?: string,
         user?: string,
         appKey?: string,
+        responseCode?: string | null,
     ): Promise<boolean> {
         const tags: ITagsMap = {};
         if (user) {
@@ -110,6 +111,8 @@ export default class Metrics {
             user_id: user ?? '',
             application_id: appKey ?? '',
             sent_request_total_duration: timeData.requestDuration,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            response_code: responseCode ?? null,
         };
 
         try {

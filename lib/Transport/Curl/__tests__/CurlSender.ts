@@ -119,4 +119,28 @@ describe('tests for curlSender', () => {
             expect(e).toBeDefined();
         }
     });
+
+    it('should test exception', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onPost(url).networkError();
+        try {
+            await curlSender.send(
+                new RequestDto(url, HttpMethods.POST, new ProcessDto(), JSON.stringify({ message: 'ok' })),
+            );
+        } catch (e) {
+            expect(e).toBeDefined();
+        }
+    });
+
+    it('should test timeout', async () => {
+        const url = 'http://testUrl.com/status';
+        mockAdapter.onPost(url).timeout();
+        try {
+            await curlSender.send(
+                new RequestDto(url, HttpMethods.POST, new ProcessDto(), JSON.stringify({ message: 'ok' })),
+            );
+        } catch (e) {
+            expect(e).toBeDefined();
+        }
+    });
 });

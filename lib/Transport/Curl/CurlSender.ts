@@ -41,7 +41,7 @@ export default class CurlSender {
         try {
             const req = CurlSender.createInitFromDto(dto);
             const response = await axios(dto.getUrl(), req);
-            await this.sendMetrics(dto, startTime);
+            await this.sendMetrics(dto, startTime, response.status.toString());
             const buffer = await response.data;
             const body = buffer?.toString() ?? '';
             CurlSender.log(dto, req, response, body);
@@ -60,7 +60,7 @@ export default class CurlSender {
 
             return this.returnResponseDto(body, response, buffer);
         } catch (e) {
-            await this.sendMetrics(dto, startTime);
+            await this.sendMetrics(dto, startTime, null);
             if (e instanceof Error) {
                 logger.error(e.message, dto.getDebugInfo());
             }
@@ -150,7 +150,7 @@ export default class CurlSender {
         }
     }
 
-    private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics): Promise<void> {
+    private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics, responseCode: string | null): Promise<void> {
         const info = dto.getDebugInfo();
         try {
             const times = Metrics.getTimes(startTimes);
@@ -160,6 +160,7 @@ export default class CurlSender {
                 info.getHeader(CORRELATION_ID),
                 info.getHeader(USER),
                 info.getHeader(APPLICATION),
+                responseCode,
             ).catch((e) => logger.error(e?.message ?? e, info));
         } catch (e) {
             if (typeof e === 'string') {

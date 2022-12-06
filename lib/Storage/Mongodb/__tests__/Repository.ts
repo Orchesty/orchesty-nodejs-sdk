@@ -137,7 +137,6 @@ describe('Tests for repository', () => {
         (appInstallMongo as ClassWithoutDeleted).edited = true;
 
         await repo.upsert(appInstallMongo as ClassWithoutDeleted);
-        repo.clearCache();
         const appInstallEdited = await repo.findById(appKey);
 
         expect((appInstallEdited as ClassWithoutDeleted).edited).toBeTruthy();
