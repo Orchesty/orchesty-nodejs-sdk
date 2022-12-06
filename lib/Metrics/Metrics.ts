@@ -86,11 +86,11 @@ export default class Metrics {
 
     public async sendCurlMetrics(
         timeData: ITimesMetrics,
+        responseCode: number | null = null,
         nodeId?: string,
         correlationId?: string,
         user?: string,
         appKey?: string,
-        responseCode?: string | null,
     ): Promise<boolean> {
         const tags: ITagsMap = {};
         if (user) {
