@@ -86,7 +86,7 @@ export default class Metrics {
 
     public async sendCurlMetrics(
         timeData: ITimesMetrics,
-        responseCode: number | null = null,
+        responseCode: number,
         nodeId?: string,
         correlationId?: string,
         user?: string,
