@@ -1,13 +1,16 @@
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
 import TestConnector from '../../../test/Connector/TestConnector';
-import { getTestContainer } from '../../../test/TestAbstact';
+import { appInstallConfig, mockOnce } from '../../../test/MockServer';
+import { getTestContainer, NAME, USER } from '../../../test/TestAbstact';
 import { IApplication } from '../../Application/Base/IApplication';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
+import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
 import CurlSender from '../../Transport/Curl/CurlSender';
+import { HttpMethods } from '../../Transport/HttpMethods';
 import ProcessDto from '../../Utils/ProcessDto';
 
 describe('Test AConnector', () => {
@@ -15,18 +18,14 @@ describe('Test AConnector', () => {
     let mongoDbClient: MongoDbClient;
     let curlSender: CurlSender;
     let testConnector: TestConnector;
-    let repo: ApplicationInstallRepository<ApplicationInstall>;
+    let repo: ApplicationInstallRepository;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         mongoDbClient = container.get(CoreServices.MONGO);
         curlSender = container.get(CoreServices.CURL);
         testConnector = new TestConnector();
-        repo = await mongoDbClient.getApplicationRepository();
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+        repo = mongoDbClient.getApplicationRepository();
     });
 
     it('should set database of connector', () => {
@@ -50,21 +49,30 @@ describe('Test AConnector', () => {
 
     it('should return applicationInstall', async () => {
         const app = new ApplicationInstall();
-        const user = 'testUser';
         app
             .setEnabled(true)
-            .setUser(user)
-            .setName('test');
+            .setUser(USER)
+            .setName(NAME);
         await repo.insert(app);
 
         const application = new TestBasicApplication();
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
 
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"keys":["${application.getName()}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
+
+        repo.clearCache();
+
         const dto = new ProcessDto();
-        dto.setHeaders({ user });
+        dto.setHeaders({ user: USER });
         const res = await testConnector.getApplicationInstallFromHeaders(dto);
-        expect(res.getUser()).toEqual(user);
+        expect(res.getUser()).toEqual(USER);
     });
 
     it('should throw error', async () => {

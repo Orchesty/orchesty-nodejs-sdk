@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { MongoTopologyClosedError, ObjectId } from 'mongodb';
 import OnRepeatException from '../Exception/OnRepeatException';
 import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
@@ -16,14 +15,8 @@ export default function errorHandler(nodeRepository: NodeRepository) {
         }
         const dto = await createProcessDto(req);
 
-        if (err instanceof MongoTopologyClosedError) {
-            logger.error(err.message, dto, false, err);
-            // force kill app due to invalid Mongo connection
-            process.exit(0);
-        }
-
         if (err instanceof OnRepeatException) {
-            const node = await nodeRepository.findOne({ _id: new ObjectId(dto.getHeader(NODE_ID) ?? '') });
+            const node = await nodeRepository.findOne({ filter: { ids: [dto.getHeader(NODE_ID) ?? ''] } });
             const repeaterSettings = node?.getSystemConfigsFromString()?.repeater;
             if (repeaterSettings?.enabled) {
                 dto.setRepeater(repeaterSettings.interval, repeaterSettings.hops, err.message);

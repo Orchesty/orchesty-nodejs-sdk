@@ -1,30 +1,11 @@
 import assert from 'assert';
 import { getTestContainer } from '../../../../test/TestAbstact';
-import { storageOptions } from '../../../Config/Config';
-import CryptManager from '../../../Crypt/CryptManager';
-import WindWalkerCrypt from '../../../Crypt/Impl/WindWalkerCrypt';
-import DIContainer from '../../../DIContainer/Container';
-import CoreServices from '../../../DIContainer/CoreServices';
 import FileSystem from '../../File/FileSystem';
-import MongoDbClient from '../../Mongodb/Client';
 import DataStorageManager from '../DataStorageManager';
 
 describe('Test ETL Manager', () => {
-    let dbClient: MongoDbClient;
-    let container: DIContainer;
-
-    beforeAll(async () => {
-        container = await getTestContainer();
-        dbClient = new MongoDbClient(
-            storageOptions.dsn,
-            new CryptManager([new WindWalkerCrypt('123')]),
-            container,
-        );
-    });
-
-    afterAll(async () => {
-        await dbClient.down();
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+    beforeAll(() => {
+        getTestContainer();
     });
 
     it('should etl works', async () => {

@@ -1,23 +1,23 @@
 import { getCpuTimes, getCpuUsage } from '../SystemUsage';
 
-// Mock fs module
-jest.mock('fs', () => ({
-    readFileSync: jest.fn().mockReturnValue(undefined),
-}));
-
-describe('Test system usages - errors', () => {
+describe('Test system usages', () => {
     it('getCpuTimes', () => {
         const cpuTimes = getCpuTimes();
 
         expect(cpuTimes).toHaveProperty('cpuUserCodeTime');
-        expect(cpuTimes.cpuUserCodeTime).toEqual(0);
+        expect(typeof cpuTimes.cpuUserCodeTime).toBe('number');
+        expect(cpuTimes.cpuUserCodeTime > 0).toBeTruthy();
         expect(cpuTimes).toHaveProperty('cpuKernelCodeTime');
-        expect(cpuTimes.cpuKernelCodeTime).toEqual(0);
+        expect(typeof cpuTimes.cpuKernelCodeTime).toBe('number');
+        expect(cpuTimes.cpuKernelCodeTime > 0).toBeTruthy();
         expect(cpuTimes).toHaveProperty('cpuStartTime');
-        expect(cpuTimes.cpuStartTime).toEqual(0);
+        expect(typeof cpuTimes.cpuStartTime).toBe('number');
+        expect(cpuTimes.cpuStartTime > 0).toBeTruthy();
     });
 
     it('getCpuUsage', () => {
-        expect(getCpuUsage()).toEqual(0);
+        const cpuUsage = getCpuUsage();
+        expect(typeof cpuUsage).toBe('number');
+        expect(cpuUsage > 0).toBeTruthy();
     });
 });

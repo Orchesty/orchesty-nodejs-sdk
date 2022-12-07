@@ -20,8 +20,8 @@ const APPLICATION_SETTINGS = 'applicationSettings';
 export default class ApplicationManager {
 
     public constructor(
-        private readonly repository: ApplicationInstallRepository<ApplicationInstall>,
         private readonly loader: ApplicationLoader,
+        private readonly repository: ApplicationInstallRepository,
         private readonly webhookManager: WebhookManager,
     ) {
     }
@@ -120,7 +120,7 @@ export default class ApplicationManager {
         user: string,
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     ): Promise<Record<string, IField[] | boolean | unknown>> {
-        let appInstall: ApplicationInstall | null = await this.repository.findByNameAndUser(name, user);
+        let appInstall = await this.repository.findByNameAndUser(name, user);
         if (appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] already exists !`);
         }
@@ -162,7 +162,7 @@ export default class ApplicationManager {
     }
 
     public async userApplications(user: string): Promise<Record<string, unknown>> {
-        const appInstalls = await this.repository.findMany({ user });
+        const appInstalls = await this.repository.findMany({ filter: { users: [user], enabled: null } });
         return {
             items: appInstalls.map((appInstall) => {
                 let app: IApplication | undefined;
@@ -181,7 +181,9 @@ export default class ApplicationManager {
     }
 
     public async userApplicationsLimit(user: string, applications: string[]): Promise<string[]> {
-        const appInstalls = await this.repository.findMany({ user, key: { $in: applications } });
+        const appInstalls = await this.repository.findMany(
+            { filter: { users: [user], keys: applications, enabled: null } },
+        );
         return appInstalls.map((appInstall) => {
             const limiterForm = appInstall.getSettings()?.[CoreFormsEnum.LIMITER_FORM];
 
@@ -214,8 +216,8 @@ export default class ApplicationManager {
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.repository.findByNameAndUser(name, user, null);
-        if (appInstall === null) {
+        const appInstall = await this.repository.findByNameAndUser(name, user);
+        if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }
 

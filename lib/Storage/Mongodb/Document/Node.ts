@@ -1,4 +1,4 @@
-import ADeletableDocument from './ADeletableDocument';
+import ADocument from '../ADocument';
 
 interface ISystemConfigs {
     sdk: {
@@ -17,7 +17,7 @@ interface ISystemConfigs {
     };
 }
 
-export default class Node extends ADeletableDocument {
+export default class Node extends ADocument {
 
     protected systemConfigs?: string;
 

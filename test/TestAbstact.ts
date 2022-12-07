@@ -1,9 +1,10 @@
 import { Application } from 'express';
 import { container as c, expressApp as e, initiateContainer, listen as l } from '../lib';
+import { IApplicationSettings } from '../lib/Application/Database/ApplicationInstall';
 import CommonLoader from '../lib/Commons/CommonLoader';
+import CryptManager from '../lib/Crypt/CryptManager';
 import DIContainer from '../lib/DIContainer/Container';
 import CoreServices from '../lib/DIContainer/CoreServices';
-import MongoDbClient from '../lib/Storage/Mongodb/Client';
 import Redis from '../lib/Storage/Redis/Redis';
 import TestBasicApplication from './Application/TestBasicApplication';
 import TestOAuth2Application from './Application/TestOAuth2Application';
@@ -13,16 +14,21 @@ import TestConnector from './Connector/TestConnector';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestMapperNode from './CustomNode/TestMapperNode';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
+import { appInstallConfig } from './MockServer';
 
 export const expressApp = e;
 export const container = c;
+
+export const USER = 'user';
+export const NAME = 'name';
+export const WEBHOOK_NAME = 'webhookName';
 
 export function listen(): void {
     l();
 }
 
-export async function getTestContainer(): Promise<DIContainer> {
-    await initiateContainer();
+export function getTestContainer(): DIContainer {
+    initiateContainer();
     const testConnector = new TestConnector().setSender(container.get(CoreServices.CURL));
     const appBasic = new TestBasicApplication();
     const appOAuth = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
@@ -75,12 +81,8 @@ export function mockRouter(): {
     };
 }
 
-export async function dropCollection(collection: string): Promise<void> {
-    const dm = c.get<MongoDbClient>(CoreServices.MONGO);
-    const db = await dm.db();
-
+export async function dropCollection(): Promise<void> {
     try {
-        await db.dropCollection(collection);
         if (c.has(CoreServices.REDIS)) {
             const redis = c.get<Redis>(CoreServices.REDIS);
             await redis.dropAll();
@@ -91,10 +93,30 @@ export async function dropCollection(collection: string): Promise<void> {
 }
 
 export async function closeConnections(): Promise<void> {
-    const dm = c.get<MongoDbClient>(CoreServices.MONGO);
-    await dm.down();
     if (c.has(CoreServices.REDIS)) {
         const redis = c.get<Redis>(CoreServices.REDIS);
         await redis.dropAll();
     }
+}
+
+export function getCryptService(): CryptManager {
+    if (c.has(CoreServices.CRYPT_MANAGER)) {
+        return c.get<CryptManager>(CoreServices.CRYPT_MANAGER);
+    }
+    throw new Error('Crypt manager is available');
+}
+
+export function getApplicationWithSettings(
+    encryptedSettings?: IApplicationSettings,
+    appName: string = NAME,
+    user: string = USER,
+): unknown {
+    const appInstall = appInstallConfig;
+    appInstall.key = appName;
+    appInstall.user = user;
+    if (encryptedSettings) {
+        appInstall.encryptedSettings = getCryptService().encrypt(encryptedSettings);
+    }
+
+    return appInstall;
 }

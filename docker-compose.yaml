@@ -16,32 +16,14 @@ services:
             APP_ENV: 'debug'
             CRYPT_SECRET: 'ThisIsNotSoSecret'
             BACKEND_URL: 'http://127.0.0.40:8080'
-            MONGODB_DSN: 'mongodb://mongo:27017/node-sdk'
             ORCHESTY_API_KEY: 'ThisIsNotRealKEy'
             WORKER_API_HOST: 'http://127.0.0.40'
         command: sleep infinity
-
-    mongo:
-        image: mongo:latest
-        ports:
-            - ${DEV_IP}:27017:27017
-        volumes:
-            - mongo:/data/db
 
     redis:
         image: redis:alpine
         ports:
             - ${DEV_IP}:6379:6379
-
-    logstash:
-        image: mendhak/udp-listener
-        ports:
-            - ${DEV_IP}:4444:5005
-
-    kapacitor:
-        image: mendhak/udp-listener
-        ports:
-            - ${DEV_IP}:5120:5005
 
 volumes:
     mongo: {}

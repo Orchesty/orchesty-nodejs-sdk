@@ -24,10 +24,6 @@ export const metricsOptions = {
     processMeasurement: 'monolith',
 };
 
-export const storageOptions = {
-    dsn: process.env.MONGODB_DSN ?? '',
-};
-
 export const appOptions = {
     port: parseInt(process.env.APP_PORT ?? '8080', 10),
     debug: process.env.APP_ENV === 'debug' || process.env.NODE_ENV === 'debug',
@@ -35,7 +31,9 @@ export const appOptions = {
 };
 
 export const cryptOptions = {
-    secret: process.env.CRYPT_SECRET ?? '',
+    secret: process.env.CRYPT_SECRET ?? (() => {
+        throw new Error('Env [CRYPT_SECRET] is missing.');
+    })(),
 };
 
 export const orchestyOptions = {

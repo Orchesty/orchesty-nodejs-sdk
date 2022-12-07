@@ -3,7 +3,6 @@ import MockAdapter from 'axios-mock-adapter';
 import { getTestContainer } from '../../../../test/TestAbstact';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
-import MongoDbClient from '../../../Storage/Mongodb/Client';
 import ProcessDto from '../../../Utils/ProcessDto';
 import { HttpMethods } from '../../HttpMethods';
 import CurlSender from '../CurlSender';
@@ -14,14 +13,10 @@ let curlSender: CurlSender;
 let mockAdapter: MockAdapter;
 
 describe('tests for curlSender', () => {
-    beforeAll(async () => {
+    beforeAll(() => {
         mockAdapter = new MockAdapter(axios);
-        container = await getTestContainer();
+        container = getTestContainer();
         curlSender = container.get(CoreServices.CURL);
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('should test send', async () => {

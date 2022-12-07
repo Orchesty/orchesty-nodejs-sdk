@@ -1,58 +1,58 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import TestWebhookApplication from '../../../../test/Application/TestWebhookApplication';
-import { dropCollection, getTestContainer } from '../../../../test/TestAbstact';
-import { PASSWORD, TOKEN, USER } from '../../../Authorization/Type/Basic/ABasicApplication';
+import { mockOnce, webhookConfig } from '../../../../test/MockServer';
+import { getApplicationWithSettings, getTestContainer, WEBHOOK_NAME } from '../../../../test/TestAbstact';
+import { USER } from '../../../Authorization/Type/Basic/ABasicApplication';
+import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
-import CoreFormsEnum from '../../Base/CoreFormsEnum';
+import CurlSender from '../../../Transport/Curl/CurlSender';
+import { HttpMethods } from '../../../Transport/HttpMethods';
+import ApplicationLoader from '../../ApplicationLoader';
 import { ApplicationInstall } from '../../Database/ApplicationInstall';
+import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
 import Webhook from '../../Database/Webhook';
+import WebhookRepository from '../../Database/WebhookRepository';
 import WebhookManager from '../WebhookManager';
 
 let container: DIContainer;
 let webhookManager: WebhookManager;
-let appInstall: ApplicationInstall;
+let webhookRepository: WebhookRepository;
 let dbClient: MongoDbClient;
-let mockAdapter: MockAdapter;
 
 describe('Tests for webhookManager', () => {
-    beforeAll(async () => {
-        mockAdapter = new MockAdapter(axios);
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         dbClient = container.get(CoreServices.MONGO);
+        const curl = container.get<CurlSender>(CoreServices.CURL);
+
+        const testApp = new TestWebhookApplication();
+        const mockedContainer = new DIContainer();
+        mockedContainer.setApplication(testApp);
+
+        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
+        webhookRepository = container.getRepository(Webhook);
+
+        const mockedLoader = new ApplicationLoader(mockedContainer);
+        webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
     });
 
-    beforeEach(async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setEnabled(true)
-            .setUser('user')
-            .setName('webhookName')
-            .setSettings({
-                key: 'value',
-                [CoreFormsEnum.AUTHORIZATION_FORM]: {
-                    [USER]: 'user',
-                    [PASSWORD]: 'password',
-                    [TOKEN]: 'token',
-                },
-            });
-        const repo = await dbClient.getApplicationRepository();
-        await repo.insert(appInstall);
-        webhookManager = container.get(CoreServices.WEBHOOK_MANAGER);
-    });
-
-    afterAll(async () => {
-        await dbClient.down();
+    beforeEach(() => {
+        const repo = dbClient.getRepository(Webhook);
+        repo.clearCache();
     });
 
     it('should get all webhooks', async () => {
-        await dropCollection(Webhook.getCollection());
-        const repo = await dbClient.getRepository(Webhook);
-        await repo.insert(new Webhook().setName('testWebhook').setUser('user').setApplication('webhookName').setTopology('testWebhook'));
-        const app = container.getApplication('webhookName') as TestWebhookApplication;
-        const webhooks = await webhookManager.getWebhooks(app, appInstall.getUser());
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"]}`,
+            },
+            response: { body: [webhookConfig] },
+        }]);
+
+        const app = container.getApplication(WEBHOOK_NAME) as TestWebhookApplication;
+        const webhooks = await webhookManager.getWebhooks(app, USER);
         expect(webhooks).toHaveLength(1);
         expect(webhooks).toStrictEqual([{
             default: true, enabled: true, name: 'testWebhook', topology: 'testWebhook',
@@ -60,25 +60,34 @@ describe('Tests for webhookManager', () => {
     });
 
     it('should subscribe webhooks', async () => {
-        mockAdapter.onGet(
-            /https:\/\/sp.orchesty.com\/webhook\/topologies\/testWebhook\/nodes\/testNode\/token\/.*/,
-        ).replyOnce(200, Buffer.from(JSON.stringify({ id: '1' })));
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${WEBHOOK_NAME}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
+        }]);
+
         await expect(webhookManager.subscribeWebhooks(
-            appInstall.getName(),
-            appInstall.getUser(),
+            WEBHOOK_NAME,
+            USER,
             { name: 'testName', topology: 'testWebhook' },
         )).resolves.not.toThrow();
     });
 
     it('should unsubscribe webhooks', async () => {
-        mockAdapter.onDelete('/unknown/url')
-            .reply(200, Buffer.from(JSON.stringify({ id: '1' })));
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${WEBHOOK_NAME}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
+        }]);
 
         await expect(webhookManager.unsubscribeWebhooks(
-            appInstall.getName(),
-            appInstall.getUser(),
+            WEBHOOK_NAME,
+            USER,
             { name: 'testName', topology: 'testWebhook' },
         )).resolves.not.toThrow();
-        mockAdapter.restore();
     });
 });

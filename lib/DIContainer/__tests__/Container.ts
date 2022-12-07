@@ -6,9 +6,7 @@ import { IBatchNode } from '../../Batch/IBatchNode';
 import { ICommonNode } from '../../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../../CustomNode/CustomNodeRouter';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import DIContainer from '../Container';
-import CoreServices from '../CoreServices';
 
 describe('Test DIContainer', () => {
     let container: DIContainer;
@@ -17,16 +15,12 @@ describe('Test DIContainer', () => {
     let testBatch: IBatchNode;
     let testApp: IApplication;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         testConnector = container.getConnector('test');
         testCustom = container.getCustomNode('testcustom');
         testBatch = container.getBatch('testbatch');
         testApp = container.getApplication('test');
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('test set/has service', () => {

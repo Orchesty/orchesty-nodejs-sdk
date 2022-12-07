@@ -1,28 +1,19 @@
 import deepmerge from 'deepmerge';
 import { DateTime } from 'luxon';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ignore, index } from 'mongodb-typescript';
-import ADeletableDocument from '../../Storage/Mongodb/Document/ADeletableDocument';
+import ADocument from '../../Storage/Mongodb/ADocument';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-export interface IApplicationSettings {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
-}
+export type IApplicationSettings = Record<string, any>;
 
-export class ApplicationInstall extends ADeletableDocument {
+export class ApplicationInstall extends ADocument {
 
-    @index()
     private expires?: Date;
 
-    @index()
     private user = '';
 
-    @index()
     private key = '';
 
-    @ignore
     private settings: IApplicationSettings = {};
 
     private enabled = false;
@@ -132,7 +123,7 @@ export class ApplicationInstall extends ADeletableDocument {
 
     public toArray(): Record<string, unknown> {
         return {
-            id: this._id?.toHexString() ?? '',
+            id: this.id,
             user: this.user,
             key: this.key,
             enabled: this.enabled,

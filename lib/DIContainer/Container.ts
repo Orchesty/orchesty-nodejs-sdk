@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClassType } from 'mongodb-typescript/lib/repository';
 import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
 import { IApplication } from '../Application/Base/IApplication';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
@@ -7,7 +6,8 @@ import { IBatchNode } from '../Batch/IBatchNode';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
-import Repository from '../Storage/Mongodb/Repository';
+import ADocument, { ClassType } from '../Storage/Mongodb/ADocument';
+import Repository, { IQuery } from '../Storage/Mongodb/Repository';
 
 const REPOSITORY = 'repository';
 
@@ -82,12 +82,12 @@ export default class DIContainer {
         return this.get(`${BATCH_PREFIX}.${name}`);
     }
 
-    public setRepository<T extends object>(repository: Repository<T>): void {
-        this.set(`${REPOSITORY}.${repository.getName()}`, repository);
+    public setRepository<Q extends IQuery, T extends ADocument>(repository: Repository<T, Q>): void {
+        this.set(`${REPOSITORY}.${repository.collection}`, repository);
     }
 
-    public getRepository<T extends object>(type: ClassType<T>): Repository<T> {
-        return this.get(`${REPOSITORY}.${type.name}`);
+    public getRepository<Q extends IQuery, T extends ADocument>(collection: ClassType<T>): Repository<T, Q> {
+        return this.get(`${REPOSITORY}.${collection.getCollection()}`);
     }
 
 }

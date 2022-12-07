@@ -2,8 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import BatchRouter from '../BatchRouter';
 import { IBatchNode } from '../IBatchNode';
 
@@ -11,13 +9,9 @@ describe('Tests for BatchRouter', () => {
     let container: DIContainer;
     let batch: IBatchNode;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         batch = container.getBatch('testbatch');
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('get /batch/:name/action', async () => {

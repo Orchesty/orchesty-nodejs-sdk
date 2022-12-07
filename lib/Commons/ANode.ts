@@ -44,10 +44,10 @@ export default abstract class ANode implements INode {
 
     protected async getApplicationInstall(
         user?: string,
-        enabled: boolean | null = true,
+        enabled = true,
     ): Promise<ApplicationInstall> {
-        const repo = await this.getDbClient().getApplicationRepository();
-        let appInstall: ApplicationInstall | null;
+        const repo = this.getDbClient().getApplicationRepository();
+        let appInstall: ApplicationInstall | undefined;
         if (user) {
             appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled);
         } else {
@@ -65,7 +65,7 @@ export default abstract class ANode implements INode {
 
     protected async getApplicationInstallFromProcess(
         dto: AProcessDto,
-        enabled: boolean | null = true,
+        enabled = true,
     ): Promise<ApplicationInstall> {
         const user = dto.getUser();
         if (!user) {

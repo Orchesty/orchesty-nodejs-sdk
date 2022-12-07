@@ -30,8 +30,8 @@ export default class WebhookManager {
     public constructor(
         private readonly loader: ApplicationLoader,
         private readonly curl: CurlSender,
-        private readonly webhookRepository: WebhookRepository<Webhook>,
-        private readonly appRepository: ApplicationInstallRepository<ApplicationInstall>,
+        private readonly webhookRepository: WebhookRepository,
+        private readonly appRepository: ApplicationInstallRepository,
     ) {
     }
 
@@ -100,7 +100,7 @@ export default class WebhookManager {
                         .setWebhookId(webhookId)
                         .setToken(token);
 
-                    await this.webhookRepository.upsert(webhook);
+                    await this.webhookRepository.insert(webhook);
 
                     return webhook;
                 }),
@@ -139,7 +139,7 @@ export default class WebhookManager {
     }
 
     private async getAllWebhooks(application: string, user: string): Promise<Webhook[]> {
-        return this.webhookRepository.findMany({ application, user });
+        return this.webhookRepository.findMany({ filter: { apps: [application], users: [user] } });
     }
 
     private getApplication(key: string): IWebhookApplication {
@@ -147,8 +147,8 @@ export default class WebhookManager {
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.appRepository.findByNameAndUser(name, user, null);
-        if (appInstall === null) {
+        const appInstall = await this.appRepository.findByNameAndUser(name, user);
+        if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }
 
