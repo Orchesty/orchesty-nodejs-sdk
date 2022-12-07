@@ -60,16 +60,18 @@ export default class CurlSender {
 
             return this.returnResponseDto(body, response, buffer);
         } catch (e) {
-            await this.sendMetrics(dto, startTime, null);
             if (e instanceof Error) {
                 logger.error(e.message, dto.getDebugInfo());
             }
 
             if (e instanceof AxiosError) {
-                if (e.message.includes('network timeout')) {
+                if (e.message.includes('timeout')) {
+                    await this.sendMetrics(dto, startTime, 408);
                     throw new OnRepeatException(sec, hops, e.message);
                 }
             }
+
+            await this.sendMetrics(dto, startTime, 500);
 
             throw e;
         }
@@ -150,7 +152,7 @@ export default class CurlSender {
         }
     }
 
-    private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics, responseCode: number | null): Promise<void> {
+    private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics, responseCode: number): Promise<void> {
         const info = dto.getDebugInfo();
         try {
             const times = Metrics.getTimes(startTimes);

@@ -24,7 +24,7 @@ describe('Test metrics', () => {
     });
 
     it('sendCurlMetrics', async () => {
-        const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics);
+        const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics, 1);
         expect(curlMetrics).toBeDefined();
     });
 
