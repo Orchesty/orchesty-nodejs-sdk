@@ -51,7 +51,7 @@ export function initiateContainer(): void {
         new WindWalkerCrypt(cryptOptions.secret),
     ];
     const cryptManager = new CryptManager(cryptProviders);
-    const mongoDbClient = new MongoDbClient(cryptManager, container);
+    const mongoDbClient = new MongoDbClient(container);
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
     const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
@@ -68,12 +68,10 @@ export function initiateContainer(): void {
     const webhookRepository = new WebhookRepository(
         Webhook,
         mongoDbClient.getClient(),
-        cryptManager,
     );
     const nodeRepository = new NodeRepository(
         Node,
         mongoDbClient.getClient(),
-        cryptManager,
     );
 
     const webhookManager = new WebhookManager(appLoader, curlSender, webhookRepository, applicationInstallRepo);

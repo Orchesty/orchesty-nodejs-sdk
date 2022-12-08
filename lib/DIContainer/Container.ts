@@ -7,7 +7,7 @@ import { ICommonNode } from '../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
 import ADocument, { ClassType } from '../Storage/Mongodb/ADocument';
-import Repository, { IQuery } from '../Storage/Mongodb/Repository';
+import Repository, { IFilter, IPaging, ISorter } from '../Storage/Mongodb/Repository';
 
 const REPOSITORY = 'repository';
 
@@ -82,11 +82,15 @@ export default class DIContainer {
         return this.get(`${BATCH_PREFIX}.${name}`);
     }
 
-    public setRepository<Q extends IQuery, T extends ADocument>(repository: Repository<T, Q>): void {
+    public setRepository
+    <T extends ADocument, F extends IFilter, S extends ISorter, P extends IPaging>(repository: Repository<T, F, S, P>):
+    void {
         this.set(`${REPOSITORY}.${repository.collection}`, repository);
     }
 
-    public getRepository<Q extends IQuery, T extends ADocument>(collection: ClassType<T>): Repository<T, Q> {
+    public getRepository
+    <T extends ADocument, F extends IFilter, S extends ISorter, P extends IPaging>(collection: ClassType<T>):
+    Repository<T, F, S, P> {
         return this.get(`${REPOSITORY}.${collection.getCollection()}`);
     }
 

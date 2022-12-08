@@ -1,17 +1,15 @@
-import crypto from 'crypto';
 import NodeCache from 'node-cache';
-import CryptManager from '../../Crypt/CryptManager';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Client from '../../Worker-api/Client';
 import ADocument, { ClassType } from './ADocument';
 
 const STD_TTL = 1;
 
-export interface IQuerySorter {
+export interface ISorter {
     created: 'asc' | 'desc';
 }
 
-export interface IQueryFilter {
+export interface IFilter {
     ids?: string[];
 }
 
@@ -20,17 +18,16 @@ export interface IPaging {
     offset?: number;
 }
 
-export interface IQuery {
-    sorter?: IQuerySorter;
-    paging?: IPaging;
-    filter?: IQueryFilter;
-}
-
 interface IRepository<T> {
     fromObject(object: unknown): T;
 }
 
-export default class Repository<T, Q extends IQuery> implements IRepository<T> {
+export default class Repository<
+    T,
+    F extends IFilter = IFilter,
+    S extends ISorter = ISorter,
+    P extends IPaging = IPaging >
+implements IRepository<T> {
 
     public collection: string;
 
@@ -39,7 +36,6 @@ export default class Repository<T, Q extends IQuery> implements IRepository<T> {
     public constructor(
         collection: ClassType<T>,
         protected client: Client,
-        protected readonly crypt: CryptManager,
     ) {
         this.cache = new NodeCache({ stdTTL: STD_TTL, checkperiod: 1 });
         this.collection = collection.getCollection();
@@ -50,50 +46,48 @@ export default class Repository<T, Q extends IQuery> implements IRepository<T> {
         throw new Error('Method not implemented.');
     }
 
-    public clearCache(): void {
+    public clearCache(): this {
         this.cache.flushAll();
+        return this;
     }
 
-    public async insert(entity: T): Promise<void> {
-        return this.insertMany([entity]);
+    public async insert(entity: T): Promise<this> {
+        await this.insertMany([entity]);
+        return this;
     }
 
-    public async insertMany(entities: T[]): Promise<void> {
-        entities.forEach((entity) => this.encrypt(entity));
+    public async insertMany(entities: T[]): Promise<this> {
+        entities.forEach((entity) => this.beforeSend(entity));
         await this.client.send(`/document/${this.collection}`, HttpMethods.POST, entities);
-        this.clearCache();
+        return this.clearCache();
     }
 
-    public async update(entity: T): Promise<void> {
-        return this.insertMany([entity]);
+    public async update(entity: T): Promise<this> {
+        await this.insertMany([entity]);
+        return this;
     }
 
     public async findById(id: string): Promise<T | undefined> {
-        return this.findOne({ filter: { ids: [id] } } as Q);
+        return this.findOne({ ids: [id] } as F);
     }
 
-    public async findOne(query?: Q): Promise<T | undefined> {
-        return (await this.findMany(query))?.[0];
+    public async findOne(filter: F, sorter?: S, paging?: P): Promise<T | undefined> {
+        return (await this.findMany(filter, sorter, paging))?.[0];
     }
 
     public async findManyById(ids: string[]): Promise<T[]> {
-        return this.findMany({ filter: { ids } } as Q);
+        return this.findMany({ ids } as F);
     }
 
-    public async findMany(query?: Q): Promise<T[]> {
-        const cacheRecord = this.findInCache<T[]>(query);
+    public async findMany(filter?: F, sorter?: S, paging?: P): Promise<T[]> {
+        const path = this.createQuery(filter, sorter, paging);
+
+        const cacheRecord = this.findInCache<T[]>(path);
         if (cacheRecord) {
             return cacheRecord;
         }
 
-        let queryParams = '';
-        if (query) {
-            queryParams = this.decorateQuery(queryParams, 'filter', query.filter);
-            queryParams = this.decorateQuery(queryParams, 'sorter', query.sorter);
-            queryParams = this.decorateQuery(queryParams, 'paging', query.paging);
-        }
-
-        const find = (await this.client.send(`/document/${this.collection}${queryParams}`, HttpMethods.GET)).data;
+        const find = (await this.client.send(path, HttpMethods.GET)).data;
 
         if (!find) {
             return [];
@@ -101,12 +95,12 @@ export default class Repository<T, Q extends IQuery> implements IRepository<T> {
 
         const entities: T[] = find.map((item: unknown) => {
             const entity = this.fromObject(item);
-            this.decrypt(entity);
+            this.afterReceive(entity);
             return entity;
         });
 
         if (entities.length) {
-            this.cache.set(this.getKey(query), entities);
+            this.cache.set(path, entities);
 
             return entities;
         }
@@ -114,35 +108,41 @@ export default class Repository<T, Q extends IQuery> implements IRepository<T> {
         return [];
     }
 
-    public async remove(entity: T): Promise<void> {
-        await this.removeMany({ filter: { ids: [(entity as ADocument).getId()] } } as Q);
+    public async remove(entity: T): Promise<this> {
+        await this.removeMany({ ids: [(entity as ADocument).getId()] } as F);
+        return this;
     }
 
-    public async removeMany(query?: Q): Promise<void> {
-        await this.client.send(`/document/${this.collection}`, HttpMethods.DELETE, query);
-        this.clearCache();
+    public async removeMany(filter?: F): Promise<this> {
+        await this.client.send(`/document/${this.collection}`, HttpMethods.DELETE, filter);
+        return this.clearCache();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected encrypt(entity: T): void {}
+    protected beforeSend(entity: T): this {
+        return this;
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected decrypt(entity: T): void {}
+    protected afterReceive(entity: T): this {
+        return this;
+    }
 
-    private findInCache<O>(query?: Q): O | undefined {
-        if (this.cache.has(this.getKey(query))) {
-            return this.cache.get(this.getKey(query));
+    private findInCache<O>(path: string): O | undefined {
+        if (this.cache.has(path)) {
+            return this.cache.get(path);
         }
 
         return undefined;
     }
 
-    private getKey(query?: Q): string {
-        return `document_query_${this.collection}_${this.md5(query)}`;
-    }
+    private createQuery(filter?: F, sorter?: S, paging?: P): string {
+        let queryParams = '';
+        queryParams = this.decorateQuery(queryParams, 'filter', filter);
+        queryParams = this.decorateQuery(queryParams, 'sorter', sorter);
+        queryParams = this.decorateQuery(queryParams, 'paging', paging);
 
-    private md5(query?: Q): string {
-        return crypto.createHash('md5').update(JSON.stringify(query ?? {})).digest('hex');
+        return `/document/${this.collection}${queryParams}`;
     }
 
     private decorateQuery(query: string, parameter: string, value: unknown): string {

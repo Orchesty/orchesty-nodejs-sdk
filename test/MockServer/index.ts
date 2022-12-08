@@ -1,6 +1,7 @@
 import axios from 'axios';
 import MockAdapter, { RequestHandler } from 'axios-mock-adapter';
 import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
+import { TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import { CLIENT_ID, FRONTEND_REDIRECT_URL } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import { metricsOptions, orchestyOptions } from '../../lib/Config/Config';
 import { HttpMethods } from '../../lib/Transport/HttpMethods';
@@ -50,6 +51,7 @@ export const appInstallConfig = {
         [CoreFormsEnum.AUTHORIZATION_FORM]: {
             [CLIENT_ID]: 'client id 1',
             [FRONTEND_REDIRECT_URL]: 'url',
+            [TOKEN]: 'testToken',
         },
     },
     enabled: false,

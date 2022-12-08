@@ -67,6 +67,13 @@ describe('Tests for webhookManager', () => {
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: /https:\/\/sp.orchesty.com\/webhook\/topologies\/testWebhook\/nodes\/testNode\/token\/*/,
+            },
+            response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
+        }]);
 
         await expect(webhookManager.subscribeWebhooks(
             WEBHOOK_NAME,
@@ -82,6 +89,21 @@ describe('Tests for webhookManager', () => {
                 url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${WEBHOOK_NAME}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
+        }]);
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"]}`,
+            },
+            response: { body: [webhookConfig] },
+        }]);
+
+        mockOnce([{
+            request: {
+                method: HttpMethods.DELETE,
+                url: 'unknown/url',
+            },
+            response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
         }]);
 
         await expect(webhookManager.unsubscribeWebhooks(

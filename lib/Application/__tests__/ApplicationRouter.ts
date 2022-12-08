@@ -91,7 +91,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["user"],"keys":["name"],"enabled":null}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["user"],"keys":["name"],"enabled":true}`,
             },
             response: { body: [getApplicationWithSettings(limiterForm)] },
         }]);

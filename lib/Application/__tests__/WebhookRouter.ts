@@ -28,6 +28,14 @@ describe('tests for WebhookRouter', () => {
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);
+
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: /https:\/\/sp.orchesty.com\/webhook\/topologies\/testTopo\/nodes\/testNode\/token\/*/,
+            },
+            response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
+        }]);
     });
 
     it('post /webhook/applications/:name/users/:user/subscribe', async () => {

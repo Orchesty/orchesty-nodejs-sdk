@@ -139,7 +139,7 @@ export default class WebhookManager {
     }
 
     private async getAllWebhooks(application: string, user: string): Promise<Webhook[]> {
-        return this.webhookRepository.findMany({ filter: { apps: [application], users: [user] } });
+        return this.webhookRepository.findMany({ apps: [application], users: [user] });
     }
 
     private getApplication(key: string): IWebhookApplication {
@@ -147,7 +147,7 @@ export default class WebhookManager {
     }
 
     private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.appRepository.findByNameAndUser(name, user);
+        const appInstall = await this.appRepository.findByNameAndUser(name, user, null);
         if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }

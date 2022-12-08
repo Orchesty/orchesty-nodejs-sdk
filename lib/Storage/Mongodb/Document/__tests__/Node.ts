@@ -34,7 +34,7 @@ describe('tests for Node', () => {
             response: { body: [{ id: '1', systemConfigs: JSON.stringify(nodeConfig) }] },
         }]);
 
-        const databaseNode = await nodeRepository.findOne({ filter: { ids: [node.getId()] } });
+        const databaseNode = await nodeRepository.findOne({ ids: [node.getId()] });
         expect(databaseNode?.getSystemConfigs()).toBe(JSON.stringify(nodeConfig));
     });
 
@@ -47,7 +47,7 @@ describe('tests for Node', () => {
             response: { body: [{ id: '1', systemConfigs: JSON.stringify(nodeConfig) }] },
         }]);
 
-        const databaseNode = await nodeRepository.findOne({ filter: { ids: [node.getId()] } });
+        const databaseNode = await nodeRepository.findOne({ ids: [node.getId()] });
         expect(databaseNode?.getSystemConfigsFromString()).toEqual(nodeConfig);
     });
 

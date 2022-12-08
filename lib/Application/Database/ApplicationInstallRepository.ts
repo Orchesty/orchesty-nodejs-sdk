@@ -1,51 +1,60 @@
-import Repository, { IPaging, IQueryFilter, IQuerySorter } from '../../Storage/Mongodb/Repository';
+import CryptManager from '../../Crypt/CryptManager';
+import { ClassType } from '../../Storage/Mongodb/ADocument';
+import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Mongodb/Repository';
+import Client from '../../Worker-api/Client';
 import { ApplicationInstall } from './ApplicationInstall';
 
-export interface IApplicationInstallQueryFilter extends IQueryFilter {
+export interface IApplicationInstallQueryFilter extends IFilter {
     keys?: string[];
     users?: string[];
     expires?: number;
-    nonEncrypt?: unknown;
+    nonEncrypt?: Record<string, unknown>;
     enabled: boolean | null;
 }
 
-export interface IApplicationInstallQuery {
-    sorter?: IQuerySorter;
-    paging?: IPaging;
-    filter?: IApplicationInstallQueryFilter;
+export default class ApplicationInstallRepository
+    extends Repository<ApplicationInstall, IApplicationInstallQueryFilter> {
 
-}
-
-export default class ApplicationInstallRepository extends Repository<ApplicationInstall, IApplicationInstallQuery> {
+    public constructor(
+        collection: ClassType<ApplicationInstall>,
+        client: Client,
+        private readonly crypt: CryptManager,
+    ) {
+        super(collection, client);
+    }
 
     public async findByNameAndUser(
         name: string,
         user: string,
-        enabled: boolean | null = null,
+        enabled: boolean | null = true,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ filter: { users: [user], enabled, keys: [name] } });
+        return this.findOne({ users: [user], enabled, keys: [name] });
     }
 
-    public async findOneByUser(user: string, enabled: boolean | null = null): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ filter: { users: [user], enabled } });
+    public async findOneByUser(user: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
+        return this.findOne({ users: [user], enabled });
     }
 
-    public async findOneByName(name: string, enabled: boolean | null = null): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ filter: { keys: [name], enabled } });
+    public async findOneByName(name: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
+        return this.findOne({ keys: [name], enabled });
     }
 
     public async findManyByUser(
         user: string,
-        enabled: boolean | null = null,
+        enabled: boolean | null = true,
+        sorter?: ISorter,
+        paging?: IPaging,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ filter: { users: [user], enabled } });
+        return this.findMany({ users: [user], enabled }, sorter, paging);
     }
 
     public async findManyByName(
         name: string,
-        enabled: boolean | null = null,
+        enabled: boolean | null = true,
+        paging?: IPaging,
+        sorter?: ISorter,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ filter: { keys: [name], enabled } });
+        return this.findMany({ keys: [name], enabled }, sorter, paging);
     }
 
     public fromObject(object: unknown): ApplicationInstall {
@@ -53,20 +62,24 @@ export default class ApplicationInstallRepository extends Repository<Application
         return applicationInstall.fromObject<ApplicationInstall>(applicationInstall, object);
     }
 
-    protected encrypt(entity: ApplicationInstall): void {
+    protected beforeSend(entity: ApplicationInstall): this {
         if (Object.keys(entity.getSettings()).length) {
             const encrypted = this.crypt.encrypt(entity.getSettings());
             entity.setEncryptedSettings(encrypted);
             entity.setUpdated();
         }
+
+        return this;
     }
 
-    protected decrypt(entity: ApplicationInstall): void {
+    protected afterReceive(entity: ApplicationInstall): this {
         if (entity.getEncryptedSettings()) {
             const decrypted = this.crypt.decrypt(entity.getEncryptedSettings());
             entity.setSettings(decrypted);
             entity.setEncryptedSettings('');
         }
+
+        return this;
     }
 
 }

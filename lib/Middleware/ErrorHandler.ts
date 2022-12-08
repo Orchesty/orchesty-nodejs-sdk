@@ -16,7 +16,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
         const dto = await createProcessDto(req);
 
         if (err instanceof OnRepeatException) {
-            const node = await nodeRepository.findOne({ filter: { ids: [dto.getHeader(NODE_ID) ?? ''] } });
+            const node = await nodeRepository.findOne({ ids: [dto.getHeader(NODE_ID) ?? ''] });
             const repeaterSettings = node?.getSystemConfigsFromString()?.repeater;
             if (repeaterSettings?.enabled) {
                 dto.setRepeater(repeaterSettings.interval, repeaterSettings.hops, err.message);
