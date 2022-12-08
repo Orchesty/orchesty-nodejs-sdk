@@ -1,9 +1,8 @@
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
 import TestConnector from '../../../test/Connector/TestConnector';
 import { appInstallConfig, mockOnce } from '../../../test/MockServer';
-import { getTestContainer, NAME, USER } from '../../../test/TestAbstact';
+import { getTestContainer, USER } from '../../../test/TestAbstact';
 import { IApplication } from '../../Application/Base/IApplication';
-import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
@@ -48,13 +47,6 @@ describe('Test AConnector', () => {
     });
 
     it('should return applicationInstall', async () => {
-        const app = new ApplicationInstall();
-        app
-            .setEnabled(true)
-            .setUser(USER)
-            .setName(NAME);
-        await repo.insert(app);
-
         const application = new TestBasicApplication();
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);
@@ -76,13 +68,6 @@ describe('Test AConnector', () => {
     });
 
     it('should throw error', async () => {
-        const app = new ApplicationInstall();
-        const user = 'testUser';
-        app
-            .setUser(user)
-            .setName('test');
-        await repo.insert(app);
-
         const application = new TestBasicApplication();
         testConnector.setDb(mongoDbClient);
         testConnector.setApplication(application);

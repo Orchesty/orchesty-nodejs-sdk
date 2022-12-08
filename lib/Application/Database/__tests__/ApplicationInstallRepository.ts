@@ -10,7 +10,6 @@ import ApplicationInstallRepository from '../ApplicationInstallRepository';
 
 let container: DIContainer;
 let dbClient: MongoDbClient;
-let appInstall: ApplicationInstall;
 let repo: ApplicationInstallRepository;
 
 describe('ApplicationInstallRepository tests', () => {
@@ -24,19 +23,11 @@ describe('ApplicationInstallRepository tests', () => {
         }
     });
 
-    afterEach(async () => {
-        await repo.remove(appInstall);
+    afterEach(() => {
         repo.clearCache();
     });
 
     it('should findByNameAndUser works', async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setUser(USER)
-            .setName(NAME);
-
-        await repo.insert(appInstall);
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
@@ -78,13 +69,6 @@ describe('ApplicationInstallRepository tests', () => {
     });
 
     it('should findOneByUser works', async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setUser(USER)
-            .setName(NAME);
-
-        await repo.insert(appInstall);
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
@@ -126,13 +110,6 @@ describe('ApplicationInstallRepository tests', () => {
     });
 
     it('should findOneByName works', async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setUser(USER)
-            .setName(NAME);
-
-        await repo.insert(appInstall);
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
@@ -174,13 +151,6 @@ describe('ApplicationInstallRepository tests', () => {
     });
 
     it('should findManyByUser works', async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setUser(USER)
-            .setName(NAME);
-
-        await repo.insert(appInstall);
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
@@ -225,13 +195,6 @@ describe('ApplicationInstallRepository tests', () => {
     });
 
     it('should findManyByName works', async () => {
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setUser(USER)
-            .setName(NAME);
-
-        await repo.insert(appInstall);
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,

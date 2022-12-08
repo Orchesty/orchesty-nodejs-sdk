@@ -16,13 +16,8 @@ describe('tests for Node', () => {
         nodeRepository = container.getRepository(Node);
     });
 
-    beforeEach(async () => {
+    beforeEach(() => {
         node = new Node().setConfigs(nodeConfig);
-        await nodeRepository.insert(node);
-    });
-
-    afterEach(async () => {
-        await nodeRepository.remove(node);
     });
 
     it('get system setting as string', async () => {
