@@ -5,7 +5,7 @@ import Client from '../../Worker-api/Client';
 import { ApplicationInstall } from './ApplicationInstall';
 
 export interface IApplicationInstallQueryFilter extends IFilter {
-    keys?: string[];
+    names?: string[];
     users?: string[];
     expires?: number;
     nonEncrypt?: Record<string, unknown>;
@@ -28,7 +28,7 @@ export default class ApplicationInstallRepository
         user: string,
         enabled: boolean | null = true,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ users: [user], enabled, keys: [name] });
+        return this.findOne({ users: [user], enabled, names: [name] });
     }
 
     public async findOneByUser(user: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
@@ -36,7 +36,7 @@ export default class ApplicationInstallRepository
     }
 
     public async findOneByName(name: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ keys: [name], enabled });
+        return this.findOne({ names: [name], enabled });
     }
 
     public async findManyByUser(
@@ -54,7 +54,7 @@ export default class ApplicationInstallRepository
         paging?: IPaging,
         sorter?: ISorter,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ keys: [name], enabled }, sorter, paging);
+        return this.findMany({ names: [name], enabled }, sorter, paging);
     }
 
     public fromObject(object: unknown): ApplicationInstall {

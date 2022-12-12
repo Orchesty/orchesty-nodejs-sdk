@@ -24,7 +24,7 @@ describe('tests for WebhookRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${WEBHOOK_NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);

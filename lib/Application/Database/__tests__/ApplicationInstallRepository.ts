@@ -31,7 +31,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":false,"keys":["${NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":false,"names":["${NAME}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -44,7 +44,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"keys":["${NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"names":["${NAME}"]}`,
             },
             response: { body: [] },
         }]);
@@ -57,7 +57,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${NAME}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -113,7 +113,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":false}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":false}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -126,7 +126,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":true}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":true}`,
             },
             response: { body: [] },
         }]);
@@ -139,7 +139,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":true}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":true}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -198,7 +198,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":false}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":false}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -212,7 +212,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":true}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":true}`,
             },
             response: { body: [] },
         }]);
@@ -226,7 +226,7 @@ describe('ApplicationInstallRepository tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"keys":["${NAME}"],"enabled":true}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"names":["${NAME}"],"enabled":true}`,
             },
             response: { body: [appInstallConfig] },
         }]);

@@ -54,7 +54,7 @@ describe('Test AConnector', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"keys":["${application.getName()}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"names":["${application.getName()}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);

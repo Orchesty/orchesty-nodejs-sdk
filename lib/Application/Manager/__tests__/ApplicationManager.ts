@@ -54,7 +54,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
             },
             response: { body: [getApplicationWithSettings(
                 undefined,
@@ -175,7 +175,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testOAuth2Name}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
             },
             response: { body: [getApplicationWithSettings(
                 { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },
@@ -206,7 +206,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testOAuth2Name}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
             },
             response: { body: [getApplicationWithSettings(
                 { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },

@@ -91,7 +91,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["user"],"keys":["name"],"enabled":true}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["user"],"names":["name"],"enabled":true}`,
             },
             response: { body: [getApplicationWithSettings(limiterForm)] },
         }]);
@@ -152,7 +152,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${oauthName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -167,7 +167,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${oauthName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -183,7 +183,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${oauthName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -215,7 +215,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -233,7 +233,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -259,7 +259,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${NAME}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
@@ -276,7 +276,7 @@ describe('Test ApplicationRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"keys":["${testName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, testName)] },
         }]);

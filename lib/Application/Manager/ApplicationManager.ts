@@ -182,7 +182,7 @@ export default class ApplicationManager {
 
     public async userApplicationsLimit(user: string, applications: string[]): Promise<string[]> {
         const appInstalls = await this.repository.findMany(
-            { users: [user], keys: applications, enabled: true },
+            { users: [user], names: applications, enabled: true },
         );
         return appInstalls.map((appInstall) => {
             const limiterForm = appInstall.getSettings()?.[CoreFormsEnum.LIMITER_FORM];
