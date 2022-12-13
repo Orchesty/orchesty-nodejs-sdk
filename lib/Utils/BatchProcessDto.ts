@@ -27,7 +27,12 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
         return this;
     }
 
-    public addItem(body: Item, user?: string, limit?: string): BatchProcessDto<Item> {
+    public addItem(
+        body: Item,
+        user?: string,
+        limit?: string,
+        headers?: Record<string, string[] | string> | null,
+    ): BatchProcessDto<Item> {
         let b: unknown = body;
         if (typeof body !== 'string') {
             b = JSON.stringify(body);
@@ -42,6 +47,7 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
             headers: {
                 ...limit ? { [LIMITER_KEY]: Object.values(limits).join(';') } : null,
                 ...user ? { user } : null,
+                ...headers ?? null,
             },
             body: b as string,
         });
