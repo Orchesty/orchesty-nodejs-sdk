@@ -1,8 +1,6 @@
 import TestMapperNode, { IInput, NAME } from '../../../test/CustomNode/TestMapperNode';
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import { RESULT_CODE, RESULT_MESSAGE } from '../Headers';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
@@ -11,12 +9,8 @@ import { checkParams } from '../Validations';
 let container: DIContainer;
 
 describe('Validations', () => {
-    beforeAll(async () => {
-        container = await getTestContainer();
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+    beforeAll(() => {
+        container = getTestContainer();
     });
 
     it('array', () => {

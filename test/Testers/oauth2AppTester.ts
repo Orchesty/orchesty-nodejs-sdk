@@ -28,7 +28,7 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
     appInstall.addSettings(customSettings);
 
     const db = di.get<MongoDbClient>(CoreServices.MONGO);
-    const repo = await db.getApplicationRepository();
+    const repo = db.getApplicationRepository();
     await repo.insert(appInstall);
 
     const appManager = di.get<ApplicationManager>(CoreServices.APP_MANAGER);

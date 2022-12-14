@@ -46,8 +46,8 @@ export default abstract class ANode implements INode {
         user?: string,
         enabled: boolean | null = true,
     ): Promise<ApplicationInstall> {
-        const repo = await this.getDbClient().getApplicationRepository();
-        let appInstall: ApplicationInstall | null;
+        const repo = this.getDbClient().getApplicationRepository();
+        let appInstall: ApplicationInstall | undefined;
         if (user) {
             appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled);
         } else {

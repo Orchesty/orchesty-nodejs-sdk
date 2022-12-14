@@ -1,6 +1,5 @@
 import { initiateContainer } from '../../../lib';
 import CoreServices from '../../../lib/DIContainer/CoreServices';
-import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import { HttpMethods } from '../../../lib/Transport/HttpMethods';
@@ -11,13 +10,9 @@ import { mockCurl } from '../TesterHelpers';
 describe('Test topologyHelper', () => {
     let sender: CurlSender;
 
-    beforeAll(async () => {
-        await initiateContainer();
+    beforeAll(() => {
+        initiateContainer();
         sender = container.get(CoreServices.CURL);
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('mockCurl - replacements', async () => {

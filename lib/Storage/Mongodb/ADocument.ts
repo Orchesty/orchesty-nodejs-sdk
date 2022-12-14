@@ -1,31 +1,18 @@
-import { ObjectId } from 'mongodb';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { id, objectId } from 'mongodb-typescript';
-
-export interface IDocument {
+export interface ClassType<T> {
+    new (...args: never[]): T;
     getCollection(): string;
-
-    toArray(): Record<string, unknown>;
 }
 
-export default abstract class ADocument implements IDocument {
+export default abstract class ADocument {
 
-    @id @objectId
-    protected _id?: ObjectId;
+    protected id = '';
 
     public static getCollection(): string {
         return this.name;
     }
 
     public getId(): string {
-        return this._id?.toHexString() ?? '';
-    }
-
-    public getObjectId(): ObjectId {
-        if (!this._id) {
-            throw Error('_id is not set.');
-        }
-        return this._id;
+        return this.id;
     }
 
     public getCollection(): string {
@@ -34,6 +21,12 @@ export default abstract class ADocument implements IDocument {
 
     public toArray(): Record<string, unknown> {
         return {};
+    }
+
+    public fromObject<T>(entity: T, object: unknown): T {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Object.assign(entity as any, object);
+        return entity;
     }
 
 }
