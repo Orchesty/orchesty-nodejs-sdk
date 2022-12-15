@@ -1,50 +1,56 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
+import { mockOnce } from '../../../test/MockServer';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { ICommonNode } from '../../Commons/ICommonNode';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import { HttpMethods } from '../../Transport/HttpMethods';
 import ConnectorRouter from '../ConnectorRouter';
 
-jest.mock('../../Transport/Curl/CurlSender', () => jest.fn().mockImplementation(() => ({
-    send: () => ({ getResponseCode: () => StatusCodes.OK, getBody: () => ({ response: 'mockedResponse' }) }),
-})));
+function mockConnector(count: number): void {
+    for (let i = 0; i < count; i++) {
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: 'https://jsonplaceholder.typicode.com/users',
+            },
+            response: {
+                body: Buffer.from(JSON.stringify({ response: 'mockedResponse' })),
+                headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
+            },
+        }]);
+    }
+}
 
 describe('Test ConnectorRouter', () => {
     let container: DIContainer;
     let connector: ICommonNode;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         connector = container.getConnector('test');
     });
 
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
-    });
-
     it('get /connector/:name/action/test route', async () => {
-        const connectorUrl = `/connector/${connector.getName()}/action/test`;
         await supertest(expressApp)
-            .get(connectorUrl)
+            .get(`/connector/${connector.getName()}/action/test`)
             .expect(StatusCodes.OK, '[]');
     });
 
     it('post /connector/:name/action route', async () => {
-        const connectorUrl = `/connector/${connector.getName()}/action`;
+        mockConnector(3);
+
         await supertest(expressApp)
-            .post(connectorUrl)
+            .post(`/connector/${connector.getName()}/action`)
             .expect(StatusCodes.OK, {
-                body: { response: 'mockedResponse' },
+                body: JSON.stringify({ response: 'mockedResponse' }),
                 headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
             });
     });
 
     it('get /connector/list route', async () => {
-        const connectorUrl = '/connector/list';
         await supertest(expressApp)
-            .get(connectorUrl)
+            .get('/connector/list')
             .expect(StatusCodes.OK, '[{"name":"test"}]');
     });
 

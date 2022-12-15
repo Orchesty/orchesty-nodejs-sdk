@@ -4,7 +4,6 @@ import CoreFormsEnum from '../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import { ACCESS_TOKEN, EXPIRES, OAuth2Provider, REFRESH_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
@@ -14,13 +13,9 @@ describe('Test AOAuth2Application', () => {
     let container: DIContainer;
     let oAuthApplication: TestOAuth2Application;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('should get authorizationType', () => {

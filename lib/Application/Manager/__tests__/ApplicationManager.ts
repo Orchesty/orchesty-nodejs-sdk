@@ -1,20 +1,22 @@
 import { Request } from 'express';
 import TestBasicApplication from '../../../../test/Application/TestBasicApplication';
 import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
-import { getTestContainer } from '../../../../test/TestAbstact';
+import { mockOnce } from '../../../../test/MockServer';
+import { getApplicationWithSettings, getTestContainer, USER } from '../../../../test/TestAbstact';
 import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Provider';
 import { PASSWORD } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
+import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
 import CoreServices from '../../../DIContainer/CoreServices';
 import MongoDbClient from '../../../Storage/Mongodb/Client';
 import CurlSender from '../../../Transport/Curl/CurlSender';
+import { HttpMethods } from '../../../Transport/HttpMethods';
 import ApplicationLoader from '../../ApplicationLoader';
 import CoreFormsEnum from '../../Base/CoreFormsEnum';
 import { ApplicationInstall, IApplicationSettings } from '../../Database/ApplicationInstall';
 import ApplicationInstallRepository from '../../Database/ApplicationInstallRepository';
 import Webhook from '../../Database/Webhook';
-import WebhookRepository from '../../Database/WebhookRepository';
 import { IField } from '../../Model/Form/Field';
 import ApplicationManager from '../ApplicationManager';
 import WebhookManager from '../WebhookManager';
@@ -23,8 +25,8 @@ let container: DIContainer;
 let appManager: ApplicationManager;
 let dbClient: MongoDbClient;
 let curl: CurlSender;
-let appInstall: ApplicationInstall;
-let appInstallOAuth: ApplicationInstall;
+const testName = 'test';
+const testOAuth2Name = 'oauth2application';
 
 jest.mock('../../../Authorization/Provider/OAuth2/OAuth2Provider');
 
@@ -41,50 +43,27 @@ describe('ApplicationManager tests', () => {
         return mockedRequest() as unknown as Request;
     }
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         dbClient = container.get(CoreServices.MONGO);
         curl = container.get(CoreServices.CURL);
-        const db = await dbClient.db();
-        try {
-            await db.dropCollection(ApplicationInstall.getCollection());
-        } catch (e) {
-            // Ignore non-existent
-        }
-    });
-
-    beforeEach(async () => {
         appManager = container.get(CoreServices.APP_MANAGER);
-        appInstall = new ApplicationInstall();
-        appInstall
-            .setEnabled(true)
-            .setUser('user')
-            .setName('test')
-            .setSettings({ key: 'value' });
-
-        const repo = await dbClient.getApplicationRepository();
-        await repo.insert(appInstall);
-
-        appInstallOAuth = new ApplicationInstall();
-        appInstallOAuth
-            .setEnabled(true)
-            .setUser('user')
-            .setName('oauth2application')
-            .setSettings({
-                key: 'value',
-            });
-
-        await repo.insert(appInstallOAuth);
     });
 
-    afterEach(async () => {
-        const repo = await dbClient.getApplicationRepository();
-        await repo.remove(appInstall);
-        await repo.remove(appInstallOAuth);
-    });
+    beforeEach(() => {
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(
+                undefined,
+                testName,
+            )] },
+        }]);
 
-    afterAll(async () => {
-        await dbClient.down();
+        const repo = dbClient.getApplicationRepository();
+        repo.clearCache();
     });
 
     it('applications', () => {
@@ -124,12 +103,12 @@ describe('ApplicationManager tests', () => {
     });
 
     it('getApplication', () => {
-        expect(appManager.getApplication('test'))
+        expect(appManager.getApplication(testName))
             .toBeInstanceOf(TestBasicApplication);
     });
 
     it('getSynchronousActions', () => {
-        expect(appManager.getSynchronousActions('test'))
+        expect(appManager.getSynchronousActions(testName))
             .toEqual([
                 'testSyncMethod',
                 'testSyncMethodVoid',
@@ -142,7 +121,7 @@ describe('ApplicationManager tests', () => {
 
     it('runSynchronousAction', async () => {
         expect(await appManager.runSynchronousAction(
-            'test',
+            testName,
             'testSyncMethod',
             mockRequest(),
         ))
@@ -151,18 +130,17 @@ describe('ApplicationManager tests', () => {
 
     it('runSynchronousAction with void', async () => {
         expect(await appManager.runSynchronousAction(
-            'test',
+            testName,
             'testSyncMethodVoid',
             mockRequest(),
-        ))
-            .toEqual({ status: 'ok' });
+        )).toEqual({ status: 'ok' });
     });
 
     it('saveApplicationSettings', async () => {
         const appSettings = {
             param1: 'p1',
         };
-        const dbInstall = await appManager.saveApplicationSettings('test', 'user', appSettings);
+        const dbInstall = await appManager.saveApplicationSettings(testName, USER, appSettings);
 
         expect(dbInstall).toHaveProperty('id');
         expect(dbInstall).toHaveProperty('applicationSettings');
@@ -173,16 +151,15 @@ describe('ApplicationManager tests', () => {
     });
 
     it('saveApplicationPassword', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dbInstall = await appManager.saveApplicationPassword(
-            'test',
-            'user',
+            testName,
+            USER,
             CoreFormsEnum.AUTHORIZATION_FORM,
             PASSWORD,
             'passs',
         );
-        expect(dbInstall.key).toEqual('test');
-        expect(dbInstall.user).toEqual('user');
+        expect(dbInstall.key).toEqual(testName);
+        expect(dbInstall.user).toEqual(USER);
         expect(
             CoreFormsEnum.AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings),
         ).toBeTruthy();
@@ -195,6 +172,17 @@ describe('ApplicationManager tests', () => {
     });
 
     it('authorizationApplication', async () => {
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(
+                { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },
+                testOAuth2Name,
+            )] },
+        }]);
+
         const oAuth2Provider = new OAuth2Provider('');
         (oAuth2Provider.authorize as jest.MockedFunction<typeof oAuth2Provider.authorize>).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
 
@@ -202,19 +190,30 @@ describe('ApplicationManager tests', () => {
         const mockedContainer = new DIContainer();
         mockedContainer.setApplication(testApp);
 
-        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
-        const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
+        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
+        const webhookRepository = container.getRepository(Webhook);
 
         const mockedLoader = new ApplicationLoader(mockedContainer);
         const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
-        const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
+        const mockedAppManager = new ApplicationManager(mockedLoader, appRepo, webhookManager);
 
-        const dbInstall = await mockedAppManager.authorizationApplication('oauth2application', 'user', 'https://example.com');
+        const dbInstall = await mockedAppManager.authorizationApplication(testOAuth2Name, USER, 'https://example.com');
         expect(dbInstall)
             .toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
     });
 
     it('saveAuthorizationToken', async () => {
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(
+                { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },
+                testOAuth2Name,
+            )] },
+        }]);
+
         const oAuth2Provider = new OAuth2Provider('');
         (oAuth2Provider.getAccessToken as jest.MockedFunction<typeof oAuth2Provider.getAccessToken>)
             .mockResolvedValue({});
@@ -223,18 +222,15 @@ describe('ApplicationManager tests', () => {
         const mockedContainer = new DIContainer();
         mockedContainer.setApplication(testApp);
 
-        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository<ApplicationInstall>;
-        const webhookRepository = container.getRepository(Webhook) as WebhookRepository<Webhook>;
-
-        appInstallOAuth.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } });
-        await appRepo.update(appInstallOAuth);
+        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
+        const webhookRepository = container.getRepository(Webhook);
 
         const mockedLoader = new ApplicationLoader(mockedContainer);
         const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
-        const mockedAppManager = new ApplicationManager(appRepo, mockedLoader, webhookManager);
+        const mockedAppManager = new ApplicationManager(mockedLoader, appRepo, webhookManager);
         const frontendUrl = await mockedAppManager.saveAuthorizationToken(
-            'oauth2application',
-            'user',
+            testOAuth2Name,
+            USER,
             { testToken: 'tokenTest' },
         );
         expect(frontendUrl).toEqual('url');
@@ -246,7 +242,7 @@ describe('ApplicationManager tests', () => {
         };
         const applicationName = 'testNotFound';
         try {
-            await appManager.saveApplicationSettings(applicationName, 'user', appSettings);
+            await appManager.saveApplicationSettings(applicationName, USER, appSettings);
         } catch (e) {
             if (e instanceof Error) {
                 expect(e.message)

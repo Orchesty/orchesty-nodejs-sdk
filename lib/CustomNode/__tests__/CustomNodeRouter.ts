@@ -1,32 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
+import { mockOnce, nodeConfig } from '../../../test/MockServer';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { ICommonNode } from '../../Commons/ICommonNode';
+import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
 import errorHandler from '../../Middleware/ErrorHandler';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import Node from '../../Storage/Mongodb/Document/Node';
 import NodeRepository from '../../Storage/Mongodb/Document/NodeRepository';
+import { HttpMethods } from '../../Transport/HttpMethods';
 import { REPEAT_INTERVAL, REPEAT_MAX_HOPS } from '../../Utils/Headers';
 import CustomNodeRouter from '../CustomNodeRouter';
-
-const config = {
-    sdk: {
-        host: 'testHost',
-    },
-    bridge: {
-        host: 'testHost',
-    },
-    rabbit: {
-        prefetch: 'tesePrefetch',
-    },
-    repeater: {
-        enabled: false,
-        hops: 2,
-        interval: 30,
-    },
-};
 
 describe('Test CustomNodeRouter', () => {
     let container: DIContainer;
@@ -34,16 +18,16 @@ describe('Test CustomNodeRouter', () => {
     let testOnRepeatExceptionCustom: ICommonNode;
     let nodeRepository: NodeRepository;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         customNode = container.getCustomNode('testcustom');
         testOnRepeatExceptionCustom = container.getCustomNode('testOnRepeatExceptionCustom');
         expressApp.use(errorHandler(container.getRepository(Node)));
         nodeRepository = container.getRepository(Node);
     });
 
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+    beforeEach(() => {
+        nodeRepository.clearCache();
     });
 
     it('test configureRoutes', () => {
@@ -87,15 +71,12 @@ describe('Test CustomNodeRouter', () => {
     });
 
     it('post /custom-node/:name/process route - onRepeatException', async () => {
-        const node = new Node().setConfigs(config);
-        await nodeRepository.insert(node);
-
         const onRepeatExceptionCustomNodeUrl = `/custom-node/${testOnRepeatExceptionCustom.getName()}/process`;
         const resp = await supertest(expressApp)
             .post(onRepeatExceptionCustomNodeUrl)
             .send(JSON.stringify({
                 headers: {
-                    'node-id': node.getId(),
+                    'node-id': '',
                 },
                 body: {},
             }));
@@ -105,17 +86,20 @@ describe('Test CustomNodeRouter', () => {
     });
 
     it('post /custom-node/:name/process route - onRepeatException, custom repeater', async () => {
-        const editedConfig = config;
-        editedConfig.repeater.enabled = true;
-        const node = new Node().setConfigs(editedConfig);
-        await nodeRepository.insert(node);
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/Node?filter={"ids":["1"]}`,
+            },
+            response: { body: [{ id: '1', systemConfigs: JSON.stringify(nodeConfig) }] },
+        }]);
 
         const onRepeatExceptionCustomNodeUrl = `/custom-node/${testOnRepeatExceptionCustom.getName()}/process`;
         const resp = await supertest(expressApp)
             .post(onRepeatExceptionCustomNodeUrl)
             .send(JSON.stringify({
                 headers: {
-                    'node-id': node.getId(),
+                    'node-id': '1',
                 },
                 body: {},
             }));

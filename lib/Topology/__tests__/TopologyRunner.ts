@@ -4,7 +4,6 @@ import { StatusCodes } from 'http-status-codes';
 import { container } from '../../../test/TestAbstact';
 import CoreServices from '../../DIContainer/CoreServices';
 import { initiateContainer } from '../../index';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import ProcessDto from '../../Utils/ProcessDto';
 import TopologyRunner from '../TopologyRunner';
 
@@ -16,16 +15,12 @@ function mockCurl(url: string, headers?: Record<string, string>): MockAdapter {
 describe('TopologyRunner tests', () => {
     let runner: TopologyRunner;
 
-    beforeAll(async () => {
-        await initiateContainer();
+    beforeAll(() => {
+        initiateContainer();
     });
 
     beforeEach(() => {
         runner = container.get(CoreServices.TOPOLOGY_RUNNER);
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('get webhook url', () => {

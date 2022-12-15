@@ -13,7 +13,7 @@ import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import BatchRouter from './Batch/BatchRouter';
 import ACommonRouter from './Commons/ACommonRouter';
 import CommonLoader from './Commons/CommonLoader';
-import { appOptions, cryptOptions, orchestyOptions, storageOptions } from './Config/Config';
+import { appOptions, cryptOptions, orchestyOptions } from './Config/Config';
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
@@ -45,13 +45,13 @@ expressApp.use(express_prom_bundle({
         } },
 }));
 
-export async function initiateContainer(): Promise<void> {
+export function initiateContainer(): void {
     // Instantiate core services
     const cryptProviders = [
         new WindWalkerCrypt(cryptOptions.secret),
     ];
     const cryptManager = new CryptManager(cryptProviders);
-    const mongoDbClient = new MongoDbClient(storageOptions.dsn, cryptManager, container);
+    const mongoDbClient = new MongoDbClient(container);
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
     const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
@@ -59,24 +59,23 @@ export async function initiateContainer(): Promise<void> {
     const curlSender = new CurlSender(metrics);
     const topologyRunner = new TopologyRunner(curlSender);
 
-    await mongoDbClient.reconnect();
     const applicationInstallRepo = new ApplicationInstallRepository(
         ApplicationInstall,
         mongoDbClient.getClient(),
-        ApplicationInstall.getCollection(),
         cryptManager,
     );
 
     const webhookRepository = new WebhookRepository(
         Webhook,
         mongoDbClient.getClient(),
-        Webhook.getCollection(),
-        cryptManager,
     );
-    const nodeRepository = new NodeRepository(Node, mongoDbClient.getClient(), Node.getCollection(), cryptManager);
+    const nodeRepository = new NodeRepository(
+        Node,
+        mongoDbClient.getClient(),
+    );
 
     const webhookManager = new WebhookManager(appLoader, curlSender, webhookRepository, applicationInstallRepo);
-    const appManager = new ApplicationManager(applicationInstallRepo, appLoader, webhookManager);
+    const appManager = new ApplicationManager(appLoader, applicationInstallRepo, webhookManager);
 
     // Add them to the DIContainer
     container.set(CoreServices.CRYPT_MANAGER, cryptManager);
