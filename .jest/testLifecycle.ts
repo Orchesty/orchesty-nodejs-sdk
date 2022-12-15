@@ -1,4 +1,4 @@
-import {createLoggerMockedServer, createMetricsMockedServer} from "../test/MockServer";
+import { createLoggerMockedServer, createMetricsMockedServer} from "../test/MockServer";
 
 beforeAll(async () => {
     createLoggerMockedServer();

@@ -1,6 +1,4 @@
 import DIContainer from '../../../lib/DIContainer/Container';
-import CoreServices from '../../../lib/DIContainer/CoreServices';
-import MongoDbClient from '../../../lib/Storage/Mongodb/Client';
 import ProcessDto from '../../../lib/Utils/ProcessDto';
 import { getTestContainer } from '../../TestAbstact';
 import TopologyTester from '../TopologyTester';
@@ -8,12 +6,8 @@ import TopologyTester from '../TopologyTester';
 describe('Test topologyTester', () => {
     let container: DIContainer;
 
-    beforeAll(async () => {
-        container = await getTestContainer();
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
+    beforeAll(() => {
+        container = getTestContainer();
     });
 
     it('Run without specific StartingPoint', async () => {

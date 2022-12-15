@@ -1,16 +1,25 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
-import { closeConnections, dropCollection, expressApp, getTestContainer } from '../../../test/TestAbstact';
+import { appInstallConfig, mockOnce } from '../../../test/MockServer';
+import {
+    closeConnections,
+    dropCollection,
+    expressApp,
+    getApplicationWithSettings,
+    getTestContainer,
+    NAME,
+    USER,
+} from '../../../test/TestAbstact';
 import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provider';
 import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
-import { CLIENT_ID } from '../../Authorization/Type/OAuth2/IOAuth2Application';
+import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
 import MongoDbClient from '../../Storage/Mongodb/Client';
+import { HttpMethods } from '../../Transport/HttpMethods';
 import { encode } from '../../Utils/Base64';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
-import { ApplicationInstall } from '../Database/ApplicationInstall';
 import { IField } from '../Model/Form/Field';
 import assertions from './assertions.json';
 
@@ -20,13 +29,12 @@ describe('Test ApplicationRouter', () => {
     let provider: OAuth2Provider;
     let container: DIContainer;
     let dbClient: MongoDbClient;
-    let appInstall: ApplicationInstall;
-    let name: string;
-    let user: string;
+    let oauthName: string;
     let authorizationURL: string;
+    const testName = 'test';
 
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         application = container.getApplication('test');
         oAuthApplication = container.getApplication('oauth2application');
         provider = container.get(CoreServices.OAUTH2_PROVIDER);
@@ -34,25 +42,14 @@ describe('Test ApplicationRouter', () => {
     });
 
     beforeEach(async () => {
-        await dropCollection(ApplicationInstall.getCollection());
-        const repo = await dbClient.getApplicationRepository();
+        await dropCollection();
+        const repo = dbClient.getApplicationRepository();
+        repo.clearCache();
 
-        user = 'user';
-        name = oAuthApplication.getName();
+        oauthName = oAuthApplication.getName();
 
         authorizationURL = 'example.com';
 
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(user)
-            .setName(name);
-        appInstall.setSettings({
-            [CoreFormsEnum.AUTHORIZATION_FORM]: {
-                [CLIENT_ID]: 'client id 1',
-            },
-        });
-
-        await repo.insert(appInstall);
         Reflect.set(provider, 'createClient', () => ({
             getToken: () => ({
                 token: {
@@ -68,143 +65,140 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('get /applications route', async () => {
-        const applicationUrl = '/applications';
         const expectedResult = '{"items":[{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true},{"name":"Test OAuth2 Application","authorization_type":"oauth2","application_type":"cron","key":"oauth2application","description":"Test OAuth2 application","info":"","logo":null,"isInstallable":true},{"name":"Test webhook application","authorization_type":"basic","application_type":"webhook","key":"webhookName","description":"Test webhook description","info":"","logo":null,"isInstallable":false}]}';
 
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get('/applications')
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('post /applications/limits - empty array', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
-        const appName = 'test';
-        const userName = 'abcUsername';
-        appInstall = new ApplicationInstall()
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
-        const applicationUrl = '/applications/limits';
         await supertest(expressApp)
-            .post(applicationUrl)
-            .send({ user: userName, applications: [appName] }).expect((response) => {
+            .post('/applications/limits')
+            .send({ user: USER, applications: [NAME] }).expect((response) => {
                 expect(response.statusCode).toEqual(StatusCodes.OK);
                 expect(response.body).toEqual([]);
             });
     });
 
     it('post /applications/limits', async () => {
-        const repo = await dbClient.getRepository(ApplicationInstall);
-        const appName = 'test';
-        const userName = 'abcUsername';
-        appInstall = new ApplicationInstall()
-            .setUser(userName)
-            .setName(appName)
-            .setSettings({ [CoreFormsEnum.LIMITER_FORM]: {
-                useLimit: true,
-                value: 3,
-                time: 60,
-            } });
-        await repo.insert(appInstall);
-        const applicationUrl = '/applications/limits';
+        const limiterForm = { [CoreFormsEnum.LIMITER_FORM]: {
+            useLimit: true,
+            value: 3,
+            time: 60,
+        } };
+
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["user"],"names":["name"],"enabled":true}`,
+            },
+            response: { body: [getApplicationWithSettings(limiterForm)] },
+        }]);
+
         await supertest(expressApp)
-            .post(applicationUrl)
-            .send({ user: userName, applications: [appName] }).expect((response) => {
+            .post('/applications/limits')
+            .send({ user: USER, applications: [NAME] }).expect((response) => {
                 expect(response.statusCode).toEqual(StatusCodes.OK);
-                expect(response.body).toEqual(['abcUsername|test;60;3']);
+                expect(response.body).toEqual([`${USER}|${NAME};60;3`]);
             });
     });
 
     it('get /applications/:name route', async () => {
-        const applicationUrl = `/applications/${application.getName()}`;
-        // eslint-disable-next-line max-len
         const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true}';
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get(`/applications/${application.getName()}`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('get /applications/:name/sync/list route', async () => {
-        const applicationUrl = `/applications/${application.getName()}/sync/list`;
-        // eslint-disable-next-line max-len
         const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get(`/applications/${application.getName()}/sync/list`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('post /applications/:name/sync/:method route', async () => {
         const method = 'testSyncMethod';
-        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
         const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
         await supertest(expressApp)
-            .post(applicationUrl)
+            .post(`/applications/${application.getName()}/sync/${method}`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('post /applications/:name/sync/:method route with void', async () => {
         const method = 'testSyncMethodVoid';
-        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
         const expectedResult = '{"status":"ok"}';
         await supertest(expressApp)
-            .post(applicationUrl)
+            .post(`/applications/${application.getName()}/sync/${method}`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('get /applications/:name/sync/:method route', async () => {
         const method = 'testSyncMethod';
-        const applicationUrl = `/applications/${application.getName()}/sync/${method}`;
         const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get(`/applications/${application.getName()}/sync/${method}`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
-    it('throw error on get /applications/:name/users/:user/authorize route cause', async () => {
-        const applicationUrl = `/applications/${application.getName()}/users/${application.getName()}/authorize`;
+    it('throw error on get /applications/:oauthName/users/:user/authorize route cause', async () => {
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get(`/applications/${application.getName()}/users/${application.getName()}/authorize`)
             .expect(StatusCodes.BAD_REQUEST);
     });
 
     it('get /applications/:name/users/:user/authorize route', async () => {
-        const applicationUrl = `/applications/${name}/users/${user}/authorize`;
-        const expectedResult = `{"authorizeUrl":"${authorizationURL}&access_type=offline"}`;
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
+
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get(`/applications/${oauthName}/users/${USER}/authorize`)
             .query({ redirect_url: 'example.com' })
-            .expect(expectedResult);
+            .expect(`{"authorizeUrl":"${authorizationURL}&access_type=offline"}`);
     });
 
     it('get /applications/authorize/token route', async () => {
-        const applicationUrl = '/applications/authorize/token';
-        const expectedResult = '{}';
-        const state = encode(`${user}:${name}`); // Base64
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
+
+        const state = encode(`${USER}:${oauthName}`); // Base64
         await supertest(expressApp)
-            .get(applicationUrl)
+            .get('/applications/authorize/token')
             .query({ state })
-            .expect(StatusCodes.OK, expectedResult);
+            .expect(StatusCodes.OK, '{}');
     });
 
     it('get /applications/:name/users/:user/authorize/token route', async () => {
-        const redirectUrl = 'example.com';
-        const applicationUrl = `/applications/${name}/users/${user}/authorize/token`;
-        const expectedResult = '{}';
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${oauthName}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
 
         await supertest(expressApp)
-            .get(applicationUrl)
-            .query({ redirect_url: redirectUrl })
-            .expect(StatusCodes.OK, expectedResult);
+            .get(`/applications/${oauthName}/users/${USER}/authorize/token`)
+            .query({ redirect_url: 'example.com' })
+            .expect(StatusCodes.OK, '{}');
     });
 
     it('post /applications/:name/users/:user/install route', async () => {
-        const newUser = 'user';
-        const appName = 'test';
-        const applicationUrl = `/applications/${appName}/users/${newUser}/install`;
         const expectedResult = assertions['post /applications/:name/users/:user/install route'];
 
         await supertest(expressApp)
-            .post(applicationUrl)
+            .post(`/applications/${testName}/users/${USER}/install`)
             .expect((response) => {
                 expect(JSON.parse(response.text)).toEqual(expectedResult);
                 expect(response.statusCode).toEqual(StatusCodes.CREATED);
@@ -212,54 +206,41 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('should not allow store /applications/:name/users/:user/install if application already exists', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'user';
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(userName)
-            .setName(appName);
-
-        await repo.insert(appInstall);
-        const applicationUrl = `/applications/${appName}/users/${userName}/install`;
         await supertest(expressApp)
-            .post(applicationUrl)
+            .post(`/applications/${NAME}/users/${USER}/install`)
             .expect(StatusCodes.BAD_REQUEST);
     });
 
     it('put /applications/:name/users/:user/settings route', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'user';
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
-        const applicationUrl = `/applications/${appName}/users/${userName}/settings`;
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
 
         await supertest(expressApp)
-            .put(applicationUrl)
+            .put(`/applications/${testName}/users/${USER}/settings`)
             .send({ data: { key: 'name' } })
             .expect((response) => {
-                expect(JSON.parse(response.text).user).toEqual(userName);
+                expect(JSON.parse(response.text).user).toEqual(USER);
                 expect(response.statusCode).toEqual(StatusCodes.OK);
             });
     });
 
     it('put /applications/:name/users/:user/password route', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'user';
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
-        const applicationUrl = `/applications/${appName}/users/${userName}/password`;
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
+
         const password = 'pass';
         await supertest(expressApp)
-            .put(applicationUrl)
+            .put(`/applications/${testName}/users/${USER}/password`)
             .send({ password, formKey: [CoreFormsEnum.AUTHORIZATION_FORM], fieldKey: [PASSWORD] })
             .expect((response) => {
                 const jsonResponse = JSON.parse(response.text);
@@ -275,18 +256,16 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('put /applications/:name/users/:user/uninstall route', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'user';
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${NAME}"]}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
 
-        const applicationUrl = `/applications/${appName}/users/${userName}/uninstall`;
         await supertest(expressApp)
-            .delete(applicationUrl)
+            .delete(`/applications/${NAME}/users/${USER}/uninstall`)
             .expect((response) => {
                 // Todo : There's a decorator that basically force to add delete = false ,await repo.findOne({ key: appName, user: userName , deleted: true });
                 expect(response.statusCode).toEqual(StatusCodes.OK);
@@ -294,18 +273,17 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('get /applications/:name/users/:user route', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'user';
-        appInstall = new ApplicationInstall()
-            .setEnabled(true)
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
-        const applicationUrl = `/applications/${appName}/users/${userName}`;
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
+            },
+            response: { body: [getApplicationWithSettings(undefined, testName)] },
+        }]);
+
         await supertest(expressApp)
-            .get(applicationUrl)
-            .send({ name: userName, user: userName }).expect((response) => {
+            .get(`/applications/${testName}/users/${USER}`)
+            .expect((response) => {
                 expect(response.statusCode).toEqual(StatusCodes.OK);
                 expect(response.body).toHaveProperty('name');
                 expect(response.body.key).toEqual('test');
@@ -315,17 +293,17 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('get /applications/users/:user route', async () => {
-        const repo = await dbClient.getApplicationRepository();
-        const appName = 'test';
-        const userName = 'abcUsername';
-        appInstall = new ApplicationInstall()
-            .setUser(userName)
-            .setName(appName);
-        await repo.insert(appInstall);
-        const applicationUrl = `/applications/users/${userName}`;
+        mockOnce([{
+            request: {
+                method: HttpMethods.GET,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null}`,
+            },
+            response: { body: [appInstallConfig] },
+        }]);
+
         await supertest(expressApp)
-            .get(applicationUrl)
-            .send({ name: userName, user: userName }).expect((response) => {
+            .get(`/applications/users/${USER}`)
+            .expect((response) => {
                 expect(response.statusCode).toEqual(StatusCodes.OK);
                 expect(response.body).toHaveProperty('items');
                 expect(response.body.items).toHaveLength(1);

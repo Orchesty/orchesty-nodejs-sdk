@@ -1,7 +1,6 @@
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
 import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
 import { ICpuTimes } from '../../Utils/SystemUsage';
 import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
 
@@ -26,13 +25,9 @@ let metrics: Metrics;
 let container: DIContainer;
 
 describe('Test metrics', () => {
-    beforeAll(async () => {
-        container = await getTestContainer();
+    beforeAll(() => {
+        container = getTestContainer();
         metrics = container.get(CoreServices.METRICS);
-    });
-
-    afterAll(async () => {
-        await container.get<MongoDbClient>(CoreServices.MONGO).down();
     });
 
     it('getTimes', () => {
