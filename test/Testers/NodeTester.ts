@@ -75,7 +75,7 @@ export default class NodeTester {
         const output = JSON.parse(fs.readFileSync(`${fileDir}/Data/${fileName}/${prefix}output${index}.json`)
             .toString()) as IDtoData;
 
-        const mockAdapter = mockNodeCurl(
+        mockNodeCurl(
             node,
             this.file,
             _prefix,
@@ -133,7 +133,6 @@ export default class NodeTester {
                 thrownErr = e;
             }
         } finally {
-            mockAdapter?.restore();
             if (expectedError && !thrownErr) {
                 // eslint-disable-next-line no-unsafe-finally
                 throw new Error(`Error [${typeof expectedError}] expected but non thrown.`);
