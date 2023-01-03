@@ -268,7 +268,7 @@ export default class TopologyTester {
         prefix: string,
         index = 0,
     ): Promise<AProcessDto> {
-        const mockAdapter = mockNodeCurl(
+        mockNodeCurl(
             worker,
             this.file,
             `${prefix}${node.id}`,
@@ -282,7 +282,6 @@ export default class TopologyTester {
         }
 
         const out = await worker.processAction(toProcess);
-        mockAdapter?.restore();
 
         return out;
     }

@@ -1,12 +1,13 @@
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Buffer } from 'buffer';
 import fs from 'fs';
 import path from 'path';
 import { INode } from '../../lib/Commons/INode';
 import AConnector from '../../lib/Connector/AConnector';
+import { mockAdapter } from '../MockServer';
 
 export interface ICurlMock {
+    useRegexp?: boolean;
     httpReplacement?: {
         query?: Record<string, string>;
         path?: Record<string, string>;
@@ -80,31 +81,36 @@ export function mockCurl(
     const fileName = path.parse(file).name;
     const fileDir = path.parse(file).dir;
 
-    const mockAdapter = new MockAdapter(axios, { onNoMatch: 'throwException' });
     let mockFile = `${fileDir}/Data/${fileName}/${index}${prefix}mock.json`;
     let call = 0;
     do {
         const curl = JSON.parse(fs.readFileSync(mockFile).toString()) as ICurlMock;
         const [method, url] = curl.http.split(' ', 2);
         let requestHandler;
+        let escapedUrl;
+        if (curl.useRegexp) {
+            escapedUrl = new RegExp(url);
+        } else {
+            escapedUrl = url;
+        }
         switch (method.toLowerCase()) {
             case 'get':
-                requestHandler = mockAdapter.onGet(new RegExp(url));
+                requestHandler = mockAdapter.onGet(escapedUrl);
                 break;
             case 'post':
-                requestHandler = mockAdapter.onPost(new RegExp(url));
+                requestHandler = mockAdapter.onPost(escapedUrl);
                 break;
             case 'put':
-                requestHandler = mockAdapter.onPut(new RegExp(url));
+                requestHandler = mockAdapter.onPut(escapedUrl);
                 break;
             case 'patch':
-                requestHandler = mockAdapter.onPatch(new RegExp(url));
+                requestHandler = mockAdapter.onPatch(escapedUrl);
                 break;
             case 'delete':
-                requestHandler = mockAdapter.onDelete(new RegExp(url));
+                requestHandler = mockAdapter.onDelete(escapedUrl);
                 break;
             default:
-                requestHandler = mockAdapter.onAny(new RegExp(url));
+                requestHandler = mockAdapter.onAny(escapedUrl);
                 break;
         }
 
