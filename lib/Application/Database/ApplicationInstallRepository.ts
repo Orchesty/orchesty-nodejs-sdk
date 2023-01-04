@@ -5,11 +5,11 @@ import Client from '../../Worker-api/Client';
 import { ApplicationInstall } from './ApplicationInstall';
 
 export interface IApplicationInstallQueryFilter extends IFilter {
+    enabled: boolean | null;
     names?: string[];
     users?: string[];
     expires?: number;
     nonEncrypt?: Record<string, unknown>;
-    enabled: boolean | null;
 }
 
 export default class ApplicationInstallRepository

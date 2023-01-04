@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@hanaboso/eslint-plugin': ^1.0.7
+  '@hanaboso/eslint-plugin': ^1.0.8
   '@types/express': ^4.17.15
   '@types/jest': ^29.2.5
   '@types/luxon': ^3.2.0
@@ -63,7 +63,7 @@ dependencies:
   sodium-native: 3.4.1
 
 devDependencies:
-  '@hanaboso/eslint-plugin': 1.0.7_p6ekqnroyms5nhqbfxosryz7rm
+  '@hanaboso/eslint-plugin': 1.0.8_p6ekqnroyms5nhqbfxosryz7rm
   '@types/express': 4.17.15
   '@types/jest': 29.2.5
   '@types/luxon': 3.2.0
@@ -454,8 +454,8 @@ packages:
       - supports-color
     dev: true
 
-  /@hanaboso/eslint-plugin/1.0.7_p6ekqnroyms5nhqbfxosryz7rm:
-    resolution: {integrity: sha512-08OMHAWULhjL9baNNBMBnvG+wwaC6NvFMD13EjVNK2cVU/ta8VSykzKAbzpCVvCkuvsV2IlXnmWx+tFki0chzw==}
+  /@hanaboso/eslint-plugin/1.0.8_p6ekqnroyms5nhqbfxosryz7rm:
+    resolution: {integrity: sha512-DON53AUN4/mHYPWn3pnxmUhPaSaxEgDnDndPGYtv5WJy9wll5bX2uqiO71bj/5zwr4jV3z1KVP3YaD9YUNuZXw==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.48.0_k73wpmdolxikpyqun3p36akaaq
       '@typescript-eslint/parser': 5.48.0_iukboom6ndih5an6iafl45j2fe
