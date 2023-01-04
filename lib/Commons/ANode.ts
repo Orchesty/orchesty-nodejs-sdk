@@ -45,13 +45,14 @@ export default abstract class ANode implements INode {
     protected async getApplicationInstall(
         user?: string,
         enabled: boolean | null = true,
+        deleted?: boolean,
     ): Promise<ApplicationInstall> {
         const repo = this.getDbClient().getApplicationRepository();
         let appInstall: ApplicationInstall | undefined;
         if (user) {
-            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled);
+            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled, deleted);
         } else {
-            appInstall = await repo.findOneByName(this.getApplication().getName(), enabled);
+            appInstall = await repo.findOneByName(this.getApplication().getName(), enabled, deleted);
         }
 
         if (!appInstall) {
@@ -66,12 +67,13 @@ export default abstract class ANode implements INode {
     protected async getApplicationInstallFromProcess(
         dto: AProcessDto,
         enabled: boolean | null = true,
+        deleted?: boolean,
     ): Promise<ApplicationInstall> {
         const user = dto.getUser();
         if (!user) {
             throw Error('User not defined');
         }
-        return this.getApplicationInstall(user, enabled);
+        return this.getApplicationInstall(user, enabled, deleted);
     }
 
 }

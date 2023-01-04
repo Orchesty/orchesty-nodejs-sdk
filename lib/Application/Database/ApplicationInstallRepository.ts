@@ -27,34 +27,45 @@ export default class ApplicationInstallRepository
         name: string,
         user: string,
         enabled: boolean | null = true,
+        deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ users: [user], enabled, names: [name] });
+        return this.findOne({ users: [user], enabled, names: [name], deleted });
     }
 
-    public async findOneByUser(user: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ users: [user], enabled });
+    public async findOneByUser(
+        user: string,
+        enabled: boolean | null = true,
+        deleted?: boolean,
+    ): Promise<ApplicationInstall | undefined> {
+        return this.findOne({ users: [user], enabled, deleted });
     }
 
-    public async findOneByName(name: string, enabled: boolean | null = true): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ names: [name], enabled });
+    public async findOneByName(
+        name: string,
+        enabled: boolean | null = true,
+        deleted?: boolean,
+    ): Promise<ApplicationInstall | undefined> {
+        return this.findOne({ names: [name], enabled, deleted });
     }
 
     public async findManyByUser(
         user: string,
         enabled: boolean | null = true,
+        deleted?: boolean,
         sorter?: ISorter,
         paging?: IPaging,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ users: [user], enabled }, sorter, paging);
+        return this.findMany({ users: [user], enabled, deleted }, sorter, paging);
     }
 
     public async findManyByName(
         name: string,
         enabled: boolean | null = true,
+        deleted?: boolean,
         paging?: IPaging,
         sorter?: ISorter,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ names: [name], enabled }, sorter, paging);
+        return this.findMany({ names: [name], enabled, deleted }, sorter, paging);
     }
 
     public fromObject(object: unknown): ApplicationInstall {
