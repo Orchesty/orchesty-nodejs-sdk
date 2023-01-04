@@ -8,8 +8,6 @@ export type IApplicationSettings = Record<string, any>;
 
 export class ApplicationInstall extends ADocument {
 
-    private expires?: Date;
-
     private user = '';
 
     private key = '';
@@ -25,6 +23,8 @@ export class ApplicationInstall extends ADocument {
     private encryptedSettings = '';
 
     private nonEncryptedSettings: IApplicationSettings = {};
+
+    private expires?: Date;
 
     public constructor() {
         super();
