@@ -8,10 +8,10 @@ import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import { NAME, USER } from '../TestAbstact';
 
 export interface IRequestMock {
-    headers?: Record<string, string>;
-    body?: string;
     method: HttpMethods;
     url: RegExp | string;
+    headers?: Record<string, string>;
+    body?: string;
 }
 
 export interface IResponseMock {

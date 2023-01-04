@@ -7,23 +7,23 @@ import AConnector from '../../lib/Connector/AConnector';
 import { mockAdapter } from '../MockServer';
 
 export interface ICurlMock {
+    body: Record<string, unknown> | string;
+    code: number;
+    http: string;
+    headers: Record<string, string>;
     useRegexp?: boolean;
     httpReplacement?: {
         query?: Record<string, string>;
         path?: Record<string, string>;
     };
-    body: Record<string, unknown> | string;
-    code: number;
-    http: string;
-    headers: Record<string, string>;
 }
 
 export interface IDtoData {
+    headers: Record<string, string>;
+    data: Record<string, unknown>;
     replacement?: {
         data?: Record<string, string>;
     };
-    headers: Record<string, string>;
-    data: Record<string, unknown>;
 }
 
 export interface ILightNode {

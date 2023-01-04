@@ -2,13 +2,13 @@ import DateTimeUtils from '../../../Utils/DateTimeUtils';
 
 export default class DataStorageDocument<T = unknown> {
 
+    private created: Date;
+
     private user?: string = '';
 
     private application?: string = '';
 
     private data?: T;
-
-    private created: Date;
 
     public constructor() {
         this.created = DateTimeUtils.getUtcDate();
@@ -67,8 +67,9 @@ export default class DataStorageDocument<T = unknown> {
 }
 
 export interface IDataStorageDocument<T> {
+    created: Date;
     user?: string;
     application?: string;
     data?: T;
-    created: Date;
+
 }

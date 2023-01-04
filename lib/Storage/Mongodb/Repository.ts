@@ -11,6 +11,7 @@ export interface ISorter {
 
 export interface IFilter {
     ids?: string[];
+    deleted?: boolean;
 }
 
 export interface IPaging {

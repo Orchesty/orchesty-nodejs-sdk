@@ -39,7 +39,7 @@
     "sodium-native": "^3.4.1"
   },
   "devDependencies": {
-    "@hanaboso/eslint-plugin": "^1.0.7",
+    "@hanaboso/eslint-plugin": "^1.0.8",
     "@types/express": "^4.17.15",
     "@types/jest": "^29.2.5",
     "@types/luxon": "^3.2.0",
