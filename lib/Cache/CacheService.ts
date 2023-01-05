@@ -9,7 +9,7 @@ export interface ICacheCallback<T> {
     expire: number;
 }
 
-const MAX_TRY = 15;
+const MAX_TRY = 60;
 
 export default class CacheService {
 
@@ -82,7 +82,7 @@ export default class CacheService {
                     requestDto,
                     getDataCallback,
                     allowedCodes,
-                    tryCount + 1,
+                    tryCount,
                 );
             }
 
