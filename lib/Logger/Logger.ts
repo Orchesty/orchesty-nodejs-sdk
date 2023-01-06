@@ -61,19 +61,19 @@ export class Logger {
 
     public info(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('info', message, context);
-        this.logger.debug(data, message);
+        this.logger.info(data, message);
         this.send(data, isForUi);
     }
 
     public warn(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('warn', message, context);
-        this.logger.debug(data, message);
+        this.logger.warn(data, message);
         this.send(data, isForUi);
     }
 
     public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false, err?: Error): void {
         const data = this.format('error', message, context, err);
-        this.logger.debug(data, message);
+        this.logger.error(data, message);
         this.send(data, isForUi);
     }
 
