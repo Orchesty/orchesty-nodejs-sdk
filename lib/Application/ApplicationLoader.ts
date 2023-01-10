@@ -1,7 +1,6 @@
 import CommonLoader from '../Commons/CommonLoader';
 import { APPLICATION_PREFIX } from './ApplicationRouter';
 import { IApplicationArray } from './Base/AApplication';
-import { IApplication } from './Base/IApplication';
 
 export default class ApplicationLoader extends CommonLoader {
 
@@ -13,8 +12,8 @@ export default class ApplicationLoader extends CommonLoader {
     public getListApplications(): IApplicationArray[] {
         let list: IApplicationArray[] = [];
         this.container.getAllByPrefix(APPLICATION_PREFIX)
-            .forEach((obj: IApplication) => {
-                list.push(obj.toArray());
+            .forEach((obj) => {
+                list.push(obj.value.toArray());
             });
         list = list.sort(this.compare.bind(this));
         return list;
