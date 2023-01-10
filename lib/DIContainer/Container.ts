@@ -27,11 +27,11 @@ export default class DIContainer {
         throw new Error(`Service with name [${name}] does not exist!`);
     }
 
-    public getAllByPrefix(prefix: string): any[] {
+    public getAllByPrefix(prefix: string): { key: string; value: any }[] {
         const services: any[] = [];
         this.services.forEach((value, key) => {
             if (key.startsWith(prefix)) {
-                services.push(value);
+                services.push({ key: key.substring(prefix.length + 1), value });
             }
         });
 

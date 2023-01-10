@@ -1,4 +1,3 @@
-import { IApplication } from '../Application/Base/IApplication';
 import DIContainer from '../DIContainer/Container';
 import { IName } from './IName';
 
@@ -13,15 +12,15 @@ export default class CommonLoader {
 
     public getList(prefix: string): ICommonObject[] {
         const list: ICommonObject[] = [];
-        this.container.getAllByPrefix(prefix).forEach((obj: INameAndApplication) => {
+        this.container.getAllByPrefix(prefix).forEach((obj) => {
             let app: string | undefined;
             try {
-                app = obj.getApplication().getName();
+                app = obj.value.getApplication().getName();
             } catch (e) {
                 app = undefined;
             }
 
-            list.push({ name: obj.getName(), app });
+            list.push({ name: obj.key, app });
         });
 
         return list.sort(this.compare.bind(this));
@@ -43,8 +42,4 @@ export interface ICommonObject {
     name: string;
     app?: string;
 
-}
-
-export interface INameAndApplication extends IName {
-    getApplication(): IApplication;
 }

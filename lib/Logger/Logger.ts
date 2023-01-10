@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import * as os from 'os';
 import pino from 'pino';
-import { orchestyOptions } from '../Config/Config';
+import { appOptions, orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
 import * as headers from '../Utils/Headers';
@@ -49,7 +49,7 @@ interface ILoggerFormat {
 
 export class Logger {
 
-    private readonly logger = pino();
+    private readonly logger = pino({ level: appOptions.debug ? 'debug' : 'info' });
 
     private readonly workerApi = new Client(orchestyOptions.workerApi);
 
