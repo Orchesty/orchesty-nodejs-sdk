@@ -1,7 +1,6 @@
 import CommonLoader from '../Commons/CommonLoader';
 import { APPLICATION_PREFIX } from './ApplicationRouter';
 import { IApplicationArray } from './Base/AApplication';
-import { IApplication } from './Base/IApplication';
 
 export default class ApplicationLoader extends CommonLoader {
 
