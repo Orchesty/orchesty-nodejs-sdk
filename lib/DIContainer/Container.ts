@@ -31,7 +31,7 @@ export default class DIContainer {
         const services: any[] = [];
         this.services.forEach((value, key) => {
             if (key.startsWith(prefix)) {
-                services.push({ key: key.substring(prefix.length), value });
+                services.push({ key: key.substring(prefix.length + 1), value });
             }
         });
 
