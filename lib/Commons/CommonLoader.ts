@@ -12,8 +12,8 @@ export default class CommonLoader {
 
     public getList(prefix: string): string[] {
         let list: string[] = [];
-        this.container.getAllByPrefix(prefix).forEach((obj: IName) => {
-            list.push(obj.getName());
+        this.container.getAllByPrefix(prefix).forEach((obj) => {
+            list.push(obj.key);
         });
 
         list = list.sort();

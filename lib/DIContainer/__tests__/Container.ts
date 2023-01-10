@@ -105,6 +105,9 @@ describe('Test DIContainer', () => {
         const container2 = new DIContainer();
         container2.setConnector(testConnector);
 
-        expect(container2.getAllByPrefix(CONNECTOR_PREFIX)).toEqual([testConnector]);
+        expect(container2.getAllByPrefix(CONNECTOR_PREFIX)).toEqual([{
+            key: testConnector.getName(),
+            value: testConnector,
+        }]);
     });
 });
