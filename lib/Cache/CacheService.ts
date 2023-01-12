@@ -30,7 +30,7 @@ export default class CacheService {
             }
 
             // Call endpoint for data
-            const response = await this.curlSender.send(requestDto, allowedCodes);
+            const response = await this.curlSender.send(requestDto, { repeat: allowedCodes });
 
             // Parse response & store data to cache & remove lock
             const dataCallback = await getDataCallback(response);
@@ -87,7 +87,7 @@ export default class CacheService {
             }
 
             // Call endpoint for data
-            const response = await this.curlSender.send(requestDto, allowedCodes);
+            const response = await this.curlSender.send(requestDto, { repeat: allowedCodes });
 
             // Parse response & store data to cache & remove lock
             const dataCallback = await getDataCallback(response);
