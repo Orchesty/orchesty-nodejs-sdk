@@ -16,9 +16,16 @@ export default class Client {
         const req: AxiosRequestConfig = {
             method,
             data: data ? JSON.stringify(data) : undefined,
-            headers: { ...{ 'orchesty-api-key': orchestyOptions.orchestyApiKey }, ...headers },
+            headers: {
+                ...{
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'orchesty-api-key': orchestyOptions.orchestyApiKey,
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    'content-type': 'application/json',
+                }, ...headers,
+            },
             timeout: 10000,
-            responseType: 'arraybuffer',
+            responseType: 'json',
             validateStatus: () => true,
         };
 

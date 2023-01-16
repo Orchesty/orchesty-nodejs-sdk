@@ -1,5 +1,5 @@
 import CryptManager from '../../Crypt/CryptManager';
-import { ClassType } from '../../Storage/Mongodb/ADocument';
+import ADocument, { ClassType } from '../../Storage/Mongodb/ADocument';
 import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Mongodb/Repository';
 import Client from '../../Worker-api/Client';
 import { ApplicationInstall } from './ApplicationInstall';
@@ -73,11 +73,19 @@ export default class ApplicationInstallRepository
         return applicationInstall.fromObject<ApplicationInstall>(applicationInstall, object);
     }
 
+    public async remove(entity: ApplicationInstall): Promise<this> {
+        await this.removeMany(
+            { ids: [(entity as ADocument).getId()], enabled: null } as IApplicationInstallQueryFilter,
+        );
+        return this;
+    }
+
     protected beforeSend(entity: ApplicationInstall): this {
         if (Object.keys(entity.getSettings()).length) {
             const encrypted = this.crypt.encrypt(entity.getSettings());
             entity.setEncryptedSettings(encrypted);
             entity.setUpdated();
+            entity.setSettings({});
         }
 
         return this;

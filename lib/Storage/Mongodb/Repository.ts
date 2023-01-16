@@ -27,7 +27,7 @@ export default class Repository<
     T,
     F extends IFilter = IFilter,
     S extends ISorter = ISorter,
-    P extends IPaging = IPaging >
+    P extends IPaging = IPaging>
 implements IRepository<T> {
 
     public collection: string;
@@ -115,7 +115,7 @@ implements IRepository<T> {
     }
 
     public async removeMany(filter?: F): Promise<this> {
-        await this.client.send(`/document/${this.collection}`, HttpMethods.DELETE, filter);
+        await this.client.send(this.createQuery(filter), HttpMethods.DELETE);
         return this.clearCache();
     }
 

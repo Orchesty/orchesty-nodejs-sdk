@@ -1,18 +1,19 @@
 export interface ClassType<T> {
-    new (...args: never[]): T;
+    new(...args: never[]): T;
+
     getCollection(): string;
 }
 
 export default abstract class ADocument {
 
-    protected id = '';
+    protected _id = '';
 
     public static getCollection(): string {
         return this.name;
     }
 
     public getId(): string {
-        return this.id;
+        return this._id;
     }
 
     public getCollection(): string {
