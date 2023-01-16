@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
+import { CommonHeaders, ORCHESTY_API_KEY } from '../Utils/Headers';
 
 export default class Client {
 
@@ -18,11 +19,10 @@ export default class Client {
             data: data ? JSON.stringify(data) : undefined,
             headers: {
                 ...{
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    'orchesty-api-key': orchestyOptions.orchestyApiKey,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    'content-type': 'application/json',
-                }, ...headers,
+                    [ORCHESTY_API_KEY]: orchestyOptions.orchestyApiKey,
+                    [CommonHeaders.CONTENT_TYPE]: 'application/json',
+                },
+                ...headers,
             },
             timeout: 10000,
             responseType: 'json',

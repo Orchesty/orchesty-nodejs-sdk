@@ -60,6 +60,7 @@ implements IRepository<T> {
     public async insertMany(entities: T[]): Promise<this> {
         entities.forEach((entity) => this.beforeSend(entity));
         await this.client.send(`/document/${this.collection}`, HttpMethods.POST, entities);
+        entities.forEach((entity) => this.afterReceive(entity));
         return this.clearCache();
     }
 
