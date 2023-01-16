@@ -130,11 +130,12 @@ export class Logger {
         return ctx;
     }
 
-    private send(data: unknown, isForUi = false): void {
+    private send(data: ILoggerFormat, isForUi = false): void {
         if (isForUi) {
-            this.workerApi.send('/logger/logs', HttpMethods.POST, data).catch((e) => {
-                this.logger.error(e);
-            });
+            this.workerApi.send('/logger/logs', HttpMethods.POST, { ...data, isForUi: true })
+                .catch((e) => {
+                    this.logger.error(e);
+                });
         }
     }
 
