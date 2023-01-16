@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
+import { CommonHeaders, ORCHESTY_API_KEY } from '../Utils/Headers';
 
 export default class Client {
 
@@ -16,9 +17,15 @@ export default class Client {
         const req: AxiosRequestConfig = {
             method,
             data: data ? JSON.stringify(data) : undefined,
-            headers: { ...{ 'orchesty-api-key': orchestyOptions.orchestyApiKey }, ...headers },
+            headers: {
+                ...{
+                    [ORCHESTY_API_KEY]: orchestyOptions.orchestyApiKey,
+                    [CommonHeaders.CONTENT_TYPE]: 'application/json',
+                },
+                ...headers,
+            },
             timeout: 10000,
-            responseType: 'arraybuffer',
+            responseType: 'json',
             validateStatus: () => true,
         };
 

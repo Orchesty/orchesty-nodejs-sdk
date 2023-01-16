@@ -123,7 +123,7 @@ export class ApplicationInstall extends ADocument {
 
     public toArray(): Record<string, unknown> {
         return {
-            id: this.id,
+            id: this._id,
             user: this.user,
             key: this.key,
             enabled: this.enabled,

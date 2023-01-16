@@ -128,7 +128,10 @@ export function createMetricsMockedServer(mocks: IMockServer[] = []): MockAdapte
 
 export function createDocumentMockedServer(mocks: IMockServer[] = []): MockAdapter {
     if (!mocks.length) {
-        mockAdapter.onGet(`${orchestyOptions.workerApi}/document/Node`).replyOnce(200, [{ id: '1', systemConfigs: JSON.stringify(nodeConfig) }]);
+        mockAdapter.onGet(`${orchestyOptions.workerApi}/document/Node`).replyOnce(200, [{
+            id: '1',
+            systemConfigs: JSON.stringify(nodeConfig),
+        }]);
         mockAdapter.onGet(`${orchestyOptions.workerApi}/document/Webhook`).replyOnce(200, [webhookConfig]);
         mockAdapter.onGet(new RegExp(`${orchestyOptions.workerApi}/document/ApplicationInstall`)).replyOnce(200, [appInstallConfig]);
         mockAdapter.onPost(new RegExp(`${orchestyOptions.workerApi}/document/*`)).replyOnce(201);
