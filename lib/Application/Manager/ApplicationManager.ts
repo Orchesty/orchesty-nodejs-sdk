@@ -120,7 +120,12 @@ export default class ApplicationManager {
         user: string,
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     ): Promise<Record<string, IField[] | boolean | unknown>> {
-        let appInstall = await this.repository.findByNameAndUser(name, user);
+        let appInstall;
+        try {
+            appInstall = await this.repository.findByNameAndUser(name, user);
+        } catch (e) {
+            //
+        }
         if (appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] already exists !`);
         }

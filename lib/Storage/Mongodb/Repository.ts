@@ -92,7 +92,7 @@ implements IRepository<T> {
         const result = await this.client.send(path, HttpMethods.GET);
 
         if (result.status !== 200) {
-            throw new Error(result.data.message ?? 'Unknown exception!');
+            throw new Error(result?.data?.message ?? 'Unknown exception!');
         }
 
         const find = result.data;
