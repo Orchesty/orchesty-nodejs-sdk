@@ -89,11 +89,13 @@ implements IRepository<T> {
             return cacheRecord;
         }
 
-        const find = (await this.client.send(path, HttpMethods.GET)).data;
+        const result = await this.client.send(path, HttpMethods.GET);
 
-        if (!find) {
-            return [];
+        if (result.status !== 200) {
+            throw new Error(result.data.message ?? 'Unknown exception!');
         }
+
+        const find = result.data;
 
         const entities: T[] = find.map((item: unknown) => {
             const entity = this.fromObject(item);
