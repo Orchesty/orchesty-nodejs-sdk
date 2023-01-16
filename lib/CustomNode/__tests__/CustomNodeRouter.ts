@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
-import { mockOnce, nodeConfig } from '../../../test/MockServer';
+import { createDocumentMockedServer, mockOnce, nodeConfig } from '../../../test/MockServer';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
 import { ICommonNode } from '../../Commons/ICommonNode';
 import { orchestyOptions } from '../../Config/Config';
@@ -28,6 +28,7 @@ describe('Test CustomNodeRouter', () => {
 
     beforeEach(() => {
         nodeRepository.clearCache();
+        createDocumentMockedServer();
     });
 
     it('test configureRoutes', () => {
@@ -81,8 +82,8 @@ describe('Test CustomNodeRouter', () => {
                 body: {},
             }));
         expect(resp.status).toBe(200);
-        expect(resp.body.headers[REPEAT_INTERVAL]).toBe('60');
-        expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('10');
+        expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
+        expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');
     });
 
     it('post /custom-node/:name/process route - onRepeatException, custom repeater', async () => {

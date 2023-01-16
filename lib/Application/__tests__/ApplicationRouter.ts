@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
-import { appInstallConfig, mockOnce } from '../../../test/MockServer';
+import { appInstallConfig, createDocumentMockedServer, mockOnce } from '../../../test/MockServer';
 import {
     closeConnections,
     dropCollection,
@@ -73,6 +73,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('post /applications/limits - empty array', async () => {
+        createDocumentMockedServer();
         await supertest(expressApp)
             .post('/applications/limits')
             .send({ user: USER, applications: [NAME] }).expect((response) => {
