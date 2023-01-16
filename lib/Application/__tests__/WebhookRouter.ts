@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
-import { mockOnce } from '../../../test/MockServer';
+import { createDocumentMockedServer, mockOnce } from '../../../test/MockServer';
 import { expressApp, getApplicationWithSettings, getTestContainer, USER, WEBHOOK_NAME } from '../../../test/TestAbstact';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
@@ -36,6 +36,8 @@ describe('tests for WebhookRouter', () => {
             },
             response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
         }]);
+
+        createDocumentMockedServer();
     });
 
     it('post /webhook/applications/:name/users/:user/subscribe', async () => {
