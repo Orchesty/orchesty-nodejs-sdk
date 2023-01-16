@@ -82,11 +82,13 @@ describe('Test ApplicationRouter', () => {
     });
 
     it('post /applications/limits', async () => {
-        const limiterForm = { [CoreFormsEnum.LIMITER_FORM]: {
-            useLimit: true,
-            value: 3,
-            time: 60,
-        } };
+        const limiterForm = {
+            [CoreFormsEnum.LIMITER_FORM]: {
+                useLimit: true,
+                value: 3,
+                time: 60,
+            },
+        };
 
         mockOnce([{
             request: {
