@@ -131,8 +131,11 @@ export default abstract class AApplication implements IApplication {
             logger.error(e?.message ?? 'Unknown error', { data: JSON.stringify(e) });
         }
 
+        let definedFields: Record<string, string[]> = {};
         formStack.getForms().forEach((form) => {
+            definedFields = { ...definedFields, ...{ [form.getKey()]: [] } };
             form.getFields().forEach((field) => {
+                definedFields[form.getKey()].push(field.getKey());
                 if (form.getKey() in settings && field.getKey() in settings[form.getKey()]) {
                     const currentFrom = preparedSettings[form.getKey()];
                     if (currentFrom) {
@@ -147,6 +150,22 @@ export default abstract class AApplication implements IApplication {
         if (Object.keys(preparedSettings).length > 0) {
             applicationInstall.addSettings(preparedSettings);
         }
+
+        const appSettings = applicationInstall.getSettings();
+        Object.keys(appSettings).forEach((formKey) => {
+            if (!Object.keys(definedFields).includes(formKey)) {
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete appSettings[formKey];
+            } else {
+                Object.keys(appSettings[formKey]).forEach((fieldKey) => {
+                    if (!definedFields[formKey].includes(fieldKey)) {
+                        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                        delete appSettings[formKey][fieldKey];
+                    }
+                });
+            }
+        });
+        applicationInstall.setSettings(appSettings);
 
         return applicationInstall;
     }
