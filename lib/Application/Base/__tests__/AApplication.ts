@@ -9,7 +9,7 @@ describe('ApplicationManager tests', () => {
         const oAuth2Provider = new OAuth2Provider('');
         const application = new TestOAuth2Application(oAuth2Provider);
         const appInstall = new ApplicationInstall();
-        const appSettings: IApplicationSettings = { testForm: { testValue: true }, [CoreFormsEnum.AUTHORIZATION_FORM]: { [CLIENT_ID]: 'testClientId' } };
+        const appSettings: IApplicationSettings = { testForm: { testValue: true }, [CoreFormsEnum.AUTHORIZATION_FORM]: { [CLIENT_ID]: 'testClientId', testField: 'testValue' } };
         appInstall.setSettings(appSettings);
         await application.saveApplicationForms(appInstall, appSettings);
 
