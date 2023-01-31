@@ -7,6 +7,7 @@ import logger from '../../Logger/Logger';
 import RequestDto from '../../Transport/Curl/RequestDto';
 import AProcessDto from '../../Utils/AProcessDto';
 import { ApplicationInstall, IApplicationSettings } from '../Database/ApplicationInstall';
+import CustomAction from '../Model/CustomAction/CustomAction';
 import Field from '../Model/Form/Field';
 import FieldType from '../Model/Form/FieldType';
 import Form, { IForm } from '../Model/Form/Form';
@@ -218,6 +219,10 @@ export default abstract class AApplication implements IApplication {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { user, name } = JSON.parse(req.body);
         // You can find AppInstall by user & name. E.g.: If you want to call topology
+    }
+
+    public getCustomActions(): CustomAction[] {
+        return [];
     }
 
     // eslint-disable-next-line

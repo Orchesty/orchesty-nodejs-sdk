@@ -1,5 +1,7 @@
 import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
+import CustomAction from '../../lib/Application/Model/CustomAction/CustomAction';
+import CustomActionType from '../../lib/Application/Model/CustomAction/CustomActionType';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import Form from '../../lib/Application/Model/Form/Form';
@@ -65,6 +67,12 @@ export default class TestBasicApplication extends ABasicApplication {
         data?: unknown,
     ): RequestDto {
         return new RequestDto(url ?? '', method, dto, data);
+    }
+
+    public getCustomActions(): CustomAction[] {
+        const action = new CustomAction('name', 'https://www.google.com/', CustomActionType.OPEN);
+
+        return [action];
     }
 
 }

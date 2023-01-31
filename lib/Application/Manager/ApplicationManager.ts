@@ -16,6 +16,7 @@ import WebhookManager from './WebhookManager';
 
 const AUTHORIZED = 'authorized';
 const APPLICATION_SETTINGS = 'applicationSettings';
+const CUSTOM_ACTIONS = 'customActions';
 
 export default class ApplicationManager {
 
@@ -163,6 +164,7 @@ export default class ApplicationManager {
             webhookSettings: isWebhook(app.getApplicationType())
                 ? await this.webhookManager.getWebhooks(app, user)
                 : [],
+            [CUSTOM_ACTIONS]: app.getCustomActions().map((action) => action.toArray()),
         };
     }
 

@@ -2,6 +2,8 @@ import ApplicationTypeEnum from '../../lib/Application/Base/ApplicationTypeEnum'
 import { IWebhookApplication } from '../../lib/Application/Base/IWebhookApplication';
 import { ApplicationInstall } from '../../lib/Application/Database/ApplicationInstall';
 import Webhook from '../../lib/Application/Database/Webhook';
+import CustomAction from '../../lib/Application/Model/CustomAction/CustomAction';
+import CustomActionType from '../../lib/Application/Model/CustomAction/CustomActionType';
 import Field from '../../lib/Application/Model/Form/Field';
 import FieldType from '../../lib/Application/Model/Form/FieldType';
 import Form from '../../lib/Application/Model/Form/Form';
@@ -91,6 +93,12 @@ export default class TestWebhookApplication extends ABasicApplication implements
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public processWebhookUnsubscribeResponse(dto: ResponseDto): boolean {
         return true;
+    }
+
+    public getCustomActions(): CustomAction[] {
+        const action = new CustomAction('name', 'https://www.google.com/', CustomActionType.OPEN);
+
+        return [action];
     }
 
 }
