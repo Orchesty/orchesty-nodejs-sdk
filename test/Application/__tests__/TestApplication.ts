@@ -1,6 +1,7 @@
 import ApplicationTypeEnum from '../../../lib/Application/Base/ApplicationTypeEnum';
 import CoreFormsEnum from '../../../lib/Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
+import CustomActionType from '../../../lib/Application/Model/CustomAction/CustomActionType';
 import AuthorizationTypeEnum from '../../../lib/Authorization/AuthorizationTypeEnum';
 import { PASSWORD } from '../../../lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
@@ -260,5 +261,17 @@ describe('Test application', () => {
                 readOnly: false,
             },
         });
+    });
+
+    it('getApplicationCustomAction', () => {
+        const app = new TestBasicApplication();
+
+        expect(app.getCustomActions()).toEqual([
+            {
+                name: 'name',
+                url: 'https://www.google.com/',
+                action: CustomActionType.OPEN,
+            },
+        ]);
     });
 });
