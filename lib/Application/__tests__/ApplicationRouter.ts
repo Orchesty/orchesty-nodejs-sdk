@@ -107,18 +107,18 @@ describe('Test ApplicationRouter', () => {
             });
     });
 
+    const expectedSyncActionsResult = '["testSyncMethod","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
     it('get /applications/:name route', async () => {
-        const expectedResult = '{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true}';
+        const expectedResult = `{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true,"syncMethods":${expectedSyncActionsResult}}`;
         await supertest(expressApp)
             .get(`/applications/${application.getName()}`)
             .expect(StatusCodes.OK, expectedResult);
     });
 
     it('get /applications/:name/sync/list route', async () => {
-        const expectedResult = '["testSyncMethod","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
         await supertest(expressApp)
             .get(`/applications/${application.getName()}/sync/list`)
-            .expect(StatusCodes.OK, expectedResult);
+            .expect(StatusCodes.OK, expectedSyncActionsResult);
     });
 
     it('post /applications/:name/sync/:method route', async () => {

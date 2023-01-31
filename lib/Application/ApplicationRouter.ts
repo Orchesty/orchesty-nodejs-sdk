@@ -6,6 +6,7 @@ import { createApiErrorResponse } from '../Utils/Router';
 import ApplicationManager from './Manager/ApplicationManager';
 
 export const APPLICATION_PREFIX = 'hbpf.application';
+export const SYNC_METHODS = 'syncMethods';
 
 export class ApplicationRouter extends ACommonRouter {
 
@@ -37,7 +38,10 @@ export class ApplicationRouter extends ACommonRouter {
 
         this.app.route('/applications/:name').get((req, res, next) => {
             try {
-                res.json(this.manager.getApplication(req.params.name).toArray());
+                res.json({
+                    ...this.manager.getApplication(req.params.name).toArray(),
+                    [SYNC_METHODS]: this.manager.getSynchronousActions(req.params.name),
+                });
                 next();
             } catch (e) {
                 createApiErrorResponse(req, res, e);
