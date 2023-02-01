@@ -47,7 +47,7 @@ export default class TestTokenBasicApplication extends ABasicApplication {
     }
 
     public getCustomActions(): CustomAction[] {
-        const action = new CustomAction('name', 'https://www.google.com/', CustomActionType.OPEN);
+        const action = new CustomAction('testName', CustomActionType.OPEN, { url: 'https://www.google.com/' });
 
         return [action];
     }
