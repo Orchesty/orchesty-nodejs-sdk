@@ -28,17 +28,17 @@ export interface ILogContext {
 interface ILoggerFormat {
     timestamp: number;
     hostname: string;
-    type: string;
-    severity: string;
+    service: string;
+    level: string;
     message: string;
-    node_id?: string;
-    user_id?: string;
-    node_name?: string;
-    topology_id?: string;
-    topology_name?: string;
-    correlation_id?: string;
-    result_code?: ResultCode;
-    result_message?: string;
+    nodeId?: string;
+    userId?: string;
+    nodeName?: string;
+    topologyId?: string;
+    topologyName?: string;
+    correlationId?: string;
+    resultCode?: ResultCode;
+    resultMessage?: string;
     stacktrace?: {
         message: string;
         trace?: string;
@@ -148,43 +148,43 @@ export class Logger {
         const line: ILoggerFormat = {
             timestamp: Date.now(),
             hostname: os.hostname(),
-            type: 'sdk',
-            severity: `${level}`.toUpperCase(),
+            service: 'sdk',
+            level: `${level}`.toLowerCase(),
             message: message?.replace(/\s\s+/g, ' '),
         };
 
         const context = this.createCtx(payload, err);
 
         if (context.topology_id) {
-            line.topology_id = context.topology_id;
+            line.topologyId = context.topology_id;
         }
 
         if (context.topology_name) {
-            line.topology_name = context.topology_name;
+            line.topologyName = context.topology_name;
         }
 
         if (context.correlation_id) {
-            line.correlation_id = context.correlation_id;
+            line.correlationId = context.correlation_id;
         }
 
         if (context.user_id) {
-            line.user_id = context.user_id;
+            line.userId = context.user_id;
         }
 
         if (context.node_id) {
-            line.node_id = context.node_id;
+            line.nodeId = context.node_id;
         }
 
         if (context.node_name) {
-            line.node_name = context.node_name;
+            line.nodeName = context.node_name;
         }
 
         if (context.result_code && context.result_code >= 0) {
-            line.result_code = context.result_code;
+            line.resultCode = context.result_code;
         }
 
         if (context.result_message) {
-            line.result_message = context.result_message;
+            line.resultMessage = context.result_message;
         }
 
         if (context.error) {
