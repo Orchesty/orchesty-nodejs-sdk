@@ -1,12 +1,5 @@
 import CustomActionType from './CustomActionType';
 
-interface RequestInfo {
-    url?: string;
-    topologyName?: string;
-    nodeName?: string;
-    body?: string;
-}
-
 export default class CustomAction {
 
     private url?: string;
@@ -20,7 +13,12 @@ export default class CustomAction {
     public constructor(
         private readonly name: string,
         private readonly action: CustomActionType,
-        requestInfo: RequestInfo,
+        requestInfo: {
+            url?: string;
+            topologyName?: string;
+            nodeName?: string;
+            body?: string;
+        },
     ) {
         if (!(requestInfo.url || requestInfo.topologyName && requestInfo.nodeName)) {
             throw new Error('One or more parameters are missing: url or topologyName and nodeName');
