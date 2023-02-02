@@ -9,13 +9,13 @@ interface RequestInfo {
 
 export default class CustomAction {
 
-    private url?: string = undefined;
+    private url?: string;
 
-    private body?: string = undefined;
+    private body?: string;
 
-    private topologyName?: string = undefined;
+    private topologyName?: string;
 
-    private nodeName?: string = undefined;
+    private nodeName?: string;
 
     public constructor(
         private readonly name: string,
