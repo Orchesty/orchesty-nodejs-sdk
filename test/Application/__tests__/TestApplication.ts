@@ -268,9 +268,9 @@ describe('Test application', () => {
 
         expect(app.getCustomActions()).toEqual([
             {
-                name: 'name',
-                url: 'https://www.google.com/',
+                name: 'testName',
                 action: CustomActionType.OPEN,
+                url: 'https://www.google.com/',
             },
         ]);
     });
