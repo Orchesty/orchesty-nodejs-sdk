@@ -1,16 +1,16 @@
 import { getTestContainer } from '../../../../test/TestAbstact';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import DIContainer from '../../../DIContainer/Container';
-import MongoDbClient from '../Client';
+import DatabaseClient from '../Client';
 import Repository from '../Repository';
 
 describe('Test MongoDb Storage', () => {
-    let dbClient: MongoDbClient;
+    let dbClient: DatabaseClient;
     let container: DIContainer;
 
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = new MongoDbClient(container);
+        dbClient = new DatabaseClient(container);
     });
 
     it('repository', () => {

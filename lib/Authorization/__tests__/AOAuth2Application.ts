@@ -3,7 +3,6 @@ import { getTestContainer } from '../../../test/TestAbstact';
 import CoreFormsEnum from '../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../Application/Database/ApplicationInstall';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
 import { ACCESS_TOKEN, EXPIRES, OAuth2Provider, REFRESH_TOKEN } from '../Provider/OAuth2/OAuth2Provider';
 import { TOKEN } from '../Type/Basic/ABasicApplication';
 import { CLIENT_ID } from '../Type/OAuth2/IOAuth2Application';
@@ -15,7 +14,7 @@ describe('Test AOAuth2Application', () => {
 
     beforeAll(() => {
         container = getTestContainer();
-        oAuthApplication = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
+        oAuthApplication = new TestOAuth2Application(container.get(OAuth2Provider));
     });
 
     it('should get authorizationType', () => {
@@ -67,7 +66,7 @@ describe('Test AOAuth2Application', () => {
     });
 
     it('should refresh authorization token', async () => {
-        const provider = container.get<OAuth2Provider>(CoreServices.OAUTH2_PROVIDER);
+        const provider = container.get(OAuth2Provider);
         Reflect.set(provider, 'createClient', () => ({
             createToken: () => ({
                 token: {

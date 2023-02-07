@@ -8,8 +8,7 @@ import { PASSWORD } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
-import CoreServices from '../../../DIContainer/CoreServices';
-import MongoDbClient from '../../../Storage/Mongodb/Client';
+import DatabaseClient from '../../../Storage/Database/Client';
 import CurlSender from '../../../Transport/Curl/CurlSender';
 import { HttpMethods } from '../../../Transport/HttpMethods';
 import ApplicationLoader from '../../ApplicationLoader';
@@ -23,7 +22,7 @@ import WebhookManager from '../WebhookManager';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
-let dbClient: MongoDbClient;
+let dbClient: DatabaseClient;
 let curl: CurlSender;
 const testName = 'test';
 const testOAuth2Name = 'oauth2application';
@@ -45,9 +44,9 @@ describe('ApplicationManager tests', () => {
 
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = container.get(CoreServices.MONGO);
-        curl = container.get(CoreServices.CURL);
-        appManager = container.get(CoreServices.APP_MANAGER);
+        dbClient = container.get(DatabaseClient);
+        curl = container.get(CurlSender);
+        appManager = container.get(ApplicationManager);
     });
 
     beforeEach(() => {

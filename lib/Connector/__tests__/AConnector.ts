@@ -6,23 +6,22 @@ import { IApplication } from '../../Application/Base/IApplication';
 import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import DatabaseClient from '../../Storage/Database/Client';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import ProcessDto from '../../Utils/ProcessDto';
 
 describe('Test AConnector', () => {
     let container: DIContainer;
-    let mongoDbClient: MongoDbClient;
+    let mongoDbClient: DatabaseClient;
     let curlSender: CurlSender;
     let testConnector: TestConnector;
     let repo: ApplicationInstallRepository;
 
     beforeAll(() => {
         container = getTestContainer();
-        mongoDbClient = container.get(CoreServices.MONGO);
-        curlSender = container.get(CoreServices.CURL);
+        mongoDbClient = container.get(DatabaseClient);
+        curlSender = container.get(CurlSender);
         testConnector = new TestConnector();
         repo = mongoDbClient.getApplicationRepository();
     });

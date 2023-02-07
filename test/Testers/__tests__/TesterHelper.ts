@@ -1,5 +1,4 @@
 import { initiateContainer } from '../../../lib';
-import CoreServices from '../../../lib/DIContainer/CoreServices';
 import CurlSender from '../../../lib/Transport/Curl/CurlSender';
 import RequestDto from '../../../lib/Transport/Curl/RequestDto';
 import { HttpMethods } from '../../../lib/Transport/HttpMethods';
@@ -12,7 +11,7 @@ describe('Test topologyHelper', () => {
 
     beforeAll(() => {
         initiateContainer();
-        sender = container.get(CoreServices.CURL);
+        sender = container.get(CurlSender);
     });
 
     it('mockCurl - replacements', async () => {

@@ -1,6 +1,6 @@
 import { IApplication } from '../Application/Base/IApplication';
 import { ApplicationInstall } from '../Application/Database/ApplicationInstall';
-import MongoDbClient from '../Storage/Mongodb/Client';
+import DatabaseClient from '../Storage/Database/Client';
 import AProcessDto from '../Utils/AProcessDto';
 import { INode } from './INode';
 
@@ -8,7 +8,7 @@ export default abstract class ANode implements INode {
 
     private application?: IApplication;
 
-    private db?: MongoDbClient;
+    private db?: DatabaseClient;
 
     public abstract processAction(dto: AProcessDto): AProcessDto | Promise<AProcessDto>;
 
@@ -20,7 +20,7 @@ export default abstract class ANode implements INode {
         return this;
     }
 
-    public setDb(db: MongoDbClient): this {
+    public setDb(db: DatabaseClient): this {
         this.db = db;
 
         return this;
@@ -34,7 +34,7 @@ export default abstract class ANode implements INode {
         throw new Error('Application has not been set.');
     }
 
-    protected getDbClient(): MongoDbClient {
+    protected getDbClient(): DatabaseClient {
         if (this.db) {
             return this.db;
         }

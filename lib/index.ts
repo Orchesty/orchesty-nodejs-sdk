@@ -19,15 +19,14 @@ import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import DIContainer from './DIContainer/Container';
-import CoreServices from './DIContainer/CoreServices';
 import logger from './Logger/Logger';
 import Metrics from './Metrics/Metrics';
 import bodyParser from './Middleware/BodyParseHandler';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
-import MongoDbClient from './Storage/Mongodb/Client';
-import Node from './Storage/Mongodb/Document/Node';
-import NodeRepository from './Storage/Mongodb/Document/NodeRepository';
+import DatabaseClient from './Storage/Database/Client';
+import Node from './Storage/Database/Document/Node';
+import NodeRepository from './Storage/Database/Document/NodeRepository';
 import TopologyRunner from './Topology/TopologyRunner';
 import CurlSender from './Transport/Curl/CurlSender';
 
@@ -51,7 +50,7 @@ export function initiateContainer(): void {
         new WindWalkerCrypt(cryptOptions.secret),
     ];
     const cryptManager = new CryptManager(cryptProviders);
-    const mongoDbClient = new MongoDbClient(container);
+    const databaseClient = new DatabaseClient(container);
     const loader = new CommonLoader(container);
     const appLoader = new ApplicationLoader(container);
     const oauth2Provider = new OAuth2Provider(orchestyOptions.backend);
@@ -61,33 +60,33 @@ export function initiateContainer(): void {
 
     const applicationInstallRepo = new ApplicationInstallRepository(
         ApplicationInstall,
-        mongoDbClient.getClient(),
+        databaseClient,
         cryptManager,
     );
 
     const webhookRepository = new WebhookRepository(
         Webhook,
-        mongoDbClient.getClient(),
+        databaseClient,
     );
     const nodeRepository = new NodeRepository(
         Node,
-        mongoDbClient.getClient(),
+        databaseClient,
     );
 
     const webhookManager = new WebhookManager(appLoader, curlSender, webhookRepository, applicationInstallRepo);
     const appManager = new ApplicationManager(appLoader, applicationInstallRepo, webhookManager);
 
     // Add them to the DIContainer
-    container.set(CoreServices.CRYPT_MANAGER, cryptManager);
-    container.set(CoreServices.MONGO, mongoDbClient);
-    container.set(CoreServices.LOADER, loader);
-    container.set(CoreServices.APP_LOADER, appLoader);
-    container.set(CoreServices.APP_MANAGER, appManager);
-    container.set(CoreServices.WEBHOOK_MANAGER, webhookManager);
-    container.set(CoreServices.OAUTH2_PROVIDER, oauth2Provider);
-    container.set(CoreServices.CURL, curlSender);
-    container.set(CoreServices.METRICS, metrics);
-    container.set(CoreServices.TOPOLOGY_RUNNER, topologyRunner);
+    container.set(cryptManager);
+    container.set(databaseClient);
+    container.set(loader);
+    container.set(appLoader);
+    container.set(appManager);
+    container.set(webhookManager);
+    container.set(oauth2Provider);
+    container.set(curlSender);
+    container.set(metrics);
+    container.set(topologyRunner);
 
     container.setRepository(applicationInstallRepo);
     container.setRepository(webhookRepository);

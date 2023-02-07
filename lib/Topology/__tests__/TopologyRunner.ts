@@ -2,7 +2,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { StatusCodes } from 'http-status-codes';
 import { container } from '../../../test/TestAbstact';
-import CoreServices from '../../DIContainer/CoreServices';
 import { initiateContainer } from '../../index';
 import ProcessDto from '../../Utils/ProcessDto';
 import TopologyRunner from '../TopologyRunner';
@@ -20,7 +19,7 @@ describe('TopologyRunner tests', () => {
     });
 
     beforeEach(() => {
-        runner = container.get(CoreServices.TOPOLOGY_RUNNER);
+        runner = container.get(TopologyRunner);
     });
 
     it('get webhook url', () => {

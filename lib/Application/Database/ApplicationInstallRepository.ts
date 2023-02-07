@@ -1,7 +1,7 @@
 import CryptManager from '../../Crypt/CryptManager';
-import ADocument, { ClassType } from '../../Storage/Mongodb/ADocument';
-import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Mongodb/Repository';
-import Client from '../../Worker-api/Client';
+import ADocument, { ClassType } from '../../Storage/Database/ADocument';
+import DatabaseClient from '../../Storage/Database/Client';
+import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Database/Repository';
 import { ApplicationInstall } from './ApplicationInstall';
 
 export interface IApplicationInstallQueryFilter extends IFilter {
@@ -17,7 +17,7 @@ export default class ApplicationInstallRepository
 
     public constructor(
         collection: ClassType<ApplicationInstall>,
-        client: Client,
+        client: DatabaseClient,
         private readonly crypt: CryptManager,
     ) {
         super(collection, client);

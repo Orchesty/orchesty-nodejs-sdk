@@ -4,8 +4,7 @@ import { getApplicationWithSettings, getTestContainer, WEBHOOK_NAME } from '../.
 import { USER } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
-import CoreServices from '../../../DIContainer/CoreServices';
-import MongoDbClient from '../../../Storage/Mongodb/Client';
+import DatabaseClient from '../../../Storage/Database/Client';
 import CurlSender from '../../../Transport/Curl/CurlSender';
 import { HttpMethods } from '../../../Transport/HttpMethods';
 import ApplicationLoader from '../../ApplicationLoader';
@@ -18,13 +17,13 @@ import WebhookManager from '../WebhookManager';
 let container: DIContainer;
 let webhookManager: WebhookManager;
 let webhookRepository: WebhookRepository;
-let dbClient: MongoDbClient;
+let dbClient: DatabaseClient;
 
 describe('Tests for webhookManager', () => {
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = container.get(CoreServices.MONGO);
-        const curl = container.get<CurlSender>(CoreServices.CURL);
+        dbClient = container.get(DatabaseClient);
+        const curl = container.get(CurlSender);
 
         const testApp = new TestWebhookApplication();
         const mockedContainer = new DIContainer();

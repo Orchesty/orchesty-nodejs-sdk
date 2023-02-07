@@ -6,7 +6,7 @@ import Client from '../../Worker-api/Client';
 import ADocument, { ClassType } from './ADocument';
 import Repository, { IFilter, IPaging, ISorter } from './Repository';
 
-export default class MongoDbClient {
+export default class DatabaseClient {
 
     private readonly workerApi = new Client(orchestyOptions.workerApi);
 

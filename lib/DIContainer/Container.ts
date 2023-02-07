@@ -6,8 +6,8 @@ import { IBatchNode } from '../Batch/IBatchNode';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
-import ADocument, { ClassType } from '../Storage/Mongodb/ADocument';
-import Repository, { IFilter, IPaging, ISorter } from '../Storage/Mongodb/Repository';
+import ADocument, { ClassType } from '../Storage/Database/ADocument';
+import Repository, { IFilter, IPaging, ISorter } from '../Storage/Database/Repository';
 
 const REPOSITORY = 'repository';
 
@@ -19,79 +19,94 @@ export default class DIContainer {
         this.services = new Map<string, any>();
     }
 
-    public get<T = unknown>(name: string): T {
-        if (this.has(name)) {
+    public getNamed<T = unknown>(name: string): T {
+        if (this.hasNamed(name)) {
             return this.services.get(name);
         }
 
         throw new Error(`Service with name [${name}] does not exist!`);
     }
 
+    public get<T>(classLike: new (...args: any[]) => T): T {
+        return this.getNamed(classLike.name);
+    }
+
     public getAllByPrefix(prefix: string): { key: string; value: any }[] {
         const services: any[] = [];
         this.services.forEach((value, key) => {
             if (key.startsWith(prefix)) {
-                services.push({ key: key.substring(prefix.length + 1), value });
+                services.push({
+                    key: key.substring(prefix.length + 1),
+                    value,
+                });
             }
         });
 
         return services;
     }
 
-    public has(name: string): boolean {
+    public has<T>(classLike: new (...args: any[]) => T): boolean {
+        return this.services.has(classLike.name);
+    }
+
+    public hasNamed(name: string): boolean {
         return this.services.has(name);
     }
 
-    public set<T>(name: string, service: T): void {
-        if (!this.has(name)) {
+    public setNamed<T>(name: string, service: T): void {
+        if (!this.hasNamed(name)) {
             this.services.set(name, service);
         } else {
             throw new Error(`Service with name [${name}] already exist!`);
         }
     }
 
+    public set<T extends object>(service: T): void {
+        this.setNamed(service.constructor.name, service);
+    }
+
     public setConnector(service: ICommonNode): void {
-        this.set(`${CONNECTOR_PREFIX}.${service.getName()}`, service);
+        this.setNamed(`${CONNECTOR_PREFIX}.${service.getName()}`, service);
     }
 
     public getConnector<T extends ICommonNode>(name: string): T {
-        return this.get(`${CONNECTOR_PREFIX}.${name}`);
+        return this.getNamed(`${CONNECTOR_PREFIX}.${name}`);
     }
 
     public setCustomNode(service: ICommonNode): void {
-        this.set(`${CUSTOM_NODE_PREFIX}.${service.getName()}`, service);
+        this.setNamed(`${CUSTOM_NODE_PREFIX}.${service.getName()}`, service);
     }
 
     public getCustomNode<T extends ICommonNode>(name: string): T {
-        return this.get(`${CUSTOM_NODE_PREFIX}.${name}`);
+        return this.getNamed(`${CUSTOM_NODE_PREFIX}.${name}`);
     }
 
     public setApplication(service: IApplication): void {
-        this.set(`${APPLICATION_PREFIX}.${service.getName()}`, service);
+        this.setNamed(`${APPLICATION_PREFIX}.${service.getName()}`, service);
     }
 
     public getApplication(name: string): IApplication {
-        return this.get(`${APPLICATION_PREFIX}.${name}`);
+        return this.getNamed(`${APPLICATION_PREFIX}.${name}`);
     }
 
     public setBatch(service: IBatchNode): void {
-        this.set(`${BATCH_PREFIX}.${service.getName()}`, service);
+        this.setNamed(`${BATCH_PREFIX}.${service.getName()}`, service);
     }
 
     public getBatch<T extends IBatchNode>(name: string): T {
-        return this.get(`${BATCH_PREFIX}.${name}`);
+        return this.getNamed(`${BATCH_PREFIX}.${name}`);
     }
 
     public setRepository
     <T extends ADocument, F extends IFilter, S extends ISorter, P extends IPaging>(repository: Repository<T, F, S, P>):
     void {
-        this.set(`${REPOSITORY}.${repository.collection}`, repository);
+        this.setNamed(`${REPOSITORY}.${repository.collection}`, repository);
     }
 
     public getRepository
     <T extends ADocument, F extends IFilter, S extends ISorter, P extends IPaging>(collection: ClassType<T>):
     Repository<T, F, S, P> {
-        return this.get(`${REPOSITORY}.${collection.getCollection()}`);
+        return this.getNamed(`${REPOSITORY}.${collection.getCollection()}`);
     }
 
 }
