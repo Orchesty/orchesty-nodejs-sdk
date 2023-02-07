@@ -2,7 +2,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { getTestContainer } from '../../../../test/TestAbstact';
 import DIContainer from '../../../DIContainer/Container';
-import CoreServices from '../../../DIContainer/CoreServices';
 import ProcessDto from '../../../Utils/ProcessDto';
 import { HttpMethods } from '../../HttpMethods';
 import CurlSender from '../CurlSender';
@@ -16,7 +15,7 @@ describe('tests for curlSender', () => {
     beforeAll(() => {
         mockAdapter = new MockAdapter(axios);
         container = getTestContainer();
-        curlSender = container.get(CoreServices.CURL);
+        curlSender = container.get(CurlSender);
     });
 
     it('should test send', async () => {

@@ -1,4 +1,4 @@
-import Repository, { IFilter } from '../../Storage/Mongodb/Repository';
+import Repository, { IFilter } from '../../Storage/Database/Repository';
 import Webhook from './Webhook';
 
 export interface IWebhookQueryFilter extends IFilter {

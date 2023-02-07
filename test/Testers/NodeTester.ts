@@ -64,7 +64,7 @@ export default class NodeTester {
         _batchProcessDto: AProcessDto = new BatchProcessDto(),
     ): Promise<void> {
         const prefix = _prefix !== '' ? `${_prefix}-` : '';
-        const node: INode = this.container.get(`${nodePrefix}.${nodeName}`);
+        const node: INode = this.container.getNamed(`${nodePrefix}.${nodeName}`);
         const fileName = path.parse(this.file).name;
         const fileDir = path.parse(this.file).dir;
         let thrownErr: unknown;

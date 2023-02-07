@@ -2,6 +2,7 @@ import NodeCache from 'node-cache';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Client from '../../Worker-api/Client';
 import ADocument, { ClassType } from './ADocument';
+import DatabaseClient from './Client';
 
 const STD_TTL = 1;
 
@@ -34,12 +35,15 @@ implements IRepository<T> {
 
     private readonly cache: NodeCache;
 
+    private readonly client: Client;
+
     public constructor(
         collection: ClassType<T>,
-        protected client: Client,
+        databaseClient: DatabaseClient,
     ) {
         this.cache = new NodeCache({ stdTTL: STD_TTL, checkperiod: 1 });
         this.collection = collection.getCollection();
+        this.client = databaseClient.getClient();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

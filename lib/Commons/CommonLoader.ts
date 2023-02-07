@@ -7,7 +7,7 @@ export default class CommonLoader {
     }
 
     public get(prefix: string, name: string): IName {
-        return this.container.get(`${prefix}.${name}`);
+        return this.container.getNamed(`${prefix}.${name}`);
     }
 
     public getList(prefix: string): ICommonObject[] {

@@ -25,26 +25,33 @@ describe('Test DIContainer', () => {
 
     it('test set/has service', () => {
         const serviceName = 'testService';
-        container.set(serviceName, 'fake-service');
+        container.setNamed(serviceName, 'fake-service');
 
-        expect(container.has(serviceName))
+        expect(container.hasNamed(serviceName))
             .toBeTruthy();
     });
 
     it('test set/get service', () => {
         const serviceName = 'testService2';
-        container.set(serviceName, 'fake-service');
+        container.setNamed(serviceName, 'fake-service');
 
-        expect(container.get(serviceName))
+        expect(container.getNamed(serviceName))
             .toEqual('fake-service');
+    });
+
+    it('test set/get service instance', () => {
+        class Losos {} // eslint-disable-line
+        container.set(new Losos());
+
+        expect(container.get(Losos)).toBeInstanceOf(Losos);
     });
 
     it('test set duplicate service', () => {
         const serviceName = 'testService3';
-        container.set(serviceName, 'fake-service');
+        container.setNamed(serviceName, 'fake-service');
 
         try {
-            container.set(serviceName, 'fake-service');
+            container.setNamed(serviceName, 'fake-service');
             expect(false)
                 .toBeTruthy();
         } catch (e) {
@@ -56,7 +63,7 @@ describe('Test DIContainer', () => {
     it('test get non-exist service', () => {
         const serviceName = 'non-exist';
         try {
-            container.get(serviceName);
+            container.getNamed(serviceName);
             expect(false)
                 .toBeTruthy();
         } catch (e) {
@@ -66,12 +73,12 @@ describe('Test DIContainer', () => {
     });
 
     it('test set/get CustomNode service', () => {
-        expect(container.get(`${CUSTOM_NODE_PREFIX}.${testCustom.getName()}`)).toEqual(testCustom);
+        expect(container.getNamed(`${CUSTOM_NODE_PREFIX}.${testCustom.getName()}`)).toEqual(testCustom);
         expect(container.getCustomNode(testCustom.getName())).toEqual(testCustom);
     });
 
     it('test set/get Batch service', () => {
-        expect(container.get(`${BATCH_PREFIX}.${testBatch.getName()}`)).toEqual(testBatch);
+        expect(container.getNamed(`${BATCH_PREFIX}.${testBatch.getName()}`)).toEqual(testBatch);
         expect(container.getBatch(testBatch.getName())).toEqual(testBatch);
     });
 
@@ -79,7 +86,7 @@ describe('Test DIContainer', () => {
         const cont = new DIContainer();
         cont.setApplication(testApp);
 
-        expect(cont.get(`${APPLICATION_PREFIX}.${testApp.getName()}`))
+        expect(cont.getNamed(`${APPLICATION_PREFIX}.${testApp.getName()}`))
             .toEqual(testApp);
         expect(cont.getApplication(testApp.getName()))
             .toEqual(testApp);

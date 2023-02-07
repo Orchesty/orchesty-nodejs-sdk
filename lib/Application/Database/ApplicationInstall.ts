@@ -1,6 +1,6 @@
 import deepmerge from 'deepmerge';
 import { DateTime } from 'luxon';
-import ADocument from '../../Storage/Mongodb/ADocument';
+import ADocument from '../../Storage/Database/ADocument';
 import DateTimeUtils, { DATE_TIME } from '../../Utils/DateTimeUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

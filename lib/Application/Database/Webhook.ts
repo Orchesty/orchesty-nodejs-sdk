@@ -1,4 +1,4 @@
-import ADocument from '../../Storage/Mongodb/ADocument';
+import ADocument from '../../Storage/Database/ADocument';
 
 export const USER = 'user';
 export const APPLICATION = 'application';

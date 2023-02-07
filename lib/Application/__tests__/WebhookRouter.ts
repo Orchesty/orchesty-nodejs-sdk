@@ -4,17 +4,16 @@ import { createDocumentMockedServer, mockOnce } from '../../../test/MockServer';
 import { expressApp, getApplicationWithSettings, getTestContainer, USER, WEBHOOK_NAME } from '../../../test/TestAbstact';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import DatabaseClient from '../../Storage/Database/Client';
 import { HttpMethods } from '../../Transport/HttpMethods';
 
 let container: DIContainer;
-let dbClient: MongoDbClient;
+let dbClient: DatabaseClient;
 
 describe('tests for WebhookRouter', () => {
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = container.get(CoreServices.MONGO);
+        dbClient = container.get(DatabaseClient);
     });
 
     beforeEach(() => {
