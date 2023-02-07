@@ -5,8 +5,7 @@ import ApplicationManager from '../../lib/Application/Manager/ApplicationManager
 import { OAuth2Provider } from '../../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import { CLIENT_ID, CLIENT_SECRET } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import DIContainer from '../../lib/DIContainer/Container';
-import CoreServices from '../../lib/DIContainer/CoreServices';
-import MongoDbClient from '../../lib/Storage/Mongodb/Client';
+import DatabaseClient from '../../lib/Storage/Database/Client';
 
 export default async function runCli(di: DIContainer, customSettings: Record<string, unknown>): Promise<void> {
     const user = 'default_test_user';
@@ -27,11 +26,11 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
         });
     appInstall.addSettings(customSettings);
 
-    const db = di.get<MongoDbClient>(CoreServices.MONGO);
+    const db = di.get(DatabaseClient);
     const repo = db.getApplicationRepository();
     await repo.insert(appInstall);
 
-    const appManager = di.get<ApplicationManager>(CoreServices.APP_MANAGER);
+    const appManager = di.get(ApplicationManager);
     const resp = await appManager.authorizationApplication(name, user, '');
     // eslint-disable-next-line no-console
     console.log(resp);

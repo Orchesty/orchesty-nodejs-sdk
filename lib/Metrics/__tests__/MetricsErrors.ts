@@ -1,6 +1,5 @@
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
 import Metrics, { ITimesMetrics } from '../Metrics';
 
 const mockITimesMetrics: ITimesMetrics = {
@@ -15,7 +14,7 @@ let container: DIContainer;
 describe('Test metrics', () => {
     beforeAll(() => {
         container = getTestContainer();
-        metrics = container.get(CoreServices.METRICS);
+        metrics = container.get(Metrics);
     });
 
     it('sendCurlMetrics', async () => {

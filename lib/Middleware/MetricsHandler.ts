@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import CoreServices from '../DIContainer/CoreServices';
 import { container } from '../index';
 import logger from '../Logger/Logger';
 import Metrics, { IStartMetrics } from '../Metrics/Metrics';
@@ -28,7 +27,7 @@ function afterResponse(
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {
     const startMetrics = Metrics.getCurrentMetrics();
-    const sender = container.get<Metrics>(CoreServices.METRICS);
+    const sender = container.get(Metrics);
     res.on('finish', () => {
         afterResponse(req, res, next, startMetrics, sender);
     });

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import OnRepeatException from '../Exception/OnRepeatException';
 import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
-import NodeRepository from '../Storage/Mongodb/Document/NodeRepository';
+import NodeRepository from '../Storage/Database/Document/NodeRepository';
 import { getRepeatHops, NODE_ID, REPEAT_INTERVAL } from '../Utils/Headers';
 import ResultCode from '../Utils/ResultCode';
 import { createErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';

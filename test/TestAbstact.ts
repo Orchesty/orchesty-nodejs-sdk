@@ -1,11 +1,12 @@
 import { Application } from 'express';
 import { container as c, expressApp as e, initiateContainer, listen as l } from '../lib';
 import { IApplicationSettings } from '../lib/Application/Database/ApplicationInstall';
+import { OAuth2Provider } from '../lib/Authorization/Provider/OAuth2/OAuth2Provider';
 import CommonLoader from '../lib/Commons/CommonLoader';
 import CryptManager from '../lib/Crypt/CryptManager';
 import DIContainer from '../lib/DIContainer/Container';
-import CoreServices from '../lib/DIContainer/CoreServices';
 import Redis from '../lib/Storage/Redis/Redis';
+import CurlSender from '../lib/Transport/Curl/CurlSender';
 import TestBasicApplication from './Application/TestBasicApplication';
 import TestOAuth2Application from './Application/TestOAuth2Application';
 import TestWebhookApplication from './Application/TestWebhookApplication';
@@ -29,9 +30,9 @@ export function listen(): void {
 
 export function getTestContainer(): DIContainer {
     initiateContainer();
-    const testConnector = new TestConnector().setSender(container.get(CoreServices.CURL));
+    const testConnector = new TestConnector().setSender(container.get(CurlSender));
     const appBasic = new TestBasicApplication();
-    const appOAuth = new TestOAuth2Application(container.get(CoreServices.OAUTH2_PROVIDER));
+    const appOAuth = new TestOAuth2Application(container.get(OAuth2Provider));
     const appWebhook = new TestWebhookApplication();
     const batch = new TestBatch();
     const custom = new TestCustomNode();
@@ -83,8 +84,8 @@ export function mockRouter(): {
 
 export async function dropCollection(): Promise<void> {
     try {
-        if (c.has(CoreServices.REDIS)) {
-            const redis = c.get<Redis>(CoreServices.REDIS);
+        if (c.has(Redis)) {
+            const redis = c.get(Redis);
             await redis.dropAll();
         }
     } catch {
@@ -93,15 +94,15 @@ export async function dropCollection(): Promise<void> {
 }
 
 export async function closeConnections(): Promise<void> {
-    if (c.has(CoreServices.REDIS)) {
-        const redis = c.get<Redis>(CoreServices.REDIS);
+    if (c.has(Redis)) {
+        const redis = c.get(Redis);
         await redis.dropAll();
     }
 }
 
 export function getCryptService(): CryptManager {
-    if (c.has(CoreServices.CRYPT_MANAGER)) {
-        return c.get<CryptManager>(CoreServices.CRYPT_MANAGER);
+    if (c.has(CryptManager)) {
+        return c.get(CryptManager);
     }
     throw new Error('Crypt manager is available');
 }

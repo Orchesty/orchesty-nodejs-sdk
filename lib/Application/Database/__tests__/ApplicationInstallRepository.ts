@@ -2,20 +2,19 @@ import { appInstallConfig, mockOnce } from '../../../../test/MockServer';
 import { getTestContainer, NAME, USER } from '../../../../test/TestAbstact';
 import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
-import CoreServices from '../../../DIContainer/CoreServices';
-import MongoDbClient from '../../../Storage/Mongodb/Client';
+import DatabaseClient from '../../../Storage/Database/Client';
 import { HttpMethods } from '../../../Transport/HttpMethods';
 import { ApplicationInstall } from '../ApplicationInstall';
 import ApplicationInstallRepository from '../ApplicationInstallRepository';
 
 let container: DIContainer;
-let dbClient: MongoDbClient;
+let dbClient: DatabaseClient;
 let repo: ApplicationInstallRepository;
 
 describe('ApplicationInstallRepository tests', () => {
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = container.get(CoreServices.MONGO);
+        dbClient = container.get(DatabaseClient);
         try {
             repo = dbClient.getApplicationRepository();
         } catch (e) {

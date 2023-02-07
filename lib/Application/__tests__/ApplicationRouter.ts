@@ -14,8 +14,7 @@ import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provid
 import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
-import MongoDbClient from '../../Storage/Mongodb/Client';
+import DatabaseClient from '../../Storage/Database/Client';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import { encode } from '../../Utils/Base64';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
@@ -28,7 +27,7 @@ describe('Test ApplicationRouter', () => {
     let oAuthApplication: IApplication;
     let provider: OAuth2Provider;
     let container: DIContainer;
-    let dbClient: MongoDbClient;
+    let dbClient: DatabaseClient;
     let oauthName: string;
     let authorizationURL: string;
     const testName = 'test';
@@ -37,8 +36,8 @@ describe('Test ApplicationRouter', () => {
         container = getTestContainer();
         application = container.getApplication('test');
         oAuthApplication = container.getApplication('oauth2application');
-        provider = container.get(CoreServices.OAUTH2_PROVIDER);
-        dbClient = container.get(CoreServices.MONGO);
+        provider = container.get(OAuth2Provider);
+        dbClient = container.get(DatabaseClient);
     });
 
     beforeEach(async () => {

@@ -1,6 +1,5 @@
 import { getTestContainer } from '../../../test/TestAbstact';
 import DIContainer from '../../DIContainer/Container';
-import CoreServices from '../../DIContainer/CoreServices';
 import { ICpuTimes } from '../../Utils/SystemUsage';
 import Metrics, { IStartMetrics, ITimesMetrics } from '../Metrics';
 
@@ -27,7 +26,7 @@ let container: DIContainer;
 describe('Test metrics', () => {
     beforeAll(() => {
         container = getTestContainer();
-        metrics = container.get(CoreServices.METRICS);
+        metrics = container.get(Metrics);
     });
 
     it('getTimes', () => {
