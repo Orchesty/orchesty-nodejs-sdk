@@ -12,9 +12,11 @@ export class ApplicationInstall extends ADocument {
 
     private key = '';
 
-    private settings: IApplicationSettings = {};
+    private settings?: IApplicationSettings = undefined;
 
     private enabled = false;
+
+    private readonly deleted = false;
 
     private readonly created: Date;
 
@@ -33,7 +35,7 @@ export class ApplicationInstall extends ADocument {
     }
 
     public getSettings(): IApplicationSettings {
-        return this.settings;
+        return this.settings ?? {};
     }
 
     public getEncryptedSettings(): string {
@@ -96,7 +98,7 @@ export class ApplicationInstall extends ADocument {
         return this.enabled;
     }
 
-    public setSettings(settings: IApplicationSettings): this {
+    public setSettings(settings?: IApplicationSettings): this {
         this.settings = settings;
         return this;
     }
@@ -112,7 +114,7 @@ export class ApplicationInstall extends ADocument {
     }
 
     public addSettings(setting: IApplicationSettings): this {
-        this.settings = deepmerge(this.settings, setting);
+        this.settings = deepmerge(this.getSettings(), setting);
         return this;
     }
 
@@ -127,6 +129,7 @@ export class ApplicationInstall extends ADocument {
             user: this.user,
             key: this.key,
             enabled: this.enabled,
+            deleted: this.deleted,
             nonEncryptedSettings: this.nonEncryptedSettings,
             created: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.created), DATE_TIME),
             update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(this.updated), DATE_TIME),

@@ -85,7 +85,7 @@ export default class ApplicationInstallRepository
             const encrypted = this.crypt.encrypt(entity.getSettings());
             entity.setEncryptedSettings(encrypted);
             entity.setUpdated();
-            entity.setSettings({});
+            entity.setSettings(undefined);
         }
 
         return this;
