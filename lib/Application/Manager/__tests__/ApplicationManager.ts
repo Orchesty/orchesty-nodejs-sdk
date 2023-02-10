@@ -42,6 +42,20 @@ describe('ApplicationManager tests', () => {
         return mockedRequest() as unknown as Request;
     }
 
+    function getMockedAppManager(oAuth2Provider: OAuth2Provider): ApplicationManager {
+        const testApp = new TestOAuth2Application(oAuth2Provider);
+        const mockedContainer = new DIContainer();
+        mockedContainer.setApplication(testApp);
+
+        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
+        const webhookRepository = container.getRepository(Webhook);
+
+        const mockedLoader = new ApplicationLoader(mockedContainer);
+        const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
+
+        return new ApplicationManager(mockedLoader, appRepo, webhookManager);
+    }
+
     beforeAll(() => {
         container = getTestContainer();
         dbClient = container.get(DatabaseClient);
@@ -185,17 +199,7 @@ describe('ApplicationManager tests', () => {
         const oAuth2Provider = new OAuth2Provider('');
         (oAuth2Provider.authorize as jest.MockedFunction<typeof oAuth2Provider.authorize>).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
 
-        const testApp = new TestOAuth2Application(oAuth2Provider);
-        const mockedContainer = new DIContainer();
-        mockedContainer.setApplication(testApp);
-
-        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
-        const webhookRepository = container.getRepository(Webhook);
-
-        const mockedLoader = new ApplicationLoader(mockedContainer);
-        const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
-        const mockedAppManager = new ApplicationManager(mockedLoader, appRepo, webhookManager);
-
+        const mockedAppManager = getMockedAppManager(oAuth2Provider);
         const dbInstall = await mockedAppManager.authorizationApplication(testOAuth2Name, USER, 'https://example.com');
         expect(dbInstall)
             .toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
@@ -217,16 +221,7 @@ describe('ApplicationManager tests', () => {
         (oAuth2Provider.getAccessToken as jest.MockedFunction<typeof oAuth2Provider.getAccessToken>)
             .mockResolvedValue({});
 
-        const testApp = new TestOAuth2Application(oAuth2Provider);
-        const mockedContainer = new DIContainer();
-        mockedContainer.setApplication(testApp);
-
-        const appRepo = container.getRepository(ApplicationInstall) as ApplicationInstallRepository;
-        const webhookRepository = container.getRepository(Webhook);
-
-        const mockedLoader = new ApplicationLoader(mockedContainer);
-        const webhookManager = new WebhookManager(mockedLoader, curl, webhookRepository, appRepo);
-        const mockedAppManager = new ApplicationManager(mockedLoader, appRepo, webhookManager);
+        const mockedAppManager = getMockedAppManager(oAuth2Provider);
         const frontendUrl = await mockedAppManager.saveAuthorizationToken(
             testOAuth2Name,
             USER,

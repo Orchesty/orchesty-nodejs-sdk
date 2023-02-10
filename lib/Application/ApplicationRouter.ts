@@ -71,7 +71,8 @@ export class ApplicationRouter extends ACommonRouter {
             try {
                 const redirectUrl = req.query.redirect_url;
                 if (!redirectUrl) {
-                    throw Error('Missing "redirect_url" query parameter.');
+                    createApiErrorResponse(req, res, { message: 'Missing "redirect_url" query parameter.' });
+                    return;
                 }
 
                 const url = await this.manager.authorizationApplication(
@@ -107,7 +108,8 @@ export class ApplicationRouter extends ACommonRouter {
             try {
                 const { state } = req.query;
                 if (!state) {
-                    throw Error('Missing "state" query parameter.');
+                    createApiErrorResponse(req, res, { message: 'Missing "state" query parameter.' });
+                    return;
                 }
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string
                 const stateDecode = OAuth2Provider.stateDecode(state.toString());
@@ -153,7 +155,8 @@ export class ApplicationRouter extends ACommonRouter {
                 const { name, user } = req.params;
                 const { password, formKey, fieldKey } = JSON.parse(req.body);
                 if (!password || !formKey || !fieldKey) {
-                    throw Error('Missing required parameters [password, formKey, fieldKey] in body.');
+                    createApiErrorResponse(req, res, { message: 'Missing required parameters [password, formKey, fieldKey] in body.' });
+                    return;
                 }
                 const response = await this.manager.saveApplicationPassword(name, user, formKey, fieldKey, password);
                 res.status(StatusCodes.OK);

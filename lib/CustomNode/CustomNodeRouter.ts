@@ -39,10 +39,9 @@ export default class CustomNodeRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/custom-node/list').get(async (req, res, next) => {
+        this.app.route('/custom-node/list').get((req, res, next) => {
             try {
-                // eslint-disable-next-line @typescript-eslint/await-thenable
-                res.json(await this.loader.getList(CUSTOM_NODE_PREFIX));
+                res.json(this.loader.getList(CUSTOM_NODE_PREFIX));
                 next();
             } catch (e) {
                 createApiErrorResponse(req, res, e);

@@ -30,7 +30,7 @@ import NodeRepository from './Storage/Database/Document/NodeRepository';
 import TopologyRunner from './Topology/TopologyRunner';
 import CurlSender from './Transport/Curl/CurlSender';
 
-export const routes: ACommonRouter[] = [];
+const routes: ACommonRouter[] = [];
 const container = new DIContainer();
 const expressApp: express.Application = express();
 
@@ -44,7 +44,7 @@ expressApp.use(express_prom_bundle({
         } },
 }));
 
-export function initiateContainer(): void {
+function initiateContainer(): void {
     // Instantiate core services
     const cryptProviders = [
         new WindWalkerCrypt(cryptOptions.secret),
@@ -100,7 +100,7 @@ export function initiateContainer(): void {
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }
 
-export function listen(): void {
+function listen(): void {
     expressApp.disable('x-powered-by');
     expressApp.use(errorHandler(container.getRepository(Node)));
     expressApp.listen(appOptions.port, () => {
@@ -111,4 +111,4 @@ export function listen(): void {
     });
 }
 
-export { container, expressApp };
+export { container, expressApp, initiateContainer, listen, routes };

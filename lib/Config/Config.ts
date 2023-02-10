@@ -19,6 +19,16 @@ function getUrl(name: string, fallback?: string): string {
     })();
 }
 
+export function getEnv(name: string, defaultValue?: string): string {
+    const env = process.env[name] ?? defaultValue;
+
+    if (!env) {
+        throw new Error(`Env [${name}] is missing.`);
+    }
+
+    return env;
+}
+
 export const metricsOptions = {
     curlMeasurement: 'connectors',
     processMeasurement: 'monolith',
@@ -31,9 +41,7 @@ export const appOptions = {
 };
 
 export const cryptOptions = {
-    secret: process.env.CRYPT_SECRET ?? (() => {
-        throw new Error('Env [CRYPT_SECRET] is missing.');
-    })(),
+    secret: getEnv('CRYPT_SECRET'),
 };
 
 export const orchestyOptions = {
