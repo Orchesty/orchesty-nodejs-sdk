@@ -26,5 +26,10 @@ services:
         ports:
             - ${DEV_IP}:6379:6379
 
+    mongo:
+        image: mongo
+        ports:
+            - ${DEV_IP}:27017:27017
+
 volumes:
     mongo: {}

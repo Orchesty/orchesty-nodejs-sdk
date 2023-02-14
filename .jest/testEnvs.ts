@@ -8,9 +8,11 @@ process.env.WORKER_API_HOST = 'https://wa.orchesty.com'
 if(process.env.JEST_DOCKER){
   // --- DOCKER ---
   process.env.REDIS_DSN = 'redis://redis'
+  process.env.MONGODB_DSN = 'mongodb://mongo'
 } else {
   // --- LOCALHOST ---
   process.env.REDIS_DSN = 'redis://127.0.0.40'
+  process.env.MONGODB_DSN = 'mongodb://127.0.0.40'
 }
 
 
