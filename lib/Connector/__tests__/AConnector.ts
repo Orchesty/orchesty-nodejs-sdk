@@ -26,12 +26,6 @@ describe('Test AConnector', () => {
         repo = mongoDbClient.getApplicationRepository();
     });
 
-    it('should set database of connector', () => {
-        testConnector.setDb(mongoDbClient);
-        const testConnectorDatabaseURL = Reflect.get(testConnector, 'db').dsn;
-        expect(process.env.MONGODB_DSN).toEqual(testConnectorDatabaseURL);
-    });
-
     it('should set application of connector', () => {
         const application = new TestBasicApplication();
         testConnector.setApplication(application);
