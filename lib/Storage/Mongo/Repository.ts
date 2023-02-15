@@ -11,9 +11,8 @@ export abstract class Repository<T extends { _id: ObjectId }> {
         this.collection = client.getCollection(collectionName);
     }
 
-    // eslint-disable-next-line @typescript-eslint/require-await
     public async get(id: ObjectId | string): Promise<T | null> {
-        return this.collection.findOne({ _id: this.ensureObjectId(id) }) as unknown as T | null;
+        return this.collection.findOne({ _id: this.ensureObjectId(id) }) as unknown as Promise<T | null>;
     }
 
     public async insert(document: T): Promise<T> {
