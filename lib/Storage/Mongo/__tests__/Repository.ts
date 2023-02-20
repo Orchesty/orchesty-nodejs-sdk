@@ -1,18 +1,13 @@
 // eslint-disable-next-line max-classes-per-file
-import { ObjectId } from 'mongodb';
 import { MongoDb } from '../MongoDb';
-import { Repository } from '../Repository';
+import { AbstractRepository } from '../Repository';
 
-class Doc {
-
-    public _id: ObjectId = new ObjectId();
-
-    public constructor(public data: string) {
-    }
-
+interface IDoc {
+    id: string;
+    data: string;
 }
 
-class DocRepository extends Repository<Doc> {
+class DocRepository extends AbstractRepository<IDoc> {
 }
 
 describe('Repository', () => {
@@ -22,7 +17,7 @@ describe('Repository', () => {
     beforeAll(async () => {
         client = new MongoDb(process.env.MONGODB_DSN ?? '');
         await client.connect();
-        repo = new DocRepository(client, Doc.name);
+        repo = new DocRepository(client, 'doc');
     });
 
     afterAll(async () => {
@@ -30,16 +25,19 @@ describe('Repository', () => {
     });
 
     it('CRUD', async () => {
-        const instance = new Doc('datas');
+        const instance: IDoc = { data: 'datas', id: '' };
         await repo.insert(instance);
-        const fetched = await repo.findOne({ _id: instance._id });
-        expect(fetched).toEqual(instance);
+        const fetched = await repo.findOne({ id: instance.id });
+        expect(fetched)
+            .toEqual(instance);
 
-        const fetchedMany = await repo.find({ data: 'datas' });
-        expect(fetchedMany[0]).toEqual(instance);
+        const fetchedMany = await repo.findMany({ data: 'datas' });
+        expect(fetchedMany[0])
+            .toEqual(instance);
 
         await repo.deleteAll();
-        const remaining = await repo.find({});
-        expect(remaining).toHaveLength(0);
+        const remaining = await repo.findMany({});
+        expect(remaining)
+            .toHaveLength(0);
     });
 });

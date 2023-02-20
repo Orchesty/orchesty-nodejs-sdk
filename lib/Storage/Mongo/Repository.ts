@@ -1,7 +1,8 @@
+/* eslint-disable no-param-reassign */
 import { Collection, Filter, FindOptions, IndexDescription, ObjectId } from 'mongodb';
 import { MongoDb } from './MongoDb';
 
-export abstract class Repository<T extends { _id: ObjectId }> {
+export abstract class AbstractRepository<T extends { id: string }> {
 
     protected readonly collection: Collection;
 
@@ -11,13 +12,16 @@ export abstract class Repository<T extends { _id: ObjectId }> {
         this.collection = client.getCollection(collectionName);
     }
 
-    public async get(id: ObjectId | string): Promise<T | null> {
-        return this.collection.findOne({ _id: this.ensureObjectId(id) }) as unknown as Promise<T | null>;
+    public async findById(id: ObjectId | string): Promise<T | null> {
+        return this.resultOrNull(
+            this.collection.findOne({ _id: this.ensureObjectId(id) }),
+        );
     }
 
     public async insert(document: T): Promise<T> {
         const result = await this.collection.insertOne(document);
-        document._id = result.insertedId;
+        document.id = result.insertedId.toHexString();
+        delete (document as Record<string, unknown>)._id;
 
         return document;
     }
@@ -27,34 +31,45 @@ export abstract class Repository<T extends { _id: ObjectId }> {
     }
 
     public async update(document: T): Promise<T> {
-        await this.collection.updateOne({ _id: document._id }, { $set: document });
+        await this.collection.updateOne({ _id: this.ensureObjectId(document.id) }, { $set: document });
 
         return document;
     }
 
-    public async findOne(query: Filter<unknown>, options: FindOptions = {}): Promise<T> {
-        const result = await this.collection.findOne(query, options);
-
-        return result as T;
+    public async findOne(query: Filter<unknown>, options: FindOptions = {}): Promise<T | null> {
+        return this.resultOrNull(
+            this.collection.findOne(this.remapId(query), options),
+        );
     }
 
-    public async find(query: Filter<unknown>, options: FindOptions = {}): Promise<T[]> {
-        const cursor = this.collection.find(query, options);
+    public async findMany(query: Filter<unknown>, options: FindOptions = {}): Promise<T[]> {
+        const cursor = this.collection.find(this.remapId(query), options);
+        const items = await cursor.toArray();
 
-        return await cursor.toArray() as T[];
+        return Promise.all(items.map(async (it) => this.resultOrNull(it)) as unknown as T[]);
     }
 
     public async upsert(document: T): Promise<T> {
-        const result = await this.collection.updateOne({ _id: document._id }, { $set: document }, { upsert: true });
+        const result = await this.collection.updateOne(
+            { _id: this.ensureObjectId(document.id) },
+            { $set: document },
+            { upsert: true },
+        );
         if (result.upsertedId) {
-            document._id = result.upsertedId;
+            document.id = result.upsertedId.toHexString();
         }
 
         return document;
     }
 
+    public async upsertMany(documents: T[]): Promise<T[]> {
+        const promises = documents.map(async (document) => this.upsert(document));
+
+        return Promise.all(promises);
+    }
+
     public async delete(filter: Filter<unknown>): Promise<void> {
-        await this.collection.deleteMany(filter);
+        await this.collection.deleteMany(this.remapId(filter));
     }
 
     public async deleteAll(): Promise<void> {
@@ -67,12 +82,39 @@ export abstract class Repository<T extends { _id: ObjectId }> {
         }
     }
 
-    private ensureObjectId(id: ObjectId | string): ObjectId {
+    /*
+        Helper methods for object management
+     */
+
+    protected ensureObjectId(id: ObjectId | string): ObjectId {
         if (typeof id === 'string') {
             return new ObjectId(id);
         }
 
         return id;
+    }
+
+    protected remapId(data: Record<string, unknown>): object {
+        if ('id' in data) {
+            data._id = this.ensureObjectId(data.id as ObjectId | string);
+            delete data.id;
+        }
+
+        return data;
+    }
+
+    protected async resultOrNull(result: unknown): Promise<T | null> {
+        const data = (await result) as Record<string, unknown> | null;
+        if (data) {
+            if ('_id' in data) {
+                data.id = (data._id as ObjectId).toHexString();
+                delete data._id;
+            }
+
+            return data as T;
+        }
+
+        return null;
     }
 
 }
