@@ -29,7 +29,16 @@ export default class ApplicationInstallRepository
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ users: [user], enabled, names: [name], deleted });
+        const filter: IApplicationInstallQueryFilter = {
+            users: [user],
+            enabled,
+            names: [name],
+        };
+        if (deleted !== undefined) {
+            filter.deleted = deleted;
+        }
+
+        return this.findOne(filter);
     }
 
     public async findOneByUser(
@@ -37,7 +46,15 @@ export default class ApplicationInstallRepository
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ users: [user], enabled, deleted });
+        const filter: IApplicationInstallQueryFilter = {
+            users: [user],
+            enabled,
+        };
+        if (deleted !== undefined) {
+            filter.deleted = deleted;
+        }
+
+        return this.findOne(filter);
     }
 
     public async findOneByName(
@@ -45,7 +62,15 @@ export default class ApplicationInstallRepository
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
-        return this.findOne({ names: [name], enabled, deleted });
+        const filter: IApplicationInstallQueryFilter = {
+            names: [name],
+            enabled,
+        };
+        if (deleted !== undefined) {
+            filter.deleted = deleted;
+        }
+
+        return this.findOne(filter);
     }
 
     public async findManyByUser(
@@ -55,7 +80,15 @@ export default class ApplicationInstallRepository
         sorter?: ISorter,
         paging?: IPaging,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ users: [user], enabled, deleted }, sorter, paging);
+        const filter: IApplicationInstallQueryFilter = {
+            users: [user],
+            enabled,
+        };
+        if (deleted !== undefined) {
+            filter.deleted = deleted;
+        }
+
+        return this.findMany(filter, sorter, paging);
     }
 
     public async findManyByName(
@@ -65,7 +98,15 @@ export default class ApplicationInstallRepository
         paging?: IPaging,
         sorter?: ISorter,
     ): Promise<ApplicationInstall[]> {
-        return this.findMany({ names: [name], enabled, deleted }, sorter, paging);
+        const filter: IApplicationInstallQueryFilter = {
+            names: [name],
+            enabled,
+        };
+        if (deleted !== undefined) {
+            filter.deleted = deleted;
+        }
+
+        return this.findMany(filter, sorter, paging);
     }
 
     public fromObject(object: unknown): ApplicationInstall {
