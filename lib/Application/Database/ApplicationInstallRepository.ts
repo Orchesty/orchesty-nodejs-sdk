@@ -9,7 +9,7 @@ export interface IApplicationInstallQueryFilter extends IFilter {
     names?: string[];
     users?: string[];
     expires?: number;
-    nonEncrypt?: Record<string, unknown>;
+    nonEncrypted?: Record<string, unknown>;
 }
 
 export default class ApplicationInstallRepository
