@@ -3,6 +3,7 @@ import Redis from '../Storage/Redis/Redis';
 import CurlSender from '../Transport/Curl/CurlSender';
 import RequestDto from '../Transport/Curl/RequestDto';
 import ResponseDto from '../Transport/Curl/ResponseDto';
+import { IResultRanges, repeatOnErrorRanges } from '../Transport/Curl/ResultCodeRange';
 
 export interface ICacheCallback<T> {
     dataToStore: T;
@@ -20,7 +21,7 @@ export default class CacheService {
         cacheKey: string,
         requestDto: RequestDto,
         getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
-        allowedCodes = [200],
+        allowedCodes = repeatOnErrorRanges,
     ): Promise<T> {
         try {
             // Restore if exist
@@ -30,7 +31,7 @@ export default class CacheService {
             }
 
             // Call endpoint for data
-            const response = await this.curlSender.send(requestDto, { repeat: allowedCodes });
+            const response = await this.curlSender.send(requestDto, allowedCodes);
 
             // Parse response & store data to cache & remove lock
             const dataCallback = await getDataCallback(response);
@@ -58,7 +59,7 @@ export default class CacheService {
         lockKey: string,
         requestDto: RequestDto,
         getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
-        allowedCodes = [200],
+        allowedCodes = repeatOnErrorRanges,
         tryCount = 0,
     ): Promise<T> {
         if (tryCount > MAX_TRY) {
@@ -87,7 +88,7 @@ export default class CacheService {
             }
 
             // Call endpoint for data
-            const response = await this.curlSender.send(requestDto, { repeat: allowedCodes });
+            const response = await this.curlSender.send(requestDto, allowedCodes);
 
             // Parse response & store data to cache & remove lock
             const dataCallback = await getDataCallback(response);
@@ -117,7 +118,7 @@ export default class CacheService {
         lockKey: string,
         requestDto: RequestDto,
         getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
-        allowedCodes: number[],
+        allowedCodes: IResultRanges,
         tryCount: number,
     ): Promise<T> {
         return new Promise((resolve) => {
