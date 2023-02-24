@@ -93,6 +93,8 @@ export default class NodeTester {
             dto.setJsonData(input.data);
         }
         dto.setHeaders({ ...input.headers, ...dto.getHeaders() });
+        dto.removeHeader(RESULT_CODE);
+        dto.removeHeader(RESULT_MESSAGE);
 
         try {
             const res = await node.processAction(dto);
