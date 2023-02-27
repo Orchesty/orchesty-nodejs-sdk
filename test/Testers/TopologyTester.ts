@@ -82,10 +82,6 @@ export default class TopologyTester {
 
             nextDto.push(dto);
         });
-
-        if ((out.getJsonData() as unknown[]).length <= 0) {
-            nextDto.push(out);
-        }
     }
 
     private parseTopologyFile(path: string): TestNode[] {
