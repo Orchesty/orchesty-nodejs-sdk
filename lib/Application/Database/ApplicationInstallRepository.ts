@@ -8,7 +8,7 @@ export interface IApplicationInstallQueryFilter extends IFilter {
     enabled: boolean | null;
     names?: string[];
     users?: string[];
-    expires?: number;
+    expires?: Date;
     nonEncrypted?: Record<string, unknown>;
 }
 
