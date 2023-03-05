@@ -296,7 +296,7 @@ export default class TopologyTester {
         }
 
         const clone = new ProcessDto();
-        clone.setHeaders(dto.getHeaders());
+        clone.setHeaders(dto?.getHeaders() ?? {});
         if (body) {
             clone.setJsonData(body);
         } else {
