@@ -1,5 +1,5 @@
 // --- COMMONS ---
-process.env.APP_ENV = 'debug'
+process.env.APP_ENV = 'prod' // 'debug' <= use it if you want to see more logs
 process.env.CRYPT_SECRET = 'ThisIsNotSoSecret'
 process.env.BACKEND_URL = 'http://127.0.0.40:8080'
 process.env.STARTING_POINT_URL = 'https://sp.orchesty.com'
