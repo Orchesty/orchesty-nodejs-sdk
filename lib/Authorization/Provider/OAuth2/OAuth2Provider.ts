@@ -93,13 +93,18 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
 
         const { access_token, token_type, refresh_token, expires_at, ...others } = accessToken.token;
 
-        return {
+        const token: Record<string, unknown> = {
             [ACCESS_TOKEN]: access_token,
             [TOKEN_TYPE]: token_type,
-            [REFRESH_TOKEN]: refresh_token,
             [EXPIRES]: expires_at,
             [OTHERS]: others,
         };
+
+        if (refresh_token) {
+            token[REFRESH_TOKEN] = refresh_token;
+        }
+
+        return token;
     }
 
     private createClient(dto: IOAuth2Dto, customConfig = {}): AuthorizationCode {
