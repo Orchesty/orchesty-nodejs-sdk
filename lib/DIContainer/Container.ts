@@ -5,6 +5,7 @@ import ABatchNode from '../Batch/ABatchNode';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
 import { IBatchNode } from '../Batch/IBatchNode';
 import ACommonNode from '../Commons/ACommonNode';
+import ANode from '../Commons/ANode';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { INode } from '../Commons/INode';
 import AConnector from '../Connector/AConnector';
@@ -76,7 +77,7 @@ export default class DIContainer {
     }
 
     public setNode<T extends INode>(node: T, application: IApplication | null = null): INode {
-        if (node instanceof ACommonNode) {
+        if (node instanceof ANode) {
             node.setDb(this.get(DatabaseClient));
             if (application) {
                 node.setApplication(application);
