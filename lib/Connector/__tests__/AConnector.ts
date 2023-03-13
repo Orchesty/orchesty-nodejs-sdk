@@ -3,7 +3,6 @@ import TestConnector from '../../../test/Connector/TestConnector';
 import { appInstallConfig, mockOnce } from '../../../test/MockServer';
 import { getTestContainer, USER } from '../../../test/TestAbstact';
 import { IApplication } from '../../Application/Base/IApplication';
-import ApplicationInstallRepository from '../../Application/Database/ApplicationInstallRepository';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
 import DatabaseClient from '../../Storage/Database/Client';
@@ -16,14 +15,12 @@ describe('Test AConnector', () => {
     let mongoDbClient: DatabaseClient;
     let curlSender: CurlSender;
     let testConnector: TestConnector;
-    let repo: ApplicationInstallRepository;
 
     beforeAll(() => {
         container = getTestContainer();
         mongoDbClient = container.get(DatabaseClient);
         curlSender = container.get(CurlSender);
         testConnector = new TestConnector();
-        repo = mongoDbClient.getApplicationRepository();
     });
 
     it('should set application of connector', () => {
@@ -51,8 +48,6 @@ describe('Test AConnector', () => {
             },
             response: { body: [appInstallConfig] },
         }]);
-
-        repo.clearCache();
 
         const dto = new ProcessDto();
         dto.setHeaders({ user: USER });

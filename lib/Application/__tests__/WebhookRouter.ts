@@ -1,25 +1,22 @@
 import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
 import { createDocumentMockedServer, mockOnce } from '../../../test/MockServer';
-import { expressApp, getApplicationWithSettings, getTestContainer, USER, WEBHOOK_NAME } from '../../../test/TestAbstact';
+import {
+    expressApp,
+    getApplicationWithSettings,
+    getTestContainer,
+    USER,
+    WEBHOOK_NAME,
+} from '../../../test/TestAbstact';
 import { orchestyOptions } from '../../Config/Config';
-import DIContainer from '../../DIContainer/Container';
-import DatabaseClient from '../../Storage/Database/Client';
 import { HttpMethods } from '../../Transport/HttpMethods';
-
-let container: DIContainer;
-let dbClient: DatabaseClient;
 
 describe('tests for WebhookRouter', () => {
     beforeAll(() => {
-        container = getTestContainer();
-        dbClient = container.get(DatabaseClient);
+        getTestContainer();
     });
 
     beforeEach(() => {
-        const repo = dbClient.getApplicationRepository();
-        repo.clearCache();
-
         mockOnce([{
             request: {
                 method: HttpMethods.GET,

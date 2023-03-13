@@ -1,10 +1,7 @@
-import NodeCache from 'node-cache';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Client from '../../Worker-api/Client';
 import ADocument, { ClassType } from './ADocument';
 import DatabaseClient from './Client';
-
-const STD_TTL = 1;
 
 export interface ISorter {
     created: 'asc' | 'desc';
@@ -33,15 +30,12 @@ implements IRepository<T> {
 
     public collection: string;
 
-    private readonly cache: NodeCache;
-
     private readonly client: Client;
 
     public constructor(
         collection: ClassType<T>,
         databaseClient: DatabaseClient,
     ) {
-        this.cache = new NodeCache({ stdTTL: STD_TTL, checkperiod: 1 });
         this.collection = collection.getCollection();
         this.client = databaseClient.getClient();
     }
@@ -49,11 +43,6 @@ implements IRepository<T> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fromObject(object: unknown): T {
         throw new Error('Method not implemented.');
-    }
-
-    public clearCache(): this {
-        this.cache.flushAll();
-        return this;
     }
 
     public async insert(entity: T): Promise<this> {
@@ -65,7 +54,7 @@ implements IRepository<T> {
         entities.forEach((entity) => this.beforeSend(entity));
         await this.client.send(`/document/${this.collection}`, HttpMethods.POST, entities);
         entities.forEach((entity) => this.afterReceive(entity));
-        return this.clearCache();
+        return this;
     }
 
     public async update(entity: T): Promise<this> {
@@ -88,11 +77,6 @@ implements IRepository<T> {
     public async findMany(filter?: F, sorter?: S, paging?: P): Promise<T[]> {
         const path = this.createQuery(filter, sorter, paging);
 
-        const cacheRecord = this.findInCache<T[]>(path);
-        if (cacheRecord) {
-            return cacheRecord;
-        }
-
         const result = await this.client.send(path, HttpMethods.GET);
 
         if (result.status !== 200) {
@@ -107,13 +91,7 @@ implements IRepository<T> {
             return entity;
         });
 
-        if (entities.length) {
-            this.cache.set(path, entities);
-
-            return entities;
-        }
-
-        return [];
+        return entities;
     }
 
     public async remove(entity: T): Promise<this> {
@@ -123,7 +101,7 @@ implements IRepository<T> {
 
     public async removeMany(filter?: F): Promise<this> {
         await this.client.send(this.createQuery(filter), HttpMethods.DELETE);
-        return this.clearCache();
+        return this;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,14 +112,6 @@ implements IRepository<T> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected afterReceive(entity: T): this {
         return this;
-    }
-
-    private findInCache<O>(path: string): O | undefined {
-        if (this.cache.has(path)) {
-            return this.cache.get(path);
-        }
-
-        return undefined;
     }
 
     private createQuery(filter?: F, sorter?: S, paging?: P): string {

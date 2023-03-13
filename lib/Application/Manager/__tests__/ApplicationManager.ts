@@ -8,7 +8,6 @@ import { PASSWORD } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
 import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
-import DatabaseClient from '../../../Storage/Database/Client';
 import CurlSender from '../../../Transport/Curl/CurlSender';
 import { HttpMethods } from '../../../Transport/HttpMethods';
 import ApplicationLoader from '../../ApplicationLoader';
@@ -22,7 +21,6 @@ import WebhookManager from '../WebhookManager';
 
 let container: DIContainer;
 let appManager: ApplicationManager;
-let dbClient: DatabaseClient;
 let curl: CurlSender;
 const testName = 'test';
 const testOAuth2Name = 'oauth2application';
@@ -58,7 +56,6 @@ describe('ApplicationManager tests', () => {
 
     beforeAll(() => {
         container = getTestContainer();
-        dbClient = container.get(DatabaseClient);
         curl = container.get(CurlSender);
         appManager = container.get(ApplicationManager);
     });
@@ -74,9 +71,6 @@ describe('ApplicationManager tests', () => {
                 testName,
             )] },
         }]);
-
-        const repo = dbClient.getApplicationRepository();
-        repo.clearCache();
     });
 
     it('applications', () => {

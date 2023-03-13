@@ -14,7 +14,6 @@ import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provid
 import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
-import DatabaseClient from '../../Storage/Database/Client';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import { encode } from '../../Utils/Base64';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
@@ -27,7 +26,6 @@ describe('Test ApplicationRouter', () => {
     let oAuthApplication: IApplication;
     let provider: OAuth2Provider;
     let container: DIContainer;
-    let dbClient: DatabaseClient;
     let oauthName: string;
     let authorizationURL: string;
     const testName = 'test';
@@ -37,13 +35,10 @@ describe('Test ApplicationRouter', () => {
         application = container.getApplication('test');
         oAuthApplication = container.getApplication('oauth2application');
         provider = container.get(OAuth2Provider);
-        dbClient = container.get(DatabaseClient);
     });
 
     beforeEach(async () => {
         await dropCollection();
-        const repo = dbClient.getApplicationRepository();
-        repo.clearCache();
 
         oauthName = oAuthApplication.getName();
 

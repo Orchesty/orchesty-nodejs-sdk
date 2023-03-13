@@ -7,7 +7,6 @@ import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
 import errorHandler from '../../Middleware/ErrorHandler';
 import Node from '../../Storage/Database/Document/Node';
-import NodeRepository from '../../Storage/Database/Document/NodeRepository';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import { REPEAT_INTERVAL, REPEAT_MAX_HOPS } from '../../Utils/Headers';
 import CustomNodeRouter from '../CustomNodeRouter';
@@ -16,18 +15,15 @@ describe('Test CustomNodeRouter', () => {
     let container: DIContainer;
     let customNode: ICommonNode;
     let testOnRepeatExceptionCustom: ICommonNode;
-    let nodeRepository: NodeRepository;
 
     beforeAll(() => {
         container = getTestContainer();
         customNode = container.getCustomNode('testcustom');
         testOnRepeatExceptionCustom = container.getCustomNode('testOnRepeatExceptionCustom');
         expressApp.use(errorHandler(container.getRepository(Node)));
-        nodeRepository = container.getRepository(Node);
     });
 
     beforeEach(() => {
-        nodeRepository.clearCache();
         createDocumentMockedServer();
     });
 
