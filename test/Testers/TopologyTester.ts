@@ -221,7 +221,6 @@ export default class TopologyTester {
                 index += 1;
                 dto.removeHeader(RESULT_CODE);
                 [out] = await this.recursiveRunner(node, this.cloneProcessDto(dto), prefix, index);
-                nextDto.push(this.cloneProcessDto(out, {}));
                 break;
             // Repeat batch until cursor ends and store message
             case ResultCode.BATCH_CURSOR_WITH_FOLLOWERS.toString():
