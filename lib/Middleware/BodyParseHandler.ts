@@ -9,7 +9,10 @@ export default function bodyParser(req: Request, res: Response, next: NextFuncti
     req.on('end', () => {
         req.body = data;
 
-        logger.debug(`Incoming request: Method[${req.method}] Url[${req.url}] Headers[${JSON.stringify(req.headers)}] Body[${req.body}]`, req);
+        logger.debug(
+            `Incoming request: Method[${req.method}] Url[${req.url}] Headers[${JSON.stringify(req.headers)}] Body[${req.body}]`,
+            logger.createCtx(req),
+        );
 
         next();
     });

@@ -39,7 +39,7 @@ export default class FileSystem {
         } catch (e) {
             if (e instanceof Error) {
                 error = e;
-                logger.error(`Write to file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, { error });
+                logger.error(`Write to file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, {}, false, error);
             }
             throw e;
         } finally {
@@ -69,7 +69,7 @@ export default class FileSystem {
             return data.map<DataStorageDocument<T>>((item) => DataStorageDocument.fromJson(item));
         } catch (error) {
             if (error instanceof Error) {
-                logger.error(`Read file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, { error });
+                logger.error(`Read file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, {}, false, error);
                 await this.sleep();
                 return this.read<T>(file, actualTry + 1);
             }
@@ -91,7 +91,7 @@ export default class FileSystem {
             return true;
         } catch (error) {
             if (error instanceof Error) {
-                logger.error(`Delete file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, { error });
+                logger.error(`Delete file [${file}] was not successful. Tries [${actualTry}/${this.maxTries}]`, {}, false, error);
                 await this.sleep();
                 return this.delete(file, actualTry + 1);
             }

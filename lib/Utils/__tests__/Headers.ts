@@ -55,14 +55,14 @@ describe('Test headers utils', () => {
 
     it('getSequenceId', () => {
         const v = getSequenceId(mockedHeaders);
-        expect(v).toEqual(1);
+        expect(v).toEqual('1');
     });
 
     it('getSequenceId if not exist', () => {
         const updatedHeaders = mockedHeaders;
         delete updatedHeaders['sequence-id'];
         const v = getSequenceId(updatedHeaders);
-        expect(v).toEqual(0);
+        expect(v).toEqual('0');
     });
 
     it('getRepeatHops', () => {

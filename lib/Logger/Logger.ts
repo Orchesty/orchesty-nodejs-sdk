@@ -1,42 +1,30 @@
 import { Request } from 'express';
-import * as os from 'os';
 import pino from 'pino';
 import { appOptions, orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
 import * as headers from '../Utils/Headers';
+import { IHttpHeaders } from '../Utils/Headers';
 import ResultCode from '../Utils/ResultCode';
 import Client from '../Worker-api/Client';
 
 export interface ILogContext {
-    topology_id?: string;
-    topology_name?: string;
-    node_id?: string;
-    user_id?: string;
-    node_name?: string;
-    correlation_id?: string;
-    process_id?: string;
-    parent_id?: string;
-    sequence_id?: number;
-    result_code?: ResultCode;
-    result_message?: string;
-    error?: Error;
-    data?: string;
-    isForUi?: boolean;
-}
-
-interface ILoggerFormat {
-    timestamp: number;
-    hostname: string;
-    service: string;
-    level: string;
-    message: string;
+    timestamp?: number;
+    service?: string;
+    levelName?: string;
+    message?: string;
+    previousNodeId?: string;
     nodeId?: string;
-    userId?: string;
     nodeName?: string;
     topologyId?: string;
     topologyName?: string;
     correlationId?: string;
+    previousCorrelationId?: string;
+    processId?: string;
+    parentId?: string;
+    sequenceId?: string;
+    userId?: string;
+    applications?: string;
     resultCode?: ResultCode;
     resultMessage?: string;
     stacktrace?: {
@@ -44,7 +32,6 @@ interface ILoggerFormat {
         trace?: string;
     };
     data?: string;
-    isForUi?: boolean;
 }
 
 export class Logger {
@@ -61,76 +48,52 @@ export class Logger {
 
     public info(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('info', message, context);
-        this.logger.info(data, message);
+        this.logger.info(data);
         this.send(data, isForUi);
     }
 
     public warn(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('warn', message, context);
-        this.logger.warn(data, message);
+        this.logger.warn(data);
         this.send(data, isForUi);
     }
 
     public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false, err?: Error): void {
         const data = this.format('error', message, context, err);
-        this.logger.error(data, message);
+        this.logger.error(data);
         this.send(data, isForUi);
     }
 
-    public createCtx(
-        payload: AProcessDto | ILogContext | Request,
-        err?: Error,
-    ): ILogContext {
-        if (payload) {
-            if (payload instanceof Request) {
-                return this.ctxFromReq(payload as Request, err);
-            }
-            if (payload instanceof AProcessDto) {
-                return this.ctxFromDto(payload, err);
-            }
-            return payload as ILogContext;
+    public createCtx(payload: AProcessDto | ILogContext | Request): ILogContext {
+        if (payload instanceof Request) {
+            return this.ctxFromHeaders(JSON.parse((payload as Request)?.body || '{}')?.headers || {});
         }
 
-        return {};
+        if (payload instanceof AProcessDto) {
+            return this.ctxFromHeaders(payload.getHeaders());
+        }
+
+        return payload as ILogContext;
     }
 
-    public ctxFromDto(dto: AProcessDto, err?: Error): ILogContext {
-        const ctx: ILogContext = {
-            node_id: headers.getNodeId(dto.getHeaders()),
-            correlation_id: headers.getCorrelationId(dto.getHeaders()),
-            topology_id: headers.getTopologyId(dto.getHeaders()),
-            process_id: headers.getProcessId(dto.getHeaders()),
-            parent_id: headers.getParentId(dto.getHeaders()),
-            sequence_id: headers.getSequenceId(dto.getHeaders()),
-            user_id: headers.getUserId(dto.getHeaders()),
+    public ctxFromHeaders(processHeaders: IHttpHeaders): ILogContext {
+        return {
+            previousNodeId: headers.getPreviousNodeId(processHeaders),
+            nodeId: headers.getNodeId(processHeaders),
+            nodeName: headers.getNodeName(processHeaders),
+            previousCorrelationId: headers.getPreviousCorrelationId(processHeaders),
+            correlationId: headers.getCorrelationId(processHeaders),
+            topologyId: headers.getTopologyId(processHeaders),
+            topologyName: headers.getTopologyName(processHeaders),
+            processId: headers.getProcessId(processHeaders),
+            parentId: headers.getParentId(processHeaders),
+            sequenceId: headers.getSequenceId(processHeaders),
+            userId: headers.getUserId(processHeaders),
+            applications: headers.getApplications(processHeaders),
         };
-
-        if (err) {
-            ctx.error = err;
-        }
-
-        return ctx;
     }
 
-    public ctxFromReq(req: Request, err?: Error): ILogContext {
-        const ctx: ILogContext = {
-            node_id: headers.getNodeId(req.headers),
-            correlation_id: headers.getCorrelationId(req.headers),
-            topology_id: headers.getTopologyId(req.headers),
-            process_id: headers.getProcessId(req.headers),
-            parent_id: headers.getParentId(req.headers),
-            sequence_id: headers.getSequenceId(req.headers),
-            user_id: headers.getUserId(req.headers),
-        };
-
-        if (err) {
-            ctx.error = err;
-        }
-
-        return ctx;
-    }
-
-    private send(data: ILoggerFormat, isForUi = false): void {
+    private send(data: ILogContext, isForUi = false): void {
         if (isForUi) {
             this.workerApi.send('/logger/logs', HttpMethods.POST, { ...data, isForUi: true })
                 .catch((e) => {
@@ -144,58 +107,18 @@ export class Logger {
         message: string,
         payload: AProcessDto | ILogContext | Request,
         err?: Error,
-    ): ILoggerFormat {
-        const line: ILoggerFormat = {
-            timestamp: Date.now(),
-            hostname: os.hostname(),
-            service: 'sdk',
-            level: `${level}`.toLowerCase(),
-            message: message?.replace(/\s\s+/g, ' '),
-        };
+    ): ILogContext {
+        const line = this.createCtx(payload);
+        line.timestamp = Date.now();
+        line.service = 'sdk';
+        line.levelName = `${level}`.toLowerCase();
+        line.message = message?.replace(/\s\s+/g, ' ');
 
-        const context = this.createCtx(payload, err);
-
-        if (context.topology_id) {
-            line.topologyId = context.topology_id;
-        }
-
-        if (context.topology_name) {
-            line.topologyName = context.topology_name;
-        }
-
-        if (context.correlation_id) {
-            line.correlationId = context.correlation_id;
-        }
-
-        if (context.user_id) {
-            line.userId = context.user_id;
-        }
-
-        if (context.node_id) {
-            line.nodeId = context.node_id;
-        }
-
-        if (context.node_name) {
-            line.nodeName = context.node_name;
-        }
-
-        if (context.result_code && context.result_code >= 0) {
-            line.resultCode = context.result_code;
-        }
-
-        if (context.result_message) {
-            line.resultMessage = context.result_message;
-        }
-
-        if (context.error) {
+        if (err) {
             line.stacktrace = {
-                message: context.error.message.replace(/\s\s+/g, ' '),
-                trace: context.error.stack,
+                message: err.message.replace(/\s\s+/g, ' '),
+                trace: err.stack,
             };
-        }
-
-        if (context.data) {
-            line.data = context.data;
         }
 
         return line;

@@ -62,12 +62,28 @@ export function getCorrelationId(headers: IHttpHeaders): string | undefined {
     return get(CORRELATION_ID, headers);
 }
 
+export function getPreviousCorrelationId(headers: IHttpHeaders): string | undefined {
+    return get(PREV_CORRELATION_ID, headers);
+}
+
 export function getTopologyId(headers: IHttpHeaders): string | undefined {
     return get(TOPOLOGY_ID, headers);
 }
 
+export function getTopologyName(headers: IHttpHeaders): string | undefined {
+    return get(TOPOLOGY_NAME, headers);
+}
+
 export function getNodeId(headers: IHttpHeaders): string | undefined {
     return get(NODE_ID, headers);
+}
+
+export function getNodeName(headers: IHttpHeaders): string | undefined {
+    return get(NODE_NAME, headers);
+}
+
+export function getPreviousNodeId(headers: IHttpHeaders): string | undefined {
+    return get(PREV_NODE_ID, headers);
 }
 
 export function getProcessId(headers: IHttpHeaders): string | undefined {
@@ -78,12 +94,16 @@ export function getParentId(headers: IHttpHeaders): string | undefined {
     return get(PARENT_ID, headers);
 }
 
-export function getSequenceId(headers: IHttpHeaders): number {
-    return parseInt(get(SEQUENCE_ID, headers) ?? '0', 10);
+export function getSequenceId(headers: IHttpHeaders): string {
+    return get(SEQUENCE_ID, headers) ?? '0';
 }
 
 export function getUserId(headers: IHttpHeaders): string {
     return get(USER, headers) ?? '0';
+}
+
+export function getApplications(headers: IHttpHeaders): string | undefined {
+    return get(APPLICATIONS, headers);
 }
 
 export function getRepeatHops(headers: IHttpHeaders): number {

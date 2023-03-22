@@ -15,14 +15,19 @@ function afterResponse(
     next();
 
     const times = Metrics.getTimes(startMetrics);
-    sender.sendProcessMetrics(
-        times,
-        getCorrelationId(req.headers),
-        getNodeId(req.headers),
-        getCorrelationId(req.headers),
-    ).catch((e) => logger.error(e?.message ?? e, req));
+    sender
+        .sendProcessMetrics(
+            times,
+            getCorrelationId(req.headers),
+            getNodeId(req.headers),
+            getCorrelationId(req.headers),
+        )
+        .catch((e) => logger.error(e?.message ?? e, req));
 
-    logger.debug(`Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`, req);
+    logger.debug(
+        `Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`,
+        logger.createCtx(req),
+    );
 }
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {
