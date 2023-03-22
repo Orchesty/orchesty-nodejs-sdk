@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "4.2.13",
+  "version": "4.2.14",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
