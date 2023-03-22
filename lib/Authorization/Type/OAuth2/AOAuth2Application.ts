@@ -32,7 +32,7 @@ export default abstract class AOAuth2Application extends AApplication implements
             this.createDto(applicationInstall),
             this.getScopes(applicationInstall),
             this.getScopesSeparator(),
-            this.getProviderCustomOptions(),
+            this.getProviderCustomOptions(applicationInstall),
         );
     }
 
@@ -71,7 +71,7 @@ export default abstract class AOAuth2Application extends AApplication implements
         const token = await this.provider.refreshAccessToken(
             this.createDto(applicationInstall),
             this.getTokens(applicationInstall),
-            this.getProviderCustomOptions(),
+            this.getProviderCustomOptions(applicationInstall),
         );
 
         applicationInstall.setExpires(token[EXPIRES] ?? undefined);
@@ -89,15 +89,13 @@ export default abstract class AOAuth2Application extends AApplication implements
             token.code,
             this.getScopes(applicationInstall),
             this.getScopesSeparator(),
-            this.getProviderCustomOptions(),
+            this.getProviderCustomOptions(applicationInstall),
         );
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         applicationInstall.setExpires(tokenFromProvider[EXPIRES] ?? undefined);
 
-        if (Object.hasOwn(tokenFromProvider, EXPIRES)) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call
-            (tokenFromProvider as any)[EXPIRES] = (tokenFromProvider as any)[EXPIRES].toString();
+        if (Object.hasOwn(tokenFromProvider, EXPIRES) && tokenFromProvider[EXPIRES] !== undefined) {
+            tokenFromProvider[EXPIRES] = tokenFromProvider[EXPIRES].toString();
         }
 
         applicationInstall.addSettings({
@@ -138,7 +136,8 @@ export default abstract class AOAuth2Application extends AApplication implements
         return ScopeSeparatorEnum.COMMA;
     }
 
-    protected getProviderCustomOptions(): Record<string, unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected getProviderCustomOptions(applicationInstall: ApplicationInstall): Record<string, unknown> {
         return {
             options: {
                 authorizationMethod: 'body',
