@@ -148,6 +148,14 @@ export default abstract class AApplication implements IApplication {
             });
         });
 
+        if (definedFields[CoreFormsEnum.AUTHORIZATION_FORM]) {
+            if (!definedFields[CoreFormsEnum.AUTHORIZATION_FORM].includes('token')) {
+                definedFields[CoreFormsEnum.AUTHORIZATION_FORM].push('token');
+            }
+        } else {
+            definedFields[CoreFormsEnum.AUTHORIZATION_FORM] = ['token'];
+        }
+
         if (Object.keys(preparedSettings).length > 0) {
             applicationInstall.addSettings(preparedSettings);
         }
