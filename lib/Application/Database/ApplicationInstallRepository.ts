@@ -6,7 +6,7 @@ import { ApplicationInstall } from './ApplicationInstall';
 
 export interface IApplicationInstallQueryFilter extends IFilter {
     enabled: boolean | null;
-    names?: string[];
+    names?: string[] | { nin: string[] };
     users?: string[];
     expires?: Date;
     nonEncrypted?: Record<string, unknown>;
