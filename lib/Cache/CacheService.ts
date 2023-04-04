@@ -113,6 +113,10 @@ export default class CacheService {
         }
     }
 
+    public async deleteCache(cacheKey: string): Promise<boolean> {
+        return this.redis.remove(cacheKey);
+    }
+
     private async recurseEntryWithLock<T>(
         cacheKey: string,
         lockKey: string,
