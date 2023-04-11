@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { IOAuth2Application } from '../../Authorization/Type/OAuth2/IOAuth2Application';
-import { HttpMethods } from '../../Transport/HttpMethods';
+import { HttpMethods, parseHttpMethod } from '../../Transport/HttpMethods';
 import Annotation from '../../Utils/Annotation';
 import { getLimiterKey, getLimiterKeyWithGroup } from '../../Utils/Headers';
 import ApplicationLoader from '../ApplicationLoader';
@@ -46,7 +46,7 @@ export default class ApplicationManager {
         const syncMethod = `sync${method[0].toUpperCase()}${method.substring(1)}`;
         if (typeof app[syncMethod] === 'function') {
             let resp;
-            if (request.method === HttpMethods.GET) {
+            if (parseHttpMethod(request.method) === HttpMethods.GET) {
                 resp = await app[syncMethod](); // eslint-disable-line @typescript-eslint/no-unsafe-call
             } else {
                 resp = await app[syncMethod](request); // eslint-disable-line @typescript-eslint/no-unsafe-call

@@ -238,7 +238,7 @@ export default abstract class AApplication implements IApplication {
     }
 
     protected autoInjectLimitForm(forms: FormStack, applicationInstall: ApplicationInstall): Promise<void> | void {
-        let limiterForm = forms.getForms().find((it) => it.getKey() === CoreFormsEnum.LIMITER_FORM);
+        let limiterForm = forms.getForms().find((it) => it.getKey() === CoreFormsEnum.LIMITER_FORM.toString());
 
         if (!limiterForm) {
             limiterForm = new Form(CoreFormsEnum.LIMITER_FORM, getFormName(CoreFormsEnum.LIMITER_FORM));

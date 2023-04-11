@@ -1,10 +1,11 @@
+import { StatusCodes } from 'http-status-codes';
 import { IResponseDto } from '../IResponseDto';
 
 export default class ResponseDto<JsonBody = unknown> implements IResponseDto<JsonBody> {
 
     public constructor(
         private readonly body: string,
-        private readonly code: number,
+        private readonly code: StatusCodes,
         private readonly headers: Record<string, unknown>,
         private readonly buffer: Buffer,
         private readonly reason?: string,
@@ -31,7 +32,7 @@ export default class ResponseDto<JsonBody = unknown> implements IResponseDto<Jso
         return this.reason;
     }
 
-    public getResponseCode(): number {
+    public getResponseCode(): StatusCodes {
         return this.code;
     }
 

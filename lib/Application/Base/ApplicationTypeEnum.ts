@@ -6,10 +6,10 @@ enum ApplicationTypeEnum {
 
 export default ApplicationTypeEnum;
 
-export function isWebhook(type: string): boolean {
+export function isWebhook(type: ApplicationTypeEnum): boolean {
     return type === ApplicationTypeEnum.WEBHOOK;
 }
 
-export function isCron(type: string): boolean {
+export function isCron(type: ApplicationTypeEnum): boolean {
     return type === ApplicationTypeEnum.CRON;
 }
