@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import ResponseDto from '../ResponseDto';
 
 let responseDto: ResponseDto;
@@ -5,7 +6,7 @@ const jsonBody = { param1: 1, param2: 2 };
 
 describe('test for ResponseDto', () => {
     beforeEach(() => {
-        responseDto = new ResponseDto(JSON.stringify(jsonBody), 999, {}, Buffer.from(''), 'testReason');
+        responseDto = new ResponseDto(JSON.stringify(jsonBody), StatusCodes.CONFLICT, {}, Buffer.from(''), 'testReason');
     });
 
     it('getBody', () => {
@@ -24,6 +25,6 @@ describe('test for ResponseDto', () => {
     });
 
     it('getResponseCode', () => {
-        expect(responseDto.getResponseCode()).toEqual(999);
+        expect(responseDto.getResponseCode()).toEqual(409);
     });
 });

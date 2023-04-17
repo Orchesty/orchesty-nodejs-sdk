@@ -108,7 +108,7 @@ describe('Tests ProcessDto utils', () => {
 
     it('setStopProcess with unsupported ResultCode', () => {
         const dto = new ProcessDto();
-        expect(() => dto.setStopProcess(10000, 'nok')).toThrow(Error);
+        expect(() => dto.setStopProcess(ResultCode.UNKNOWN_ERROR, 'nok')).toThrow(Error);
     });
 
     it('setRepeater and removeRepeater', () => {

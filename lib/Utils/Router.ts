@@ -33,7 +33,6 @@ function logResponseProcess(dto: AProcessDto): void {
         logger.error(
             `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
             dto,
-            true,
         );
     }
 }
@@ -55,7 +54,7 @@ export function createApiErrorResponse(req: Request, res: Response, e?: unknown)
     }
 
     res.setHeader('Content-Type', 'application/json');
-    logger.error(`Request process failed. Message: [${message}]`, {}, true);
+    logger.error(`Request process failed. Message: [${message}]`, {});
     res.send(JSON.stringify({ status: 'Error', message }));
 }
 
