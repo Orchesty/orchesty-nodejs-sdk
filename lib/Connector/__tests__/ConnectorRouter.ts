@@ -42,9 +42,10 @@ describe('Test ConnectorRouter', () => {
 
         await supertest(expressApp)
             .post(`/connector/${connector.getName()}/action`)
+            .send(JSON.stringify({ headers: { user: 'test' }, body: { foo: 'bar' } }))
             .expect(StatusCodes.OK, {
                 body: JSON.stringify({ response: 'mockedResponse' }),
-                headers: { 'result-code': '0', 'result-message': 'Processed successfully.' },
+                headers: { 'result-code': '0', 'result-message': 'Processed successfully.', user: 'test' },
             });
     });
 

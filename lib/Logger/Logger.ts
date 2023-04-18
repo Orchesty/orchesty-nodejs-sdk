@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { IncomingMessage } from 'http';
 import pino from 'pino';
 import { appOptions, orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
@@ -42,7 +43,7 @@ export class Logger {
 
     public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
         const data = this.format('debug', message, context);
-        this.logger.debug(data, message);
+        this.logger.debug(data);
         this.send(data, isForUi);
     }
 
@@ -65,15 +66,15 @@ export class Logger {
     }
 
     public createCtx(payload: AProcessDto | ILogContext | Request): ILogContext {
-        if (payload instanceof Request) {
-            return this.ctxFromHeaders(JSON.parse((payload as Request)?.body || '{}')?.headers || {});
+        if (payload instanceof IncomingMessage) {
+            return this.ctxFromHeaders(JSON.parse(payload?.body || '{}')?.headers || {});
         }
 
         if (payload instanceof AProcessDto) {
             return this.ctxFromHeaders(payload.getHeaders());
         }
 
-        return payload as ILogContext;
+        return payload;
     }
 
     public ctxFromHeaders(processHeaders: IHttpHeaders): ILogContext {
