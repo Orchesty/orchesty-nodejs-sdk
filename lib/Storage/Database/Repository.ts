@@ -80,10 +80,10 @@ implements IRepository<T> {
         const result = await this.client.send(path, HttpMethods.GET);
 
         if (result.status !== 200) {
-            throw new Error(result?.data?.message ?? 'Unknown exception!');
+            throw new Error(result?.data?.message?.error ?? 'Unknown exception!');
         }
 
-        const find = result.data;
+        const find = Array.isArray(result.data) ? result.data : [];
 
         const entities: T[] = find.map((item: unknown) => {
             const entity = this.fromObject(item);
