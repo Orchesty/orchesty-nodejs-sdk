@@ -11,7 +11,6 @@ export const NODE_ID = 'node-id';
 export const NODE_NAME = 'node-name';
 export const TOPOLOGY_ID = 'topology-id';
 export const TOPOLOGY_NAME = 'topology-name';
-export const APPLICATION = 'application';
 export const USER = 'user';
 export const WORKER_FOLLOWERS = 'worker-followers';
 export const FORCE_TARGET_QUEUE = 'force-target-queue';
@@ -74,8 +73,8 @@ export function getTopologyName(headers: IHttpHeaders): string | undefined {
     return get(TOPOLOGY_NAME, headers);
 }
 
-export function getNodeId(headers: IHttpHeaders): string | undefined {
-    return get(NODE_ID, headers);
+export function getNodeId(headers: IHttpHeaders): string {
+    return get(NODE_ID, headers) ?? '';
 }
 
 export function getNodeName(headers: IHttpHeaders): string | undefined {

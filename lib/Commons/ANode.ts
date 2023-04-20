@@ -26,6 +26,14 @@ export default abstract class ANode implements INode {
         return this;
     }
 
+    public getApplicationName(): string {
+        try {
+            return this.getApplication().getName();
+        } catch (e) {
+            return '';
+        }
+    }
+
     protected getApplication<T extends IApplication>(): T {
         if (this.application) {
             return this.application as T;

@@ -25,8 +25,11 @@ export default abstract class AProcessDto<JsonData = unknown> {
 
     protected data: string;
 
+    protected currentApp: string;
+
     public constructor() {
         this.data = '';
+        this.currentApp = '';
         this.headers = {};
         this.free = true;
     }
@@ -39,6 +42,16 @@ export default abstract class AProcessDto<JsonData = unknown> {
 
     public setUser(value: string | undefined): this {
         this.headers.user = value;
+
+        return this;
+    }
+
+    public getCurrentApp(): string {
+        return this.currentApp;
+    }
+
+    public setCurrentApp(value: string): this {
+        this.currentApp = value;
 
         return this;
     }
@@ -59,6 +72,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
         if (free) {
             this.clearData();
             this.headers = {};
+            this.currentApp = '';
         }
         this.free = free;
 

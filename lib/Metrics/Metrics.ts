@@ -87,32 +87,34 @@ export default class Metrics {
     public async sendCurlMetrics(
         timeData: ITimesMetrics,
         responseCode: number,
-        nodeId?: string,
-        correlationId?: string,
-        user?: string,
+        user: string,
+        nodeId: string,
         appKey?: string,
+        correlationId?: string,
+        url?: string,
     ): Promise<boolean> {
         const tags: ITagsMap = {};
         if (user) {
             tags.user_id = user;
         }
-        if (appKey) {
-            tags.application_id = appKey;
-        }
         if (nodeId) {
             tags.node_id = nodeId;
+        }
+        if (appKey) {
+            tags.application_id = appKey;
         }
         if (correlationId) {
             tags.correlation_id = correlationId;
         }
+        if (url) {
+            tags.url = url;
+        }
 
         const fields: IMetricsFields = {
             created: new Date(),
-            user_id: user ?? '',
-            application_id: appKey ?? '',
             sent_request_total_duration: timeData.requestDuration,
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            response_code: responseCode ?? null,
+            response_code: responseCode,
         };
 
         try {

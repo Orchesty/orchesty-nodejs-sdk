@@ -134,8 +134,9 @@ describe('tests Router Utils', () => {
 
     it('createProcessDto', async () => {
         const req = mockRequest();
-        const dto = await createProcessDto(req);
+        const dto = await createProcessDto(req, 'testApp');
         expect(dto.getHeader(NODE_ID)).toEqual('123');
         expect(dto.getJsonData()).toEqual({ body: 'aaa' });
+        expect(dto.getCurrentApp()).toEqual('testApp');
     });
 });

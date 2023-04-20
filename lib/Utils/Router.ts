@@ -158,22 +158,24 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
     });
 }
 
-export async function createProcessDto(req: Request): Promise<ProcessDto> {
+export async function createProcessDto(req: Request, appName = ''): Promise<ProcessDto> {
     const dto = await getFreeDto();
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
     dto.setData(parsed.body || '{}');
     dto.setHeaders(parsed.headers || {});
+    dto.setCurrentApp(appName);
 
     return dto;
 }
 
-export async function createBatchProcessDto(req: Request): Promise<BatchProcessDto> {
+export async function createBatchProcessDto(req: Request, appName: string): Promise<BatchProcessDto> {
     const dto = await getFreeBatchDto();
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
     dto.setBridgeData(parsed.body || '{}');
     dto.setHeaders(parsed.headers || {});
+    dto.setCurrentApp(appName);
 
     return dto;
 }

@@ -3,7 +3,7 @@ import OnRepeatException from '../../Exception/OnRepeatException';
 import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
-import { APPLICATION, CORRELATION_ID, NODE_ID, USER } from '../../Utils/Headers';
+import { getCorrelationId, getNodeId, getUserId } from '../../Utils/Headers';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
 import { defaultRanges, inRange, IResultRanges, StatusRange } from './ResultCodeRange';
@@ -41,10 +41,10 @@ export default class CurlSender {
         try {
             const req = CurlSender.createInitFromDto(dto);
             const response = await axios(dto.getUrl(), req);
-            await this.sendMetrics(dto, startTime, response.status);
             const buffer = await response.data;
             const body = buffer?.toString() ?? '';
             CurlSender.log(dto, req, response, body);
+            await this.sendMetrics(dto, startTime, response.status);
 
             if (codeRanges) {
                 return await this.handleByResultCode(
@@ -106,7 +106,7 @@ export default class CurlSender {
             return this.returnResponseDto(body, response, buffer);
         }
 
-        if (response.status < 300) {
+        if (status < 300) {
             return this.returnResponseDto(body, response, buffer);
         }
 
@@ -154,21 +154,16 @@ export default class CurlSender {
 
     private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics, responseCode: number): Promise<void> {
         const info = dto.getDebugInfo();
-        try {
-            const times = Metrics.getTimes(startTimes);
-            await this.metrics.sendCurlMetrics(
-                times,
-                responseCode,
-                info.getHeader(NODE_ID),
-                info.getHeader(CORRELATION_ID),
-                info.getHeader(USER),
-                info.getHeader(APPLICATION),
-            ).catch((e) => logger.error(e?.message ?? e, info));
-        } catch (e) {
-            if (typeof e === 'string') {
-                logger.error(e, info);
-            }
-        }
+        const times = Metrics.getTimes(startTimes);
+        await this.metrics.sendCurlMetrics(
+            times,
+            responseCode,
+            getUserId(info.getHeaders()),
+            getNodeId(info.getHeaders()),
+            info.getCurrentApp(),
+            getCorrelationId(info.getHeaders()),
+            dto.getUrl(),
+        ).catch((e) => logger.error(e?.message ?? 'Metrics: unknown error', info, false, e));
     }
 
 }

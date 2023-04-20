@@ -1,7 +1,7 @@
 import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
+import ANode from '../Commons/ANode';
 import CommonLoader from '../Commons/CommonLoader';
-import { ICommonNode } from '../Commons/ICommonNode';
 import { createApiErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
 
 export const CONNECTOR_PREFIX = 'hbpf.connector';
@@ -15,8 +15,10 @@ export default class ConnectorRouter extends ACommonRouter {
     public configureRoutes(): express.Application {
         this.app.route('/connector/:name/action').post(async (req, res, next) => {
             try {
-                const connector = this.loader.get(CONNECTOR_PREFIX, req.params.name) as ICommonNode;
-                const dto = await connector.processAction(await createProcessDto(req));
+                const connector = this.loader.get(CONNECTOR_PREFIX, req.params.name) as ANode;
+                const dto = await connector.processAction(
+                    await createProcessDto(req, connector.getApplicationName()),
+                );
 
                 createSuccessResponse(res, dto);
                 res.on('finish', () => {

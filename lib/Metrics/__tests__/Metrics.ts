@@ -59,10 +59,11 @@ describe('Test metrics', () => {
         const curlMetrics = await metrics.sendCurlMetrics(
             mockITimesMetrics,
             200,
-            'randomNodeId',
-            'randomCorrelationId',
             'randomUser',
+            'randomNodeId',
             'randomAppKey',
+            'randomCorrelationId',
+            'randomUrl',
         );
         expect(curlMetrics).toBeTruthy();
     });
