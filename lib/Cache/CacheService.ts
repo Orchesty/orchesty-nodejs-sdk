@@ -42,13 +42,10 @@ export default class CacheService {
             }
 
             return dataCallback.dataToStore;
-        } catch (e) {
-            const msg = 'Unknown error in CacheService.';
-            if (e instanceof Error) {
-                logger.error(e.message, {}, false, e);
-            } else {
-                logger.error(msg, {});
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+            const msg = e?.message ?? 'Unknown error in CacheService.';
+            logger.error(msg, {}, false, e);
 
             throw new Error(`Unexpected error: ${msg}`);
         }
@@ -101,13 +98,10 @@ export default class CacheService {
             await this.redis.remove(lockKey);
 
             return dataCallback.dataToStore;
-        } catch (e) {
-            const msg = 'Unknown error in CacheService.';
-            if (e instanceof Error) {
-                logger.error(e.message, {}, false, e);
-            } else {
-                logger.error(msg, {});
-            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+            const msg = e?.message ?? 'Unknown error in CacheService.';
+            logger.error(msg, {}, false, e);
 
             throw new Error(`Unexpected error: ${msg}`);
         }
