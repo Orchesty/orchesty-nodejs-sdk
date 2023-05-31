@@ -114,12 +114,20 @@ export class ApplicationInstall extends ADocument {
     }
 
     public addSettings(setting: IApplicationSettings): this {
-        this.settings = deepmerge(this.getSettings(), setting);
+        this.settings = deepmerge(
+            this.getSettings(),
+            setting,
+            { arrayMerge: (destinationArray, sourceArray) => sourceArray },
+        );
         return this;
     }
 
     public addNonEncryptedSettings(nonEncryptedSettings: IApplicationSettings): this {
-        this.nonEncryptedSettings = deepmerge(this.nonEncryptedSettings, nonEncryptedSettings);
+        this.nonEncryptedSettings = deepmerge(
+            this.nonEncryptedSettings,
+            nonEncryptedSettings,
+            { arrayMerge: (destinationArray, sourceArray) => sourceArray },
+        );
         return this;
     }
 

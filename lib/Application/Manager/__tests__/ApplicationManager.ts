@@ -66,10 +66,7 @@ describe('ApplicationManager tests', () => {
                 method: HttpMethods.GET,
                 url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
             },
-            response: { body: [getApplicationWithSettings(
-                undefined,
-                testName,
-            )] },
+            response: { body: [getApplicationWithSettings(undefined, testName)] },
         }]);
     });
 
@@ -145,7 +142,10 @@ describe('ApplicationManager tests', () => {
 
     it('saveApplicationSettings', async () => {
         const appSettings = {
-            param1: 'p1',
+            testForm: {
+                param1: 'p1',
+                multi: ['p1', 'b', 'a'],
+            },
         };
         const dbInstall = await appManager.saveApplicationSettings(testName, USER, appSettings);
 

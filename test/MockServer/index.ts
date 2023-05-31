@@ -53,6 +53,9 @@ export const appInstallConfig = {
             [FRONTEND_REDIRECT_URL]: 'url',
             [TOKEN]: 'testToken',
         },
+        testForm: {
+            multi: ['a', 'b'],
+        },
     },
     enabled: false,
     created: new Date(2022, 11, 5),

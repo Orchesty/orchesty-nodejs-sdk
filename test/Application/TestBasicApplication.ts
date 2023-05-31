@@ -48,11 +48,14 @@ export default class TestBasicApplication extends ABasicApplication {
         form.addField(fieldText);
 
         const fieldText1 = new Field(FieldType.TEXT, 'host', label);
+        const multi = new Field(FieldType.MULTI_SELECT, 'multi', label);
         const field1 = new Field(FieldType.TEXT, 'database', label);
 
         const form1 = new Form('testForm', 'testPublicName');
-        form1.addField(field1);
-        form1.addField(fieldText1);
+        form1
+            .addField(field1)
+            .addField(multi)
+            .addField(fieldText1);
 
         const formStack = new FormStack();
         formStack.addForm(form);
