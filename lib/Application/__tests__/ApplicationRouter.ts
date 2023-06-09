@@ -14,10 +14,12 @@ import { OAuth2Provider } from '../../Authorization/Provider/OAuth2/OAuth2Provid
 import { PASSWORD } from '../../Authorization/Type/Basic/ABasicApplication';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
+import DatabaseClient from '../../Storage/Database/Client';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import { encode } from '../../Utils/Base64';
 import CoreFormsEnum from '../Base/CoreFormsEnum';
 import { IApplication } from '../Base/IApplication';
+import ApplicationInstallRepository from '../Database/ApplicationInstallRepository';
 import { IField } from '../Model/Form/Field';
 import assertions from './assertions.json';
 
@@ -26,6 +28,7 @@ describe('Test ApplicationRouter', () => {
     let oAuthApplication: IApplication;
     let provider: OAuth2Provider;
     let container: DIContainer;
+    let repo: ApplicationInstallRepository;
     let oauthName: string;
     let authorizationURL: string;
     const testName = 'test';
@@ -35,6 +38,7 @@ describe('Test ApplicationRouter', () => {
         application = container.getApplication('test');
         oAuthApplication = container.getApplication('oauth2application');
         provider = container.get(OAuth2Provider);
+        repo = container.get(DatabaseClient).getApplicationRepository();
     });
 
     beforeEach(async () => {
@@ -92,6 +96,7 @@ describe('Test ApplicationRouter', () => {
             },
             response: { body: [getApplicationWithSettings(limiterForm)] },
         }]);
+        repo.clearCache();
 
         await supertest(expressApp)
             .post('/applications/limits')

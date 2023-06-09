@@ -51,3 +51,8 @@ export const orchestyOptions = {
     orchestyApiKey: process.env.ORCHESTY_API_KEY ?? '',
     systemUser: 'orchesty',
 };
+
+export const databaseOptions = {
+    repositoryCacheTTL: parseInt(getEnv('REPOSITORY_CACHE_TTL', '10'), 10),
+    periodCacheChecker: parseInt(getEnv('PERIOD_CACHE_CHECKER', '1'), 10),
+};

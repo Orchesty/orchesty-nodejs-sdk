@@ -33,7 +33,7 @@ export const nodeConfig = {
         host: 'testHost',
     },
     rabbit: {
-        prefetch: 'tesePrefetch',
+        prefetch: '50',
     },
     repeater: {
         enabled: true,

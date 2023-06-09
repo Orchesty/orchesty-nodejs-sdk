@@ -1,3 +1,5 @@
+import NodeCache from 'node-cache';
+import { databaseOptions } from '../../Config/Config';
 import { HttpMethods } from '../../Transport/HttpMethods';
 import Client from '../../Worker-api/Client';
 import ADocument, { ClassType } from './ADocument';
@@ -32,17 +34,27 @@ implements IRepository<T> {
 
     private readonly client: Client;
 
+    private readonly cache: NodeCache;
+
     public constructor(
         collection: ClassType<T>,
         databaseClient: DatabaseClient,
     ) {
         this.collection = collection.getCollection();
         this.client = databaseClient.getClient();
+        this.cache = new NodeCache(
+            { stdTTL: databaseOptions.repositoryCacheTTL, checkperiod: databaseOptions.periodCacheChecker },
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fromObject(object: unknown): T {
         throw new Error('Method not implemented.');
+    }
+
+    public clearCache(): this {
+        this.cache.flushAll();
+        return this;
     }
 
     public async insert(entity: T): Promise<this> {
@@ -54,7 +66,8 @@ implements IRepository<T> {
         entities.forEach((entity) => this.beforeSend(entity));
         await this.client.send(`/document/${this.collection}`, HttpMethods.POST, entities);
         entities.forEach((entity) => this.afterReceive(entity));
-        return this;
+
+        return this.clearCache();
     }
 
     public async update(entity: T): Promise<this> {
@@ -77,6 +90,11 @@ implements IRepository<T> {
     public async findMany(filter?: F, sorter?: S, paging?: P): Promise<T[]> {
         const path = this.createQuery(filter, sorter, paging);
 
+        const cacheRecord = this.findInCache<T[]>(path);
+        if (cacheRecord) {
+            return cacheRecord;
+        }
+
         const result = await this.client.send(path, HttpMethods.GET);
 
         if (result.status !== 200) {
@@ -91,6 +109,10 @@ implements IRepository<T> {
             return entity;
         });
 
+        if (entities.length) {
+            this.cache.set(path, entities);
+        }
+
         return entities;
     }
 
@@ -101,7 +123,8 @@ implements IRepository<T> {
 
     public async removeMany(filter?: F): Promise<this> {
         await this.client.send(this.createQuery(filter), HttpMethods.DELETE);
-        return this;
+
+        return this.clearCache();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -112,6 +135,14 @@ implements IRepository<T> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected afterReceive(entity: T): this {
         return this;
+    }
+
+    private findInCache<O>(path: string): O | undefined {
+        if (this.cache.has(path)) {
+            return this.cache.get(path);
+        }
+
+        return undefined;
     }
 
     private createQuery(filter?: F, sorter?: S, paging?: P): string {
