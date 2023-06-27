@@ -21,6 +21,8 @@ export default class Webhook extends ADocument {
 
     private unsubscribeFailed = false;
 
+    private readonly deleted = false;
+
     public constructor() {
         super();
     }

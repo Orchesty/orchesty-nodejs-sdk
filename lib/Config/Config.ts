@@ -53,6 +53,6 @@ export const orchestyOptions = {
 };
 
 export const databaseOptions = {
-    repositoryCacheTTL: parseInt(getEnv('REPOSITORY_CACHE_TTL', '10'), 10),
+    repositoryCacheTTL: parseInt(getEnv('REPOSITORY_CACHE_TTL', '1'), 10),
     periodCacheChecker: parseInt(getEnv('PERIOD_CACHE_CHECKER', '1'), 10),
 };
