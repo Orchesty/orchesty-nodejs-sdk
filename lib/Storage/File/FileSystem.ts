@@ -7,7 +7,7 @@ export default class FileSystem {
 
     private lockedFiles: string[] = [];
 
-    public constructor(private readonly millisecondsDelayOnFail: number = 2000, private readonly maxTries = 5) {
+    public constructor(private readonly millisecondsDelayOnFail = 2000, private readonly maxTries = 5) {
     }
 
     public async write<T>(file: string, data: DataStorageDocument<T>[], actualTry = 1): Promise<boolean> {

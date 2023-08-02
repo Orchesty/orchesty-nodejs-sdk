@@ -20,7 +20,7 @@ export default class CacheService {
     public async entry<T>(
         cacheKey: string,
         requestDto: RequestDto,
-        getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
+        getDataCallback: (res: ResponseDto) => ICacheCallback<T> | Promise<ICacheCallback<T>>,
         allowedCodes = repeatOnErrorRanges,
     ): Promise<T> {
         try {
@@ -55,7 +55,7 @@ export default class CacheService {
         cacheKey: string,
         lockKey: string,
         requestDto: RequestDto,
-        getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
+        getDataCallback: (res: ResponseDto) => ICacheCallback<T> | Promise<ICacheCallback<T>>,
         allowedCodes = repeatOnErrorRanges,
         tryCount = 0,
     ): Promise<T> {
@@ -115,7 +115,7 @@ export default class CacheService {
         cacheKey: string,
         lockKey: string,
         requestDto: RequestDto,
-        getDataCallback: (res: ResponseDto) => Promise<ICacheCallback<T>>,
+        getDataCallback: (res: ResponseDto) => ICacheCallback<T> | Promise<ICacheCallback<T>>,
         allowedCodes: IResultRanges,
         tryCount: number,
     ): Promise<T> {

@@ -27,7 +27,7 @@ export default class Field {
         private readonly key: string,
         private label: string,
         private value: unknown = null,
-        private required: boolean = false,
+        private required = false,
     ) {
     }
 

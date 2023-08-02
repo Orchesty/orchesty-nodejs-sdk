@@ -20,7 +20,7 @@ export default class CustomAction {
             body?: string;
         },
     ) {
-        if (!(requestInfo.url || requestInfo.topologyName && requestInfo.nodeName)) {
+        if (!(requestInfo.url ?? (requestInfo.topologyName && requestInfo.nodeName))) {
             throw new Error('One or more parameters are missing: url or topologyName and nodeName');
         }
 
