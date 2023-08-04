@@ -21,7 +21,7 @@ mirror:
     stage: mirror
     when: manual
     script:
-        - "curl -X POST -F token=${MIRROR_TOKEN} -F ref=master -F variables\\[REPO\\]=hanaboso-pipes-nodejs-sdk https://gitlab.hanaboso.net/api/v4/projects/38/trigger/pipeline"
+        - "curl -X POST --fail -F token=${MIRROR_TOKEN} -F ref=master -F variables\\[REPO\\]=hanaboso-pipes-nodejs-sdk https://gitlab.hanaboso.net/api/v4/projects/131/trigger/pipeline"
 
 cleanup:
     stage: cleanup
