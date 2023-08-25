@@ -12,9 +12,4 @@
 
 ## How to develop
 1. Run `make init` for start dev environment
-1. Tests can be run by `make test` or `make fasttest`
-
-## How to publish new package version
-1. Be logged into npmjs.com
-1. Increase version number in package.json
-1. Run `make publish`
+2. Tests can be run by `make test` or `make fasttest`
