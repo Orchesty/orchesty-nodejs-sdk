@@ -1,4 +1,5 @@
 import express from 'express';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import express_prom_bundle from 'express-prom-bundle';
 import ApplicationLoader from './Application/ApplicationLoader';
 import { ApplicationRouter } from './Application/ApplicationRouter';

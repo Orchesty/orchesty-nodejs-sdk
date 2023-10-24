@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import * as fs from 'fs';
 import { contentType } from 'mime-types';
 import path from 'path';
@@ -207,25 +206,25 @@ export default abstract class AApplication implements IApplication {
 
     public syncAfterInstallCallback(req: Request): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, name } = JSON.parse(req.body);
+        const { user, name } = JSON.parse(String(req.body));
         // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
     public syncAfterUninstallCallback(req: Request): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, name } = JSON.parse(req.body);
+        const { user, name } = JSON.parse(String(req.body));
         // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
     public syncAfterEnableCallback(req: Request): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, name } = JSON.parse(req.body);
+        const { user, name } = JSON.parse(String(req.body));
         // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
     public syncAfterDisableCallback(req: Request): void {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { user, name } = JSON.parse(req.body);
+        const { user, name } = JSON.parse(String(req.body));
         // You can find AppInstall by user & name. E.g.: If you want to call topology
     }
 
