@@ -5,7 +5,7 @@ enum CoreFormsEnum {
 
 export default CoreFormsEnum;
 
-export function getFormName(key: string): string {
+export function getFormName(key: CoreFormsEnum): string {
     switch (key) {
         case CoreFormsEnum.AUTHORIZATION_FORM:
             return 'Authorization';
