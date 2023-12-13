@@ -18,6 +18,12 @@ export default class TopologyRunner {
         return `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}/token/${token}/run`;
     }
 
+    public static getStartUrl(topology: string, node: string, runByName = true, _user?: string): string {
+        const user = _user !== undefined ? `/user/${_user}` : '';
+
+        return `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run${runByName ? '-by-name' : ''}`;
+    }
+
     public async runByName(
         data: Record<string, unknown>,
         topology: string,
@@ -26,8 +32,7 @@ export default class TopologyRunner {
         _user?: string,
         _headers?: Record<string, string>,
     ): Promise<ResponseDto> {
-        const user = _user !== undefined ? `/user/${_user}` : '';
-        const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run-by-name`;
+        const url = TopologyRunner.getStartUrl(topology, node, true, _user);
 
         return this.run(url, data, processDto, _headers);
     }
@@ -40,8 +45,7 @@ export default class TopologyRunner {
         _user?: string,
         _headers?: Record<string, string>,
     ): Promise<ResponseDto> {
-        const user = _user !== undefined ? `/user/${_user}` : '';
-        const url = `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run`;
+        const url = TopologyRunner.getStartUrl(topology, node, false, _user);
 
         return this.run(url, data, processDto, _headers);
     }

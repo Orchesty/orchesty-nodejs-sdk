@@ -27,6 +27,16 @@ describe('TopologyRunner tests', () => {
         expect(whUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/token/hash/run');
     });
 
+    it('get start url with name', () => {
+        const spUrl = TopologyRunner.getStartUrl('topoName', 'nodeName', true, 'user');
+        expect(spUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run-by-name');
+    });
+
+    it('get start url', () => {
+        const spUrl = TopologyRunner.getStartUrl('topoName', 'nodeName', false, 'user');
+        expect(spUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run');
+    });
+
     it('run by name', async () => {
         const mockAdapter = mockCurl('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/run-by-name');
         const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto());
