@@ -112,7 +112,7 @@ export class Logger {
         const line = this.createCtx(payload);
         line.timestamp = Date.now();
         line.service = 'sdk';
-        line.levelName = `${level}`.toLowerCase();
+        line.levelName = level.toLowerCase();
         line.message = message?.replace(/\s\s+/g, ' ');
 
         if (err) {
