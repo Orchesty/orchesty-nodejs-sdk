@@ -106,7 +106,7 @@ describe('Test ApplicationRouter', () => {
             });
     });
 
-    const expectedSyncActionsResult = '["testSyncMethod","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
+    const expectedSyncActionsResult = '["testSyncMethod","testSyncMethodResponse","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
     it('get /applications/:name route', async () => {
         const expectedResult = `{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true,"syncMethods":${expectedSyncActionsResult}}`;
         await supertest(expressApp)
@@ -123,6 +123,14 @@ describe('Test ApplicationRouter', () => {
     it('post /applications/:name/sync/:method route', async () => {
         const method = 'testSyncMethod';
         const expectedResult = '"{\\"param1\\":\\"p1\\",\\"param2\\":\\"p2\\"}"';
+        await supertest(expressApp)
+            .post(`/applications/${application.getName()}/sync/${method}`)
+            .expect(StatusCodes.OK, expectedResult);
+    });
+
+    it('post /applications/:name/sync/:method route with custom response', async () => {
+        const method = 'testSyncMethodResponse';
+        const expectedResult = 'plaintext';
         await supertest(expressApp)
             .post(`/applications/${application.getName()}/sync/${method}`)
             .expect(StatusCodes.OK, expectedResult);

@@ -2,6 +2,7 @@ import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { OAuth2Provider } from '../Authorization/Provider/OAuth2/OAuth2Provider';
 import ACommonRouter from '../Commons/ACommonRouter';
+import { CommonHeaders } from '../Utils/Headers';
 import { createApiErrorResponse } from '../Utils/Router';
 import ApplicationManager from './Manager/ApplicationManager';
 
@@ -60,7 +61,18 @@ export class ApplicationRouter extends ACommonRouter {
         this.app.route('/applications/:name/sync/:method')
             .all(async (req, res, next) => {
                 try {
-                    res.json(await this.manager.runSynchronousAction(req.params.name, req.params.method, req));
+                    const syncResp = await this.manager.runSynchronousAction(req.params.name, req.params.method, req);
+                    if (syncResp instanceof Response) {
+                        if (syncResp.headers.has(CommonHeaders.CONTENT_TYPE)) {
+                            res.set(
+                                CommonHeaders.CONTENT_TYPE,
+                                syncResp.headers.get(CommonHeaders.CONTENT_TYPE) as string,
+                            );
+                        }
+                        res.send(Buffer.from(await syncResp.text()));
+                    } else {
+                        res.json(syncResp);
+                    }
                     next();
                 } catch (e) {
                     createApiErrorResponse(req, res, e);

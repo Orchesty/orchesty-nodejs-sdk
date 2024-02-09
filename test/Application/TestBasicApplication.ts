@@ -9,6 +9,7 @@ import FormStack from '../../lib/Application/Model/Form/FormStack';
 import { ABasicApplication, PASSWORD, USER } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import RequestDto from '../../lib/Transport/Curl/RequestDto';
 import { HttpMethods } from '../../lib/Transport/HttpMethods';
+import { CommonHeaders } from '../../lib/Utils/Headers';
 import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBasicApplication extends ABasicApplication {
@@ -23,6 +24,13 @@ export default class TestBasicApplication extends ABasicApplication {
 
     // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
     public async syncTestSyncMethodVoid(): Promise<void> {
+    }
+
+    public syncTestSyncMethodResponse(): Response {
+        const res = new Response('plaintext');
+        res.headers.append(CommonHeaders.CONTENT_TYPE, 'text/plain');
+
+        return res;
     }
 
     public getDescription(): string {

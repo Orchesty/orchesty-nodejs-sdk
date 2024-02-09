@@ -115,6 +115,7 @@ describe('ApplicationManager tests', () => {
         expect(appManager.getSynchronousActions(testName))
             .toEqual([
                 'testSyncMethod',
+                'testSyncMethodResponse',
                 'testSyncMethodVoid',
                 'afterDisableCallback',
                 'afterEnableCallback',
