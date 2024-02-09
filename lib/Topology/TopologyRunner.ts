@@ -24,6 +24,19 @@ export default class TopologyRunner {
         return `${orchestyOptions.startingPoint}/topologies/${topology}/nodes/${node}${user}/run${runByName ? '-by-name' : ''}`;
     }
 
+    public async runWebhook(
+        data: Record<string, unknown>,
+        topology: string,
+        node: string,
+        token: string,
+        processDto: ProcessDto,
+        _headers?: Record<string, string>,
+    ): Promise<ResponseDto> {
+        const url = TopologyRunner.getWebhookUrl(topology, node, token);
+
+        return this.run(url, data, processDto, _headers);
+    }
+
     public async runByName(
         data: Record<string, unknown>,
         topology: string,

@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "4.2.37",
+  "version": "4.2.38",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -36,7 +36,7 @@
     "pino": "^8.18.0",
     "prom-client": "^15.1.0",
     "simple-oauth2": "^5.0.0",
-    "sodium-native": "^4.0.7"
+    "sodium-native": "^4.0.8"
   },
   "devDependencies": {
     "@hanaboso/eslint-plugin": "^1.1.1",

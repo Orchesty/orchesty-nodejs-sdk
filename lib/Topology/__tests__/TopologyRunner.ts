@@ -84,4 +84,12 @@ describe('TopologyRunner tests', () => {
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
         mockAdapter.restore();
     });
+
+    it('run webhook', async () => {
+        const mockAdapter = mockCurl('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/token/hash/run');
+        const res = await runner.runWebhook({}, 'topoName', 'nodeName', 'hash', new ProcessDto());
+
+        expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+        mockAdapter.restore();
+    });
 });
