@@ -194,9 +194,22 @@ export default class ApplicationManager {
         return appInstalls.map((appInstall) => {
             const limiterForm = appInstall.getSettings()?.[CoreFormsEnum.LIMITER_FORM];
 
-            const useLimit = limiterForm?.[USE_LIMIT] ?? undefined;
-            const time = limiterForm?.[TIME] ?? undefined;
-            const value = limiterForm?.[VALUE] ?? undefined;
+            let useLimit = limiterForm?.[USE_LIMIT] ?? undefined;
+            let time = limiterForm?.[TIME] ?? undefined;
+            let value = limiterForm?.[VALUE] ?? undefined;
+
+            if (!useLimit || !time || !value) {
+                let app: AApplication | undefined;
+                try {
+                    app = this.getApplication(appInstall.getName()) as AApplication;
+                } catch (e) {
+                    //
+                }
+
+                useLimit = app?.getGlobalLimits(appInstall)[USE_LIMIT];
+                time = app?.getGlobalLimits(appInstall)[TIME];
+                value = app?.getGlobalLimits(appInstall)[VALUE];
+            }
 
             if (!useLimit || !time || !value) {
                 return '';

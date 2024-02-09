@@ -3,7 +3,7 @@ import MockAdapter, { RequestHandler } from 'axios-mock-adapter';
 import CoreFormsEnum from '../../lib/Application/Base/CoreFormsEnum';
 import { TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import { CLIENT_ID, FRONTEND_REDIRECT_URL } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
-import { metricsOptions, orchestyOptions } from '../../lib/Config/Config';
+import { metricsOptions, orchestyOptions, testerOptions } from '../../lib/Config/Config';
 import { HttpMethods } from '../../lib/Transport/HttpMethods';
 import { NAME, USER } from '../TestAbstact';
 
@@ -75,7 +75,7 @@ export const webhookConfig = {
     unsubscribeFailed: false,
 };
 
-export const mockAdapter = new MockAdapter(axios);
+export const mockAdapter = new MockAdapter(axios, testerOptions);
 
 export function mockOnce(mocks: IMockServer[] = []): void {
     mocks.forEach((mock) => {

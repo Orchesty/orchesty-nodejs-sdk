@@ -232,6 +232,13 @@ export default abstract class AApplication implements IApplication {
         return [];
     }
 
+    public getGlobalLimits(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        applicationInstall: ApplicationInstall,
+    ): { [USE_LIMIT]?: boolean, [TIME]?: number, [VALUE]?: number, [GROUP_TIME]?: number, [GROUP_VALUE]?: number } {
+        return {};
+    }
+
     // eslint-disable-next-line
     protected customFormReplace(forms: FormStack, applicationInstall: ApplicationInstall): void | Promise<void> {
     }

@@ -1,3 +1,3 @@
-FROM node:21-alpine
+FROM node:slim
 
 RUN npm i -g pnpm
