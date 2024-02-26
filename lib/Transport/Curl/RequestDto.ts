@@ -6,6 +6,8 @@ export default class RequestDto implements IRequestDto {
 
     private timeout: number;
 
+    private auth: { username: string; password: string; } | undefined;
+
     public constructor(
         private url: string,
         private method: HttpMethods,
@@ -86,6 +88,14 @@ export default class RequestDto implements IRequestDto {
         this.body = JSON.stringify(body);
 
         return this;
+    }
+
+    public setAuth(username: string, password: string): void {
+        this.auth = { username, password };
+    }
+
+    public getAuth(): { username: string; password: string; } | undefined {
+        return this.auth;
     }
 
 }

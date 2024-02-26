@@ -126,6 +126,10 @@ export default class CurlSender {
             req.data = dto.getBody();
         }
 
+        if (dto.getAuth() !== undefined) {
+            req.auth = dto.getAuth();
+        }
+
         return req;
     }
 
