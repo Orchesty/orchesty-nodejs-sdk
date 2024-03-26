@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "4.2.40",
+  "version": "4.2.41",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -19,16 +19,16 @@
   "author": "info@hanaboso.com",
   "dependencies": {
     "async-mutex": "^0.4.1",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "deepmerge": "^4.3.1",
     "express": "5.0.0-beta.1",
     "express-prom-bundle": "^7.0.0",
-    "fast-xml-parser": "^4.3.5",
+    "fast-xml-parser": "^4.3.6",
     "http-status-codes": "^2.3.0",
     "joi": "^17.12.2",
     "luxon": "^3.4.4",
     "mime-types": "^2.1.35",
-    "mongodb": "^6.3.0",
+    "mongodb": "^6.5.0",
     "node-cache": "^5.1.2",
     "node-redis-connection-pool": "^3.1.0",
     "object-traversal": "^1.0.1",
@@ -36,15 +36,15 @@
     "pino": "^8.19.0",
     "prom-client": "^15.1.0",
     "simple-oauth2": "^5.0.0",
-    "sodium-native": "^4.0.10"
+    "sodium-native": "^4.1.1"
   },
   "devDependencies": {
-    "@hanaboso/eslint-plugin": "^1.1.1",
+    "@hanaboso/eslint-plugin": "^1.1.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/luxon": "^3.4.2",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^20.11.20",
+    "@types/node": "^20.11.30",
     "@types/php-serialize": "^3.0.4",
     "@types/readline-sync": "^1.4.8",
     "@types/simple-oauth2": "^5.0.7",
@@ -59,6 +59,6 @@
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   }
 }

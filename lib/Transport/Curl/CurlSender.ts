@@ -167,7 +167,14 @@ export default class CurlSender {
             info.getCurrentApp(),
             getCorrelationId(info.getHeaders()),
             dto.getUrl(),
-        ).catch((e) => logger.error(e?.message ?? 'Metrics: unknown error', info, false, e));
+        ).catch(
+            (e: unknown) => logger.error(
+                (e as { message: string })?.message ?? 'Metrics: unknown error',
+                info,
+                false,
+                e as Error,
+            ),
+        );
     }
 
 }

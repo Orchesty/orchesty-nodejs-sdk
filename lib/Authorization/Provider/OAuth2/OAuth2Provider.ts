@@ -1,5 +1,6 @@
 import deepmerge from 'deepmerge';
 import { AccessToken, AuthorizationCode } from 'simple-oauth2';
+import logger from '../../../Logger/Logger';
 import { decode, encode } from '../../../Utils/Base64';
 import ScopeSeparatorEnum from '../../ScopeSeparatorEnum';
 import AOAuthProvider from '../AOAuthProvider';
@@ -68,8 +69,15 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
 
         const client = this.createClient(dto, customConfig);
 
-        const accessToken = await client.getToken(tokenParams);
-        return OAuth2Provider.convertAccessToken(accessToken);
+        try {
+            const accessToken = await client.getToken(tokenParams);
+
+            return OAuth2Provider.convertAccessToken(accessToken);
+        } catch (e: unknown) {
+            logger.error((e as { message: string }).message, {});
+
+            throw e;
+        }
     }
 
     public async refreshAccessToken(dto: OAuth2Dto, token: IToken, customConfig = {}): Promise<IToken> {
@@ -81,9 +89,16 @@ export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
             access_token: token[ACCESS_TOKEN],
             refresh_token: token[REFRESH_TOKEN],
         });
-        const newAccessToken = await accessToken.refresh();
 
-        return OAuth2Provider.convertAccessToken(newAccessToken);
+        try {
+            const newAccessToken = await accessToken.refresh();
+
+            return OAuth2Provider.convertAccessToken(newAccessToken);
+        } catch (e) {
+            logger.error((e as { message: string }).message, {});
+
+            throw e;
+        }
     }
 
     private static convertAccessToken(accessToken: AccessToken): IToken {

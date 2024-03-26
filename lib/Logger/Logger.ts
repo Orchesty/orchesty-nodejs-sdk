@@ -97,7 +97,7 @@ export class Logger {
     private send(data: ILogContext, isForUi = false): void {
         if (isForUi) {
             this.workerApi.send('/logger/logs', HttpMethods.POST, { ...data, isForUi: true })
-                .catch((e) => {
+                .catch((e: unknown) => {
                     this.logger.error(e);
                 });
         }

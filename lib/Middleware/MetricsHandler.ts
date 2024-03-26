@@ -22,7 +22,7 @@ function afterResponse(
             getNodeId(req.headers),
             getCorrelationId(req.headers),
         )
-        .catch((e) => logger.error(e?.message ?? e, req));
+        .catch((e: unknown) => logger.error((e as { message: string })?.message ?? e, req));
 
     logger.debug(
         `Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`,
