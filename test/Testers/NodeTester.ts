@@ -20,6 +20,7 @@ export default class NodeTester {
         private readonly file: string,
         private readonly forceMock = false,
         private readonly exclude?: string[],
+        private readonly configuration?: { assertRawResponse: boolean },
     ) {
     }
 
@@ -98,9 +99,11 @@ export default class NodeTester {
 
         try {
             const res = await node.processAction(dto);
-            let resData = dto.getJsonData();
+            let resData = this.configuration?.assertRawResponse ? dto.getData() : dto.getJsonData();
             if (nodePrefix === BATCH_PREFIX) {
-                resData = JSON.parse(dto.getBridgeData() as string);
+                resData = this.configuration?.assertRawResponse
+                    ? dto.getBridgeData() as string
+                    : JSON.parse(dto.getBridgeData() as string);
             }
 
             if (output.replacement?.data) {
