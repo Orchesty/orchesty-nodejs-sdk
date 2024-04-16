@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "4.2.42",
+  "version": "4.2.44",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -34,7 +34,7 @@
     "object-traversal": "^1.0.1",
     "php-serialize": "^4.1.1",
     "pino": "^8.20.0",
-    "prom-client": "^15.1.1",
+    "prom-client": "^15.1.2",
     "simple-oauth2": "^5.0.0",
     "sodium-native": "^4.1.1"
   },

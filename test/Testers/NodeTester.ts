@@ -20,7 +20,7 @@ export default class NodeTester {
         private readonly file: string,
         private readonly forceMock = false,
         private readonly exclude?: string[],
-        private readonly configuration?: { assertRawResponse: boolean },
+        private readonly configuration?: { useRawInputData?: boolean, assertRawResponse?: boolean },
     ) {
     }
 
@@ -88,10 +88,16 @@ export default class NodeTester {
         let dto;
         if (nodePrefix === BATCH_PREFIX) {
             dto = _batchProcessDto as BatchProcessDto;
-            dto.setBridgeData(JSON.stringify(input.data));
+            dto.setBridgeData(
+                this.configuration?.useRawInputData ? input.data as unknown as string : JSON.stringify(input.data),
+            );
         } else {
             dto = new ProcessDto();
-            dto.setJsonData(input.data);
+            if (this.configuration?.useRawInputData) {
+                dto.setData(input.data as unknown as string);
+            } else {
+                dto.setJsonData(input.data);
+            }
         }
         dto.setHeaders({ ...input.headers, ...dto.getHeaders() });
         dto.removeHeader(RESULT_CODE);
