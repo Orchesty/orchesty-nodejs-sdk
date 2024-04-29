@@ -55,10 +55,14 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
         return this as unknown as BatchProcessDto<Item>;
     }
 
-    public setItemList(list: Item[]): BatchProcessDto<Item[]> {
-        list.forEach((it) => {
-            this.addItem(it);
-        });
+    public setItemList(list: Item[], asBatch = false): BatchProcessDto<Item[]> {
+        if (asBatch) {
+            this.addItem([list] as Item);
+        } else {
+            list.forEach((it) => {
+                this.addItem(it);
+            });
+        }
 
         return this as unknown as BatchProcessDto<Item[]>;
     }
