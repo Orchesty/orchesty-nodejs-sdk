@@ -80,21 +80,22 @@ export const mockAdapter = new MockAdapter(axios, testerOptions);
 export function mockOnce(mocks: IMockServer[] = []): void {
     mocks.forEach((mock) => {
         let mockHandler: RequestHandler;
+        const config = { headers: mock.request.headers };
         switch (mock.request.method) {
             case HttpMethods.GET:
-                mockHandler = mockAdapter.onGet(mock.request.url, mock.request.body, mock.request.headers);
+                mockHandler = mockAdapter.onGet(mock.request.url, config);
                 break;
             case HttpMethods.POST:
-                mockHandler = mockAdapter.onPost(mock.request.url, mock.request.body, mock.request.headers);
+                mockHandler = mockAdapter.onPost(mock.request.url, mock.request.body, config);
                 break;
             case HttpMethods.PUT:
-                mockHandler = mockAdapter.onPut(mock.request.url, mock.request.body, mock.request.headers);
+                mockHandler = mockAdapter.onPut(mock.request.url, mock.request.body, config);
                 break;
             case HttpMethods.DELETE:
-                mockHandler = mockAdapter.onDelete(mock.request.url, mock.request.body, mock.request.headers);
+                mockHandler = mockAdapter.onDelete(mock.request.url, config);
                 break;
             case HttpMethods.PATCH:
-                mockHandler = mockAdapter.onPatch(mock.request.url, mock.request.body, mock.request.headers);
+                mockHandler = mockAdapter.onPatch(mock.request.url, mock.request.body, config);
                 break;
             default:
                 throw Error(`Unsupported method ${mock.request.url}`);
