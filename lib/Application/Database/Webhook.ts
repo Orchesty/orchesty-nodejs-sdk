@@ -99,4 +99,18 @@ export default class Webhook extends ADocument {
         return this;
     }
 
+    public toArray(): Record<string, unknown> {
+        return {
+            id: this._id,
+            name: this.name,
+            user: this.user,
+            token: this.token,
+            node: this.node,
+            topology: this.topology,
+            application: this.application,
+            webhookId: this.webhookId,
+            deleted: this.deleted,
+        };
+    }
+
 }

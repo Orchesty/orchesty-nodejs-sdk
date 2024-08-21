@@ -1,7 +1,7 @@
 {
   "name": "@orchesty/nodejs-sdk",
   "description": "",
-  "version": "4.2.47",
+  "version": "4.2.48",
   "license": "Apache-2.0",
   "url": "https://github.com/Orchesty/orchesty-nodejs-sdk",
   "repository": "https://github.com/Orchesty/orchesty-nodejs-sdk",
@@ -20,7 +20,7 @@
   "packageManager": "pnpm@9.1.4",
   "dependencies": {
     "async-mutex": "^0.5.0",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "deepmerge": "^4.3.1",
     "express": "5.0.0-beta.3",
     "express-prom-bundle": "^7.0.0",
@@ -45,7 +45,7 @@
     "@types/jest": "^29.5.12",
     "@types/luxon": "^3.4.2",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^22.2.0",
+    "@types/node": "^22.5.0",
     "@types/php-serialize": "^3.0.4",
     "@types/readline-sync": "^1.4.8",
     "@types/simple-oauth2": "^5.0.7",
