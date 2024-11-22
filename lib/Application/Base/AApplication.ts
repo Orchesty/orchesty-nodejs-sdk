@@ -73,7 +73,6 @@ export default abstract class AApplication implements IApplication {
 
                 return `data:${mimeType};base64, ${Buffer.from(bitmap).toString('base64')}`;
             }
-            // eslint-disable-next-line no-empty
         } catch {
         }
         return null;
@@ -114,7 +113,6 @@ export default abstract class AApplication implements IApplication {
         return formStack.toArray();
     }
 
-    // eslint-disable-next-line @typescript-eslint/require-await
     public async saveApplicationForms(
         applicationInstall: ApplicationInstall,
         settings: IApplicationSettings,

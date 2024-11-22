@@ -59,13 +59,11 @@ export class TestNode implements ILightNode {
 export function walkRecursive(body: any, keys: string[], value: string): any {
     const first = keys.shift();
     if (first && body[first]) {
-        // eslint-disable-next-line no-param-reassign
         body[first] = walkRecursive(body[first], keys, value);
     } else if (first && !body[first]) {
         // Ignore key if not exist in output data
         return body;
     } else {
-        // eslint-disable-next-line no-param-reassign
         body = value;
     }
     return body;

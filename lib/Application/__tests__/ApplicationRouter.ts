@@ -107,6 +107,7 @@ describe('Test ApplicationRouter', () => {
     });
 
     const expectedSyncActionsResult = '["testSyncMethod","testSyncMethodResponse","testSyncMethodVoid","afterDisableCallback","afterEnableCallback","afterInstallCallback","afterUninstallCallback"]';
+
     it('get /applications/:name route', async () => {
         const expectedResult = `{"name":"Test application","authorization_type":"basic","application_type":"cron","key":"test","description":"Test description","info":"","logo":null,"isInstallable":true,"syncMethods":${expectedSyncActionsResult}}`;
         await supertest(expressApp)
@@ -258,6 +259,7 @@ describe('Test ApplicationRouter', () => {
                     const fieldPassword = (
                         jsonResponse.applicationSettings[CoreFormsEnum.AUTHORIZATION_FORM].fields as IField[]
                     ).find((field) => field.key);
+
                     expect(fieldPassword?.value).toBeTruthy();
                 } else {
                     expect(false).toBeTruthy();

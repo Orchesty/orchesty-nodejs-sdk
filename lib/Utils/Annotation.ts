@@ -12,7 +12,7 @@ export default class Annotation {
                 .sort()
                 .filter(
                     (p, i, arr) => typeof inLoopObj[p] === 'function' // Only the methods
-                        && inLoopObj[p].name.toLowerCase().startsWith('sync') // eslint-disable-line @typescript-eslint/no-unsafe-call
+                        && inLoopObj[p].name.toLowerCase().startsWith('sync')
                         && p !== 'constructor' // Not the constructor
                         && (i === 0 || p !== arr[i - 1]) // Not overriding in this prototype
                         && !inLoopProps.includes(p),

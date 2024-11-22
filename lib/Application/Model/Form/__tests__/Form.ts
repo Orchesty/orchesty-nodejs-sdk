@@ -5,6 +5,7 @@ import Form from '../Form';
 describe('Test form', () => {
     it('getFields', () => {
         const form = new Form('testKey', 'testPublicName');
+
         expect(form.getFields()).toEqual([]);
     });
 
@@ -12,6 +13,7 @@ describe('Test form', () => {
         const form = new Form('testKey', 'testPublicName');
         const field = new Field(FieldType.TEXT, 'testKey', 'testLabel');
         form.addField(field);
+
         expect(form.getFields()).toEqual([field]);
     });
 

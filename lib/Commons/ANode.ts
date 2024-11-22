@@ -29,6 +29,7 @@ export default abstract class ANode implements INode {
     public getApplicationName(): string {
         try {
             return this.getApplication().getName();
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             return '';
         }

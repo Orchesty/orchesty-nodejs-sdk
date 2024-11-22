@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { XMLParser } from 'fast-xml-parser';
 import * as fs from 'fs';
 import { INode } from '../../lib/Commons/INode';
@@ -231,7 +230,6 @@ export default class TopologyTester {
                 break;
             default:
                 if (out.getHeader(RESULT_CODE) !== '0') {
-                    // eslint-disable-next-line max-len
                     throw new Error(`Node [${node.name}] has returned non success result code [${out.getHeader(RESULT_CODE)}].`);
                 }
         }

@@ -20,7 +20,6 @@ function checkParam(object: { [key: string]: unknown }, param: string, strict: b
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function checkParams<T extends {} = Record<string, unknown>>(
     object: T,
     params: unknown,

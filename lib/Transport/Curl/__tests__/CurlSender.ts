@@ -22,6 +22,7 @@ describe('tests for curlSender', () => {
         const url = 'https://testUrl.com/status';
         mockAdapter.onGet(url).replyOnce(200, JSON.stringify({ id: '1' }));
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()));
+
         expect((response.getJsonBody() as { id: string }).id).toBe('1');
     });
 
@@ -29,6 +30,7 @@ describe('tests for curlSender', () => {
         const url = 'https://testUrl.com/status';
         mockAdapter.onGet(url).replyOnce(400, '');
         const response = await curlSender.send(new RequestDto(url, HttpMethods.GET, new ProcessDto()), 400);
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -39,6 +41,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: 400 },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -49,6 +52,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: '400-401' },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -59,6 +63,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: '>=400' },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -69,6 +74,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: '<=401' },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -79,6 +85,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: '<401' },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 
@@ -89,6 +96,7 @@ describe('tests for curlSender', () => {
             new RequestDto(url, HttpMethods.GET, new ProcessDto()),
             { success: '>399' },
         );
+
         expect(response.getResponseCode()).toBe(400);
     });
 

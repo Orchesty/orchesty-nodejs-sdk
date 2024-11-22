@@ -21,6 +21,7 @@ describe('Crypt tests', () => {
     it('Decrypt unknown test', () => {
         try {
             crypt.decrypt('_unknown');
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -35,6 +36,7 @@ describe('Crypt tests', () => {
             encrypted = encrypted.substring(crypt.getPrefixLength() + 2);
 
             crypt.decrypt(`${crypt.getPrefix()}${encrypted}`);
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -48,10 +50,12 @@ describe('Crypt tests', () => {
 
         const php = '002_Cww5KOU6QJOs1UaKXPmxJNEmk4HS6jBs85VSGjis30k=:UIJEGDZf7wFSudwi7lq36AeiiSB4g5vzmeRYXKsd1bM=:MTtg0gS+2PsDOsFc6VuJuU0rKTjXIk1S:sAhh2siZDXLysLmcjPix1Iv5EMstzIqpEu79K4euqj6qmzbckk2l5TAhpwD7HGtsMWtEezBlQdK+Ptz51cLvCMNTQAQxlBimDBd1+PPsPso9Ldh0zSmBbq1kJJeqyNWq0oDwEDawbmCMv0itRxq/vlwGiypcCGY6gsQ+EuDld6SBZ6RezKUI7lZMBxJhz4MkLAQGwKg0aFdoCsjyjNZZRil6aMinokzKW9KLOuo1EaqnwLTPMl1E0oQXgtnwQiX3B5neFxml7RKHAV9BfWOQBVSHoZuK7t0WoZKfrsuElo7c8r0p2IwKlZByR+bPktpgtirUdG90Uw/KbPut1vUFqdPKK72lsEli35nMjUj18cM=';
         const decryptedObj = phpCrypt.decrypt(php);
+
         expect(decryptedObj).toHaveProperty('key', 'val');
         expect(decryptedObj).toHaveProperty('str');
 
         const decryptedStr = phpCrypt.decrypt(decryptedObj.str);
+
         expect(decryptedStr).toEqual('asdf12342~!@#$%^&*()_+{}|:"<>?[]\\;,./');
     });
 });

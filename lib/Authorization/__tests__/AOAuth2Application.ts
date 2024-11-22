@@ -20,6 +20,7 @@ describe('Test AOAuth2Application', () => {
     it('should get authorizationType', () => {
         const type = 'oauth2';
         const applicationType = oAuthApplication.getAuthorizationType();
+
         expect(type).toBe(applicationType);
     });
 
@@ -36,6 +37,7 @@ describe('Test AOAuth2Application', () => {
         };
         appInstall.setSettings(settings);
         const isAuthorized = oAuthApplication.isAuthorized(appInstall);
+
         expect(isAuthorized).toBeTruthy();
     });
 
@@ -50,6 +52,7 @@ describe('Test AOAuth2Application', () => {
         };
         appInstall.setSettings(settings);
         const isAuthorized = oAuthApplication.isAuthorized(appInstall);
+
         expect(isAuthorized).toBeFalsy();
     });
 
@@ -93,6 +96,7 @@ describe('Test AOAuth2Application', () => {
 
         const data = await oAuthApplication.refreshAuthorization(appInstall);
         const returnedSettings = data.getSettings();
+
         expect(
             returnedSettings[CoreFormsEnum.AUTHORIZATION_FORM][CLIENT_ID],
         ).toEqual(settings[CoreFormsEnum.AUTHORIZATION_FORM][CLIENT_ID]);
@@ -115,6 +119,7 @@ describe('Test AOAuth2Application', () => {
         };
         appInstall.setSettings(settings);
         const accessTokenFromService = oAuthApplication.getAccessToken(appInstall);
+
         expect(accessToken).toEqual(accessTokenFromService);
     });
 
@@ -123,6 +128,7 @@ describe('Test AOAuth2Application', () => {
         appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: [] });
         appInstall.addSettings({ form: [] });
         const sett = { user: 'Jakub', password: 'pass', token: 'token' };
+
         expect(await oAuthApplication.saveApplicationForms(appInstall, sett)).toBeInstanceOf(ApplicationInstall);
     });
 
@@ -132,6 +138,7 @@ describe('Test AOAuth2Application', () => {
         appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: { [TOKEN]: token } });
         appInstall.addSettings({ form: [] });
         const tokenFromService = oAuthApplication.getTokens(appInstall);
+
         expect(token).toEqual(tokenFromService);
     });
 

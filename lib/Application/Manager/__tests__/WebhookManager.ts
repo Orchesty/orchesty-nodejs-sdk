@@ -44,6 +44,7 @@ describe('Tests for webhookManager', () => {
 
         const app = container.getApplication(WEBHOOK_NAME) as TestWebhookApplication;
         const webhooks = await webhookManager.getWebhooks(app, USER);
+
         expect(webhooks).toHaveLength(1);
         expect(webhooks).toStrictEqual([{
             default: true, enabled: true, name: 'testWebhook', topology: 'testWebhook',

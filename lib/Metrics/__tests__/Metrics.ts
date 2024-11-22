@@ -31,6 +31,7 @@ describe('Test metrics', () => {
 
     it('getTimes', () => {
         const times = Metrics.getTimes(mockIStartMetrics);
+
         expect(times).toHaveProperty('requestDuration');
         expect(typeof times.requestDuration).toEqual('number');
         expect(times).toHaveProperty('userTime');
@@ -47,6 +48,7 @@ describe('Test metrics', () => {
         expect(currentMetrics).toHaveProperty('cpu');
 
         const { cpu } = currentMetrics;
+
         expect(cpu).toHaveProperty('cpuUserCodeTime');
         expect(typeof cpu.cpuUserCodeTime).toEqual('number');
         expect(cpu).toHaveProperty('cpuKernelCodeTime');
@@ -65,6 +67,7 @@ describe('Test metrics', () => {
             'randomCorrelationId',
             'randomUrl',
         );
+
         expect(curlMetrics).toBeTruthy();
     });
 
@@ -75,6 +78,7 @@ describe('Test metrics', () => {
             'randomNodeId',
             'randomCorrelationId',
         );
+
         expect(processMetric).toBeTruthy();
     });
 });

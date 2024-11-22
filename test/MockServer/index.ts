@@ -94,6 +94,10 @@ export function mockOnce(mocks: IMockServer[] = []): void {
             case HttpMethods.DELETE:
                 mockHandler = mockAdapter.onDelete(mock.request.url, config);
                 break;
+            case HttpMethods.OPTIONS:
+                break;
+            case HttpMethods.HEAD:
+                break;
             case HttpMethods.PATCH:
                 mockHandler = mockAdapter.onPatch(mock.request.url, mock.request.body, config);
                 break;
@@ -101,6 +105,8 @@ export function mockOnce(mocks: IMockServer[] = []): void {
                 throw Error(`Unsupported method ${mock.request.url}`);
         }
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         mockHandler.replyOnce(
             mock.response.code ?? 200,
             mock.response.body ?? {},

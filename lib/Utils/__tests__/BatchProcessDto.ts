@@ -7,6 +7,7 @@ describe('Tests ProcessDto utils', () => {
         const cursorName = 'name';
         dto.setBatchCursor(cursorName);
         dto.removeBatchCursor();
+
         expect(dto.getHeader(BATCH_CURSOR)).toBeUndefined();
     });
 

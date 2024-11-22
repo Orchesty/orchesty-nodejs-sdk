@@ -30,6 +30,7 @@ describe('tests for Node', () => {
         }]);
 
         const databaseNode = await nodeRepository.findOne({ ids: [node.getId()] });
+
         expect(databaseNode?.getSystemConfigs()).toBe(JSON.stringify(nodeConfig));
     });
 
@@ -43,11 +44,13 @@ describe('tests for Node', () => {
         }]);
 
         const databaseNode = await nodeRepository.findOne({ ids: [node.getId()] });
+
         expect(databaseNode?.getSystemConfigsFromString()).toEqual(nodeConfig);
     });
 
     it('get system setting - undefined', () => {
         const emptyNode = new Node();
+
         expect(emptyNode.getSystemConfigsFromString()).toBe(undefined);
     });
 });

@@ -40,7 +40,6 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
 
     const parameters: Record<string, string> = {};
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of req.searchParams.entries()) {
         parameters[key] = value;
     }

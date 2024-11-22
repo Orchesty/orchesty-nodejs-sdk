@@ -19,12 +19,14 @@ describe('Tests for webhook application', () => {
         const data = JSON.stringify({ test: 'testData' });
         const method = HttpMethods.POST;
         const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
+
         expect(requestDto).toBeInstanceOf(RequestDto);
         expect(requestDto).toHaveProperty('url', urlValue);
         expect(requestDto).toHaveProperty('method', method);
         expect(requestDto).toHaveProperty('body', data);
 
         const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
+
         expect(requestDtoWithoutUrl).toHaveProperty('url', '');
     });
 
@@ -63,6 +65,7 @@ describe('Tests for webhook application', () => {
                 },
             ],
         };
+
         expect(app.getFormStack()).toEqual(expected);
     });
 
@@ -70,6 +73,7 @@ describe('Tests for webhook application', () => {
         const subscription = new WebhookSubscription('SubName', 'SubNode', 'SubTopology');
         const urlValue = 'https://www.google.com';
         const requestDto = app.getWebhookSubscribeRequestDto(new ApplicationInstall(), subscription, urlValue);
+
         expect(requestDto).toBeInstanceOf(RequestDto);
         expect(requestDto).toHaveProperty('url', urlValue);
         expect(requestDto).toHaveProperty('method', HttpMethods.GET);
@@ -77,6 +81,7 @@ describe('Tests for webhook application', () => {
 
     it('getWebhookUnsubscribeRequestDto', () => {
         const requestDto = app.getWebhookUnsubscribeRequestDto(new ApplicationInstall(), new Webhook());
+
         expect(requestDto).toBeInstanceOf(RequestDto);
         expect(requestDto).toHaveProperty('url', 'unknown/url');
         expect(requestDto).toHaveProperty('method', HttpMethods.DELETE);
@@ -89,6 +94,7 @@ describe('Tests for webhook application', () => {
             {},
             Buffer.from(''),
         ), new ApplicationInstall());
+
         expect(processResponse).toBe('1');
     });
 
@@ -99,6 +105,7 @@ describe('Tests for webhook application', () => {
             {},
             Buffer.from(''),
         ));
+
         expect(processResponse).toBeTruthy();
     });
 });

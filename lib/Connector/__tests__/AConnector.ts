@@ -27,12 +27,14 @@ describe('Test AConnector', () => {
         const application = new TestBasicApplication();
         testConnector.setApplication(application);
         const testConnectorApplicationName = (Reflect.get(testConnector, 'application') as IApplication).getName();
+
         expect(application.getName()).toEqual(testConnectorApplicationName);
     });
 
     it('should set sender of connector', () => {
         testConnector.setSender(curlSender);
         const testConnectorCurlSender = Reflect.get(testConnector, 'sender');
+
         expect(testConnectorCurlSender).toEqual(curlSender);
     });
 
@@ -52,6 +54,7 @@ describe('Test AConnector', () => {
         const dto = new ProcessDto();
         dto.setHeaders({ user: USER });
         const res = await testConnector.getApplicationInstallFromHeaders(dto);
+
         expect(res.getUser()).toEqual(USER);
     });
 

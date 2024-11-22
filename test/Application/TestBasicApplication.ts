@@ -14,7 +14,6 @@ import ProcessDto from '../../lib/Utils/ProcessDto';
 
 export default class TestBasicApplication extends ABasicApplication {
 
-    // eslint-disable-next-line class-methods-use-this
     public syncTestSyncMethod(): string {
         return JSON.stringify({
             param1: 'p1',
@@ -22,7 +21,6 @@ export default class TestBasicApplication extends ABasicApplication {
         });
     }
 
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
     public async syncTestSyncMethodVoid(): Promise<void> {
     }
 

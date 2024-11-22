@@ -30,6 +30,7 @@ describe('Test CustomNodeRouter', () => {
     it('test configureRoutes', () => {
         const mock = mockRouter();
         const router = new CustomNodeRouter(mock.express, mock.loader);
+
         expect(mock.routeFn).toHaveBeenCalledTimes(3);
         expect(mock.getFn).toHaveBeenCalledTimes(2);
         expect(mock.postFn).toHaveBeenCalledTimes(1);
@@ -77,6 +78,7 @@ describe('Test CustomNodeRouter', () => {
                 },
                 body: {},
             }));
+
         expect(resp.status).toBe(200);
         expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
         expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');
@@ -100,6 +102,7 @@ describe('Test CustomNodeRouter', () => {
                 },
                 body: {},
             }));
+
         expect(resp.status).toBe(200);
         expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
         expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');

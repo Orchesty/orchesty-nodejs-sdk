@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Collection, Filter, FindOptions, IndexDescription, ObjectId } from 'mongodb';
 import { MongoDb } from './MongoDb';
 

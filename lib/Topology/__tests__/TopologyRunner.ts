@@ -24,16 +24,19 @@ describe('TopologyRunner tests', () => {
 
     it('get webhook url', () => {
         const whUrl = TopologyRunner.getWebhookUrl('topoName', 'nodeName', 'hash');
+
         expect(whUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/token/hash/run');
     });
 
     it('get start url with name', () => {
         const spUrl = TopologyRunner.getStartUrl('topoName', 'nodeName', true, 'user');
+
         expect(spUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run-by-name');
     });
 
     it('get start url', () => {
         const spUrl = TopologyRunner.getStartUrl('topoName', 'nodeName', false, 'user');
+
         expect(spUrl).toEqual('https://sp.orchesty.com/topologies/topoName/nodes/nodeName/user/user/run');
     });
 
@@ -42,6 +45,7 @@ describe('TopologyRunner tests', () => {
         const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto());
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 
@@ -58,6 +62,7 @@ describe('TopologyRunner tests', () => {
         );
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 
@@ -66,6 +71,7 @@ describe('TopologyRunner tests', () => {
         const res = await runner.runByName({}, 'topoName', 'nodeName', new ProcessDto(), 'user');
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 
@@ -74,6 +80,7 @@ describe('TopologyRunner tests', () => {
         const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto());
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 
@@ -82,6 +89,7 @@ describe('TopologyRunner tests', () => {
         const res = await runner.runById({}, 'topoId', 'nodeId', new ProcessDto(), 'user');
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 
@@ -90,6 +98,7 @@ describe('TopologyRunner tests', () => {
         const res = await runner.runWebhook({}, 'topoName', 'nodeName', 'hash', new ProcessDto());
 
         expect(res.getResponseCode()).toEqual(StatusCodes.OK);
+
         mockAdapter.restore();
     });
 });

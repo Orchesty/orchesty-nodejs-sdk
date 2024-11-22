@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { MongoDb } from '../MongoDb';
 import { AbstractRepository } from '../Repository';
 
@@ -28,15 +27,18 @@ describe('Repository', () => {
         const instance: IDoc = { data: 'datas', id: '' };
         await repo.insert(instance);
         const fetched = await repo.findOne({ id: instance.id });
+
         expect(fetched)
             .toEqual(instance);
 
         const fetchedMany = await repo.findMany({ data: 'datas' });
+
         expect(fetchedMany[0])
             .toEqual(instance);
 
         await repo.deleteAll();
         const remaining = await repo.findMany({});
+
         expect(remaining)
             .toHaveLength(0);
     });

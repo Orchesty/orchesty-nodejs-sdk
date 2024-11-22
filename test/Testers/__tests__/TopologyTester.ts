@@ -14,6 +14,7 @@ describe('Test topologyTester', () => {
         const dto = new ProcessDto();
         const tester = new TopologyTester(container, __filename);
         const res = await tester.runTopology(`${__dirname}/Data/TopologyTester/test.tplg`, dto);
+
         expect(res).toHaveLength(1);
         expect(res[0].getJsonData()).toEqual({ dataTest: 'testValue' });
     });
@@ -22,6 +23,7 @@ describe('Test topologyTester', () => {
         const dto = new ProcessDto();
         const tester = new TopologyTester(container, __filename);
         const res = await tester.runTopology(`${__dirname}/Data/TopologyTester/test.tplg`, dto, '', 'Start');
+
         expect(res).toHaveLength(1);
         expect(res[0].getJsonData()).toEqual({ dataTest: 'testValue' });
     });

@@ -82,7 +82,7 @@ export default class TestWebhookApplication extends ABasicApplication implements
     }
 
     public processWebhookSubscribeResponse(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         dto: ResponseDto,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         applicationInstall: ApplicationInstall,

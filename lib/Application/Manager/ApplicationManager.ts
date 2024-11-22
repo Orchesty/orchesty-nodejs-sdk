@@ -47,9 +47,9 @@ export default class ApplicationManager {
         if (typeof app[syncMethod] === 'function') {
             let resp;
             if (parseHttpMethod(request.method) === HttpMethods.GET) {
-                resp = await app[syncMethod](); // eslint-disable-line @typescript-eslint/no-unsafe-call
+                resp = await app[syncMethod]();
             } else {
-                resp = await app[syncMethod](request); // eslint-disable-line @typescript-eslint/no-unsafe-call
+                resp = await app[syncMethod](request);
             }
 
             return resp ?? { status: 'ok' };
@@ -124,6 +124,7 @@ export default class ApplicationManager {
         let appInstall;
         try {
             appInstall = await this.repository.findByNameAndUser(name, user);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             //
         }
@@ -175,6 +176,7 @@ export default class ApplicationManager {
                 let app: IApplication | undefined;
                 try {
                     app = this.getApplication(appInstall.getName()) as AApplication;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (e) {
                     //
                 }
@@ -202,6 +204,7 @@ export default class ApplicationManager {
                 let app: AApplication | undefined;
                 try {
                     app = this.getApplication(appInstall.getName()) as AApplication;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (e) {
                     //
                 }

@@ -52,6 +52,7 @@ describe('Test DIContainer', () => {
 
         try {
             container.setNamed(serviceName, 'fake-service');
+
             expect(false)
                 .toBeTruthy();
         } catch (e) {
@@ -64,6 +65,7 @@ describe('Test DIContainer', () => {
         const serviceName = 'non-exist';
         try {
             container.getNamed(serviceName);
+
             expect(false)
                 .toBeTruthy();
         } catch (e) {

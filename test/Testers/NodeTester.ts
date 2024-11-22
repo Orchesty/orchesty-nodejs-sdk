@@ -141,6 +141,7 @@ export default class NodeTester {
             } else {
                 /* eslint-disable-next-line jest/no-standalone-expect */
                 expect(e).toBeInstanceOf(expectedError);
+
                 thrownErr = e;
             }
         } finally {

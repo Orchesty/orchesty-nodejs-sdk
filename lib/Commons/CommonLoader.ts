@@ -16,6 +16,7 @@ export default class CommonLoader {
             let app: string | undefined;
             try {
                 app = obj.value.getApplication().getName();
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (e) {
                 app = undefined;
             }

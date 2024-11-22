@@ -4,6 +4,7 @@ import NodeTester from '../NodeTester';
 
 describe('Test NodeTester', () => {
     let container: DIContainer;
+
     beforeAll(() => {
         container = getTestContainer();
     });

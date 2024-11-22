@@ -16,29 +16,34 @@ describe('Test application', () => {
 
     it('getDescription', () => {
         const app = new TestBasicApplication();
+
         expect(app.getDescription()).toEqual('Test description');
     });
 
     it('getPublicName', () => {
         const app = new TestBasicApplication();
+
         expect(app.getPublicName()).toEqual('Test application');
     });
 
     it('getName', () => {
         const app = new TestBasicApplication();
+
         expect(app.getName()).toEqual('test');
     });
 
     it('getLogo', () => {
         const app = new TestBasicApplication();
+
         expect(app.getLogo() === null).toBeTruthy();
     });
 
     it('toArray', () => {
         const app = new TestBasicApplication();
+
         expect(app.toArray()).toEqual({
-            application_type: ApplicationTypeEnum.CRON, // eslint-disable-line
-            authorization_type: AuthorizationTypeEnum.BASIC, // eslint-disable-line
+            application_type: ApplicationTypeEnum.CRON,
+            authorization_type: AuthorizationTypeEnum.BASIC,
             description: 'Test description',
             info: '',
             isInstallable: true,
@@ -125,6 +130,7 @@ describe('Test application', () => {
                 },
             ],
         };
+
         expect(app.getFormStack()).toEqual(expected);
     });
 
@@ -138,11 +144,13 @@ describe('Test application', () => {
             appInstall,
             { [CoreFormsEnum.AUTHORIZATION_FORM]: { user, [PASSWORD]: pass, token } },
         );
+
         expect(appInstall.getSettings()).toEqual(expected);
     });
 
     it('getUri', () => {
         const app = new TestBasicApplication();
+
         expect(app.getUri('https://www.google.com')).toBeInstanceOf(URL);
     });
 
@@ -152,12 +160,14 @@ describe('Test application', () => {
         const data = JSON.stringify({ test: 'testData' });
         const method = HttpMethods.POST;
         const requestDto = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method, urlValue, data);
+
         expect(requestDto).toBeInstanceOf(RequestDto);
         expect(requestDto).toHaveProperty('url', urlValue);
         expect(requestDto).toHaveProperty('method', method);
         expect(requestDto).toHaveProperty('body', data);
 
         const requestDtoWithoutUrl = app.getRequestDto(new ProcessDto(), new ApplicationInstall(), method);
+
         expect(requestDtoWithoutUrl).toHaveProperty('url', '');
     });
 
@@ -167,6 +177,7 @@ describe('Test application', () => {
         const sett = { form: { person: user, [PASSWORD]: pass } };
         appInstall.addSettings(sett);
         const res = await app.getApplicationForms(appInstall);
+
         expect(res).toEqual({
             // eslint-disable-next-line @typescript-eslint/naming-convention
             authorization_form: {

@@ -63,6 +63,7 @@ describe('tests Router Utils', () => {
         const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
         createErrorResponse(mockRequest(), res, new ProcessDto(), new Error('err message'));
+
         expect(statusMock).toHaveBeenCalledTimes(2);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -74,6 +75,7 @@ describe('tests Router Utils', () => {
         err.stack = undefined;
 
         createErrorResponse(mockRequest(), res, new ProcessDto(), err);
+
         expect(statusMock).toHaveBeenCalledTimes(2);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -85,6 +87,7 @@ describe('tests Router Utils', () => {
         err.stack = undefined;
 
         createErrorResponse(mockRequest(), res, new ProcessDto(), err);
+
         expect(statusMock).toHaveBeenCalledTimes(2);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -97,6 +100,7 @@ describe('tests Router Utils', () => {
         dto.addHeader('authorization', 'bearer token');
         err.stack = undefined;
         createErrorResponse(mockRequest(), res, dto, err);
+
         expect(statusMock).toHaveBeenCalledTimes(2);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -106,6 +110,7 @@ describe('tests Router Utils', () => {
         const res = mockResponse(statusMock, hasHeaderMock, getHeaderMock, setHeaderMock, jsonMock, sendMock);
 
         createErrorResponse(mockRequest(), res, new ProcessDto());
+
         expect(statusMock).toHaveBeenCalledTimes(1);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -117,6 +122,7 @@ describe('tests Router Utils', () => {
         dto.addHeader(NODE_ID, '123');
 
         createSuccessResponse(res, dto);
+
         expect(statusMock).toHaveBeenCalledTimes(1);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -128,6 +134,7 @@ describe('tests Router Utils', () => {
         dto.addHeader(NODE_ID, '123');
 
         createSuccessResponse(res, dto);
+
         expect(statusMock).toHaveBeenCalledTimes(1);
         expect(sendMock).toHaveBeenCalledTimes(1);
     });
@@ -135,6 +142,7 @@ describe('tests Router Utils', () => {
     it('createProcessDto', async () => {
         const req = mockRequest();
         const dto = await createProcessDto(req, 'testApp');
+
         expect(dto.getHeader(NODE_ID)).toEqual('123');
         expect(dto.getJsonData()).toEqual({ body: 'aaa' });
         expect(dto.getCurrentApp()).toEqual('testApp');

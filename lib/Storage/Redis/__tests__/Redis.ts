@@ -42,6 +42,7 @@ describe('Tests for redis', () => {
 
     it('get', async () => {
         await redis.set(TESTKEY, TESTKEYVALUE);
+
         expect(await redis.get(TESTKEY))
             .toEqual(TESTKEYVALUE);
     });
@@ -59,6 +60,7 @@ describe('Tests for redis', () => {
         await redis.set(TESTKEY, TESTKEYVALUE);
         await redis.set(TESTKEY1, TESTKEYVALUE1);
         const values = await redis.getMany([TESTKEY, TESTKEY1]);
+
         expect(values).toContainEqual(TESTKEYVALUE);
         expect(values).toContainEqual(TESTKEYVALUE1);
     });
@@ -67,12 +69,14 @@ describe('Tests for redis', () => {
         await redis.set(TESTKEY, TESTKEYVALUE);
         await redis.set(TESTKEY1, TESTKEYVALUE1);
         await redis.dropAll();
+
         expect(await redis.getMany([TESTKEY, TESTKEY1])).toEqual([null, null]);
     });
 
     it('remove', async () => {
         await redis.set(TESTKEY, TESTKEYVALUE);
         await redis.remove(TESTKEY);
+
         expect(await redis.get(TESTKEY))
             .toBeNull();
     });
@@ -83,6 +87,7 @@ describe('Tests for redis', () => {
         await new Promise((resolve) => {
             setTimeout(resolve, 2000);
         });
+
         expect(await redis.get(TESTKEY)).toBeNull();
     });
 
@@ -98,18 +103,27 @@ describe('Tests for redis', () => {
         await redis.pushToList(TESTKEY, TESTKEYVALUE2, 10);
 
         const first = await redis.getList(TESTKEY);
+
         expect(first[0]).toBe(TESTKEYVALUE);
         expect(first[1]).toBe(TESTKEYVALUE1);
         expect(first[2]).toBe(TESTKEYVALUE2);
+
         const response = await redis.getFirstElementAndMoveToEnd(TESTKEY);
+
         expect(response).toBe(TESTKEYVALUE);
+
         const second = await redis.getList(TESTKEY);
+
         expect(second[0]).toBe(TESTKEYVALUE1);
         expect(second[1]).toBe(TESTKEYVALUE2);
         expect(second[2]).toBe(TESTKEYVALUE);
+
         const response1 = await redis.getFirstElementAndMoveToEnd(TESTKEY);
+
         expect(response1).toBe(TESTKEYVALUE1);
+
         const third = await redis.getList(TESTKEY);
+
         expect(third[0]).toBe(TESTKEYVALUE2);
         expect(third[1]).toBe(TESTKEYVALUE);
         expect(third[2]).toBe(TESTKEYVALUE1);
@@ -122,12 +136,14 @@ describe('Tests for redis', () => {
     it('incrBy', async () => {
         await redis.incrBy(TESTKEY2, 33);
         await redis.incrBy(TESTKEY2, 33);
+
         expect(await redis.incrBy(TESTKEY2, 33)).toEqual(99);
     });
 
     it('decrBy', async () => {
         await redis.set(TESTKEY3, '33');
         await redis.decrBy(TESTKEY3, 11);
+
         expect(await redis.decrBy(TESTKEY3, 11)).toEqual(11);
     });
 });

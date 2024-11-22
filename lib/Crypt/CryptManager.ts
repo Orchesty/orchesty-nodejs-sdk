@@ -10,9 +10,7 @@ export default class CryptManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public constructor(providers: any[] = []) {
         providers.forEach((provider) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             if (typeof provider.getType.bind(provider) === 'function' && provider.getType() === NAME) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 this.providers[provider.getPrefix()] = provider;
             }
         });

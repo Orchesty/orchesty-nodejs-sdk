@@ -17,6 +17,7 @@ describe('ApplicationInstallRepository tests', () => {
         dbClient = container.get(DatabaseClient);
         try {
             repo = dbClient.getApplicationRepository();
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             // Ignore non-existent
         }
@@ -33,6 +34,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res = await repo.findByNameAndUser(NAME, USER, false);
+
         expect(res).toBeInstanceOf(ApplicationInstall);
 
         mockOnce([{
@@ -45,6 +47,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res2 = await repo.findByNameAndUser(NAME, USER, true);
+
         expect(res2).toBe(undefined);
 
         mockOnce([{
@@ -57,6 +60,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res3 = await repo.findByNameAndUser(NAME, USER, null);
+
         expect(res3).toBeInstanceOf(ApplicationInstall);
     });
 
@@ -71,6 +75,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res = await repo.findOneByUser(USER, false);
+
         expect(res).toBeInstanceOf(ApplicationInstall);
 
         mockOnce([{
@@ -83,6 +88,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res2 = await repo.findOneByUser(USER, true);
+
         expect(res2).toBe(undefined);
 
         mockOnce([{
@@ -95,6 +101,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res3 = await repo.findOneByUser(USER);
+
         expect(res3).toBeInstanceOf(ApplicationInstall);
     });
 
@@ -109,6 +116,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res = await repo.findOneByName(NAME, false);
+
         expect(res).toBeInstanceOf(ApplicationInstall);
 
         mockOnce([{
@@ -121,6 +129,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res2 = await repo.findOneByName(NAME, true);
+
         expect(res2).toBe(undefined);
 
         mockOnce([{
@@ -133,6 +142,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res3 = await repo.findOneByName(NAME);
+
         expect(res3).toBeInstanceOf(ApplicationInstall);
     });
 
@@ -147,6 +157,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res = await repo.findManyByUser(USER, false);
+
         expect(res).toBeInstanceOf(Array);
         expect(res?.length).toBe(1);
 
@@ -160,6 +171,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res2 = await repo.findManyByUser(USER, true);
+
         expect(res2).toBeInstanceOf(Array);
         expect(res2?.length).toBe(0);
 
@@ -173,6 +185,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res3 = await repo.findManyByUser(USER);
+
         expect(res3).toBeInstanceOf(Array);
         expect(res3?.length).toBe(1);
     });
@@ -188,6 +201,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res = await repo.findManyByName(NAME, false);
+
         expect(res).toBeInstanceOf(Array);
         expect(res?.length).toBe(1);
 
@@ -201,6 +215,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res2 = await repo.findManyByName(NAME, true);
+
         expect(res2).toBeInstanceOf(Array);
         expect(res2?.length).toBe(0);
 
@@ -214,6 +229,7 @@ describe('ApplicationInstallRepository tests', () => {
 
         repo.clearCache();
         const res3 = await repo.findManyByName(NAME);
+
         expect(res3).toBeInstanceOf(Array);
         expect(res3?.length).toBe(1);
     });

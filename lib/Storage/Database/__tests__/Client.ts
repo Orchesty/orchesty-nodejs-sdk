@@ -15,11 +15,13 @@ describe('Test MongoDb Storage', () => {
 
     it('repository', () => {
         const appInstallRepo = dbClient.getRepository(ApplicationInstall);
+
         expect(appInstallRepo).toBeInstanceOf(Repository);
     });
 
     it('appInstall repository', () => {
         const appInstallRepo = dbClient.getApplicationRepository();
+
         expect(appInstallRepo).toBeInstanceOf(Repository);
     });
 });

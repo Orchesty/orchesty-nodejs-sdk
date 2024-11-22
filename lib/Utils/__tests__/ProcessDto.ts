@@ -108,6 +108,7 @@ describe('Tests ProcessDto utils', () => {
 
     it('setStopProcess with unsupported ResultCode', () => {
         const dto = new ProcessDto();
+
         expect(() => dto.setStopProcess(ResultCode.UNKNOWN_ERROR, 'nok')).toThrow(Error);
     });
 
@@ -121,6 +122,7 @@ describe('Tests ProcessDto utils', () => {
         expect(dto.getHeader('result-message')).toEqual('rep-message');
 
         dto.removeRepeater();
+
         expect(dto.getHeader('repeat-interval')).toBeUndefined();
         expect(dto.getHeader('repeat-hops')).toBeUndefined();
         expect(dto.getHeader('repeat-max-hops')).toBeUndefined();
@@ -139,6 +141,7 @@ describe('Tests ProcessDto utils', () => {
 
     it('setRepeater with unsupported parameters', () => {
         const dto = new ProcessDto();
+
         expect(() => dto.setRepeater(-1, 1, 'reason')).toThrow(Error);
         expect(() => dto.setRepeater(1, -1, 'reason')).toThrow(Error);
     });
@@ -150,6 +153,7 @@ describe('Tests ProcessDto utils', () => {
         expect(dto.getHeader('limiter-key')).toEqual('limit-key|user;60;10000');
 
         dto.removeLimiter();
+
         expect(dto.getHeader('limiter-key')).toBeUndefined();
     });
 

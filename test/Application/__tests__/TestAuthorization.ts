@@ -10,6 +10,7 @@ describe('Application authorize tests', () => {
         const appInstall = new ApplicationInstall();
         const settings = { [CoreFormsEnum.AUTHORIZATION_FORM]: { [USER]: 'Jakub', [PASSWORD]: 'pass' } };
         await basicApp.saveApplicationForms(appInstall, settings);
+
         expect(basicApp.isAuthorized(appInstall)).toEqual(true);
     });
 
@@ -17,6 +18,7 @@ describe('Application authorize tests', () => {
         const basicApp = new TestBasicApplication();
         const appInstall = new ApplicationInstall();
         appInstall.addSettings({ [CoreFormsEnum.AUTHORIZATION_FORM]: [] });
+
         expect(basicApp.isAuthorized(appInstall)).toEqual(false);
     });
 
@@ -25,6 +27,7 @@ describe('Application authorize tests', () => {
         const appInstall = new ApplicationInstall();
         const settings = { [CoreFormsEnum.AUTHORIZATION_FORM]: { [TOKEN]: 'token' } };
         await basicApp.saveApplicationForms(appInstall, settings);
+
         expect(basicApp.isAuthorized(appInstall)).toEqual(true);
     });
 
@@ -39,6 +42,7 @@ describe('Application authorize tests', () => {
         };
         await basicApp.saveApplicationForms(appInstall, sett);
         await basicApp.saveApplicationForms(appInstall, sett1);
+
         expect(basicApp.isAuthorized(appInstall)).toEqual(true);
     });
 });

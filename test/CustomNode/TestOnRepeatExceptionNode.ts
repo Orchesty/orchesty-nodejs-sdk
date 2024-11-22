@@ -8,7 +8,6 @@ export default class TestOnRepeatExceptionNode extends ACommonNode {
         return 'testOnRepeatExceptionCustom';
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public processAction(_dto: ProcessDto): ProcessDto {
         throw new OnRepeatException();
     }

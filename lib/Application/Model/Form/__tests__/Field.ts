@@ -9,7 +9,9 @@ describe('Field tests', () => {
 
     it('setValue', () => {
         expect(field.getValue()).toEqual(null);
+
         field.setValue(true);
+
         expect(field.getValue()).toEqual(true);
     });
 
@@ -20,43 +22,62 @@ describe('Field tests', () => {
     it('getKey', () => {
         expect(field.getKey()).toEqual(key);
     });
+
     it('getLabel', () => {
         expect(field.getLabel()).toEqual(label);
     });
+
     it('setLabel', () => {
         expect(field.getLabel()).toEqual(label);
+
         const changedLabel = 'changedLabel';
         field.setLabel(changedLabel);
+
         expect(field.getLabel()).toEqual(changedLabel);
     });
+
     it('setRequired', () => {
         expect(field.isRequired()).toEqual(false);
+
         field.setRequired(true);
+
         expect(field.isRequired()).toEqual(true);
     });
 
     it('getDescription and setDescription', () => {
         expect(field.getDescription()).toEqual('');
+
         const description = 'testDescription';
         field.setDescription(description);
+
         expect(field.getDescription()).toEqual(description);
     });
+
     it('isReadOnly and setReadOnly', () => {
         expect(field.isReadOnly()).toEqual(false);
+
         field.setReadOnly(true);
+
         expect(field.isReadOnly()).toEqual(true);
     });
+
     it('isDisabled and setDisabled', () => {
         expect(field.isDisabled()).toEqual(false);
+
         field.setDisabled(true);
+
         expect(field.isDisabled()).toEqual(true);
     });
+
     it('getChoices and setChoices', () => {
         expect(field.getChoices()).toEqual([]);
+
         const choices = ['yes', 'no'];
         field.setChoices(choices);
+
         expect(field.getChoices()).toEqual(choices);
     });
+
     it('toArray', () => {
         const array = {
             type: field.getType(),
@@ -69,6 +90,7 @@ describe('Field tests', () => {
             disabled: field.isDisabled(),
             choices: field.getChoices(),
         };
+
         expect(field.toArray()).toEqual(array);
     });
 });

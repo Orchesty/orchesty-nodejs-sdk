@@ -166,16 +166,19 @@ describe('ApplicationManager tests', () => {
             PASSWORD,
             'passs',
         );
+
         expect(dbInstall.key).toEqual(testName);
         expect(dbInstall.user).toEqual(USER);
         expect(
             CoreFormsEnum.AUTHORIZATION_FORM in (dbInstall.applicationSettings as IApplicationSettings),
         ).toBeTruthy();
+
         const fieldPassword = (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (dbInstall as any).applicationSettings[CoreFormsEnum.AUTHORIZATION_FORM].fields as IField[]
         )
             .find((field) => field.key);
+
         expect(fieldPassword).toBeTruthy();
     });
 
@@ -192,10 +195,11 @@ describe('ApplicationManager tests', () => {
         }]);
 
         const oAuth2Provider = new OAuth2Provider('');
-        (oAuth2Provider.authorize as jest.MockedFunction<typeof oAuth2Provider.authorize>).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
+        (jest.mocked(oAuth2Provider.authorize)).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
 
         const mockedAppManager = getMockedAppManager(oAuth2Provider);
         const dbInstall = await mockedAppManager.authorizationApplication(testOAuth2Name, USER, 'https://example.com');
+
         expect(dbInstall)
             .toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
     });
@@ -213,7 +217,7 @@ describe('ApplicationManager tests', () => {
         }]);
 
         const oAuth2Provider = new OAuth2Provider('');
-        (oAuth2Provider.getAccessToken as jest.MockedFunction<typeof oAuth2Provider.getAccessToken>)
+        (jest.mocked(oAuth2Provider.getAccessToken))
             .mockResolvedValue({});
 
         const mockedAppManager = getMockedAppManager(oAuth2Provider);
@@ -222,6 +226,7 @@ describe('ApplicationManager tests', () => {
             USER,
             { testToken: 'tokenTest' },
         );
+
         expect(frontendUrl).toEqual('url');
     });
 

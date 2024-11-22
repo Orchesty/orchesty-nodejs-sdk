@@ -35,6 +35,7 @@ describe('CryptManager tests', () => {
         try {
             const empty = new CryptManager();
             empty.encrypt('text');
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -46,6 +47,7 @@ describe('CryptManager tests', () => {
     it('Unsupported prefix', () => {
         try {
             man.decrypt('00_');
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -57,6 +59,7 @@ describe('CryptManager tests', () => {
     it('Unknown prefix', () => {
         try {
             man.decrypt('unknown_');
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -69,6 +72,7 @@ describe('CryptManager tests', () => {
         try {
             const bad = new CryptManager([new WindWalkerCrypt('123', 'bad')]);
             bad.decrypt('');
+
             expect(false).toBeTruthy();
         } catch (e) {
             if (e instanceof Error) {
@@ -89,6 +93,7 @@ describe('CryptManager tests', () => {
         arr.forEach((item) => {
             const encrypted = man.encrypt(item);
             const decrypted = man.decrypt(encrypted);
+
             expect(decrypted).toEqual(item);
         });
     });
@@ -104,7 +109,6 @@ describe('CryptManager tests', () => {
         };
         const encryptedObj = man.encrypt(obj);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const decryptedObj = man.decrypt(encryptedObj);
         const decrypted = man.decrypt(decryptedObj.str);
 
@@ -136,6 +140,7 @@ describe('CryptManager tests', () => {
 
         const encrypted = man.encrypt(data);
         const decrypted = man.decrypt(encrypted);
+
         expect(decrypted).toEqual(data);
     });
 });

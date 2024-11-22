@@ -17,6 +17,7 @@ describe('Test system usages', () => {
 
     it('getCpuUsage', () => {
         const cpuUsage = getCpuUsage();
+
         expect(typeof cpuUsage).toBe('number');
         expect(cpuUsage >= 0).toBeTruthy();
     });
