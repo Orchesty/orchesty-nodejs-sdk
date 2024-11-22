@@ -11,7 +11,7 @@
     "one-test": "jest --forceExit --testNamePattern",
     "test": "jest --coverage --detectOpenHandles --forceExit",
     "lint": "eslint lib test --fix",
-    "lint-ci": "eslint lib test --ext .ts",
+    "lint-ci": "eslint lib test",
     "start": "nodemon test/index.ts",
     "build": "rm -rf dist && tsc -d -p tsconfig.prod.json && cp package.json ./dist/package.json"
   },
