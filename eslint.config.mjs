@@ -20,7 +20,6 @@ export default [
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
-
       'jest/max-expects': ['error', {
         max: 20,
       }],
