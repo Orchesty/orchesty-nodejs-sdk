@@ -67,6 +67,7 @@ export class Logger {
 
     public createCtx(payload: AProcessDto | ILogContext | Request): ILogContext {
         if (payload instanceof IncomingMessage) {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             return this.ctxFromHeaders(JSON.parse(payload?.body || '{}')?.headers || {});
         }
 
