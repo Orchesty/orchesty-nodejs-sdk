@@ -160,6 +160,7 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
 
 export async function createProcessDto(req: Request, appName = ''): Promise<ProcessDto> {
     const dto = await getFreeDto();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
     dto.setData(parsed.body || '{}');
@@ -171,6 +172,7 @@ export async function createProcessDto(req: Request, appName = ''): Promise<Proc
 
 export async function createBatchProcessDto(req: Request, appName: string): Promise<BatchProcessDto> {
     const dto = await getFreeBatchDto();
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
 
     dto.setBridgeData(parsed.body || '{}');

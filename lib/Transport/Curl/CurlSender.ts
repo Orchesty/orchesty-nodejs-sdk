@@ -130,6 +130,11 @@ export default class CurlSender {
             req.auth = dto.getAuth();
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        req.validateStatus = function(status: number) {
+            return true; // do not validate status in axios
+        };
+
         return req;
     }
 

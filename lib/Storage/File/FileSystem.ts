@@ -57,7 +57,7 @@ export default class FileSystem {
             }
 
             if (actualTry > this.maxTries) {
-                throw Error(`Max tries haw been reached. Cannot read file [${file}]`);
+                throw Error(`Max tries have been reached. Cannot read file [${file}]`);
             }
 
             if (this.lockedFiles.includes(file)) {
