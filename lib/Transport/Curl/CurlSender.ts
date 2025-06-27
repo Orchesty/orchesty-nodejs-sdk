@@ -4,6 +4,7 @@ import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
 import { getCorrelationId, getNodeId, getUserId } from '../../Utils/Headers';
+import { tryJsonParse } from '../../Utils/Json';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
 import { defaultRanges, inRange, IResultRanges, StatusRange } from './ResultCodeRange';
@@ -146,18 +147,22 @@ export default class CurlSender {
     ): void {
         const message = `Method: ${request.method},
        Url: ${request.url},
-       Headers: ${JSON.stringify(request.headers)},
-       Body: ${JSON.stringify(request.data)}
        Response: 
        Code: ${response.status},
-       Body: ${body ?? 'Empty response'},
-       Headers: ${JSON.stringify(response.headers)},
        Reason: ${response.statusText}`;
 
+        const ctx = logger.createCtx(
+            requestDto.getDebugInfo(),
+            request.headers,
+            request.data,
+            response.headers,
+            tryJsonParse(body) ?? body,
+        );
+
         if (response.status > 300) {
-            logger.error(`Request failed. ${message}`, logger.createCtx(requestDto.getDebugInfo()));
+            logger.error(`Request failed. ${message}`, ctx);
         } else {
-            logger.debug(`Request success. ${message}`, logger.createCtx(requestDto.getDebugInfo()));
+            logger.debug(`Request success. ${message}`, ctx);
         }
     }
 

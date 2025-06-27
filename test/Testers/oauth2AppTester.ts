@@ -48,7 +48,7 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
     if (!state) {
         throw Error('Missing "state" query parameter.');
     }
-    const stateDecode = OAuth2Provider.stateDecode(state.toString());
+    const stateDecode = OAuth2Provider.stateDecode(state);
 
     await appManager.saveAuthorizationToken(stateDecode.name, stateDecode.user, parameters);
     const updatedApp = await repo.findByNameAndUser(stateDecode.name, stateDecode.user);

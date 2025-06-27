@@ -33,6 +33,10 @@ export interface ILogContext {
         trace?: string;
     };
     data?: string;
+    reqBody?: object|string;
+    reqHeaders?: object;
+    resBody?: object|string;
+    resHeaders?: object;
 }
 
 export class Logger {
@@ -65,14 +69,32 @@ export class Logger {
         this.send(data, isForUi);
     }
 
-    public createCtx(payload: AProcessDto | ILogContext | Request): ILogContext {
+    public createCtx(
+        payload: AProcessDto | ILogContext | Request,
+        reqHeaders?: object,
+        reqBody?: object|string,
+        resHeaders?: object,
+        resBody?: object|string,
+    ): ILogContext {
         if (payload instanceof IncomingMessage) {
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            return this.ctxFromHeaders(JSON.parse(payload?.body || '{}')?.headers || {});
+            const ctx = this.ctxFromHeaders(JSON.parse(payload?.body || '{}')?.headers || {});
+            ctx.reqHeaders = reqHeaders;
+            ctx.reqBody = reqBody;
+            ctx.resHeaders = resHeaders;
+            ctx.resBody = resBody;
+
+            return ctx;
         }
 
         if (payload instanceof AProcessDto) {
-            return this.ctxFromHeaders(payload.getHeaders());
+            const ctx = this.ctxFromHeaders(payload.getHeaders());
+            ctx.reqHeaders = reqHeaders;
+            ctx.reqBody = reqBody;
+            ctx.resHeaders = resHeaders;
+            ctx.resBody = resBody;
+
+            return ctx;
         }
 
         return payload;

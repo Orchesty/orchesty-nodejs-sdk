@@ -3,7 +3,7 @@ import DIContainer from '../../DIContainer/Container';
 import Metrics, { ITimesMetrics } from '../Metrics';
 
 const mockITimesMetrics: ITimesMetrics = {
-    requestDuration: Number(990719925474099),
+    requestDuration: 90719925474099,
     userTime: 5,
     kernelTime: 5,
 };

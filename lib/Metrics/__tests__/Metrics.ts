@@ -10,12 +10,12 @@ const mockCpuTimes: ICpuTimes = {
 };
 
 const mockIStartMetrics: IStartMetrics = {
-    timestamp: Number(9007199254740991),
+    timestamp: 9007199254740991,
     cpu: mockCpuTimes,
 };
 
 const mockITimesMetrics: ITimesMetrics = {
-    requestDuration: Number(990719925474099),
+    requestDuration: 990719925474099,
     userTime: 5,
     kernelTime: 5,
 };
