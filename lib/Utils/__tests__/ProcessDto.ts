@@ -1,4 +1,4 @@
-import { WORKER_FOLLOWERS } from '../Headers';
+import { AUDIT_ENTITY, WORKER_FOLLOWERS } from '../Headers';
 import ProcessDto from '../ProcessDto';
 import ResultCode from '../ResultCode';
 
@@ -51,9 +51,12 @@ describe('Tests ProcessDto utils', () => {
         expect(dto.getHeaders()).toEqual({ some: 'header' });
     });
 
-    it('GetHeader', () => {
+    it('getHeader', () => {
         const dto = new ProcessDto();
         dto.setHeaders({ some: 'header' });
+
+        dto.getHeader('some') satisfies string | undefined;
+        dto.getHeader('some', 'default') satisfies string;
 
         expect(dto.getHeader('some')).toEqual('header');
         expect(dto.getHeader('none', 'default')).toEqual('default');
@@ -80,6 +83,18 @@ describe('Tests ProcessDto utils', () => {
         dto.removeHeaders();
 
         expect(dto.getHeaders()).toEqual({});
+    });
+
+    it('addAuditHeader', () => {
+        const dto = new ProcessDto();
+        dto.addAuditHeader('one', 'id', [{ id: '1', externalId: 'A' }]);
+        dto.addAuditHeader('one', 'id', [{ id: '2', externalId: 'B' }]);
+        dto.addAuditHeader('two', 'id', [{ id: '3', externalId: 'C' }]);
+
+        expect(dto.getHeader(AUDIT_ENTITY)).toEqual(JSON.stringify({
+            one: { key: 'id', fields: [{ id: '1', externalId: 'A' }, { id: '2', externalId: 'B' }] },
+            two: { key: 'id', fields: [{ id: '3', externalId: 'C' }] },
+        }));
     });
 
     it('setSuccessProcess', () => {

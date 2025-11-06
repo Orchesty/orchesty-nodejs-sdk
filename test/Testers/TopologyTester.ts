@@ -206,7 +206,7 @@ export default class TopologyTester {
             // Message want to be repeated
             case ResultCode.REPEAT.toString():
                 index += 1;
-                dto.addHeader(REPEAT_HOPS, String(parseInt(out.getHeader(REPEAT_HOPS, '0') as string, 10) + 1));
+                dto.addHeader(REPEAT_HOPS, String(parseInt(out.getHeader(REPEAT_HOPS, '0'), 10) + 1));
                 if (parseInt(out.getHeader(REPEAT_HOPS) ?? '0', 10)
                     >= parseInt(out.getHeader(REPEAT_MAX_HOPS) ?? '0', 10)) {
                     throw new Error('Repeater has used last try and still need to repeat.');

@@ -1,4 +1,5 @@
 import {
+    AUDIT_ENTITY,
     FORCE_TARGET_QUEUE,
     getLimiterKey,
     getLimiterKeyWithGroup,
@@ -15,6 +16,10 @@ import {
 import ResultCode from './ResultCode';
 
 const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONTINUE];
+
+type AuditData = Record<string, { key: string; fields: Record<string, string>[] }>
+
+type AuditDataField<T extends string> = Record<string, string> & Record<T, string>;
 
 export default abstract class AProcessDto<JsonData = unknown> {
 
@@ -38,6 +43,21 @@ export default abstract class AProcessDto<JsonData = unknown> {
         const value = this.headers.user;
 
         return value ? String(value) : undefined;
+    }
+
+    public addAuditHeader<T extends string>(entity: string, key: T, fields: AuditDataField<T>[]): this {
+        const auditData: AuditData = JSON.parse(this.getHeader(AUDIT_ENTITY, '{}'));
+        const auditDataEntity = auditData[entity];
+
+        if (auditDataEntity) {
+            auditDataEntity.fields.push(...fields);
+        } else {
+            auditData[entity] = { key, fields };
+        }
+
+        this.addHeader(AUDIT_ENTITY, JSON.stringify(auditData));
+
+        return this;
     }
 
     public setUser(value: string | undefined): this {
@@ -107,6 +127,10 @@ export default abstract class AProcessDto<JsonData = unknown> {
 
         return this;
     }
+
+    public getHeader(key: string): string | undefined;
+
+    public getHeader(key: string, defaultValue: string): string;
 
     public getHeader(key: string, defaultValue?: string): string | undefined {
         const value = this.headers[key];
@@ -186,7 +210,7 @@ export default abstract class AProcessDto<JsonData = unknown> {
     }
 
     public setForceFollowers(...followers: string[]): this {
-        const workerFollowers: { name: string; id: string }[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]') as string);
+        const workerFollowers: { name: string; id: string }[] = JSON.parse(this.getHeader(WORKER_FOLLOWERS, '[]'));
         const filtered = workerFollowers.filter((item) => followers.includes(item.name));
         const targetQueues = filtered.map((item) => item.id).join(',');
 
