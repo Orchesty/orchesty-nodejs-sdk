@@ -91,7 +91,7 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
     }
 
     public getBatchCursor(defaultValue = ''): string {
-        return this.getHeader(BATCH_CURSOR, defaultValue) as string;
+        return this.getHeader(BATCH_CURSOR, defaultValue);
     }
 
     public removeBatchCursor(): this {
