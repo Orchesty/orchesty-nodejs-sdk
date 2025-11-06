@@ -34,6 +34,9 @@ export const LIMITER_KEY = 'limiter-key';
 // Batch headers
 export const BATCH_CURSOR = 'cursor';
 
+// Audit headers
+export const AUDIT_ENTITY = 'audit-entity';
+
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IHttpHeaders {
     [key: string]: string[] | string | undefined;

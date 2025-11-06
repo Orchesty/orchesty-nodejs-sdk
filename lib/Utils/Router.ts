@@ -24,7 +24,7 @@ interface IBridgeRequestDto {
 }
 
 function logResponseProcess(dto: AProcessDto): void {
-    if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0') as string, 10))) {
+    if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0'), 10))) {
         logger.info(
             `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
             dto,
