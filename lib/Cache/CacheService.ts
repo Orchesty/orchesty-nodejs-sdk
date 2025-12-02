@@ -47,6 +47,7 @@ export default class CacheService {
             const msg = e?.message ?? 'Unknown error in CacheService.';
             logger.error(msg, {}, false, e);
 
+            // eslint-disable-next-line preserve-caught-error
             throw new Error(`Unexpected error: ${msg}`);
         }
     }
@@ -103,6 +104,7 @@ export default class CacheService {
             const msg = e?.message ?? 'Unknown error in CacheService.';
             logger.error(msg, {}, false, e);
 
+            // eslint-disable-next-line preserve-caught-error
             throw new Error(`Unexpected error: ${msg}`);
         }
     }

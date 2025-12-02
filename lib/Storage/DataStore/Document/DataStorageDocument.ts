@@ -2,7 +2,7 @@ import DateTimeUtils from '../../../Utils/DateTimeUtils';
 
 export default class DataStorageDocument<T = unknown> {
 
-    private created: Date;
+    private readonly created: Date;
 
     private user?: string = '';
 
@@ -10,15 +10,14 @@ export default class DataStorageDocument<T = unknown> {
 
     private data?: T;
 
-    public constructor() {
-        this.created = DateTimeUtils.getUtcDate();
+    public constructor(date?: Date) {
+        this.created = date ?? DateTimeUtils.getUtcDate();
     }
 
     public static fromJson<T>(data: IDataStorageDocument<T>): DataStorageDocument<T> {
-        const document = new DataStorageDocument<T>();
+        const document = new DataStorageDocument<T>(data.created);
         document.setUser(data.user);
         document.setApplication(data.application);
-        document.setCreated(data.created);
         document.setData(data.data);
 
         return document;
@@ -54,12 +53,6 @@ export default class DataStorageDocument<T = unknown> {
 
     public setData(data?: T): this {
         this.data = data;
-
-        return this;
-    }
-
-    private setCreated(date: Date): this {
-        this.created = date;
 
         return this;
     }

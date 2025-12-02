@@ -45,6 +45,7 @@ export abstract class AbstractRepository<T extends { id: string }> {
         const cursor = this.collection.find(this.remapId(query), options);
         const items = await cursor.toArray();
 
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         return Promise.all(items.map(async (it) => this.resultOrNull(it)) as unknown as T[]);
     }
 

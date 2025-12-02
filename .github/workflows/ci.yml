@@ -1,0 +1,90 @@
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ci_changed: ${{ steps.final.outputs.ci_changed }}
+      makefile_changed: ${{ steps.final.outputs.makefile_changed }}
+      risky_changes: ${{ steps.final.outputs.risky }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for CI workflow changes
+        if: github.event_name != 'workflow_dispatch'
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            ci:
+              - '.github/workflows/ci.yml'
+            makefile:
+              - 'Makefile'
+
+      - name: Set defaults for manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        id: defaults
+        run: |
+          echo "No changes detected for manual dispatch - allowing test run."
+          echo "ci=false" >> $GITHUB_OUTPUT
+          echo "makefile=false" >> $GITHUB_OUTPUT
+
+      - name: Determine changes
+        id: final
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "ci_changed=false" >> $GITHUB_OUTPUT
+            echo "makefile_changed=false" >> $GITHUB_OUTPUT
+            echo "risky=false" >> $GITHUB_OUTPUT
+          else
+            echo "ci_changed=${{ steps.changes.outputs.ci }}" >> $GITHUB_OUTPUT
+            echo "makefile_changed=${{ steps.changes.outputs.makefile }}" >> $GITHUB_OUTPUT
+            echo "risky=${{ (steps.changes.outputs.ci == 'true' || steps.changes.outputs.makefile == 'true') }}" >> $GITHUB_OUTPUT
+          fi
+          echo "Debug: event_name=${{ github.event_name }}, ci_changed=$CI_CHANGED, makefile_changed=$MAKEFILE_CHANGED, risky=$RISKY"
+
+      - name: Fail if risky changes detected
+        if: steps.final.outputs.risky == 'true'
+        run: |
+          echo "Risky changes detected in .github/workflows/ci.yml or Makefile."
+          echo "For security, this PR cannot be merged automatically."
+          echo "Review changes manually and use workflow_dispatch for testing, or remove risky changes."
+          exit 1
+
+  test:
+    runs-on: self-hosted
+    needs: check-changes
+    if: ${{ needs.check-changes.outputs.risky_changes != 'true' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set docker host
+        run: |
+          echo "DOCKER_HOST=unix:///var/run/docker.sock" >> $GITHUB_ENV
+
+      - name: Setup and run tests
+        env:
+          COMPOSE_PROJECT_NAME: ${{ github.run_id }}-orchesty-nodejs-sdk
+          COMPOSE_FILE: docker-compose.ci.yml
+        run: |
+          make docker-compose.ci.yml test
+
+      - name: Cleanup
+        if: always()
+        env:
+          COMPOSE_PROJECT_NAME: ${{ github.run_id }}-orchesty-nodejs-sdk
+          COMPOSE_FILE: docker-compose.ci.yml
+        run: |
+          make docker-compose.ci.yml docker-down-clean

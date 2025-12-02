@@ -242,7 +242,6 @@ export default abstract class AApplication implements IApplication {
     }
 
     protected autoInjectLimitForm(forms: FormStack, applicationInstall: ApplicationInstall): Promise<void> | void {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
         let limiterForm = forms.getForms().find((it) => it.getKey() === CoreFormsEnum.LIMITER_FORM.toString());
 
         if (!limiterForm) {
