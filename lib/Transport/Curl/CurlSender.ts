@@ -3,7 +3,7 @@ import OnRepeatException from '../../Exception/OnRepeatException';
 import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
-import { getCorrelationId, getNodeId, getUserId } from '../../Utils/Headers';
+import { getCorrelationId, getNodeId, getTopologyId, getUserId } from '../../Utils/Headers';
 import { tryJsonParse } from '../../Utils/Json';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
@@ -45,7 +45,7 @@ export default class CurlSender {
             const buffer = await response.data;
             const body = buffer?.toString() ?? '';
             CurlSender.log(dto, req, response, body);
-            await this.sendMetrics(dto, startTime, response.status);
+            await this.sendMetrics(dto, startTime, response.status, response.status >= 300 ? body : undefined);
 
             if (codeRanges) {
                 return await this.handleByResultCode(
@@ -67,12 +67,12 @@ export default class CurlSender {
 
             if (e instanceof AxiosError) {
                 if (e.message.includes('timeout')) {
-                    await this.sendMetrics(dto, startTime, 408);
+                    await this.sendMetrics(dto, startTime, 408, 'Timeout error');
                     throw new OnRepeatException(sec, hops, e.message);
                 }
             }
 
-            await this.sendMetrics(dto, startTime, 500);
+            await this.sendMetrics(dto, startTime, 500, 'Unknown error');
 
             throw e;
         }
@@ -166,7 +166,12 @@ export default class CurlSender {
         }
     }
 
-    private async sendMetrics(dto: RequestDto, startTimes: IStartMetrics, responseCode: number): Promise<void> {
+    private async sendMetrics(
+        dto: RequestDto,
+        startTimes: IStartMetrics,
+        responseCode: number,
+        responseBody?: string,
+    ): Promise<void> {
         const info = dto.getDebugInfo();
         const times = Metrics.getTimes(startTimes);
         await this.metrics.sendCurlMetrics(
@@ -174,9 +179,11 @@ export default class CurlSender {
             responseCode,
             getUserId(info.getHeaders()),
             getNodeId(info.getHeaders()),
+            getTopologyId(info.getHeaders()) ?? '',
             info.getCurrentApp(),
             getCorrelationId(info.getHeaders()),
             dto.getUrl(),
+            responseBody,
         ).catch(
             (e: unknown) => logger.error(
                 (e as { message: string })?.message ?? 'Metrics: unknown error',
