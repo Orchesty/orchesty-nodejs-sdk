@@ -18,14 +18,14 @@ describe('Test metrics', () => {
     });
 
     it('sendCurlMetrics', async () => {
-        const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics, 1, '', '');
+        const curlMetrics = await metrics.sendCurlMetrics(mockITimesMetrics, 1, '', '', '');
 
-        expect(curlMetrics).toBeDefined();
+        expect(curlMetrics).toBe(true);
     });
 
     it('sendProcessMetrics', async () => {
         const processMetric = await metrics.sendProcessMetrics(mockITimesMetrics);
 
-        expect(processMetric).toBeDefined();
+        expect(processMetric).toBe(true);
     });
 });

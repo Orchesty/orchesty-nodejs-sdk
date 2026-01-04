@@ -23,7 +23,7 @@ export default class Redis {
         return Boolean(await this.client.sendCommand('exists', [key]));
     }
 
-    public async get(key: string): Promise<string> {
+    public async get(key: string): Promise<string | null> {
         return this.client.sendCommand('get', [key]);
     }
 
@@ -49,7 +49,7 @@ export default class Redis {
         return result === 'OK';
     }
 
-    public async getSet(key: string, value: string): Promise<string> {
+    public async getSet(key: string, value: string): Promise<string | null> {
         return this.client.sendCommand('getset', [key, value]);
     }
 
@@ -84,7 +84,7 @@ export default class Redis {
         return response;
     }
 
-    public async getFirstElementAndMoveToEnd(listKey: string): Promise<string> {
+    public async getFirstElementAndMoveToEnd(listKey: string): Promise<string | null> {
         return this.client.sendCommand('LMOVE', [
             listKey,
             listKey,
