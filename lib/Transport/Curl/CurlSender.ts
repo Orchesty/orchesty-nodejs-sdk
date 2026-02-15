@@ -72,7 +72,9 @@ export default class CurlSender {
                 }
             }
 
-            await this.sendMetrics(dto, startTime, 500, 'Unknown error');
+            if (!(e instanceof OnStopAndFailException) && !(e instanceof OnRepeatException)) {
+                await this.sendMetrics(dto, startTime, 500, 'Unknown error');
+            }
 
             throw e;
         }
