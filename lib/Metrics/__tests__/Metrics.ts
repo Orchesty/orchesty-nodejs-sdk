@@ -63,6 +63,7 @@ describe('Test metrics', () => {
             200,
             'randomUser',
             'randomNodeId',
+            'randomNodeName',
             'randomAppKey',
             'randomCorrelationId',
             'randomUrl',
