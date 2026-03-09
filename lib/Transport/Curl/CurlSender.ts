@@ -3,7 +3,7 @@ import OnRepeatException from '../../Exception/OnRepeatException';
 import OnStopAndFailException from '../../Exception/OnStopAndFailException';
 import logger from '../../Logger/Logger';
 import Metrics, { IStartMetrics } from '../../Metrics/Metrics';
-import { getCorrelationId, getNodeId, getTopologyId, getUserId } from '../../Utils/Headers';
+import { getCorrelationId, getNodeId, getNodeName, getTopologyId, getUserId } from '../../Utils/Headers';
 import { tryJsonParse } from '../../Utils/Json';
 import RequestDto from './RequestDto';
 import ResponseDto from './ResponseDto';
@@ -181,6 +181,7 @@ export default class CurlSender {
             responseCode,
             getUserId(info.getHeaders()),
             getNodeId(info.getHeaders()),
+            getNodeName(info.getHeaders()),
             getTopologyId(info.getHeaders()) ?? '',
             info.getCurrentApp(),
             getCorrelationId(info.getHeaders()),

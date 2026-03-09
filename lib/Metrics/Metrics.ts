@@ -89,6 +89,7 @@ export default class Metrics {
         responseCode: number,
         user: string,
         nodeId: string,
+        nodeName: string | undefined,
         topologyId: string,
         appKey?: string,
         correlationId?: string,
@@ -101,6 +102,9 @@ export default class Metrics {
         }
         if (nodeId) {
             tags.node_id = nodeId;
+        }
+        if (nodeName) {
+            tags.node_name = nodeName;
         }
         if (topologyId) {
             tags.topology_id = topologyId;
