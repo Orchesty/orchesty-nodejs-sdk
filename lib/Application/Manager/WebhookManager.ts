@@ -35,8 +35,8 @@ export default class WebhookManager {
     ) {
     }
 
-    public async getWebhooks(app: AApplication, user: string): Promise<IWebhookForm[]> {
-        const webhooks = await this.getAllWebhooks(app.getName(), user);
+    public async getWebhooks(app: AApplication, user: string, sdk: string): Promise<IWebhookForm[]> {
+        const webhooks = await this.getAllWebhooks(app.getName(), user, sdk);
         const ret: IWebhookForm[] = [];
 
         (app as unknown as IWebhookApplication).getWebhookSubscriptions().forEach((subs) => {
@@ -60,11 +60,16 @@ export default class WebhookManager {
         return ret;
     }
 
-    public async subscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
+    public async subscribeWebhooks(
+        name: string,
+        user: string,
+        sdk: string,
+        data: IWebhookBody,
+    ): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
             return [];
@@ -94,6 +99,7 @@ export default class WebhookManager {
                     webhook
                         .setName(subs.getName())
                         .setUser(user)
+                        .setSdk(sdk)
                         .setNode(subs.getNode())
                         .setTopology(topology)
                         .setApplication(app.getName())
@@ -107,17 +113,22 @@ export default class WebhookManager {
         );
     }
 
-    public async unsubscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
+    public async unsubscribeWebhooks(
+        name: string,
+        user: string,
+        sdk: string,
+        data: IWebhookBody,
+    ): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
             return [];
         }
 
-        const webhooks = await this.getAllWebhooks(name, user);
+        const webhooks = await this.getAllWebhooks(name, user, sdk);
         return Promise.all(
             webhooks.map(async (webhook) => {
                 if (data.topology !== webhook.getTopology()) {
@@ -138,16 +149,16 @@ export default class WebhookManager {
         );
     }
 
-    private async getAllWebhooks(application: string, user: string): Promise<Webhook[]> {
-        return this.webhookRepository.findMany({ apps: [application], users: [user] });
+    private async getAllWebhooks(application: string, user: string, sdk: string): Promise<Webhook[]> {
+        return this.webhookRepository.findMany({ apps: [application], users: [user], sdks: [sdk] });
     }
 
     private getApplication(key: string): IWebhookApplication {
         return ((this.loader.get(APPLICATION_PREFIX, key)) as unknown) as IWebhookApplication;
     }
 
-    private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.appRepository.findByNameAndUser(name, user, null);
+    private async loadApplicationInstall(name: string, user: string, sdk: string): Promise<ApplicationInstall> {
+        const appInstall = await this.appRepository.findByNameAndUser(name, user, [sdk], null);
         if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }

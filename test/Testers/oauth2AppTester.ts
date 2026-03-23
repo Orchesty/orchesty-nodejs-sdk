@@ -31,7 +31,7 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
     await repo.insert(appInstall);
 
     const appManager = di.get(ApplicationManager);
-    const resp = await appManager.authorizationApplication(name, user, '');
+    const resp = await appManager.authorizationApplication(name, user, '', '');
     // eslint-disable-next-line no-console
     console.log(resp);
 
@@ -50,8 +50,8 @@ export default async function runCli(di: DIContainer, customSettings: Record<str
     }
     const stateDecode = OAuth2Provider.stateDecode(state);
 
-    await appManager.saveAuthorizationToken(stateDecode.name, stateDecode.user, parameters);
-    const updatedApp = await repo.findByNameAndUser(stateDecode.name, stateDecode.user);
+    await appManager.saveAuthorizationToken(stateDecode.name, stateDecode.user, stateDecode.sdk, parameters);
+    const updatedApp = await repo.findByNameAndUser(stateDecode.name, stateDecode.user, [stateDecode.sdk]);
 
     // eslint-disable-next-line no-console
     console.log(updatedApp?.getSettings());

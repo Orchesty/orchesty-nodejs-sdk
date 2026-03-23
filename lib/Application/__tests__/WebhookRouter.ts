@@ -5,6 +5,7 @@ import {
     expressApp,
     getApplicationWithSettings,
     getTestContainer,
+    SDK,
     USER,
     WEBHOOK_NAME,
 } from '../../../test/TestAbstact';
@@ -20,7 +21,7 @@ describe('tests for WebhookRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);
@@ -36,24 +37,24 @@ describe('tests for WebhookRouter', () => {
         createDocumentMockedServer();
     });
 
-    it('post /webhook/applications/:name/users/:user/subscribe', async () => {
+    it('post /webhook/applications/:name/users/:user/sdk/:sdk/subscribe', async () => {
         const body = {
             name: 'testTopoName',
             topology: 'testTopo',
         };
         await supertest(expressApp)
-            .post(`/webhook/applications/${WEBHOOK_NAME}/users/${USER}/subscribe`)
+            .post(`/webhook/applications/${WEBHOOK_NAME}/users/${USER}/sdk/${SDK}/subscribe`)
             .send(body)
             .expect(StatusCodes.OK, JSON.stringify([]));
     });
 
-    it('get /webhook/applications/:name/users/:user/unsubscribe', async () => {
+    it('post /webhook/applications/:name/users/:user/sdk/:sdk/unsubscribe', async () => {
         const body = {
             name: 'testTopoName',
             topology: 'testTopo',
         };
         await supertest(expressApp)
-            .post(`/webhook/applications/${WEBHOOK_NAME}/users/${USER}/unsubscribe`)
+            .post(`/webhook/applications/${WEBHOOK_NAME}/users/${USER}/sdk/${SDK}/unsubscribe`)
             .send(body)
             .expect(StatusCodes.OK, JSON.stringify([]));
     });

@@ -10,9 +10,14 @@ export class WebhookRouter extends ACommonRouter {
     }
 
     public configureRoutes(): express.Application {
-        this.app.route('/webhook/applications/:name/users/:user/subscribe').post(async (req, res, next) => {
+        this.app.route('/webhook/applications/:name/users/:user/sdk/:sdk/subscribe').post(async (req, res, next) => {
             try {
-                const r = await this.manager.subscribeWebhooks(req.params.name, req.params.user, JSON.parse(req.body));
+                const r = await this.manager.subscribeWebhooks(
+                    req.params.name,
+                    req.params.user,
+                    req.params.sdk,
+                    JSON.parse(req.body),
+                );
 
                 res.json(r.map((w) => w?.getId()).filter((id) => id));
                 next();
@@ -21,11 +26,12 @@ export class WebhookRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/webhook/applications/:name/users/:user/unsubscribe').post(async (req, res, next) => {
+        this.app.route('/webhook/applications/:name/users/:user/sdk/:sdk/unsubscribe').post(async (req, res, next) => {
             try {
                 const r = await this.manager.unsubscribeWebhooks(
                     req.params.name,
                     req.params.user,
+                    req.params.sdk,
                     JSON.parse(req.body),
                 );
 

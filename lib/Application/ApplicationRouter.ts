@@ -25,10 +25,10 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/limits').post(async (req, res, next) => {
+        this.app.route('/applications/sdk/:sdk/limits').post(async (req, res, next) => {
             try {
                 const { user, applications } = JSON.parse(req.body);
-                const response = await this.manager.userApplicationsLimit(user, applications);
+                const response = await this.manager.userApplicationsLimit(user, req.params.sdk, applications);
                 res.status(StatusCodes.OK);
                 res.json(response);
                 next();
@@ -79,7 +79,7 @@ export class ApplicationRouter extends ACommonRouter {
                 }
             });
 
-        this.app.route('/applications/:name/users/:user/authorize').get(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/authorize').get(async (req, res, next) => {
             try {
                 const redirectUrl = req.query.redirect_url;
                 if (!redirectUrl) {
@@ -90,7 +90,7 @@ export class ApplicationRouter extends ACommonRouter {
                 const url = await this.manager.authorizationApplication(
                     req.params.name,
                     req.params.user,
-
+                    req.params.sdk,
                     redirectUrl.toString(),
                 );
 
@@ -101,11 +101,12 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/authorize/token').get(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/authorize/token').get(async (req, res, next) => {
             try {
                 const url = await this.manager.saveAuthorizationToken(
                     req.params.name,
                     req.params.user,
+                    req.params.sdk,
                     req.query as Record<string, string>,
                 );
 
@@ -128,6 +129,7 @@ export class ApplicationRouter extends ACommonRouter {
                 const url = await this.manager.saveAuthorizationToken(
                     stateDecode.name,
                     stateDecode.user,
+                    stateDecode.sdk,
                     req.query as Record<string, string>,
                 );
 
@@ -138,10 +140,10 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/install').post(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/install').post(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
-                const response = await this.manager.installApplication(name, user);
+                const { name, user, sdk } = req.params;
+                const response = await this.manager.installApplication(name, user, sdk);
                 res.status(StatusCodes.CREATED);
                 res.json(response);
                 next();
@@ -150,10 +152,11 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/settings').put(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/settings').put(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
-                const response = await this.manager.saveApplicationSettings(name, user, JSON.parse(req.body));
+                const { name, user, sdk } = req.params;
+                const response = await this.manager
+                    .saveApplicationSettings(name, user, sdk, JSON.parse(req.body));
                 res.status(StatusCodes.OK);
                 res.json(response);
                 next();
@@ -162,15 +165,16 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/password').put(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/password').put(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
+                const { name, user, sdk } = req.params;
                 const { password, formKey, fieldKey } = JSON.parse(req.body);
                 if (!password || !formKey || !fieldKey) {
                     createApiErrorResponse(req, res, { message: 'Missing required parameters [password, formKey, fieldKey] in body.' });
                     return;
                 }
-                const response = await this.manager.saveApplicationPassword(name, user, formKey, fieldKey, password);
+                const response = await this.manager
+                    .saveApplicationPassword(name, user, sdk, formKey, fieldKey, password);
                 res.status(StatusCodes.OK);
                 res.json(response);
                 next();
@@ -179,10 +183,10 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/uninstall').delete(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/uninstall').delete(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
-                await this.manager.uninstallApplication(name, user);
+                const { name, user, sdk } = req.params;
+                await this.manager.uninstallApplication(name, user, sdk);
                 res.status(StatusCodes.OK);
                 res.json({});
                 next();
@@ -191,11 +195,11 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user/changeState').put(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk/changeState').put(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
+                const { name, user, sdk } = req.params;
                 const { enabled } = JSON.parse(req.body);
-                await this.manager.changeStateOfApplication(name, user, enabled);
+                await this.manager.changeStateOfApplication(name, user, sdk, enabled);
                 res.status(StatusCodes.OK);
                 res.json({});
                 next();
@@ -204,10 +208,10 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/:name/users/:user').get(async (req, res, next) => {
+        this.app.route('/applications/:name/users/:user/sdk/:sdk').get(async (req, res, next) => {
             try {
-                const { name, user } = req.params;
-                const response = await this.manager.detailApplication(name, user);
+                const { name, user, sdk } = req.params;
+                const response = await this.manager.detailApplication(name, user, sdk);
                 res.status(StatusCodes.OK);
                 res.json(response);
                 next();
@@ -216,10 +220,10 @@ export class ApplicationRouter extends ACommonRouter {
             }
         });
 
-        this.app.route('/applications/users/:user').get(async (req, res, next) => {
+        this.app.route('/applications/users/:user/sdk/:sdk').get(async (req, res, next) => {
             try {
-                const { user } = req.params;
-                const response = await this.manager.userApplications(user);
+                const { user, sdk } = req.params;
+                const response = await this.manager.userApplications(user, sdk);
                 res.status(StatusCodes.OK);
                 res.json(response);
                 next();

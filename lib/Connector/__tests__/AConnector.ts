@@ -1,7 +1,7 @@
 import TestBasicApplication from '../../../test/Application/TestBasicApplication';
 import TestConnector from '../../../test/Connector/TestConnector';
 import { appInstallConfig, mockOnce } from '../../../test/MockServer';
-import { getTestContainer, USER } from '../../../test/TestAbstact';
+import { getTestContainer, SDK, USER } from '../../../test/TestAbstact';
 import { IApplication } from '../../Application/Base/IApplication';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
@@ -46,13 +46,13 @@ describe('Test AConnector', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"names":["${application.getName()}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":true,"names":["${application.getName()}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [appInstallConfig] },
         }]);
 
         const dto = new ProcessDto();
-        dto.setHeaders({ user: USER });
+        dto.setHeaders({ user: USER, sdk: SDK });
         const res = await testConnector.getApplicationInstallFromHeaders(dto);
 
         expect(res.getUser()).toEqual(USER);
@@ -69,6 +69,20 @@ describe('Test AConnector', () => {
             await testConnector.getApplicationInstallFromHeaders(dto);
         } catch (e) {
             expect(e).toEqual(Error('User not defined'));
+        }
+    });
+
+    it('should throw error when sdk is not defined', async () => {
+        const application = new TestBasicApplication();
+        testConnector.setDb(mongoDbClient);
+        testConnector.setApplication(application);
+
+        const dto = new ProcessDto();
+        dto.setHeaders({ user: USER });
+        try {
+            await testConnector.getApplicationInstallFromHeaders(dto);
+        } catch (e) {
+            expect(e).toEqual(Error('Sdk not defined'));
         }
     });
 });

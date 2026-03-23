@@ -45,6 +45,12 @@ export default abstract class AProcessDto<JsonData = unknown> {
         return value ? String(value) : undefined;
     }
 
+    public getSdk(): string | undefined {
+        const value = this.headers.sdk;
+
+        return value ? String(value) : undefined;
+    }
+
     public addAuditHeader<T extends string>(entity: string, key: T, fields: AuditDataField<T>[]): this {
         const auditData: AuditData = JSON.parse(this.getHeader(AUDIT_ENTITY, '{}'));
         const auditDataEntity = auditData[entity];

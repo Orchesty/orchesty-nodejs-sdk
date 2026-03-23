@@ -9,6 +9,8 @@ export default class Webhook extends ADocument {
 
     private user = '';
 
+    private sdk = '';
+
     private token = '';
 
     private node = '';
@@ -42,6 +44,15 @@ export default class Webhook extends ADocument {
 
     public setUser(user: string): this {
         this.user = user;
+        return this;
+    }
+
+    public getSdk(): string {
+        return this.sdk;
+    }
+
+    public setSdk(sdk: string): this {
+        this.sdk = sdk;
         return this;
     }
 
@@ -104,6 +115,7 @@ export default class Webhook extends ADocument {
             id: this._id,
             name: this.name,
             user: this.user,
+            sdk: this.sdk,
             token: this.token,
             node: this.node,
             topology: this.topology,

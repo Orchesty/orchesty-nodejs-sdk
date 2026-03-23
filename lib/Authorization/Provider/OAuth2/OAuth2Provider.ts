@@ -25,13 +25,13 @@ export interface IToken {
 export class OAuth2Provider extends AOAuthProvider implements IOAuth2Provider {
 
     public static stateEncode(dto: IOAuth2Dto): string {
-        return encode(`${dto.getUser()}:${dto.getApplicationKey()}`, 'base64url');
+        return encode(`${dto.getUser()}:${dto.getApplicationKey()}:${dto.getSdk()}`, 'base64url');
     }
 
-    public static stateDecode(state: string): { user: string; name: string } {
+    public static stateDecode(state: string): { user: string; name: string; sdk: string } {
         const params = decode(state, 'base64url').split(':');
 
-        return { user: params[0] ?? '', name: params[1] ?? '' };
+        return { user: params[0] ?? '', name: params[1] ?? '', sdk: params[2] ?? '' };
     }
 
     public authorize(

@@ -22,6 +22,7 @@ export const container = c;
 
 export const USER = 'user';
 export const NAME = 'name';
+export const SDK = 'sdk';
 export const WEBHOOK_NAME = 'webhookName';
 
 export function listen(): void {

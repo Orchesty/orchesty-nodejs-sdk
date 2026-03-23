@@ -15,6 +15,8 @@ export default class OAuth2Dto implements IOAuth2Dto {
 
     private applicationName = '';
 
+    private sdk = '';
+
     public constructor(
         authorization: ApplicationInstall,
         private readonly authorizeUrl: string,
@@ -52,6 +54,10 @@ export default class OAuth2Dto implements IOAuth2Dto {
         return this.user;
     }
 
+    public getSdk(): string {
+        return this.sdk;
+    }
+
     public isCustomApp(): boolean {
         return Boolean(this.user) && Boolean(this.applicationName);
     }
@@ -60,9 +66,10 @@ export default class OAuth2Dto implements IOAuth2Dto {
         return Boolean(this.redirectUrl);
     }
 
-    public setCustomAppDependencies(user: string, applicationName: string): void {
+    public setCustomAppDependencies(user: string, applicationName: string, sdk: string): void {
         this.user = user;
         this.applicationName = applicationName;
+        this.sdk = sdk;
     }
 
     public setRedirectUrl(redirectUrl: string): IOAuth2Dto {
