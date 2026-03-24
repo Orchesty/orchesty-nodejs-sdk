@@ -41,6 +41,7 @@ describe('ApplicationInstall tests', () => {
             enabled: false,
             deleted: false,
             key: '',
+            sdk: '',
             nonEncryptedSettings: {},
             update: DateTimeUtils.getFormattedDate(DateTime.fromJSDate(appInstall.getUpdated()), DATE_TIME),
             user: '',

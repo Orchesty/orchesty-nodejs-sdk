@@ -1,13 +1,20 @@
 import AProcessDto from './AProcessDto';
-import { CORRELATION_ID, NODE_ID } from './Headers';
+import { CORRELATION_ID, NODE_ID, SDK } from './Headers';
 
 export default class ProcessDto<Data = unknown> extends AProcessDto<Data> {
 
-    public static createForFormRequest(appName: string, user: string, correlationId: string, nodeId = 'form'): ProcessDto {
+    public static createForFormRequest(
+        appName: string,
+        user: string,
+        sdk: string,
+        correlationId: string,
+        nodeId = 'form',
+    ): ProcessDto {
         const p = new ProcessDto();
         p.setHeaders({
             [CORRELATION_ID]: correlationId,
             [NODE_ID]: nodeId,
+            [SDK]: sdk,
         });
         p.setUser(user);
         p.setCurrentApp(appName);

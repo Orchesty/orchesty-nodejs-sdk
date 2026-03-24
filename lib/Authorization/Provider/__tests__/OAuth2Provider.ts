@@ -1,3 +1,4 @@
+import { SDK } from '../../../../test/TestAbstact';
 import CoreFormsEnum from '../../../Application/Base/CoreFormsEnum';
 import { ApplicationInstall } from '../../../Application/Database/ApplicationInstall';
 import { CLIENT_ID, CLIENT_SECRET } from '../../Type/OAuth2/IOAuth2Application';
@@ -22,10 +23,10 @@ describe('OAuth2Provider tests', () => {
             },
         });
         const dto = new OAuth2Dto(appInstall, authUrl, 'https://identity.idoklad.cz/server/connect/token');
-        dto.setCustomAppDependencies(user, app);
+        dto.setCustomAppDependencies(user, app, SDK);
 
         expect(oauth2Provider.authorize(dto, scope)).toEqual(
-            'https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=**469040-****-4e03-861e-e19da38*****&redirect_uri=testBackend%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%2Coffline_access&state=dXNlcjp0ZXN0QXBw&access_type=offline',
+            'https://identity.idoklad.cz/server/connect/authorize?response_type=code&client_id=**469040-****-4e03-861e-e19da38*****&redirect_uri=testBackend%2Fapi%2Fapplications%2Fauthorize%2Ftoken&scope=idoklad_api%2Coffline_access&state=dXNlcjp0ZXN0QXBwOnNkaw&access_type=offline',
         );
     });
 

@@ -51,13 +51,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Empty'
-  /applications/{key}/users/{user}/authorize:
+  /applications/{key}/users/{user}/sdk/{sdk}/authorize:
     get:
       tags:
         - Applications
       parameters:
         - $ref: '#/components/parameters/Key'
         - $ref: '#/components/parameters/User'
+        - $ref: '#/components/parameters/Sdk'
       responses:
         '200':
           $ref: '#/components/responses/Empty'
@@ -65,13 +66,14 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-  /applications/{key}/users/{user}/authorize/token:
-    post:
+  /applications/{key}/users/{user}/sdk/{sdk}/authorize/token:
+    get:
       tags:
         - Applications
       parameters:
         - $ref: '#/components/parameters/Key'
         - $ref: '#/components/parameters/User'
+        - $ref: '#/components/parameters/Sdk'
       responses:
         '302':
           description: ''
@@ -257,6 +259,13 @@ components:
       in: path
       required: true
       example: user
+      schema:
+        type: string
+    Sdk:
+      name: sdk
+      in: path
+      required: true
+      example: sdk
       schema:
         type: string
     State:

@@ -52,16 +52,17 @@ export default abstract class ANode implements INode {
     }
 
     protected async getApplicationInstall(
-        user?: string,
+        user: string | undefined,
+        sdk: string,
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall> {
         const repo = this.getDbClient().getApplicationRepository();
         let appInstall: ApplicationInstall | undefined;
         if (user) {
-            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, enabled, deleted);
+            appInstall = await repo.findByNameAndUser(this.getApplication().getName(), user, [sdk], enabled, deleted);
         } else {
-            appInstall = await repo.findOneByName(this.getApplication().getName(), enabled, deleted);
+            appInstall = await repo.findOneByName(this.getApplication().getName(), [sdk], enabled, deleted);
         }
 
         if (!appInstall) {
@@ -82,7 +83,11 @@ export default abstract class ANode implements INode {
         if (!user) {
             throw Error('User not defined');
         }
-        return this.getApplicationInstall(user, enabled, deleted);
+        const sdk = dto.getSdk();
+        if (!sdk) {
+            throw Error('Sdk not defined');
+        }
+        return this.getApplicationInstall(user, sdk, enabled, deleted);
     }
 
 }

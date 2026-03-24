@@ -37,6 +37,9 @@ export const BATCH_CURSOR = 'cursor';
 // Audit headers
 export const AUDIT_ENTITY = 'audit-entity';
 
+// SDK header
+export const SDK = 'sdk';
+
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IHttpHeaders {
     [key: string]: string[] | string | undefined;

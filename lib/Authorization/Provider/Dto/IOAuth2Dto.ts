@@ -19,5 +19,7 @@ export interface IOAuth2Dto {
 
     getApplicationKey(): string;
 
-    setCustomAppDependencies(user: string, applicationKey: string): void;
+    getSdk(): string;
+
+    setCustomAppDependencies(user: string, applicationKey: string, sdk: string): void;
 }

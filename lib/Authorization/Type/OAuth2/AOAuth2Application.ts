@@ -118,7 +118,11 @@ export default abstract class AOAuth2Application extends AApplication implements
 
     public createDto(applicationInstall: ApplicationInstall, redirectUrl = ''): OAuth2Dto {
         const dto = new OAuth2Dto(applicationInstall, this.getAuthUrl(), this.getTokenUrl());
-        dto.setCustomAppDependencies(applicationInstall.getUser(), applicationInstall.getName());
+        dto.setCustomAppDependencies(
+            applicationInstall.getUser(),
+            applicationInstall.getName(),
+            applicationInstall.getSdk(),
+        );
 
         if (redirectUrl) {
             dto.setRedirectUrl(redirectUrl);
