@@ -14,7 +14,7 @@ import { OAuth2Provider } from './Authorization/Provider/OAuth2/OAuth2Provider';
 import BatchRouter from './Batch/BatchRouter';
 import ACommonRouter from './Commons/ACommonRouter';
 import CommonLoader from './Commons/CommonLoader';
-import { appOptions, cryptOptions, orchestyOptions } from './Config/Config';
+import { appOptions, cryptOptions, orchestyOptions, tunnelOptions } from './Config/Config';
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
@@ -34,6 +34,8 @@ import CurlSender from './Transport/Curl/CurlSender';
 const routes: ACommonRouter[] = [];
 const container = new DIContainer();
 const expressApp: express.Application = express();
+// eslint-disable-next-line import/no-mutable-exports, @typescript-eslint/consistent-type-imports
+let tunnelClient: InstanceType<typeof import('./Tunnel/TunnelClient').default> | null = null;
 
 expressApp.use(metricsHandler);
 expressApp.use(bodyParser);
@@ -101,15 +103,36 @@ function initiateContainer(): void {
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }
 
-function listen(): void {
+async function listen(): Promise<void> {
     expressApp.disable('x-powered-by');
     expressApp.use(errorHandler(container.getRepository(Node)));
-    expressApp.listen(appOptions.port, () => {
-        logger.info(`⚡️[server]: Server is running at http://localhost:${appOptions.port}`, {});
-        routes.forEach((router) => {
-            logger.info(`⚡️[server]: Router '${router.getName()}' loaded.`, {});
+
+    if (tunnelOptions.enabled) {
+        try {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { default: TunnelClient } = await import('./Tunnel/TunnelClient');
+            tunnelClient = new TunnelClient(expressApp, tunnelOptions);
+            await tunnelClient.start();
+            routes.forEach((router) => {
+                logger.info(`[tunnel]: Router '${router.getName()}' loaded.`, {});
+            });
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : String(err);
+            if (message.includes('Cannot find module') || message.includes('Cannot find package')) {
+                logger.error(`[tunnel]: gRPC dependencies missing. Install @grpc/grpc-js and @grpc/proto-loader. ${message}`, {});
+            } else {
+                logger.error(`[tunnel]: Failed to start: ${message}`, {});
+            }
+            process.exit(1);
+        }
+    } else {
+        expressApp.listen(appOptions.port, () => {
+            logger.info(`[server]: Server is running at http://localhost:${appOptions.port}`, {});
+            routes.forEach((router) => {
+                logger.info(`[server]: Router '${router.getName()}' loaded.`, {});
+            });
         });
-    });
+    }
 }
 
-export { container, expressApp, initiateContainer, listen, routes };
+export { container, expressApp, initiateContainer, listen, routes, tunnelClient };
