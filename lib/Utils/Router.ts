@@ -24,16 +24,25 @@ interface IBridgeRequestDto {
 }
 
 function logResponseProcess(dto: AProcessDto): void {
-    if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0'), 10))) {
+    const resultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
+    const resultMessage = dto.getHeader(RESULT_MESSAGE) ?? '';
+
+    if (isSuccessResultCode(resultCode)) {
         logger.debug(
-            `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
+            `Request successfully processed. Message: [${resultMessage}]`,
             dto,
         );
     } else {
         logger.error(
-            `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
+            `Request process failed. Message: [${resultMessage}]`,
             dto,
         );
+    }
+
+    if (resultCode as ResultCode === ResultCode.DO_NOT_CONTINUE) {
+        logger.info(resultMessage, dto, true);
+    } else if (resultCode as ResultCode === ResultCode.STOP_AND_FAILED) {
+        logger.error(resultMessage, dto, true);
     }
 }
 
