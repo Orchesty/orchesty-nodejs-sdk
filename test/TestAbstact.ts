@@ -26,6 +26,7 @@ export const SDK = 'sdk';
 export const WEBHOOK_NAME = 'webhookName';
 
 export function listen(): void {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     l();
 }
 

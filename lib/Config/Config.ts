@@ -52,6 +52,13 @@ export const orchestyOptions = {
     systemUser: 'orchesty',
 };
 
+export const tunnelOptions = {
+    enabled: process.env.TUNNEL_ENABLED === 'true',
+    proxyUrl: process.env.TUNNEL_PROXY_URL ?? '',
+    workerId: process.env.TUNNEL_WORKER_ID ?? '',
+    reconnectInterval: parseInt(process.env.TUNNEL_RECONNECT_INTERVAL ?? '5000', 10),
+};
+
 export const databaseOptions = {
     repositoryCacheTTL: parseInt(getEnv('REPOSITORY_CACHE_TTL', '1'), 10),
     periodCacheChecker: parseInt(getEnv('PERIOD_CACHE_CHECKER', '1'), 10),
