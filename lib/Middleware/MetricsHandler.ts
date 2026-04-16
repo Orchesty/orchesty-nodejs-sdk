@@ -23,11 +23,6 @@ function afterResponse(
             getCorrelationId(req.headers),
         )
         .catch((e: unknown) => logger.error((e as { message: string })?.message ?? e, req));
-
-    logger.debug(
-        `Total request duration: ${times.requestDuration}ms for endpoint ${req.method}[${req.originalUrl}]`,
-        logger.createCtx(req),
-    );
 }
 
 export default function metricsHandler(req: Request, res: Response, next: NextFunction): void {

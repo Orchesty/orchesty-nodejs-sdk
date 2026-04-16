@@ -121,6 +121,7 @@ export function createLoggerMockedServer(mocks: IMockServer[] = []): MockAdapter
 
     if (!mocks.length) {
         mockAdapter.onPost(`${orchestyOptions.workerApi}/logger/logs`).reply(200);
+        mockAdapter.onPost(`${orchestyOptions.workerApi}/logger/loki`).reply(200);
     }
 
     return mockAdapter;

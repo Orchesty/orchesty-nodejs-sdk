@@ -14,6 +14,8 @@ let mockAdapter: MockAdapter;
 describe('tests for curlSender', () => {
     beforeAll(() => {
         mockAdapter = new MockAdapter(axios);
+        mockAdapter.onPost(/\/logger\/loki$/).reply(200);
+        mockAdapter.onPost(/\/logger\/logs$/).reply(200);
         container = getTestContainer();
         curlSender = container.get(CurlSender);
     });

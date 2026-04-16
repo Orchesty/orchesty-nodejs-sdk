@@ -7,7 +7,7 @@ import AProcessDto from './AProcessDto';
 import BatchProcessDto from './BatchProcessDto';
 import { IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
 import ProcessDto from './ProcessDto';
-import ResultCode, { isSuccessResultCode } from './ResultCode';
+import ResultCode from './ResultCode';
 
 interface IErrorResponse {
     result: string;
@@ -26,18 +26,6 @@ interface IBridgeRequestDto {
 function logResponseProcess(dto: AProcessDto): void {
     const resultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
     const resultMessage = dto.getHeader(RESULT_MESSAGE) ?? '';
-
-    if (isSuccessResultCode(resultCode)) {
-        logger.debug(
-            `Request successfully processed. Message: [${resultMessage}]`,
-            dto,
-        );
-    } else {
-        logger.error(
-            `Request process failed. Message: [${resultMessage}]`,
-            dto,
-        );
-    }
 
     if (resultCode as ResultCode === ResultCode.DO_NOT_CONTINUE) {
         logger.info(resultMessage, dto, true);
