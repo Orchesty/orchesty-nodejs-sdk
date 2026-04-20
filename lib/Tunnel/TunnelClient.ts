@@ -145,7 +145,9 @@ export default class TunnelClient {
 
         return new TunnelService(
             this.options.proxyUrl,
-            grpc.credentials.createInsecure(),
+            this.options.secure
+                ? grpc.credentials.createSsl()
+                : grpc.credentials.createInsecure(),
             {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 'grpc.keepalive_time_ms': 30_000,
