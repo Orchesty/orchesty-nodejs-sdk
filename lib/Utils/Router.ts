@@ -24,12 +24,12 @@ interface IBridgeRequestDto {
 }
 
 function logResponseProcess(dto: AProcessDto): void {
-    const resultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
+    const resultCode: ResultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
     const resultMessage = dto.getHeader(RESULT_MESSAGE) ?? '';
 
-    if (resultCode as ResultCode === ResultCode.DO_NOT_CONTINUE) {
+    if (resultCode === ResultCode.DO_NOT_CONTINUE) {
         logger.info(resultMessage, dto, true);
-    } else if (resultCode as ResultCode === ResultCode.STOP_AND_FAILED) {
+    } else if (resultCode === ResultCode.STOP_AND_FAILED) {
         logger.error(resultMessage, dto, true);
     }
 }
@@ -86,7 +86,7 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
         headers: dto.getHeaders(),
-    } as IBridgeRequestDto));
+    }));
 }
 
 export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
@@ -106,7 +106,7 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
         headers: dto.getHeaders(),
-    } as IBridgeRequestDto));
+    }));
 }
 
 const mutex = new Mutex();

@@ -1,5 +1,5 @@
 import CryptManager from '../../Crypt/CryptManager';
-import ADocument, { ClassType } from '../../Storage/Database/ADocument';
+import { ClassType } from '../../Storage/Database/ADocument';
 import DatabaseClient from '../../Storage/Database/Client';
 import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Database/Repository';
 import { ApplicationInstall } from './ApplicationInstall';
@@ -127,7 +127,7 @@ export default class ApplicationInstallRepository
 
     public async remove(entity: ApplicationInstall): Promise<this> {
         await this.removeMany(
-            { ids: [(entity as ADocument).getId()], enabled: null } as IApplicationInstallQueryFilter,
+            { ids: [entity.getId()], enabled: null },
         );
         return this;
     }

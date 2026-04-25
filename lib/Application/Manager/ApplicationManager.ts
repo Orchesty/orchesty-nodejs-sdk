@@ -185,7 +185,7 @@ export default class ApplicationManager {
             items: appInstalls.map((appInstall) => {
                 let app: IApplication | undefined;
                 try {
-                    app = this.getApplication(appInstall.getName()) as AApplication;
+                    app = this.getApplication(appInstall.getName());
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (e) {
                     //
