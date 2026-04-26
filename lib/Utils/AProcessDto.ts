@@ -17,9 +17,9 @@ import ResultCode from './ResultCode';
 
 const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONTINUE];
 
-type AuditData = Record<string, { key: string; fields: Record<string, string>[] }>
+export type AuditData = Record<string, { key: string; fields: Record<string, string>[] }>
 
-type AuditDataField<T extends string> = Record<string, string> & Record<T, string>;
+export type AuditDataField<T extends string> = Record<string, string> & Record<T, string>;
 
 export default abstract class AProcessDto<JsonData = unknown> {
 

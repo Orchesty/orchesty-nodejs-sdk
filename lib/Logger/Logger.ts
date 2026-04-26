@@ -112,6 +112,7 @@ export class Logger {
         reqBody?: object|string,
         resHeaders?: object,
         resBody?: object|string,
+        extras?: Partial<ILogContext>,
     ): ILogContext {
         if (payload instanceof IncomingMessage) {
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -120,6 +121,9 @@ export class Logger {
             ctx.reqBody = reqBody;
             ctx.resHeaders = resHeaders;
             ctx.resBody = resBody;
+            if (extras) {
+                Object.assign(ctx, extras);
+            }
 
             return ctx;
         }
@@ -130,8 +134,15 @@ export class Logger {
             ctx.reqBody = reqBody;
             ctx.resHeaders = resHeaders;
             ctx.resBody = resBody;
+            if (extras) {
+                Object.assign(ctx, extras);
+            }
 
             return ctx;
+        }
+
+        if (extras) {
+            return { ...payload, ...extras };
         }
 
         return payload;

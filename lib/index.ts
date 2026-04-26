@@ -100,6 +100,7 @@ function initiateContainer(): void {
     routes.push(new BatchRouter(expressApp, loader));
     routes.push(new ConnectorRouter(expressApp, loader));
     routes.push(new CustomNodeRouter(expressApp, loader));
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }
 

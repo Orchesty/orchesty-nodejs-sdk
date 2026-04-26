@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { APPLICATION_PREFIX } from '../Application/ApplicationRouter';
+import AWebhookApplication from '../Application/Base/AWebhookApplication';
 import { IApplication } from '../Application/Base/IApplication';
+import WebhookManager from '../Application/Manager/WebhookManager';
 import ABatchNode from '../Batch/ABatchNode';
 import { BATCH_PREFIX } from '../Batch/BatchRouter';
 import { IBatchNode } from '../Batch/IBatchNode';
@@ -118,6 +120,9 @@ export default class DIContainer {
     }
 
     public setApplication(service: IApplication): IApplication {
+        if (service instanceof AWebhookApplication && this.hasNamed(WebhookManager.name)) {
+            service.setWebhookManager(this.get(WebhookManager));
+        }
         this.setNamed(`${APPLICATION_PREFIX}.${service.getName()}`, service);
 
         return service;

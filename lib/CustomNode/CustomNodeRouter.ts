@@ -1,5 +1,6 @@
 import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
+import ANode from '../Commons/ANode';
 import CommonLoader from '../Commons/CommonLoader';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { createApiErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
@@ -18,7 +19,7 @@ export default class CustomNodeRouter extends ACommonRouter {
                 const customNode = this.loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
                 const dto = await customNode.processAction(await createProcessDto(req));
 
-                createSuccessResponse(res, dto);
+                createSuccessResponse(res, dto, customNode instanceof ANode ? customNode : undefined);
                 res.on('finish', () => {
                     dto.setFree(true);
                 });
