@@ -108,7 +108,7 @@ export default class NodeTester {
             let resData = this.configuration?.assertRawResponse ? dto.getData() : dto.getJsonData();
             if (nodePrefix === BATCH_PREFIX) {
                 resData = this.configuration?.assertRawResponse
-                    ? dto.getBridgeData() as string
+                    ? dto.getBridgeData()
                     : JSON.parse(dto.getBridgeData() as string);
             }
 
