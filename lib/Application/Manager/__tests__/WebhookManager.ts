@@ -47,7 +47,13 @@ describe('Tests for webhookManager', () => {
 
         expect(webhooks).toHaveLength(1);
         expect(webhooks).toStrictEqual([{
-            default: true, enabled: true, name: 'testWebhook', topology: 'testWebhook',
+            default: true,
+            enabled: true,
+            name: 'testWebhook',
+            topology: 'testWebhook',
+            node: '',
+            webhookId: '',
+            token: '',
         }]);
     });
 
@@ -62,7 +68,7 @@ describe('Tests for webhookManager', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: /https:\/\/sp.orchesty.com\/webhook\/topologies\/testWebhook\/nodes\/testNode\/token\/*/,
+                url: /https:\/\/sp\.orchesty\.com\/topologies\/testWebhook\/nodes\/testNode\/token\/.+\/run/,
             },
             response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
         }]);

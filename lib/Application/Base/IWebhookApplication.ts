@@ -5,6 +5,13 @@ import Webhook from '../Database/Webhook';
 import WebhookSubscription from '../Model/Webhook/WebhookSubscription';
 import { IApplication } from './IApplication';
 
+/**
+ * Low-level contract describing a webhook-aware application.
+ *
+ * Prefer extending {@link AWebhookApplication} (which already implements this
+ * interface and wires up the `sync*` UI endpoints + automatic `WebhookManager`
+ * injection) over implementing the bare interface yourself.
+ */
 export interface IWebhookApplication extends IApplication {
 
     getWebhookSubscriptions(): WebhookSubscription[];

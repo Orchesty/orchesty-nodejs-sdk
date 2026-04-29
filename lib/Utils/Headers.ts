@@ -36,6 +36,8 @@ export const BATCH_CURSOR = 'cursor';
 
 // Audit headers
 export const AUDIT_ENTITY = 'audit-entity';
+export const AUDIT_ENTITY_IDS = 'audit-entity-ids';
+export const AUDIT_CHECKPOINT = 'audit-checkpoint';
 
 // SDK header
 export const SDK = 'sdk';
@@ -109,6 +111,10 @@ export function getUserId(headers: IHttpHeaders): string {
 
 export function getApplications(headers: IHttpHeaders): string | undefined {
     return get(APPLICATIONS, headers);
+}
+
+export function getAuditEntityIds(headers: IHttpHeaders): string | undefined {
+    return get(AUDIT_ENTITY_IDS, headers);
 }
 
 export function getRepeatHops(headers: IHttpHeaders): number {

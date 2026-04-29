@@ -12,7 +12,9 @@ describe('Test for WebhookSubscription', () => {
         const webhookSub = new WebhookSubscription(name, node, topology, parameters);
 
         expect(webhookSub.getName()).toEqual(name);
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         expect(webhookSub.getNode()).toEqual(node);
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         expect(webhookSub.getTopology()).toEqual(topology);
         expect(webhookSub.getParameters()).toEqual(parameters);
     });

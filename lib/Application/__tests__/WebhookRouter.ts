@@ -29,7 +29,7 @@ describe('tests for WebhookRouter', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: /https:\/\/sp.orchesty.com\/webhook\/topologies\/testTopo\/nodes\/testNode\/token\/*/,
+                url: /https:\/\/sp\.orchesty\.com\/topologies\/testTopo\/nodes\/testNode\/token\/.+\/run/,
             },
             response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
         }]);

@@ -1,11 +1,12 @@
 import { Mutex } from 'async-mutex';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import ANode from '../Commons/ANode';
 import { appOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import AProcessDto from './AProcessDto';
 import BatchProcessDto from './BatchProcessDto';
-import { IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
+import { AUDIT_CHECKPOINT, IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
 import ProcessDto from './ProcessDto';
 import ResultCode from './ResultCode';
 
@@ -34,6 +35,13 @@ function logResponseProcess(dto: AProcessDto): void {
     }
 }
 
+function attachAuditCheckpointHeader(dto: AProcessDto, node?: ANode): void {
+    const cp = node?.getAuditCheckpoint?.();
+    if (cp) {
+        dto.addHeader(AUDIT_CHECKPOINT, JSON.stringify(cp));
+    }
+}
+
 export function createApiErrorResponse(req: Request, res: Response, e?: unknown): void {
     res.status(500);
     let message = 'Error occurred: unknown reason';
@@ -55,7 +63,7 @@ export function createApiErrorResponse(req: Request, res: Response, e?: unknown)
     res.send(JSON.stringify({ status: 'Error', message }));
 }
 
-export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error): void {
+export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error, node?: ANode): void {
     const dto = _dto;
     res.status(500);
 
@@ -81,6 +89,7 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
         dto.addHeader(RESULT_MESSAGE, `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`);
     }
 
+    attachAuditCheckpointHeader(dto, node);
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
@@ -89,7 +98,7 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
     }));
 }
 
-export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
+export function createSuccessResponse(res: Response, _dto: AProcessDto, node?: ANode): void {
     const dto = _dto;
     res.status(StatusCodes.OK);
 
@@ -101,6 +110,7 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
         dto.addHeader(RESULT_MESSAGE, 'Processed successfully.');
     }
 
+    attachAuditCheckpointHeader(dto, node);
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
