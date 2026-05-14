@@ -1,0 +1,8 @@
+overrides:
+    eslint: $eslint
+
+allowBuilds:
+    protobufjs: true
+    unrs-resolver: true
+
+confirmModulesPurge: false

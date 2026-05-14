@@ -32,7 +32,7 @@ function getUrl(name: string, fallback?: string): string {
             }
         }
 
-        const domain = `${process.env.CLOUD_REGION ?? 'eu1'}.cloud.orchesty.io`;
+        const domain = `${process.env.CLOUD_REGION ?? 'eu2'}.cloud.orchesty.io`;
         switch (name) {
             case 'BACKEND_URL':
                 return `https://api-${tenantId}.${domain}`;
