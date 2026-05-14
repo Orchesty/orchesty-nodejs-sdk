@@ -1,6 +1,6 @@
 import TestWebhookApplication from '../../../../test/Application/TestWebhookApplication';
 import { mockOnce, webhookConfig } from '../../../../test/MockServer';
-import { getApplicationWithSettings, getTestContainer, WEBHOOK_NAME } from '../../../../test/TestAbstact';
+import { getApplicationWithSettings, getTestContainer, SDK, WEBHOOK_NAME } from '../../../../test/TestAbstact';
 import { USER } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { orchestyOptions } from '../../../Config/Config';
 import DIContainer from '../../../DIContainer/Container';
@@ -37,17 +37,23 @@ describe('Tests for webhookManager', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"]}`,
+                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [webhookConfig] },
         }]);
 
         const app = container.getApplication(WEBHOOK_NAME) as TestWebhookApplication;
-        const webhooks = await webhookManager.getWebhooks(app, USER);
+        const webhooks = await webhookManager.getWebhooks(app, USER, SDK);
 
         expect(webhooks).toHaveLength(1);
         expect(webhooks).toStrictEqual([{
-            default: true, enabled: true, name: 'testWebhook', topology: 'testWebhook',
+            default: true,
+            enabled: true,
+            name: 'testWebhook',
+            topology: 'testWebhook',
+            node: '',
+            webhookId: '',
+            token: '',
         }]);
     });
 
@@ -55,14 +61,14 @@ describe('Tests for webhookManager', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: /https:\/\/sp.orchesty.com\/webhook\/topologies\/testWebhook\/nodes\/testNode\/token\/*/,
+                url: /https:\/\/sp\.orchesty\.com\/topologies\/testWebhook\/nodes\/testNode\/token\/.+\/run/,
             },
             response: { body: Buffer.from(JSON.stringify({ id: '1' })) },
         }]);
@@ -70,6 +76,7 @@ describe('Tests for webhookManager', () => {
         await expect(webhookManager.subscribeWebhooks(
             WEBHOOK_NAME,
             USER,
+            SDK,
             { name: 'testName', topology: 'testWebhook' },
         )).resolves.not.toThrow();
     });
@@ -78,14 +85,14 @@ describe('Tests for webhookManager', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${WEBHOOK_NAME}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, WEBHOOK_NAME)] },
         }]);
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"]}`,
+                url: `${orchestyOptions.workerApi}/document/Webhook?filter={"apps":["${WEBHOOK_NAME}"],"users":["${USER}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [webhookConfig] },
         }]);
@@ -101,6 +108,7 @@ describe('Tests for webhookManager', () => {
         await expect(webhookManager.unsubscribeWebhooks(
             WEBHOOK_NAME,
             USER,
+            SDK,
             { name: 'testName', topology: 'testWebhook' },
         )).resolves.not.toThrow();
     });

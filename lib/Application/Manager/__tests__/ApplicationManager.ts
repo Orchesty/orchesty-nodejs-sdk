@@ -2,7 +2,7 @@ import { Request } from 'express';
 import TestBasicApplication from '../../../../test/Application/TestBasicApplication';
 import TestOAuth2Application from '../../../../test/Application/TestOAuth2Application';
 import { mockOnce } from '../../../../test/MockServer';
-import { getApplicationWithSettings, getTestContainer, USER } from '../../../../test/TestAbstact';
+import { getApplicationWithSettings, getTestContainer, SDK, USER } from '../../../../test/TestAbstact';
 import { OAuth2Provider } from '../../../Authorization/Provider/OAuth2/OAuth2Provider';
 import { PASSWORD } from '../../../Authorization/Type/Basic/ABasicApplication';
 import { FRONTEND_REDIRECT_URL } from '../../../Authorization/Type/OAuth2/IOAuth2Application';
@@ -64,7 +64,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testName}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(undefined, testName)] },
         }]);
@@ -148,7 +148,7 @@ describe('ApplicationManager tests', () => {
                 multi: ['p1', 'b', 'a'],
             },
         };
-        const dbInstall = await appManager.saveApplicationSettings(testName, USER, appSettings);
+        const dbInstall = await appManager.saveApplicationSettings(testName, USER, SDK, appSettings);
 
         expect(dbInstall).toHaveProperty('id');
         expect(dbInstall).toHaveProperty('applicationSettings');
@@ -162,6 +162,7 @@ describe('ApplicationManager tests', () => {
         const dbInstall = await appManager.saveApplicationPassword(
             testName,
             USER,
+            SDK,
             CoreFormsEnum.AUTHORIZATION_FORM,
             PASSWORD,
             'passs',
@@ -186,7 +187,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(
                 { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },
@@ -198,7 +199,7 @@ describe('ApplicationManager tests', () => {
         (jest.mocked(oAuth2Provider.authorize)).mockReturnValueOnce('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
 
         const mockedAppManager = getMockedAppManager(oAuth2Provider);
-        const dbInstall = await mockedAppManager.authorizationApplication(testOAuth2Name, USER, 'https://example.com');
+        const dbInstall = await mockedAppManager.authorizationApplication(testOAuth2Name, USER, SDK, 'https://example.com');
 
         expect(dbInstall)
             .toEqual('https://example.com/authorize?response_type=code&client_id=aa&redirect_uri=http&scope=idoklad_api%2Coffline_access&state=s&access_type=offline');
@@ -208,7 +209,7 @@ describe('ApplicationManager tests', () => {
         mockOnce([{
             request: {
                 method: HttpMethods.GET,
-                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"]}`,
+                url: `${orchestyOptions.workerApi}/document/ApplicationInstall?filter={"users":["${USER}"],"enabled":null,"names":["${testOAuth2Name}"],"sdks":["${SDK}"]}`,
             },
             response: { body: [getApplicationWithSettings(
                 { [CoreFormsEnum.AUTHORIZATION_FORM]: { [FRONTEND_REDIRECT_URL]: 'url' } },
@@ -224,6 +225,7 @@ describe('ApplicationManager tests', () => {
         const frontendUrl = await mockedAppManager.saveAuthorizationToken(
             testOAuth2Name,
             USER,
+            SDK,
             { testToken: 'tokenTest' },
         );
 
@@ -236,7 +238,7 @@ describe('ApplicationManager tests', () => {
         };
         const applicationName = 'testNotFound';
         try {
-            await appManager.saveApplicationSettings(applicationName, USER, appSettings);
+            await appManager.saveApplicationSettings(applicationName, USER, SDK, appSettings);
         } catch (e) {
             if (e instanceof Error) {
                 expect(e.message)

@@ -89,9 +89,12 @@ export default class Metrics {
         responseCode: number,
         user: string,
         nodeId: string,
+        nodeName: string | undefined,
+        topologyId: string,
         appKey?: string,
         correlationId?: string,
         url?: string,
+        responseError?: string,
     ): Promise<boolean> {
         const tags: ITagsMap = {};
         if (user) {
@@ -99,6 +102,12 @@ export default class Metrics {
         }
         if (nodeId) {
             tags.node_id = nodeId;
+        }
+        if (nodeName) {
+            tags.node_name = nodeName;
+        }
+        if (topologyId) {
+            tags.topology_id = topologyId;
         }
         if (appKey) {
             tags.application_id = appKey;
@@ -115,6 +124,8 @@ export default class Metrics {
             sent_request_total_duration: timeData.requestDuration,
             // eslint-disable-next-line @typescript-eslint/naming-convention
             response_code: responseCode,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            response_error: responseError,
         };
 
         try {

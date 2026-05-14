@@ -60,11 +60,12 @@ export default class ApplicationManager {
     public async saveApplicationSettings(
         name: string,
         user: string,
+        sdk: string,
         data: IApplicationSettings,
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     ): Promise<Record<string, IField[] | unknown>> {
         const app = this.getApplication(name) as AApplication;
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         const res = (await app.saveApplicationForms(appInstall, data)).toArray();
         await this.repository.update(appInstall);
@@ -78,12 +79,13 @@ export default class ApplicationManager {
     public async saveApplicationPassword(
         name: string,
         user: string,
+        sdk: string,
         formKey: string,
         fieldKey: string,
         password: string,
     ): Promise<Record<string, unknown>> {
         const app = this.getApplication(name);
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         const res = app.savePassword(appInstall, formKey, fieldKey, password).toArray();
         await this.repository.update(appInstall);
@@ -94,9 +96,14 @@ export default class ApplicationManager {
         };
     }
 
-    public async authorizationApplication(name: string, user: string, redirectUrl: string): Promise<string> {
+    public async authorizationApplication(
+        name: string,
+        user: string,
+        sdk: string,
+        redirectUrl: string,
+    ): Promise<string> {
         const app = this.getApplication(name) as IOAuth2Application;
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         app.setFrontendRedirectUrl(appInstall, redirectUrl);
         await this.repository.update(appInstall);
@@ -107,10 +114,11 @@ export default class ApplicationManager {
     public async saveAuthorizationToken(
         name: string,
         user: string,
+        sdk: string,
         requestParams: Record<string, string>,
     ): Promise<string> {
         const app = this.getApplication(name) as IOAuth2Application;
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
         await app.setAuthorizationToken(appInstall, requestParams);
         await this.repository.update(appInstall);
         return app.getFrontendRedirectUrl(appInstall);
@@ -119,11 +127,12 @@ export default class ApplicationManager {
     public async installApplication(
         name: string,
         user: string,
+        sdk: string,
         // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     ): Promise<Record<string, IField[] | boolean | unknown>> {
         let appInstall;
         try {
-            appInstall = await this.repository.findByNameAndUser(name, user);
+            appInstall = await this.repository.findByNameAndUser(name, user, [sdk]);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             //
@@ -133,7 +142,8 @@ export default class ApplicationManager {
         }
         appInstall = new ApplicationInstall()
             .setUser(user)
-            .setName(name);
+            .setName(name)
+            .setSdk(sdk);
         await this.repository.insert(appInstall);
         const app = this.getApplication(appInstall.getName()) as AApplication;
         return {
@@ -143,19 +153,19 @@ export default class ApplicationManager {
         };
     }
 
-    public async changeStateOfApplication(name: string, user: string, enabled: boolean): Promise<void> {
-        const appInstall = await this.loadApplicationInstall(name, user);
+    public async changeStateOfApplication(name: string, user: string, sdk: string, enabled: boolean): Promise<void> {
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
         appInstall.setEnabled(enabled);
         await this.repository.update(appInstall);
     }
 
-    public async uninstallApplication(name: string, user: string): Promise<void> {
-        const appInstall = await this.loadApplicationInstall(name, user);
+    public async uninstallApplication(name: string, user: string, sdk: string): Promise<void> {
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
         await this.repository.remove(appInstall);
     }
 
-    public async detailApplication(name: string, user: string): Promise<Record<string, unknown>> {
-        const appInstall = await this.loadApplicationInstall(name, user);
+    public async detailApplication(name: string, user: string, sdk: string): Promise<Record<string, unknown>> {
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
         const app = this.getApplication(appInstall.getName()) as AApplication;
         return {
             ...app.toArray(),
@@ -163,19 +173,19 @@ export default class ApplicationManager {
             enabled: appInstall.isEnabled(),
             [APPLICATION_SETTINGS]: await app.getApplicationForms(appInstall),
             webhookSettings: isWebhook(app.getApplicationType())
-                ? await this.webhookManager.getWebhooks(app, user)
+                ? await this.webhookManager.getWebhooks(app, user, sdk)
                 : [],
             [CUSTOM_ACTIONS]: app.getCustomActions().map((action) => action.toArray()),
         };
     }
 
-    public async userApplications(user: string): Promise<Record<string, unknown>> {
-        const appInstalls = await this.repository.findMany({ users: [user], enabled: null });
+    public async userApplications(user: string, sdk: string): Promise<Record<string, unknown>> {
+        const appInstalls = await this.repository.findMany({ users: [user], sdks: [sdk], enabled: null });
         return {
             items: appInstalls.map((appInstall) => {
                 let app: IApplication | undefined;
                 try {
-                    app = this.getApplication(appInstall.getName()) as AApplication;
+                    app = this.getApplication(appInstall.getName());
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (e) {
                     //
@@ -189,9 +199,9 @@ export default class ApplicationManager {
         };
     }
 
-    public async userApplicationsLimit(user: string, applications: string[]): Promise<string[]> {
+    public async userApplicationsLimit(user: string, sdk: string, applications: string[]): Promise<string[]> {
         const appInstalls = await this.repository.findMany(
-            { users: [user], names: applications, enabled: true },
+            { users: [user], names: applications, sdks: [sdk], enabled: true },
         );
         return appInstalls.map((appInstall) => {
             const limiterForm = appInstall.getSettings()?.[CoreFormsEnum.LIMITER_FORM];
@@ -221,14 +231,14 @@ export default class ApplicationManager {
             const groupTime = limiterForm?.[GROUP_TIME] ?? undefined;
             const groupValue = limiterForm?.[GROUP_VALUE] ?? undefined;
 
-            const key = `${appInstall.getUser()}|${appInstall.getName()}`;
+            const key = `${appInstall.getUser()}|${sdk}:${appInstall.getName()}`;
 
             if (groupTime && groupValue) {
                 return getLimiterKeyWithGroup(
                     key,
                     time,
                     value,
-                    `|${appInstall.getName()}`,
+                    `|${sdk}:${appInstall.getName()}`,
                     groupTime,
                     groupValue,
                 );
@@ -238,8 +248,8 @@ export default class ApplicationManager {
         }).filter((limit) => limit);
     }
 
-    private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.repository.findByNameAndUser(name, user, null);
+    private async loadApplicationInstall(name: string, user: string, sdk: string): Promise<ApplicationInstall> {
+        const appInstall = await this.repository.findByNameAndUser(name, user, [sdk], null);
         if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }

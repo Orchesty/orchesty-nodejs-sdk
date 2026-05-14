@@ -1,0 +1,16 @@
+syntax = "proto3";
+package tunnel;
+option go_package = "github.com/hanaboso/pipes/tunel-proxy/proto";
+
+service TunnelService {
+  rpc OpenTunnel(stream Frame) returns (stream Frame);
+}
+
+message Frame {
+  string worker_id = 1;
+  string request_id = 2;
+  string method = 3;
+  bytes payload = 4;
+  int32 status_code = 5;
+  string http_method = 6;
+}

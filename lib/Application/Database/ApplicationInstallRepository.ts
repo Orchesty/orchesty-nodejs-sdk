@@ -1,5 +1,5 @@
 import CryptManager from '../../Crypt/CryptManager';
-import ADocument, { ClassType } from '../../Storage/Database/ADocument';
+import { ClassType } from '../../Storage/Database/ADocument';
 import DatabaseClient from '../../Storage/Database/Client';
 import Repository, { IFilter, IPaging, ISorter } from '../../Storage/Database/Repository';
 import { ApplicationInstall } from './ApplicationInstall';
@@ -8,6 +8,7 @@ export interface IApplicationInstallQueryFilter extends IFilter {
     enabled: boolean | null;
     names?: string[] | { nin: string[] };
     users?: string[];
+    sdks?: string[];
     expires?: Date;
     nonEncrypted?: Record<string, unknown>;
 }
@@ -26,6 +27,7 @@ export default class ApplicationInstallRepository
     public async findByNameAndUser(
         name: string,
         user: string,
+        sdks: string[],
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
@@ -33,6 +35,7 @@ export default class ApplicationInstallRepository
             users: [user],
             enabled,
             names: [name],
+            sdks,
         };
         if (deleted !== undefined) {
             filter.deleted = deleted;
@@ -43,12 +46,14 @@ export default class ApplicationInstallRepository
 
     public async findOneByUser(
         user: string,
+        sdks: string[],
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
         const filter: IApplicationInstallQueryFilter = {
             users: [user],
             enabled,
+            sdks,
         };
         if (deleted !== undefined) {
             filter.deleted = deleted;
@@ -59,12 +64,14 @@ export default class ApplicationInstallRepository
 
     public async findOneByName(
         name: string,
+        sdks: string[],
         enabled: boolean | null = true,
         deleted?: boolean,
     ): Promise<ApplicationInstall | undefined> {
         const filter: IApplicationInstallQueryFilter = {
             names: [name],
             enabled,
+            sdks,
         };
         if (deleted !== undefined) {
             filter.deleted = deleted;
@@ -75,6 +82,7 @@ export default class ApplicationInstallRepository
 
     public async findManyByUser(
         user: string,
+        sdks: string[],
         enabled: boolean | null = true,
         deleted?: boolean,
         sorter?: ISorter,
@@ -83,6 +91,7 @@ export default class ApplicationInstallRepository
         const filter: IApplicationInstallQueryFilter = {
             users: [user],
             enabled,
+            sdks,
         };
         if (deleted !== undefined) {
             filter.deleted = deleted;
@@ -93,6 +102,7 @@ export default class ApplicationInstallRepository
 
     public async findManyByName(
         name: string,
+        sdks: string[],
         enabled: boolean | null = true,
         deleted?: boolean,
         paging?: IPaging,
@@ -101,6 +111,7 @@ export default class ApplicationInstallRepository
         const filter: IApplicationInstallQueryFilter = {
             names: [name],
             enabled,
+            sdks,
         };
         if (deleted !== undefined) {
             filter.deleted = deleted;
@@ -116,7 +127,7 @@ export default class ApplicationInstallRepository
 
     public async remove(entity: ApplicationInstall): Promise<this> {
         await this.removeMany(
-            { ids: [(entity as ADocument).getId()], enabled: null } as IApplicationInstallQueryFilter,
+            { ids: [entity.getId()], enabled: null },
         );
         return this;
     }

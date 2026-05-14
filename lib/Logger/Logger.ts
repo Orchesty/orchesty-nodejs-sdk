@@ -45,28 +45,65 @@ export class Logger {
 
     private readonly workerApi = new Client(orchestyOptions.workerApi);
 
-    public debug(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
+    public debug(
+        message: string,
+        context: AProcessDto | ILogContext | Request,
+        isForUi = false,
+        isForLoki = false,
+    ): void {
         const data = this.format('debug', message, context);
-        this.logger.debug(data);
-        this.send(data, isForUi);
+
+        if (!isForLoki) {
+            this.logger.debug(data);
+        }
+
+        this.send(data, isForUi, isForLoki);
     }
 
-    public info(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
+    public info(
+        message: string,
+        context: AProcessDto | ILogContext | Request,
+        isForUi = false,
+        isForLoki = false,
+    ): void {
         const data = this.format('info', message, context);
-        this.logger.info(data);
-        this.send(data, isForUi);
+
+        if (!isForLoki) {
+            this.logger.info(data);
+        }
+
+        this.send(data, isForUi, isForLoki);
     }
 
-    public warn(message: string, context: AProcessDto | ILogContext | Request, isForUi = false): void {
+    public warn(
+        message: string,
+        context: AProcessDto | ILogContext | Request,
+        isForUi = false,
+        isForLoki = false,
+    ): void {
         const data = this.format('warn', message, context);
-        this.logger.warn(data);
-        this.send(data, isForUi);
+
+        if (!isForLoki) {
+            this.logger.warn(data);
+        }
+
+        this.send(data, isForUi, isForLoki);
     }
 
-    public error(message: string, context: AProcessDto | ILogContext | Request, isForUi = false, err?: Error): void {
+    public error(
+        message: string,
+        context: AProcessDto | ILogContext | Request,
+        isForUi = false,
+        err?: Error,
+        isForLoki = false,
+    ): void {
         const data = this.format('error', message, context, err);
-        this.logger.error(data);
-        this.send(data, isForUi);
+
+        if (!isForLoki) {
+            this.logger.error(data);
+        }
+
+        this.send(data, isForUi, isForLoki);
     }
 
     public createCtx(
@@ -75,6 +112,7 @@ export class Logger {
         reqBody?: object|string,
         resHeaders?: object,
         resBody?: object|string,
+        extras?: Partial<ILogContext>,
     ): ILogContext {
         if (payload instanceof IncomingMessage) {
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -83,6 +121,9 @@ export class Logger {
             ctx.reqBody = reqBody;
             ctx.resHeaders = resHeaders;
             ctx.resBody = resBody;
+            if (extras) {
+                Object.assign(ctx, extras);
+            }
 
             return ctx;
         }
@@ -93,8 +134,15 @@ export class Logger {
             ctx.reqBody = reqBody;
             ctx.resHeaders = resHeaders;
             ctx.resBody = resBody;
+            if (extras) {
+                Object.assign(ctx, extras);
+            }
 
             return ctx;
+        }
+
+        if (extras) {
+            return { ...payload, ...extras };
         }
 
         return payload;
@@ -117,9 +165,16 @@ export class Logger {
         };
     }
 
-    private send(data: ILogContext, isForUi = false): void {
+    private send(data: ILogContext, isForUi = false, isForLoki = false): void {
         if (isForUi) {
             this.workerApi.send('/logger/logs', HttpMethods.POST, { ...data, isForUi: true })
+                .catch((e: unknown) => {
+                    this.logger.error(e);
+                });
+        }
+
+        if (isForLoki) {
+            this.workerApi.send('/logger/loki', HttpMethods.POST, data)
                 .catch((e: unknown) => {
                     this.logger.error(e);
                 });

@@ -4,6 +4,7 @@ import Webhook from './Webhook';
 export interface IWebhookQueryFilter extends IFilter {
     apps?: string[];
     users?: string[];
+    sdks?: string[];
 }
 
 export default class WebhookRepository extends Repository<Webhook, IWebhookQueryFilter> {

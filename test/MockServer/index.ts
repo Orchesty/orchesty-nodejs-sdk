@@ -5,7 +5,7 @@ import { TOKEN } from '../../lib/Authorization/Type/Basic/ABasicApplication';
 import { CLIENT_ID, FRONTEND_REDIRECT_URL } from '../../lib/Authorization/Type/OAuth2/IOAuth2Application';
 import { metricsOptions, orchestyOptions, testerOptions } from '../../lib/Config/Config';
 import { HttpMethods } from '../../lib/Transport/HttpMethods';
-import { NAME, USER } from '../TestAbstact';
+import { NAME, SDK, USER } from '../TestAbstact';
 
 export interface IRequestMock {
     method: HttpMethods;
@@ -47,6 +47,7 @@ export const appInstallConfig = {
     expires: new Date(3000, 1, 1),
     user: USER,
     key: NAME,
+    sdk: SDK,
     settings: {
         [CoreFormsEnum.AUTHORIZATION_FORM]: {
             [CLIENT_ID]: 'client id 1',
@@ -120,6 +121,7 @@ export function createLoggerMockedServer(mocks: IMockServer[] = []): MockAdapter
 
     if (!mocks.length) {
         mockAdapter.onPost(`${orchestyOptions.workerApi}/logger/logs`).reply(200);
+        mockAdapter.onPost(`${orchestyOptions.workerApi}/logger/loki`).reply(200);
     }
 
     return mockAdapter;

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
-import { orchestyOptions } from '../../Config/Config';
+import logger from '../../Logger/Logger';
+import TopologyRunner from '../../Topology/TopologyRunner';
 import CurlSender from '../../Transport/Curl/CurlSender';
 import ApplicationLoader from '../ApplicationLoader';
 import { APPLICATION_PREFIX } from '../ApplicationRouter';
@@ -11,9 +12,11 @@ import ApplicationInstallRepository from '../Database/ApplicationInstallReposito
 import Webhook from '../Database/Webhook';
 import WebhookRepository from '../Database/WebhookRepository';
 
-interface IWebhookBody {
+export interface IWebhookBody {
     name?: string;
     topology?: string;
+    node?: string;
+    parameters?: Record<string, string>;
 }
 
 interface IWebhookForm {
@@ -21,6 +24,9 @@ interface IWebhookForm {
     default: boolean;
     enabled: boolean;
     topology: string;
+    node: string;
+    webhookId: string;
+    token: string;
 }
 
 const LENGTH = 25;
@@ -35,36 +41,56 @@ export default class WebhookManager {
     ) {
     }
 
-    public async getWebhooks(app: AApplication, user: string): Promise<IWebhookForm[]> {
-        const webhooks = await this.getAllWebhooks(app.getName(), user);
+    public async getWebhooks(app: AApplication, user: string, sdk: string): Promise<IWebhookForm[]> {
+        const webhooks = await this.getAllWebhooks(app.getName(), user, sdk);
         const ret: IWebhookForm[] = [];
 
         (app as unknown as IWebhookApplication).getWebhookSubscriptions().forEach((subs) => {
-            let enabled = false;
-            let topology = subs.getTopology();
-
             const filtered = webhooks.filter((w) => w.getName() === subs.getName());
-            if (filtered.length > 0) {
-                enabled = true;
-                topology = filtered[0]?.getTopology();
+
+            if (filtered.length === 0) {
+                ret.push({
+                    name: subs.getName(),
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
+                    default: subs.getTopology() !== '',
+                    enabled: false,
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
+                    topology: subs.getTopology(),
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
+                    node: subs.getNode(),
+                    webhookId: '',
+                    token: '',
+                });
+                return;
             }
 
-            ret.push({
-                name: subs.getName(),
-                default: subs.getTopology() !== '',
-                enabled,
-                topology,
+            filtered.forEach((w) => {
+                ret.push({
+                    name: subs.getName(),
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
+                    default: subs.getTopology() !== '',
+                    enabled: true,
+                    topology: w.getTopology(),
+                    node: w.getNode(),
+                    webhookId: w.getWebhookId(),
+                    token: w.getToken(),
+                });
             });
         });
 
         return ret;
     }
 
-    public async subscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
+    public async subscribeWebhooks(
+        name: string,
+        user: string,
+        sdk: string,
+        data: IWebhookBody,
+    ): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
             return [];
@@ -73,16 +99,33 @@ export default class WebhookManager {
         return Promise.all(
             app.getWebhookSubscriptions()
                 .map(async (subs) => {
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
                     if (!subs.getTopology() && data.name !== subs.getName()) {
                         return undefined;
                     }
 
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
                     const topology = data.topology ?? subs.getTopology();
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated
+                    const node = data.node ?? subs.getNode();
+
+                    if (!topology || !node) {
+                        throw new Error(
+                            `Cannot subscribe webhook [${subs.getName()}] of application [${name}]: topology and node must be supplied either by WebhookSubscription or via request body.`,
+                        );
+                    }
+
+                    if (data.parameters) {
+                        Object.entries(data.parameters).forEach(([key, value]) => {
+                            subs.getParameters()[key] = value;
+                        });
+                    }
+
                     const token = crypto.randomBytes(LENGTH).toString('hex');
                     const request = app.getWebhookSubscribeRequestDto(
                         appInstall,
                         subs,
-                        `${orchestyOptions.startingPoint}/webhook/topologies/${topology}/nodes/${subs.getNode()}/token/${token}`,
+                        TopologyRunner.getWebhookUrl(topology, node, token),
                     );
 
                     const webhookId = app.processWebhookSubscribeResponse(
@@ -94,7 +137,8 @@ export default class WebhookManager {
                     webhook
                         .setName(subs.getName())
                         .setUser(user)
-                        .setNode(subs.getNode())
+                        .setSdk(sdk)
+                        .setNode(node)
                         .setTopology(topology)
                         .setApplication(app.getName())
                         .setWebhookId(webhookId)
@@ -107,47 +151,67 @@ export default class WebhookManager {
         );
     }
 
-    public async unsubscribeWebhooks(name: string, user: string, data: IWebhookBody): Promise<(Webhook | undefined)[]> {
+    public async unsubscribeWebhooks(
+        name: string,
+        user: string,
+        sdk: string,
+        data: IWebhookBody,
+    ): Promise<(Webhook | undefined)[]> {
         this.validateBody(data);
 
         const app = this.getApplication(name);
-        const appInstall = await this.loadApplicationInstall(name, user);
+        const appInstall = await this.loadApplicationInstall(name, user, sdk);
 
         if (!isWebhook(app.getApplicationType()) || !app.isAuthorized(appInstall)) {
             return [];
         }
 
-        const webhooks = await this.getAllWebhooks(name, user);
+        const webhooks = await this.getAllWebhooks(name, user, sdk);
         return Promise.all(
-            webhooks.map(async (webhook) => {
-                if (data.topology !== webhook.getTopology()) {
-                    return undefined;
-                }
+            webhooks
+                .filter((webhook) => this.matchWebhook(webhook, data))
+                .map(async (webhook) => {
+                    const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook);
+                    const resp = app.processWebhookUnsubscribeResponse(await this.curl.send(request));
+                    if (resp) {
+                        await this.webhookRepository.remove(webhook);
+                    } else {
+                        webhook.setUnsubscribeFailed(true);
+                        await this.webhookRepository.update(webhook);
+                        logger.warn(
+                            `[webhook]: Unsubscribe failed for webhook [${webhook.getName()}] (topology=${webhook.getTopology()}, node=${webhook.getNode()}, externalId=${webhook.getWebhookId()})`,
+                            {},
+                        );
+                    }
 
-                const request = app.getWebhookUnsubscribeRequestDto(appInstall, webhook);
-                const resp = app.processWebhookUnsubscribeResponse(await this.curl.send(request));
-                if (resp) {
-                    await this.webhookRepository.remove(webhook);
-                } else {
-                    webhook.setUnsubscribeFailed(true);
-                    await this.webhookRepository.update(webhook);
-                }
-
-                return webhook;
-            }),
+                    return webhook;
+                }),
         );
     }
 
-    private async getAllWebhooks(application: string, user: string): Promise<Webhook[]> {
-        return this.webhookRepository.findMany({ apps: [application], users: [user] });
+    private matchWebhook(webhook: Webhook, data: IWebhookBody): boolean {
+        if (data.name && webhook.getName() !== data.name) {
+            return false;
+        }
+        if (data.topology && webhook.getTopology() !== data.topology) {
+            return false;
+        }
+        if (data.node && webhook.getNode() !== data.node) {
+            return false;
+        }
+        return true;
+    }
+
+    private async getAllWebhooks(application: string, user: string, sdk: string): Promise<Webhook[]> {
+        return this.webhookRepository.findMany({ apps: [application], users: [user], sdks: [sdk] });
     }
 
     private getApplication(key: string): IWebhookApplication {
         return ((this.loader.get(APPLICATION_PREFIX, key)) as unknown) as IWebhookApplication;
     }
 
-    private async loadApplicationInstall(name: string, user: string): Promise<ApplicationInstall> {
-        const appInstall = await this.appRepository.findByNameAndUser(name, user, null);
+    private async loadApplicationInstall(name: string, user: string, sdk: string): Promise<ApplicationInstall> {
+        const appInstall = await this.appRepository.findByNameAndUser(name, user, [sdk], null);
         if (!appInstall) {
             throw Error(`ApplicationInstall with user [${user}] and name [${name}] has not been found!`);
         }
@@ -156,8 +220,8 @@ export default class WebhookManager {
     }
 
     private validateBody(data: IWebhookBody): void {
-        if (!data.name && !data.topology) {
-            throw new Error('Required parameter [name, topology] not found.');
+        if (!data.name && !data.topology && !data.node) {
+            throw new Error('Required parameter [name, topology, node] not found.');
         }
     }
 

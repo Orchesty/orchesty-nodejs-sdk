@@ -1,13 +1,14 @@
 import { Mutex } from 'async-mutex';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import ANode from '../Commons/ANode';
 import { appOptions } from '../Config/Config';
 import logger from '../Logger/Logger';
 import AProcessDto from './AProcessDto';
 import BatchProcessDto from './BatchProcessDto';
-import { IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
+import { AUDIT_CHECKPOINT, IHttpHeaders, RESULT_CODE, RESULT_DETAIL, RESULT_MESSAGE } from './Headers';
 import ProcessDto from './ProcessDto';
-import ResultCode, { isSuccessResultCode } from './ResultCode';
+import ResultCode from './ResultCode';
 
 interface IErrorResponse {
     result: string;
@@ -24,16 +25,20 @@ interface IBridgeRequestDto {
 }
 
 function logResponseProcess(dto: AProcessDto): void {
-    if (isSuccessResultCode(parseInt(dto.getHeader(RESULT_CODE, '0'), 10))) {
-        logger.debug(
-            `Request successfully processed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
-            dto,
-        );
-    } else {
-        logger.error(
-            `Request process failed. Message: [${dto.getHeader(RESULT_MESSAGE) ?? ''}]`,
-            dto,
-        );
+    const resultCode: ResultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
+    const resultMessage = dto.getHeader(RESULT_MESSAGE) ?? '';
+
+    if (resultCode === ResultCode.DO_NOT_CONTINUE) {
+        logger.info(resultMessage, dto, true);
+    } else if (resultCode === ResultCode.STOP_AND_FAILED) {
+        logger.error(resultMessage, dto, true);
+    }
+}
+
+function attachAuditCheckpointHeader(dto: AProcessDto, node?: ANode): void {
+    const cp = node?.getAuditCheckpoint?.();
+    if (cp) {
+        dto.addHeader(AUDIT_CHECKPOINT, JSON.stringify(cp));
     }
 }
 
@@ -58,7 +63,7 @@ export function createApiErrorResponse(req: Request, res: Response, e?: unknown)
     res.send(JSON.stringify({ status: 'Error', message }));
 }
 
-export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error): void {
+export function createErrorResponse(req: Request, res: Response, _dto: AProcessDto, e?: Error, node?: ANode): void {
     const dto = _dto;
     res.status(500);
 
@@ -84,15 +89,16 @@ export function createErrorResponse(req: Request, res: Response, _dto: AProcessD
         dto.addHeader(RESULT_MESSAGE, `Error: ${msg}, Original result: ${dto.getHeader(RESULT_MESSAGE)}`);
     }
 
+    attachAuditCheckpointHeader(dto, node);
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
         headers: dto.getHeaders(),
-    } as IBridgeRequestDto));
+    }));
 }
 
-export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
+export function createSuccessResponse(res: Response, _dto: AProcessDto, node?: ANode): void {
     const dto = _dto;
     res.status(StatusCodes.OK);
 
@@ -104,12 +110,13 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto): void {
         dto.addHeader(RESULT_MESSAGE, 'Processed successfully.');
     }
 
+    attachAuditCheckpointHeader(dto, node);
     res.setHeader('Content-Type', 'application/json');
     logResponseProcess(dto);
     res.send(JSON.stringify({
         body: dto.getBridgeData(),
         headers: dto.getHeaders(),
-    } as IBridgeRequestDto));
+    }));
 }
 
 const mutex = new Mutex();

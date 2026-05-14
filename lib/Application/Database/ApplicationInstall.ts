@@ -12,6 +12,8 @@ export class ApplicationInstall extends ADocument {
 
     private key = '';
 
+    private sdk = '';
+
     private settings?: IApplicationSettings = undefined;
 
     private enabled = false;
@@ -88,6 +90,16 @@ export class ApplicationInstall extends ADocument {
         return this;
     }
 
+    public getSdk(): string {
+        return this.sdk;
+    }
+
+    public setSdk(sdk: string): this {
+        this.sdk = sdk;
+
+        return this;
+    }
+
     public setEnabled(enabled: boolean): this {
         this.enabled = enabled;
 
@@ -136,6 +148,7 @@ export class ApplicationInstall extends ADocument {
             id: this._id,
             user: this.user,
             key: this.key,
+            sdk: this.sdk,
             enabled: this.enabled,
             deleted: this.deleted,
             nonEncryptedSettings: this.nonEncryptedSettings,

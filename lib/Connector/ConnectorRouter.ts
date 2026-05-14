@@ -20,7 +20,7 @@ export default class ConnectorRouter extends ACommonRouter {
                     await createProcessDto(req, connector.getApplicationName()),
                 );
 
-                createSuccessResponse(res, dto);
+                createSuccessResponse(res, dto, connector);
                 res.on('finish', () => {
                     dto.setFree(true);
                 });
