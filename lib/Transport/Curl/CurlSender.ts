@@ -162,9 +162,9 @@ export default class CurlSender {
         );
 
         if (response.status > 300) {
-            logger.error(`Request failed. ${message}`, ctx, false, undefined, true);
+            logger.error(`Request failed. ${message}`, ctx);
         } else {
-            logger.info(`Request success. ${message}`, ctx, false, true);
+            logger.info(`Request success. ${message}`, ctx);
         }
     }
 
