@@ -1,13 +1,14 @@
 import { Request } from 'express';
 import { IncomingMessage } from 'http';
 import pino from 'pino';
-import { appOptions, orchestyOptions } from '../Config/Config';
+import { appOptions, loggerOptions, orchestyOptions } from '../Config/Config';
 import { HttpMethods } from '../Transport/HttpMethods';
 import AProcessDto from '../Utils/AProcessDto';
 import * as headers from '../Utils/Headers';
 import { IHttpHeaders } from '../Utils/Headers';
 import ResultCode from '../Utils/ResultCode';
 import Client from '../Worker-api/Client';
+import { logToExternal, logToInternal } from './LoggerTypeEnum';
 
 export interface ILogContext {
     timestamp?: number;
@@ -45,49 +46,53 @@ export class Logger {
 
     private readonly workerApi = new Client(orchestyOptions.workerApi);
 
+    private readonly toStdout = logToInternal(loggerOptions.type);
+
+    private readonly toLoki = logToExternal(loggerOptions.type);
+
     public debug(
         message: string,
         context: AProcessDto | ILogContext | Request,
         isForUi = false,
-        isForLoki = false,
+        isForInternal = false,
     ): void {
         const data = this.format('debug', message, context);
 
-        if (!isForLoki) {
+        if (this.toStdout) {
             this.logger.debug(data);
         }
 
-        this.send(data, isForUi, isForLoki);
+        this.send(data, isForUi, isForInternal);
     }
 
     public info(
         message: string,
         context: AProcessDto | ILogContext | Request,
         isForUi = false,
-        isForLoki = false,
+        isForInternal = false,
     ): void {
         const data = this.format('info', message, context);
 
-        if (!isForLoki) {
+        if (this.toStdout) {
             this.logger.info(data);
         }
 
-        this.send(data, isForUi, isForLoki);
+        this.send(data, isForUi, isForInternal);
     }
 
     public warn(
         message: string,
         context: AProcessDto | ILogContext | Request,
         isForUi = false,
-        isForLoki = false,
+        isForInternal = false,
     ): void {
         const data = this.format('warn', message, context);
 
-        if (!isForLoki) {
+        if (this.toStdout) {
             this.logger.warn(data);
         }
 
-        this.send(data, isForUi, isForLoki);
+        this.send(data, isForUi, isForInternal);
     }
 
     public error(
@@ -95,15 +100,15 @@ export class Logger {
         context: AProcessDto | ILogContext | Request,
         isForUi = false,
         err?: Error,
-        isForLoki = false,
+        isForInternal = false,
     ): void {
         const data = this.format('error', message, context, err);
 
-        if (!isForLoki) {
+        if (this.toStdout) {
             this.logger.error(data);
         }
 
-        this.send(data, isForUi, isForLoki);
+        this.send(data, isForUi, isForInternal);
     }
 
     public createCtx(
@@ -165,7 +170,7 @@ export class Logger {
         };
     }
 
-    private send(data: ILogContext, isForUi = false, isForLoki = false): void {
+    private send(data: ILogContext, isForUi = false, isForInternal = false): void {
         if (isForUi) {
             this.workerApi.send('/logger/logs', HttpMethods.POST, { ...data, isForUi: true })
                 .catch((e: unknown) => {
@@ -173,7 +178,7 @@ export class Logger {
                 });
         }
 
-        if (isForLoki) {
+        if (this.toLoki && !isForInternal) {
             this.workerApi.send('/logger/loki', HttpMethods.POST, data)
                 .catch((e: unknown) => {
                     this.logger.error(e);
