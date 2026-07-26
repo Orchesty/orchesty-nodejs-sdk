@@ -13,7 +13,6 @@ export default function bodyParser(req: Request, res: Response, next: NextFuncti
             `Incoming request: Method[${req.method}] Url[${req.url}]`,
             logger.createCtx(req, req.headers, tryJsonParse(req.body) ?? req.body),
             false,
-            true,
         );
 
         next();
