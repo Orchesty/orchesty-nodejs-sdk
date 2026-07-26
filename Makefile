@@ -1,4 +1,5 @@
-DCS=docker-compose exec -T sdk
+DC=docker compose
+DCS=$(DC) exec -T sdk
 
 ALIAS?=alias
 Darwin:
@@ -25,11 +26,11 @@ docker-compose.ci.yml:
 	sed -r 's/^(\s+ports:)$$/#\1/g; s/^(\s+- \$$\{DEV_IP\}.*)$$/#\1/g' docker-compose.yaml > docker-compose.ci.yml
 
 docker-up-force: .env .lo0-up
-	docker-compose pull --ignore-pull-failures
-	docker-compose up -d --force-recreate --remove-orphans --build
+	$(DC) pull --ignore-pull-failures
+	$(DC) up -d --force-recreate --remove-orphans --build
 
 docker-down-clean: .env .lo0-down
-	docker-compose down -v
+	$(DC) down -v
 
 start:
 	$(DCS) pnpm run start
