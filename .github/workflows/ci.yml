@@ -19,11 +19,11 @@ jobs:
       risky_changes: ${{ steps.final.outputs.risky }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check for CI workflow changes
         if: github.event_name != 'workflow_dispatch'
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v4
         id: changes
         with:
           filters: |
@@ -68,7 +68,7 @@ jobs:
     if: ${{ needs.check-changes.outputs.risky_changes != 'true' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set docker host
         run: |

@@ -1,5 +1,8 @@
+catalog:
+    eslint: ^10.8.0
+
 overrides:
-    eslint: $eslint
+    eslint: 'catalog:'
 
 allowBuilds:
     protobufjs: true

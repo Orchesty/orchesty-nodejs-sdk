@@ -1,4 +1,3 @@
-import { XMLParser } from 'fast-xml-parser';
 import * as fs from 'fs';
 import { INode } from '../../lib/Commons/INode';
 import DIContainer from '../../lib/DIContainer/Container';
@@ -17,6 +16,32 @@ import {
 import ProcessDto from '../../lib/Utils/ProcessDto';
 import ResultCode from '../../lib/Utils/ResultCode';
 import { mockNodeCurl, TestNode } from './TesterHelpers';
+
+interface ITopologyAction {
+    name: string;
+    type: 'connector' | 'batch' | 'custom';
+    app: string | null;
+    worker: string;
+}
+
+interface ITopologyNode {
+    id: string;
+    label: 'Event' | 'Webhook' | 'Cron' | 'Breakpoint' | 'End Event' | 'Gateway'
+    | 'Batch' | 'Connector' | 'Custom Action';
+    name: string | null;
+    action: ITopologyAction | null;
+}
+
+interface ITopologyConnection {
+    id: string;
+    from: string;
+    to: string;
+}
+
+interface ITopologyJson {
+    nodes: ITopologyNode[];
+    connections: ITopologyConnection[];
+}
 
 export default class TopologyTester {
 
@@ -83,45 +108,44 @@ export default class TopologyTester {
         });
     }
 
-    private parseTopologyFile(path: string): TestNode[] {
-        const buff = fs.readFileSync(path);
-        const res = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true }).parse(buff.toString());
-
-        // Parse a compile TestNodes
-        const nodes: TestNode[] = [];
-
-        this.pushNodes(res.definitions.process.task as Record<string, string>[], nodes);
-        this.pushNodes(res.definitions.process.event as Record<string, string>[], nodes);
-
-        let { sequenceFlow } = res.definitions.process;
-        if (!Array.isArray(sequenceFlow)) {
-            sequenceFlow = [sequenceFlow];
+    private static resolveNodeTypeAndName(n: ITopologyNode): { type: string; name: string } {
+        if (n.action) {
+            return { type: n.action.type, name: n.action.name };
         }
+        switch (n.label) {
+            case 'Event': return { type: 'start', name: n.name ?? '' };
+            case 'Webhook': return { type: 'webhook', name: n.name ?? '' };
+            case 'Cron': return { type: 'cron', name: n.name ?? '' };
+            case 'Breakpoint': return { type: 'breakpoint', name: n.id };
+            case 'End Event': return { type: 'end', name: n.id };
+            case 'Gateway': return { type: 'gateway', name: n.id };
+            case 'Batch':
+            case 'Connector':
+            case 'Custom Action':
+                throw new Error(`Node [${n.id}] with label [${n.label}] is missing 'action' payload`);
+            default: throw new Error(`Unsupported node label [${n.label}]`);
+        }
+    }
 
-        (sequenceFlow as Record<string, string>[]).forEach((line: Record<string, string>) => {
-            const from = nodes.findIndex((node) => node.id === line['@_sourceRef']);
-            const to = nodes.findIndex((node) => node.id === line['@_targetRef']);
+    private parseTopologyFile(filePath: string): TestNode[] {
+        const raw = fs.readFileSync(filePath).toString();
+        const doc = JSON.parse(raw) as ITopologyJson;
 
-            if (from >= 0) {
+        const nodes: TestNode[] = doc.nodes.map((n) => {
+            const { type, name } = TopologyTester.resolveNodeTypeAndName(n);
+            return new TestNode(n.id, name, type);
+        });
+
+        doc.connections.forEach((c) => {
+            const from = nodes.findIndex((n) => n.id === c.from);
+            const to = nodes.findIndex((n) => n.id === c.to);
+            if (from >= 0 && to >= 0) {
                 nodes[from].followers.push({ id: nodes[to].id, name: nodes[to].name });
                 nodes[to].previous.push({ id: nodes[from].id, name: nodes[from].name });
             }
         });
 
         return nodes;
-    }
-
-    private pushNodes(_srcList: Record<string, string>[], dstList: TestNode[]): void {
-        let list = _srcList;
-        if (!Array.isArray(list)) {
-            list = [list];
-        }
-
-        list.forEach((event: Record<string, string>) => {
-            dstList.push(
-                new TestNode(event['@_id'], event['@_name'], event['@_pipesType']),
-            );
-        });
     }
 
     private async recursiveRunner(
@@ -145,6 +169,9 @@ export default class TopologyTester {
             case 'start':
             case 'cron':
             case 'webhook':
+            case 'breakpoint':
+            case 'end':
+            case 'gateway':
                 worker = null;
                 break;
             default:

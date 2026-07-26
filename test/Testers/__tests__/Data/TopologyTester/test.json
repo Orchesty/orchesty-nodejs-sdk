@@ -1,0 +1,60 @@
+{
+    "nodes": [
+        {
+            "id": "Event_0ve2715",
+            "label": "Event",
+            "shape": "circle",
+            "type": "flow",
+            "action": null,
+            "name": "Start",
+            "position": { "x": 0, "y": 0 },
+            "property": null
+        },
+        {
+            "id": "Activity_1kiutnz",
+            "label": "Connector",
+            "shape": "square",
+            "type": "flow",
+            "action": {
+                "name": "test",
+                "type": "connector",
+                "app": null,
+                "worker": "node-sdk"
+            },
+            "name": null,
+            "position": { "x": 0, "y": 0 },
+            "property": null
+        },
+        {
+            "id": "Activity_158l2ix",
+            "label": "Batch",
+            "shape": "square",
+            "type": "flow",
+            "action": {
+                "name": "testbatch",
+                "type": "batch",
+                "app": null,
+                "worker": "node-sdk"
+            },
+            "name": null,
+            "position": { "x": 0, "y": 0 },
+            "property": null
+        }
+    ],
+    "connections": [
+        {
+            "id": "c1",
+            "from": "Event_0ve2715",
+            "to": "Activity_1kiutnz",
+            "sourceOutput": "output",
+            "targetInput": "input"
+        },
+        {
+            "id": "c2",
+            "from": "Activity_1kiutnz",
+            "to": "Activity_158l2ix",
+            "sourceOutput": "output",
+            "targetInput": "input"
+        }
+    ]
+}
