@@ -60,6 +60,17 @@ describe('Tests ProcessDto utils', () => {
         ]);
     });
 
+    it('setFree drops both messages and the bridge data', () => {
+        const dto = new BatchProcessDto<unknown, { foo: string }>();
+        dto.setBridgeData(JSON.stringify({ foo: 'bar' }));
+        dto.addItem({ foo: 'bar' });
+
+        dto.setFree(true);
+
+        expect(dto.getData()).toEqual('');
+        expect(dto.getMessages()).toEqual([]);
+    });
+
     it('setItemList adds message correctly', () => {
         const dto = new BatchProcessDto<unknown, { foo: string }>();
         const message = { foo: 'bar' };

@@ -196,7 +196,7 @@ export default class BatchProcessDto<Data = unknown, Item = unknown> extends APr
     protected clearData(): this {
         this.messages = [];
 
-        return this;
+        return super.clearData();
     }
 
 }

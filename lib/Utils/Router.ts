@@ -126,10 +126,10 @@ export function createSuccessResponse(res: Response, _dto: AProcessDto, node?: A
 }
 
 const mutex = new Mutex();
-const dtoPool: ProcessDto[] = new Array(100).fill(new ProcessDto());
+const dtoPool: ProcessDto[] = Array.from({ length: 100 }, () => new ProcessDto());
 
 const batchMutex = new Mutex();
-const batchDtoPool: BatchProcessDto[] = new Array(100).fill(new BatchProcessDto());
+const batchDtoPool: BatchProcessDto[] = Array.from({ length: 100 }, () => new BatchProcessDto());
 
 async function getFreeDto(): Promise<ProcessDto> {
     // Should CPU still be a concern, implement linked list for faster search
@@ -172,9 +172,9 @@ async function getFreeBatchDto(): Promise<BatchProcessDto> {
 }
 
 export async function createProcessDto(req: Request, appName = ''): Promise<ProcessDto> {
-    const dto = await getFreeDto();
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
+    const dto = await getFreeDto();
 
     dto.setData(parsed.body || '{}');
     dto.setHeaders(parsed.headers || {});
@@ -184,13 +184,25 @@ export async function createProcessDto(req: Request, appName = ''): Promise<Proc
 }
 
 export async function createBatchProcessDto(req: Request, appName: string): Promise<BatchProcessDto> {
-    const dto = await getFreeBatchDto();
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const parsed: IBridgeRequestDto = JSON.parse(req.body || '{}');
+    const dto = await getFreeBatchDto();
 
     dto.setBridgeData(parsed.body || '{}');
     dto.setHeaders(parsed.headers || {});
     dto.setCurrentApp(appName);
 
     return dto;
+}
+
+export function releaseDtoOnClose(res: Response, dto: AProcessDto): void {
+    if (res.closed) {
+        dto.setFree(true);
+
+        return;
+    }
+
+    res.once('close', () => {
+        dto.setFree(true);
+    });
 }
