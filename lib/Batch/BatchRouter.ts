@@ -1,7 +1,8 @@
 import express from 'express';
 import ACommonRouter from '../Commons/ACommonRouter';
 import CommonLoader from '../Commons/CommonLoader';
-import { createApiErrorResponse, createBatchProcessDto, createSuccessResponse } from '../Utils/Router';
+import BatchProcessDto from '../Utils/BatchProcessDto';
+import { createApiErrorResponse, createBatchProcessDto, createSuccessResponse, releaseDtoOnClose } from '../Utils/Router';
 import ABatchNode from './ABatchNode';
 
 export const BATCH_PREFIX = 'hbpf.batch';
@@ -15,18 +16,27 @@ export default class BatchRouter extends ACommonRouter {
     public configureRoutes(): express.Application {
         this.app.route('/batch/:name/action')
             .post(async (req, res, next) => {
+                let acquiredBatchProcessDto: BatchProcessDto | undefined;
+
                 try {
                     const batch = this.loader.get(BATCH_PREFIX, req.params.name) as ABatchNode;
-                    const dto = await batch.processAction(
-                        await createBatchProcessDto(req, batch.getApplicationName()),
-                    );
+                    acquiredBatchProcessDto = await createBatchProcessDto(req, batch.getApplicationName());
+                    const dto = await batch.processAction(acquiredBatchProcessDto);
 
                     createSuccessResponse(res, dto, batch);
-                    res.on('finish', () => {
-                        dto.setFree(true);
-                    });
+                    releaseDtoOnClose(res, dto);
+
+                    if (dto !== acquiredBatchProcessDto) {
+                        releaseDtoOnClose(res, acquiredBatchProcessDto);
+                    }
+
+                    acquiredBatchProcessDto = undefined;
                     next();
                 } catch (e) {
+                    if (acquiredBatchProcessDto) {
+                        releaseDtoOnClose(res, acquiredBatchProcessDto);
+                    }
+
                     next(e);
                 }
             });

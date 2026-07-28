@@ -3,7 +3,8 @@ import ACommonRouter from '../Commons/ACommonRouter';
 import ANode from '../Commons/ANode';
 import CommonLoader from '../Commons/CommonLoader';
 import { ICommonNode } from '../Commons/ICommonNode';
-import { createApiErrorResponse, createProcessDto, createSuccessResponse } from '../Utils/Router';
+import ProcessDto from '../Utils/ProcessDto';
+import { createApiErrorResponse, createProcessDto, createSuccessResponse, releaseDtoOnClose } from '../Utils/Router';
 
 export const CUSTOM_NODE_PREFIX = 'hbpf.custom-node';
 
@@ -15,16 +16,27 @@ export default class CustomNodeRouter extends ACommonRouter {
 
     public configureRoutes(): express.Application {
         this.app.route('/custom-node/:name/process').post(async (req, res, next) => {
+            let acquiredProcessDto: ProcessDto | undefined;
+
             try {
                 const customNode = this.loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
-                const dto = await customNode.processAction(await createProcessDto(req));
+                acquiredProcessDto = await createProcessDto(req);
+                const dto = await customNode.processAction(acquiredProcessDto);
 
                 createSuccessResponse(res, dto, customNode instanceof ANode ? customNode : undefined);
-                res.on('finish', () => {
-                    dto.setFree(true);
-                });
+                releaseDtoOnClose(res, dto);
+
+                if (dto !== acquiredProcessDto) {
+                    releaseDtoOnClose(res, acquiredProcessDto);
+                }
+
+                acquiredProcessDto = undefined;
                 next();
             } catch (e) {
+                if (acquiredProcessDto) {
+                    releaseDtoOnClose(res, acquiredProcessDto);
+                }
+
                 next(e);
             }
         });
