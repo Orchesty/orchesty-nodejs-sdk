@@ -2,24 +2,31 @@ import { StatusCodes } from 'http-status-codes';
 import supertest from 'supertest';
 import { createDocumentMockedServer, mockOnce, nodeConfig } from '../../../test/MockServer';
 import { expressApp, getTestContainer, mockRouter } from '../../../test/TestAbstact';
+import AuditCheckpointRoleEnum from '../../Commons/AuditCheckpointRoleEnum';
+import { IAuditCheckpoint } from '../../Commons/IAuditCheckpoint';
 import { ICommonNode } from '../../Commons/ICommonNode';
 import { orchestyOptions } from '../../Config/Config';
 import DIContainer from '../../DIContainer/Container';
 import errorHandler from '../../Middleware/ErrorHandler';
 import Node from '../../Storage/Database/Document/Node';
 import { HttpMethods } from '../../Transport/HttpMethods';
-import { REPEAT_INTERVAL, REPEAT_MAX_HOPS } from '../../Utils/Headers';
+import { AUDIT_CHECKPOINT, REPEAT_INTERVAL, REPEAT_MAX_HOPS, RESULT_CODE, RESULT_MESSAGE } from '../../Utils/Headers';
+import ResultCode from '../../Utils/ResultCode';
 import CustomNodeRouter from '../CustomNodeRouter';
+
+const auditCheckpoint: IAuditCheckpoint = { role: AuditCheckpointRoleEnum.PROCESS_EXIT, fields: ['id'] };
 
 describe('Test CustomNodeRouter', () => {
     let container: DIContainer;
     let customNode: ICommonNode;
     let testOnRepeatExceptionCustom: ICommonNode;
+    let testOnStopAndFailExceptionCustom: ICommonNode;
 
     beforeAll(() => {
         container = getTestContainer();
         customNode = container.getCustomNode('testcustom');
         testOnRepeatExceptionCustom = container.getCustomNode('testOnRepeatExceptionCustom');
+        testOnStopAndFailExceptionCustom = container.getCustomNode('testOnStopAndFailExceptionCustom');
         expressApp.use(errorHandler(container.getRepository(Node)));
     });
 
@@ -41,7 +48,12 @@ describe('Test CustomNodeRouter', () => {
         const customNodeUrl = '/custom-node/list';
         await supertest(expressApp)
             .get(customNodeUrl)
-            .expect(StatusCodes.OK, '[{"name":"test-mapper"},{"name":"testcustom"},{"name":"testOnRepeatExceptionCustom"}]');
+            .expect(StatusCodes.OK, JSON.stringify([
+                { name: 'test-mapper' },
+                { name: 'testcustom' },
+                { name: 'testOnRepeatExceptionCustom' },
+                { name: 'testOnStopAndFailExceptionCustom' },
+            ]));
     });
 
     it('get /custom-node/:name/process/test route', async () => {
@@ -82,6 +94,7 @@ describe('Test CustomNodeRouter', () => {
         expect(resp.status).toBe(200);
         expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
         expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');
+        expect(JSON.parse(resp.body.headers[AUDIT_CHECKPOINT])).toEqual(auditCheckpoint);
     });
 
     it('post /custom-node/:name/process route - onRepeatException, custom repeater', async () => {
@@ -106,5 +119,23 @@ describe('Test CustomNodeRouter', () => {
         expect(resp.status).toBe(200);
         expect(resp.body.headers[REPEAT_INTERVAL]).toBe('30');
         expect(resp.body.headers[REPEAT_MAX_HOPS]).toBe('2');
+        expect(JSON.parse(resp.body.headers[AUDIT_CHECKPOINT])).toEqual(auditCheckpoint);
+    });
+
+    it('post /custom-node/:name/process route - onStopAndFailException', async () => {
+        const onStopAndFailExceptionCustomNodeUrl = `/custom-node/${testOnStopAndFailExceptionCustom.getName()}/process`;
+        const resp = await supertest(expressApp)
+            .post(onStopAndFailExceptionCustomNodeUrl)
+            .send(JSON.stringify({
+                headers: {
+                    'node-id': '1',
+                },
+                body: {},
+            }));
+
+        expect(resp.status).toBe(200);
+        expect(resp.body.headers[RESULT_CODE]).toBe(ResultCode.STOP_AND_FAILED.toString());
+        expect(resp.body.headers[RESULT_MESSAGE]).toBe('stop and fail');
+        expect(JSON.parse(resp.body.headers[AUDIT_CHECKPOINT])).toEqual(auditCheckpoint);
     });
 });

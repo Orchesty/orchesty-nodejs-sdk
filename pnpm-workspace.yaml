@@ -1,11 +1,12 @@
 catalog:
-    eslint: ^10.8.0
+    eslint: ^10.10.0
 
 overrides:
     eslint: 'catalog:'
 
 allowBuilds:
+    '@parcel/watcher': false
     protobufjs: true
     unrs-resolver: true
 
-confirmModulesPurge: false
+yes: true

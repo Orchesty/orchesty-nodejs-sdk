@@ -13,6 +13,7 @@ type RouteHandler = (req: Request, res: Response, next: NextFunction) => Promise
 interface IFakeResponse extends EventEmitter {
     closed: boolean;
     headersSent: boolean;
+    locals: Record<string, unknown>;
     status: jest.Mock;
     setHeader: jest.Mock;
     send: jest.Mock;
@@ -26,6 +27,7 @@ function mockResponse(closed = false): IFakeResponse {
     return Object.assign(new EventEmitter(), {
         closed,
         headersSent: false,
+        locals: {},
         status: jest.fn(),
         setHeader: jest.fn(),
         send: jest.fn(),

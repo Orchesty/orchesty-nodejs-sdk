@@ -20,10 +20,12 @@ export default class CustomNodeRouter extends ACommonRouter {
 
             try {
                 const customNode = this.loader.get(CUSTOM_NODE_PREFIX, req.params.name) as ICommonNode;
+                const node = customNode instanceof ANode ? customNode : undefined;
+                res.locals.node = node;
                 acquiredProcessDto = await createProcessDto(req);
                 const dto = await customNode.processAction(acquiredProcessDto);
 
-                createSuccessResponse(res, dto, customNode instanceof ANode ? customNode : undefined);
+                createSuccessResponse(res, dto, node);
                 releaseDtoOnClose(res, dto);
 
                 if (dto !== acquiredProcessDto) {

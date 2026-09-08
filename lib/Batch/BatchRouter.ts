@@ -20,6 +20,7 @@ export default class BatchRouter extends ACommonRouter {
 
                 try {
                     const batch = this.loader.get(BATCH_PREFIX, req.params.name) as ABatchNode;
+                    res.locals.node = batch;
                     acquiredBatchProcessDto = await createBatchProcessDto(req, batch.getApplicationName());
                     const dto = await batch.processAction(acquiredBatchProcessDto);
 

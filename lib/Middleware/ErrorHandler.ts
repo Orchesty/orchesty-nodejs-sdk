@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import ANode from '../Commons/ANode';
 import OnRepeatException from '../Exception/OnRepeatException';
 import OnStopAndFailException from '../Exception/OnStopAndFailException';
 import logger from '../Logger/Logger';
@@ -20,6 +21,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
         try {
             acquiredProcessDto = await createProcessDto(req);
             const dto = acquiredProcessDto;
+            const sdkNode = res.locals.node as ANode | undefined;
 
             if (err instanceof OnRepeatException) {
                 const node = await nodeRepository.findOne({ ids: [dto.getHeader(NODE_ID) ?? ''] });
@@ -38,7 +40,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
                     dto,
                 );
 
-                createSuccessResponse(res, dto);
+                createSuccessResponse(res, dto, sdkNode);
                 releaseDtoOnClose(res, dto);
 
                 acquiredProcessDto = undefined;
@@ -50,7 +52,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
                 logger.error(err.message, dto, false, err);
                 dto.setStopProcess(ResultCode.STOP_AND_FAILED, err.message);
 
-                createSuccessResponse(res, dto);
+                createSuccessResponse(res, dto, sdkNode);
                 releaseDtoOnClose(res, dto);
 
                 acquiredProcessDto = undefined;
@@ -58,7 +60,7 @@ export default function errorHandler(nodeRepository: NodeRepository) {
                 return;
             }
 
-            createErrorResponse(req, res, dto, err);
+            createErrorResponse(req, res, dto, err, sdkNode);
             releaseDtoOnClose(res, dto);
 
             acquiredProcessDto = undefined;

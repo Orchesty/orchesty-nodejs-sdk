@@ -15,6 +15,7 @@ import TestConnector from './Connector/TestConnector';
 import TestCustomNode from './CustomNode/TestCustomNode';
 import TestMapperNode from './CustomNode/TestMapperNode';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
+import TestOnStopAndFailExceptionNode from './CustomNode/TestOnStopAndFailExceptionNode';
 import { appInstallConfig } from './MockServer';
 
 export const expressApp = e;
@@ -39,6 +40,7 @@ export function getTestContainer(): DIContainer {
     const batch = new TestBatch();
     const custom = new TestCustomNode();
     const onRepeatExceptionCustom = new TestOnRepeatExceptionNode();
+    const onStopAndFailExceptionCustom = new TestOnStopAndFailExceptionNode();
 
     // Add them to the DIContainer
     container.setConnector(testConnector);
@@ -48,6 +50,7 @@ export function getTestContainer(): DIContainer {
     container.setBatch(batch);
     container.setCustomNode(custom);
     container.setCustomNode(onRepeatExceptionCustom);
+    container.setCustomNode(onStopAndFailExceptionCustom);
     container.setCustomNode(new TestMapperNode());
 
     return container;

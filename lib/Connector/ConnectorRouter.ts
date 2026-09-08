@@ -19,6 +19,7 @@ export default class ConnectorRouter extends ACommonRouter {
 
             try {
                 const connector = this.loader.get(CONNECTOR_PREFIX, req.params.name) as ANode;
+                res.locals.node = connector;
                 acquiredProcessDto = await createProcessDto(req, connector.getApplicationName());
                 const dto = await connector.processAction(acquiredProcessDto);
 

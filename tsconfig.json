@@ -18,7 +18,10 @@
         "emitDecoratorMetadata": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "ignoreDeprecations": "6.0"
+        "ignoreDeprecations": "6.0",
+        "paths": {
+            "axios": ["./node_modules/axios/index.d.ts"]
+        }
     },
     "include": [
         "lib",
