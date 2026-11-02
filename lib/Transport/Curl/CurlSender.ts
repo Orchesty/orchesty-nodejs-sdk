@@ -81,6 +81,7 @@ export default class CurlSender {
     }
 
     public returnResponseDto<JsonBody>(body: string, response: AxiosResponse, buffer: Buffer): ResponseDto<JsonBody> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment
         return new ResponseDto(body, response.status, response.headers, buffer, response.statusText);
     }
 

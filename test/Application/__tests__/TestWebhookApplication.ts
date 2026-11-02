@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { ApplicationInstall } from '../../../lib/Application/Database/ApplicationInstall';
 import Webhook from '../../../lib/Application/Database/Webhook';
 import WebhookSubscription from '../../../lib/Application/Model/Webhook/WebhookSubscription';
@@ -90,7 +91,7 @@ describe('Tests for webhook application', () => {
     it('processWebhookSubscribeResponse', () => {
         const processResponse = app.processWebhookSubscribeResponse(new ResponseDto(
             JSON.stringify({ id: '1' }),
-            200,
+            StatusCodes.OK,
             {},
             Buffer.from(''),
         ), new ApplicationInstall());
@@ -101,7 +102,7 @@ describe('Tests for webhook application', () => {
     it('processWebhookUnsubscribeResponse', () => {
         const processResponse = app.processWebhookUnsubscribeResponse(new ResponseDto(
             JSON.stringify({ id: '1' }),
-            200,
+            StatusCodes.OK,
             {},
             Buffer.from(''),
         ));

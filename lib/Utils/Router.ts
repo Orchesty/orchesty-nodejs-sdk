@@ -25,6 +25,7 @@ interface IBridgeRequestDto {
 }
 
 function logResponseProcess(dto: AProcessDto): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment
     const resultCode: ResultCode = parseInt(dto.getHeader(RESULT_CODE, '0'), 10);
     const resultMessage = dto.getHeader(RESULT_MESSAGE) ?? '';
 
