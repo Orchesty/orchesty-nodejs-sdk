@@ -15,7 +15,7 @@ import {
 } from './Headers';
 import ResultCode from './ResultCode';
 
-const ALLOWED_RESULT_CODES = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONTINUE];
+const ALLOWED_RESULT_CODES: number[] = [ResultCode.STOP_AND_FAILED, ResultCode.DO_NOT_CONTINUE];
 
 export type AuditData = Record<string, { key: string; fields: Record<string, string>[] }>
 

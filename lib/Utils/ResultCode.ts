@@ -23,19 +23,23 @@ enum ResultCode {
 
 }
 
+const SUCCESS_RESULT_CODES: number[] = [
+    ResultCode.SUCCESS,
+    ResultCode.REPEAT,
+    ResultCode.FORWARD_TO_TARGET_QUEUE,
+    ResultCode.DO_NOT_CONTINUE,
+    ResultCode.BATCH_CURSOR_ONLY,
+    ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
+];
+
+const BATCH_RESULT_CODES: number[] = [ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS];
+
 export function isSuccessResultCode(code: number): boolean {
-    return [
-        ResultCode.SUCCESS,
-        ResultCode.REPEAT,
-        ResultCode.FORWARD_TO_TARGET_QUEUE,
-        ResultCode.DO_NOT_CONTINUE,
-        ResultCode.BATCH_CURSOR_ONLY,
-        ResultCode.BATCH_CURSOR_WITH_FOLLOWERS,
-    ].includes(code);
+    return SUCCESS_RESULT_CODES.includes(code);
 }
 
 export function isBatchResultCode(code: number): boolean {
-    return [ResultCode.BATCH_CURSOR_ONLY, ResultCode.BATCH_CURSOR_WITH_FOLLOWERS].includes(code);
+    return BATCH_RESULT_CODES.includes(code);
 }
 
 export default ResultCode;

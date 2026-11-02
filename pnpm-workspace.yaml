@@ -1,12 +1,9 @@
-catalog:
-    eslint: ^10.10.0
-
-overrides:
-    eslint: 'catalog:'
-
 allowBuilds:
     '@parcel/watcher': false
     protobufjs: true
     unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - '@hanaboso/eslint-plugin@2.0.0'
 
 yes: true
