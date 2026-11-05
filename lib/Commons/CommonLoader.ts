@@ -1,4 +1,7 @@
+import AConfirm from '../Confirm/AConfirm';
 import DIContainer from '../DIContainer/Container';
+import logger from '../Logger/Logger';
+import AQuestion from '../Question/AQuestion';
 import { IName } from './IName';
 
 export default class CommonLoader {
@@ -21,14 +24,11 @@ export default class CommonLoader {
                 app = undefined;
             }
 
-            const item: ICommonObject = { name: obj.key, app };
-            if (typeof obj.value.getQuestion === 'function') {
-                item.question = obj.value.getQuestion();
+            try {
+                list.push(this.describe(obj.key, app, obj.value));
+            } catch (e) {
+                logger.error(`Node "${obj.key}" left out of the "${prefix}" list: ${(e as Error).message}`, {});
             }
-            if (typeof obj.value.getDisplayFields === 'function') {
-                item.displayFields = obj.value.getDisplayFields();
-            }
-            list.push(item);
         });
 
         return list.sort(this.compare.bind(this));
@@ -44,6 +44,18 @@ export default class CommonLoader {
         return 0;
     }
 
+    private describe(name: string, app: string | undefined, node: unknown): ICommonObject {
+        const item: ICommonObject = { name, app };
+        if (node instanceof AQuestion) {
+            item.schema = node.getSchema();
+        } else if (node instanceof AConfirm) {
+            item.question = node.getQuestion();
+            item.displayFields = node.getDisplayFields();
+        }
+
+        return item;
+    }
+
 }
 
 export interface ICommonObject {
@@ -51,5 +63,6 @@ export interface ICommonObject {
     app?: string;
     question?: string;
     displayFields?: string[];
+    schema?: Record<string, unknown>;
 
 }

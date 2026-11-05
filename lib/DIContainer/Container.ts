@@ -15,6 +15,8 @@ import { CONFIRM_PREFIX } from '../Confirm/ConfirmRouter';
 import AConnector from '../Connector/AConnector';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
+import AQuestion from '../Question/AQuestion';
+import { QUESTION_PREFIX } from '../Question/QuestionRouter';
 import ADocument, { ClassType } from '../Storage/Database/ADocument';
 import DatabaseClient from '../Storage/Database/Client';
 import Repository, { IFilter, IPaging, ISorter } from '../Storage/Database/Repository';
@@ -96,6 +98,8 @@ export default class DIContainer {
             this.setConnector(node);
         } else if (node instanceof AConfirm) {
             this.setConfirm(node);
+        } else if (node instanceof AQuestion) {
+            this.setQuestion(node);
         } else if (node instanceof ACommonNode) {
             this.setCustomNode(node);
         }
@@ -131,6 +135,16 @@ export default class DIContainer {
 
     public getConfirm<T extends ICommonNode>(name: string): T {
         return this.getNamed(`${CONFIRM_PREFIX}.${name}`);
+    }
+
+    public setQuestion(service: ICommonNode): ICommonNode {
+        this.setNamed(`${QUESTION_PREFIX}.${service.getName()}`, service);
+
+        return service;
+    }
+
+    public getQuestion<T extends ICommonNode>(name: string): T {
+        return this.getNamed(`${QUESTION_PREFIX}.${name}`);
     }
 
     public setApplication(service: IApplication): IApplication {
