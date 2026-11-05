@@ -18,6 +18,7 @@ import { appOptions, cryptOptions, orchestyOptions, tunnelOptions } from './Conf
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
+import ConfirmRouter from './Confirm/ConfirmRouter';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import DIContainer from './DIContainer/Container';
 import logger from './Logger/Logger';
@@ -100,6 +101,7 @@ function initiateContainer(): void {
     routes.push(new BatchRouter(expressApp, loader));
     routes.push(new ConnectorRouter(expressApp, loader));
     routes.push(new CustomNodeRouter(expressApp, loader));
+    routes.push(new ConfirmRouter(expressApp, loader));
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }

@@ -42,6 +42,10 @@ export const AUDIT_CHECKPOINT = 'audit-checkpoint';
 // SDK header
 export const SDK = 'sdk';
 
+// Confirm node — question + optional payload projection for the Yes/No card
+export const CONFIRM_QUESTION = 'confirm-question';
+export const CONFIRM_DISPLAY = 'confirm-display';
+
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface IHttpHeaders {
     [key: string]: string[] | string | undefined;
