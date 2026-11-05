@@ -15,10 +15,10 @@ import BatchRouter from './Batch/BatchRouter';
 import ACommonRouter from './Commons/ACommonRouter';
 import CommonLoader from './Commons/CommonLoader';
 import { appOptions, cryptOptions, orchestyOptions, tunnelOptions } from './Config/Config';
+import ConfirmRouter from './Confirm/ConfirmRouter';
 import ConnectorRouter from './Connector/ConnectorRouter';
 import CryptManager from './Crypt/CryptManager';
 import WindWalkerCrypt from './Crypt/Impl/WindWalkerCrypt';
-import ConfirmRouter from './Confirm/ConfirmRouter';
 import CustomNodeRouter from './CustomNode/CustomNodeRouter';
 import DIContainer from './DIContainer/Container';
 import logger from './Logger/Logger';
@@ -26,6 +26,7 @@ import Metrics from './Metrics/Metrics';
 import bodyParser from './Middleware/BodyParseHandler';
 import errorHandler from './Middleware/ErrorHandler';
 import metricsHandler from './Middleware/MetricsHandler';
+import QuestionRouter from './Question/QuestionRouter';
 import DatabaseClient from './Storage/Database/Client';
 import Node from './Storage/Database/Document/Node';
 import NodeRepository from './Storage/Database/Document/NodeRepository';
@@ -102,6 +103,7 @@ function initiateContainer(): void {
     routes.push(new ConnectorRouter(expressApp, loader));
     routes.push(new CustomNodeRouter(expressApp, loader));
     routes.push(new ConfirmRouter(expressApp, loader));
+    routes.push(new QuestionRouter(expressApp, loader));
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }

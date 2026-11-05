@@ -22,7 +22,10 @@ export default class CommonLoader {
             }
 
             const item: ICommonObject = { name: obj.key, app };
-            if (typeof obj.value.getQuestion === 'function') {
+            if (typeof obj.value.getSchema === 'function') {
+                // Question nodes: text depends on the message, schema is static
+                item.schema = obj.value.getSchema();
+            } else if (typeof obj.value.getQuestion === 'function') {
                 item.question = obj.value.getQuestion();
             }
             if (typeof obj.value.getDisplayFields === 'function') {
@@ -51,5 +54,6 @@ export interface ICommonObject {
     app?: string;
     question?: string;
     displayFields?: string[];
+    schema?: Record<string, unknown>;
 
 }

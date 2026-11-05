@@ -17,6 +17,7 @@ import TestMapperNode from './CustomNode/TestMapperNode';
 import TestOnRepeatExceptionNode from './CustomNode/TestOnRepeatExceptionNode';
 import TestOnStopAndFailExceptionNode from './CustomNode/TestOnStopAndFailExceptionNode';
 import { appInstallConfig } from './MockServer';
+import TestQuestion from './Question/TestQuestion';
 
 export const expressApp = e;
 export const container = c;
@@ -52,6 +53,7 @@ export function getTestContainer(): DIContainer {
     container.setCustomNode(onRepeatExceptionCustom);
     container.setCustomNode(onStopAndFailExceptionCustom);
     container.setCustomNode(new TestMapperNode());
+    container.setQuestion(new TestQuestion());
 
     return container;
 }
