@@ -21,7 +21,14 @@ export default class CommonLoader {
                 app = undefined;
             }
 
-            list.push({ name: obj.key, app });
+            const item: ICommonObject = { name: obj.key, app };
+            if (typeof obj.value.getQuestion === 'function') {
+                item.question = obj.value.getQuestion();
+            }
+            if (typeof obj.value.getDisplayFields === 'function') {
+                item.displayFields = obj.value.getDisplayFields();
+            }
+            list.push(item);
         });
 
         return list.sort(this.compare.bind(this));
@@ -42,5 +49,7 @@ export default class CommonLoader {
 export interface ICommonObject {
     name: string;
     app?: string;
+    question?: string;
+    displayFields?: string[];
 
 }
