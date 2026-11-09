@@ -1,6 +1,9 @@
 import express from 'express';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import express_prom_bundle from 'express-prom-bundle';
+import ActionControlPlaneClient from './Action/ActionControlPlaneClient';
+import ActionRouter from './Action/ActionRouter';
+import ActionRunner from './Action/ActionRunner';
 import ApplicationLoader from './Application/ApplicationLoader';
 import { ApplicationRouter } from './Application/ApplicationRouter';
 import { ApplicationInstall } from './Application/Database/ApplicationInstall';
@@ -62,6 +65,9 @@ function initiateContainer(): void {
     const metrics = new Metrics();
     const curlSender = new CurlSender(metrics);
     const topologyRunner = new TopologyRunner(curlSender);
+    const actionRunner = new ActionRunner(
+        new ActionControlPlaneClient(orchestyOptions.backend, orchestyOptions.orchestyApiKey),
+    );
 
     const applicationInstallRepo = new ApplicationInstallRepository(
         ApplicationInstall,
@@ -92,6 +98,7 @@ function initiateContainer(): void {
     container.set(curlSender);
     container.set(metrics);
     container.set(topologyRunner);
+    container.set(actionRunner);
 
     container.setRepository(applicationInstallRepo);
     container.setRepository(webhookRepository);
@@ -104,6 +111,7 @@ function initiateContainer(): void {
     routes.push(new CustomNodeRouter(expressApp, loader));
     routes.push(new ConfirmRouter(expressApp, loader));
     routes.push(new QuestionRouter(expressApp, loader));
+    routes.push(new ActionRouter(expressApp, actionRunner));
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     routes.push(new WebhookRouter(expressApp, webhookManager));
 }
