@@ -10,9 +10,13 @@ import ACommonNode from '../Commons/ACommonNode';
 import ANode from '../Commons/ANode';
 import { ICommonNode } from '../Commons/ICommonNode';
 import { INode } from '../Commons/INode';
+import AConfirm from '../Confirm/AConfirm';
+import { CONFIRM_PREFIX } from '../Confirm/ConfirmRouter';
 import AConnector from '../Connector/AConnector';
 import { CONNECTOR_PREFIX } from '../Connector/ConnectorRouter';
 import { CUSTOM_NODE_PREFIX } from '../CustomNode/CustomNodeRouter';
+import AQuestion from '../Question/AQuestion';
+import { QUESTION_PREFIX } from '../Question/QuestionRouter';
 import ADocument, { ClassType } from '../Storage/Database/ADocument';
 import DatabaseClient from '../Storage/Database/Client';
 import Repository, { IFilter, IPaging, ISorter } from '../Storage/Database/Repository';
@@ -92,6 +96,10 @@ export default class DIContainer {
         } else if (node instanceof AConnector) {
             node.setSender(this.get(CurlSender));
             this.setConnector(node);
+        } else if (node instanceof AConfirm) {
+            this.setConfirm(node);
+        } else if (node instanceof AQuestion) {
+            this.setQuestion(node);
         } else if (node instanceof ACommonNode) {
             this.setCustomNode(node);
         }
@@ -117,6 +125,26 @@ export default class DIContainer {
 
     public getCustomNode<T extends ICommonNode>(name: string): T {
         return this.getNamed(`${CUSTOM_NODE_PREFIX}.${name}`);
+    }
+
+    public setConfirm(service: ICommonNode): ICommonNode {
+        this.setNamed(`${CONFIRM_PREFIX}.${service.getName()}`, service);
+
+        return service;
+    }
+
+    public getConfirm<T extends ICommonNode>(name: string): T {
+        return this.getNamed(`${CONFIRM_PREFIX}.${name}`);
+    }
+
+    public setQuestion(service: ICommonNode): ICommonNode {
+        this.setNamed(`${QUESTION_PREFIX}.${service.getName()}`, service);
+
+        return service;
+    }
+
+    public getQuestion<T extends ICommonNode>(name: string): T {
+        return this.getNamed(`${QUESTION_PREFIX}.${name}`);
     }
 
     public setApplication(service: IApplication): IApplication {
